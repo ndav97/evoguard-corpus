@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "max_attempts": 3,
+  "max_agent_cycles": 25,
+  "timeout_seconds": {
+    "api": 1800,
+    "local": 3600
+  },
+  "provider_ring": [
+    "openai",
+    "anthropic",
+    "google",
+    "local_a",
+    "local_b"
+  ],
+  "max_provider_assignments": 5,
+  "repair_base": "own_previous_attempt",
+  "reassignment_base": "previous_validated_reference_or_scaffold",
+  "oracle_failure": "immediate_reassignment_no_feedback",
+  "oracle_visible": false,
+  "future_visible": false,
+  "external_internet": false,
+  "allow_new_dependencies": false,
+  "human_functional_fixes": false,
+  "oracle_stability_runs": 5,
+  "pilot_families": 10,
+  "pilot_episodes_per_family": 1,
+  "pilot_turns_per_episode": 3,
+  "pilot_audit_fraction": 1,
+  "pi0_fixed": true,
+  "pi0_model": null,
+  "pi0_repetitions": null,
+  "money_cutoff_usd": null
+}

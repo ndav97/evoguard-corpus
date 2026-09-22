@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Reset; ordenar nombre ascendente; recorrer todas las páginas."
+      ],
+      "expected": "30 IDs en orden lexicográfico ASCII por name.toLowerCase(); empates por posición en fixture."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Reset; ordenar nombre descendente; recorrer todas las páginas."
+      ],
+      "expected": "30 IDs en orden lexicográfico ASCII descendente; empates por posición en fixture."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Reset; ordenar precio ascendente; recorrer todas las páginas."
+      ],
+      "expected": "30 IDs por precio creciente; empates conservan posición en fixture (P001/P008/P019 para 24.99)."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Reset; ordenar precio descendente; recorrer todas las páginas."
+      ],
+      "expected": "30 IDs por precio decreciente, empates conservan posición en fixture."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Reset; buscar 'bottle'; categoría All; ordenar precio ascendente; categoría Sports."
+      ],
+      "expected": "Antes P013,P022 (empate 15.5); después solo P022."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Reset; ordenar nombre descendente; buscar 'bottle'."
+      ],
+      "expected": "Orden sigue nombre descendente: P022 (Sports Bottle), P013 (Glass Bottle), distinto del orden del fixture."
+    },
+    {
+      "id": "R003-A07",
+      "steps": [
+        "Reset; ordenar nombre descendente; categoría Books."
+      ],
+      "expected": "Books en orden Testing Software, Practical TypeScript, Modern React, Design Patterns, Data Structures, Clean Code."
+    }
+  ]
+}

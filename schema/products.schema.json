@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/products.schema.json",
+  "title": "products",
+  "type": "array",
+  "minItems": 30,
+  "maxItems": 30,
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^P0[0-3][0-9]$"
+      },
+      "name": {
+        "type": "string",
+        "pattern": "^[\\x20-\\x7E]+$",
+        "minLength": 1
+      },
+      "category": {
+        "enum": [
+          "Electronics",
+          "Home",
+          "Sports",
+          "Books"
+        ]
+      },
+      "price": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "category",
+      "price"
+    ],
+    "additionalProperties": false
+  }
+}

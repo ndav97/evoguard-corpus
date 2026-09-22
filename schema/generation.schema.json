@@ -1,0 +1,247 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/generation.schema.json",
+  "title": "generation",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^F[0-9]{3}$"
+    },
+    "version": {
+      "enum": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ]
+    },
+    "artifact_type": {
+      "const": "reference_candidate"
+    },
+    "generator": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "enum": [
+            "openai",
+            "anthropic",
+            "google",
+            "local_a",
+            "local_b"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "temperature": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "provider",
+        "model",
+        "temperature",
+        "seed"
+      ],
+      "additionalProperties": false
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "repair_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "candidate_commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixture_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "stack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "started_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "finished_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tokens": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "output": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "cycles": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 25
+    },
+    "duration_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "build": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "INFRA_ERROR"
+          ]
+        },
+        "typecheck": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "INFRA_ERROR"
+          ]
+        },
+        "development_tests": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "INFRA_ERROR"
+          ]
+        },
+        "independent_oracle": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "INFRA_ERROR"
+          ]
+        },
+        "architecture": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "INFRA_ERROR"
+          ]
+        }
+      },
+      "required": [
+        "build",
+        "typecheck",
+        "development_tests",
+        "independent_oracle",
+        "architecture"
+      ],
+      "additionalProperties": false
+    },
+    "outcome": {
+      "enum": [
+        "IN_PROGRESS",
+        "REPAIR",
+        "REASSIGN",
+        "ACCEPTED",
+        "INFRA_ERROR"
+      ]
+    },
+    "failure_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "logs_path": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "family_id",
+    "version",
+    "artifact_type",
+    "generator",
+    "attempt",
+    "repair_count",
+    "base_commit",
+    "candidate_commit",
+    "prompt_sha256",
+    "fixture_sha256",
+    "stack_sha256",
+    "started_at",
+    "finished_at",
+    "tokens",
+    "cost_usd",
+    "cycles",
+    "duration_seconds",
+    "validation",
+    "outcome",
+    "failure_reason",
+    "logs_path"
+  ],
+  "additionalProperties": false
+}

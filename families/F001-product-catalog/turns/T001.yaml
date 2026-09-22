@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Permite ordenar los productos por nombre en orden ascendente y descendente, y por precio de menor a mayor y de mayor a menor. El ordenamiento debe funcionar junto con búsqueda y categoría, y conservarse al cambiar cualquiera de estos filtros. Compara nombres ASCII sin distinguir mayúsculas; en empates conserva el orden del fixture.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

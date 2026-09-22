@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "policy",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "max_attempts": {
+      "const": 3
+    },
+    "max_agent_cycles": {
+      "const": 25
+    },
+    "timeout_seconds": {
+      "const": {
+        "api": 1800,
+        "local": 3600
+      }
+    },
+    "provider_ring": {
+      "const": [
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b"
+      ]
+    },
+    "max_provider_assignments": {
+      "const": 5
+    },
+    "repair_base": {
+      "const": "own_previous_attempt"
+    },
+    "reassignment_base": {
+      "const": "previous_validated_reference_or_scaffold"
+    },
+    "oracle_failure": {
+      "const": "immediate_reassignment_no_feedback"
+    },
+    "oracle_visible": {
+      "const": false
+    },
+    "future_visible": {
+      "const": false
+    },
+    "external_internet": {
+      "const": false
+    },
+    "allow_new_dependencies": {
+      "const": false
+    },
+    "human_functional_fixes": {
+      "const": false
+    },
+    "oracle_stability_runs": {
+      "const": 5
+    },
+    "pilot_families": {
+      "const": 10
+    },
+    "pilot_episodes_per_family": {
+      "const": 1
+    },
+    "pilot_turns_per_episode": {
+      "const": 3
+    },
+    "pilot_audit_fraction": {
+      "const": 1
+    },
+    "pi0_fixed": {
+      "const": true
+    },
+    "pi0_model": {
+      "const": null
+    },
+    "pi0_repetitions": {
+      "const": null
+    },
+    "money_cutoff_usd": {
+      "const": null
+    }
+  },
+  "required": [
+    "schema_version",
+    "protocol_version",
+    "max_attempts",
+    "max_agent_cycles",
+    "timeout_seconds",
+    "provider_ring",
+    "max_provider_assignments",
+    "repair_base",
+    "reassignment_base",
+    "oracle_failure",
+    "oracle_visible",
+    "future_visible",
+    "external_internet",
+    "allow_new_dependencies",
+    "human_functional_fixes",
+    "oracle_stability_runs",
+    "pilot_families",
+    "pilot_episodes_per_family",
+    "pilot_turns_per_episode",
+    "pilot_audit_fraction",
+    "pi0_fixed",
+    "pi0_model",
+    "pi0_repetitions",
+    "money_cutoff_usd"
+  ],
+  "additionalProperties": false
+}

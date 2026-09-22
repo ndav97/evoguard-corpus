@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "filter_products_by_category",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Filtrar productos por All, Electronics, Home, Sports o Books.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "All no excluye productos por categoría."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Cada categoría muestra solamente sus productos."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Cambiar categoría actualiza inmediatamente los resultados."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Búsqueda y categoría se aplican conjuntamente."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Un resultado vacío no muestra productos incorrectos."
+    }
+  ]
+}

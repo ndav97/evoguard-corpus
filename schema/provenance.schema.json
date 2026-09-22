@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/provenance.schema.json",
+  "title": "provenance",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^F[0-9]{3}$"
+    },
+    "created_at": {
+      "const": "2026-09-22"
+    },
+    "protocol_source": {
+      "type": "object",
+      "properties": {
+        "conversation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_markdown_retrieved": {
+          "const": false
+        },
+        "transcription_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "conversation_id",
+        "title",
+        "original_markdown_retrieved",
+        "transcription_path"
+      ],
+      "additionalProperties": false
+    },
+    "artifact_scope": {
+      "const": "specification_and_neutral_scaffold_only"
+    },
+    "authorship": {
+      "type": "object",
+      "properties": {
+        "specification_materializer": {
+          "const": "Codex"
+        },
+        "reference_application_generator": {
+          "type": "null"
+        },
+        "human_functional_corrections": {
+          "const": false
+        }
+      },
+      "required": [
+        "specification_materializer",
+        "reference_application_generator",
+        "human_functional_corrections"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "origin": {
+          "const": "created_from_approved_specification"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "models": {
+      "type": "object",
+      "properties": {
+        "openai": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "anthropic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "google": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "local_a": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "local_b": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b"
+      ],
+      "additionalProperties": false
+    },
+    "scaffold": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "functional_code": {
+          "const": false
+        }
+      },
+      "required": [
+        "path",
+        "commit",
+        "functional_code"
+      ],
+      "additionalProperties": false
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "const": "NOT_STARTED"
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "similarity_review": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "const": "NOT_STARTED"
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "status",
+        "exclude"
+      ],
+      "additionalProperties": false
+    },
+    "references": {
+      "type": "object",
+      "properties": {
+        "V0": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V1": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V2": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V3": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        }
+      },
+      "required": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "family_id",
+    "created_at",
+    "protocol_source",
+    "artifact_scope",
+    "authorship",
+    "fixture",
+    "models",
+    "scaffold",
+    "audit",
+    "similarity_review",
+    "references"
+  ],
+  "additionalProperties": false
+}

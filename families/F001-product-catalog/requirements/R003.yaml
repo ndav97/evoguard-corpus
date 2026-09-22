@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "sort_products",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Ordenar por nombre o precio en ambas direcciones. Comparar nombres ASCII sin distinguir mayúsculas. En empates conservar el orden del fixture. Sin elegir orden explícito, conservar el orden del fixture.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Orden por nombre ascendente."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Orden por nombre descendente."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Orden por precio ascendente."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Orden por precio descendente."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Se ordenan solo productos que cumplen búsqueda y categoría."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Cambiar búsqueda conserva el criterio de ordenamiento."
+    },
+    {
+      "id": "R003-A07",
+      "description": "Cambiar categoría conserva el criterio de ordenamiento."
+    }
+  ]
+}

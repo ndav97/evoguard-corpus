@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "stable_product_selection",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Seleccionar un único producto con identidad estable al ordenar o paginar. Su identidad sigue observable aunque esté en otra página. Filtros que lo mantienen incluido conservan selección; filtros que lo excluyen la limpian y retirar luego el filtro no la restaura.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "El usuario puede seleccionar un producto."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Solo puede haber un producto seleccionado a la vez."
+    },
+    {
+      "id": "R005-A03",
+      "description": "La selección tiene una indicación observable."
+    },
+    {
+      "id": "R005-A04",
+      "description": "Ordenar no cambia la identidad seleccionada."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Navegar entre páginas no cambia la identidad seleccionada."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Regresar a la página del producto muestra el mismo producto seleccionado."
+    },
+    {
+      "id": "R005-A07",
+      "description": "Una búsqueda que excluye al seleccionado limpia la selección."
+    },
+    {
+      "id": "R005-A08",
+      "description": "Una categoría que excluye al seleccionado limpia la selección."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Reset; filtros vacíos; recorrer páginas."
+      ],
+      "expected": "Exactamente 3 páginas de 10 productos, 30 IDs únicos."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Reset; ir de primera a segunda y tercera."
+      ],
+      "expected": "Se alcanzan los 30 IDs sin repetir ni omitir; siguiente deshabilitado en tercera."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Reset; buscar 'bottle'; categoría Sports."
+      ],
+      "expected": "Una página con P022; anterior/siguiente no disponibles."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Reset; ordenar precio ascendente; recorrer tres páginas.",
+        "Reset; ordenar precio ascendente; ir a segunda página; cambiar a nombre descendente."
+      ],
+      "expected": "En el primer escenario, concatenación de páginas equivale al orden global por precio con empate estable. En el segundo, permanece en página 2 y muestra posiciones 11–20 del orden por nombre descendente."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Reset; avanzar a tercera; buscar 'bottle'.",
+        "Reset; ordenar nombre ascendente; ir a segunda página; buscar 'e'."
+      ],
+      "expected": "Primer escenario: primera página con P013 y P022, sin anterior. Segundo escenario: aunque quedan más de 20 coincidencias y la página 2 aún existe, vuelve a página 1 y muestra las primeras 10 coincidencias de 'e' por nombre."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Reset; avanzar a tercera; categoría Electronics."
+      ],
+      "expected": "Primera página con 9 Electronics; anterior/siguiente no disponibles."
+    },
+    {
+      "id": "R004-A07",
+      "steps": [
+        "Reset; intentar anterior en primera; avanzar a tercera; intentar siguiente."
+      ],
+      "expected": "No cambia a una página fuera de rango; contenido y navegación siguen válidos."
+    },
+    {
+      "id": "R004-A08",
+      "steps": [
+        "Reset; avanzar a tercera; buscar 'zzzz-no-product'."
+      ],
+      "expected": "Cero productos, sin navegación anterior/siguiente; sin índice inválido (NaN, negativo o mayor al total)."
+    }
+  ]
+}

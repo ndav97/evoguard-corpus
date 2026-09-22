@@ -1,0 +1,20 @@
+{
+  "name": "evoguard-corpus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Especificación ejecutable del corpus EvoGuard; no contiene V0.",
+  "scripts": {
+    "corpus:validate": "node runner/validation/cli.mjs",
+    "family:validate": "node runner/validation/cli.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "packet:preview": "node runner/packet-cli.mjs",
+    "generation:preflight": "node runner/preflight.mjs",
+    "scaffold:build": "npm --prefix templates/react-vite run build",
+    "check": "npm run corpus:validate && npm test && npm run scaffold:build"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "yaml": "2.9.1"
+  }
+}

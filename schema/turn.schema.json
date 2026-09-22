@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/turn.schema.json",
+  "title": "turn",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^T[0-9]{3}$"
+    },
+    "episode_id": {
+      "const": "E001"
+    },
+    "from_version": {
+      "enum": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ]
+    },
+    "to_version": {
+      "enum": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ]
+    },
+    "request": {
+      "type": "string",
+      "minLength": 1
+    },
+    "introduces": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^R[0-9]{3}$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "preserves": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^R[0-9]{3}$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "active_after": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^R[0-9]{3}$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "provider": {
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b"
+      ]
+    },
+    "reference_commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "patch_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "episode_id",
+    "from_version",
+    "to_version",
+    "request",
+    "introduces",
+    "preserves",
+    "active_after",
+    "provider",
+    "reference_commit",
+    "patch_path"
+  ],
+  "additionalProperties": false
+}

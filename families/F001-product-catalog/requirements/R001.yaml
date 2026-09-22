@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "search_products_by_name",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Buscar productos por una parte del nombre.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Una coincidencia parcial del nombre devuelve los productos correspondientes."
+    },
+    {
+      "id": "R001-A02",
+      "description": "La búsqueda no distingue mayúsculas de minúsculas."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Se ignoran los espacios iniciales y finales de la consulta."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Una consulta vacía desactiva búsqueda y conserva los demás filtros."
+    },
+    {
+      "id": "R001-A05",
+      "description": "La búsqueda se combina mediante conjunción con la categoría."
+    }
+  ]
+}

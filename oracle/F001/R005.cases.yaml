@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001 en primera página."
+      ],
+      "expected": "Identidad observable P001."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001; seleccionar otro producto visible P003."
+      ],
+      "expected": "Solo P003 está seleccionado."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001 en primera página."
+      ],
+      "expected": "UI muestra selección inequívoca y observable para P001."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Reset; ordenar precio ascendente; avanzar a segunda página donde está P001; seleccionar P001; ordenar nombre descendente."
+      ],
+      "expected": "Identidad seleccionada sigue P001, no producto que ocupe el índice anterior."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001 en primera página; ir a segunda página."
+      ],
+      "expected": "Identidad observable sigue P001 aunque no esté visible en lista."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001 en primera página; siguiente; anterior."
+      ],
+      "expected": "P001 continúa seleccionado en primera página."
+    },
+    {
+      "id": "R005-A07",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001; buscar 'mouse'; después buscar 'bottle'; limpiar búsqueda."
+      ],
+      "expected": "Primero conserva P001, luego limpia; al limpiar búsqueda no reaparece selección."
+    },
+    {
+      "id": "R005-A08",
+      "steps": [
+        "Reset; ordenar nombre descendente; seleccionar P001; categoría Electronics; después Books; después All."
+      ],
+      "expected": "Conserva en Electronics, limpia en Books, no restaura al volver a All."
+    }
+  ]
+}

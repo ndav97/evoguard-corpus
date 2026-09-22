@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "paginate_products",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Paginar después de filtros y orden con tamaño fijo de 10 resultados por página, salvo la última página que contiene los restantes. No es configurable. Cambiar orden conserva el número de página.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Cada página no final contiene exactamente 10 productos; la final contiene entre 1 y 10 si existen resultados. Con cero resultados no se muestran productos."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Se puede acceder a páginas posteriores cuando hay más de 10 resultados."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Se pagina después de aplicar búsqueda y categoría."
+    },
+    {
+      "id": "R004-A04",
+      "description": "La paginación conserva el ordenamiento seleccionado; cambiar orden conserva el número de página."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Cambiar búsqueda vuelve a primera página."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Cambiar categoría vuelve a primera página."
+    },
+    {
+      "id": "R004-A07",
+      "description": "No se puede navegar a una página inexistente."
+    },
+    {
+      "id": "R004-A08",
+      "description": "Con cero resultados no se muestra una página inválida."
+    }
+  ]
+}

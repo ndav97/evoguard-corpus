@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/run.schema.json",
+  "title": "run",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^F[0-9]{3}$"
+    },
+    "episode_id": {
+      "const": "E001"
+    },
+    "turn_id": {
+      "type": "string",
+      "pattern": "^T[0-9]{3}$"
+    },
+    "artifact_type": {
+      "const": "pi0_evaluation"
+    },
+    "pi0_config_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "candidate_commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fixture_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "stack_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "started_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "finished_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "previous_active_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^R[0-9]{3}$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "pattern": "^R[0-9]{3}$"
+          },
+          "previous_result": {
+            "enum": [
+              "NOT_RUN",
+              "PASS",
+              "FAIL",
+              "INFRA_ERROR"
+            ]
+          },
+          "current_result": {
+            "enum": [
+              "NOT_RUN",
+              "PASS",
+              "FAIL",
+              "INFRA_ERROR"
+            ]
+          },
+          "regression": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "requirement_id",
+          "previous_result",
+          "current_result",
+          "regression"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "infrastructure_error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "logs_path": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "family_id",
+    "episode_id",
+    "turn_id",
+    "artifact_type",
+    "pi0_config_sha256",
+    "base_commit",
+    "candidate_commit",
+    "prompt_sha256",
+    "fixture_sha256",
+    "stack_sha256",
+    "started_at",
+    "finished_at",
+    "previous_active_requirements",
+    "outcomes",
+    "infrastructure_error",
+    "logs_path"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Reset; buscar 'mouse'."
+      ],
+      "expected": "Resultados P001, sin otros productos."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Reset; buscar 'mouse'; registrar resultados; repetir 'MOUSE'."
+      ],
+      "expected": "Mismos resultados P001."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Reset; buscar ' mouse '."
+      ],
+      "expected": "Resultados P001."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Reset; categoría Home; buscar '   '."
+      ],
+      "expected": "Todos los Home P010–P017 (8), sin otros."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Reset; buscar 'bottle'; categoría Sports; después cambiar categoría a Home."
+      ],
+      "expected": "Solo P022; con categoría Home solo P013."
+    }
+  ]
+}

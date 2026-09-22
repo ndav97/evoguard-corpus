@@ -1,0 +1,182 @@
+[
+  {
+    "id": "P001",
+    "name": "Wireless Mouse",
+    "category": "Electronics",
+    "price": 24.99
+  },
+  {
+    "id": "P002",
+    "name": "Mechanical Keyboard",
+    "category": "Electronics",
+    "price": 89.5
+  },
+  {
+    "id": "P003",
+    "name": "USB Hub",
+    "category": "Electronics",
+    "price": 19.99
+  },
+  {
+    "id": "P004",
+    "name": "Portable Monitor",
+    "category": "Electronics",
+    "price": 179
+  },
+  {
+    "id": "P005",
+    "name": "Noise Canceling Headphones",
+    "category": "Electronics",
+    "price": 129.99
+  },
+  {
+    "id": "P006",
+    "name": "Web Camera",
+    "category": "Electronics",
+    "price": 49.9
+  },
+  {
+    "id": "P007",
+    "name": "Bluetooth Speaker",
+    "category": "Electronics",
+    "price": 39.95
+  },
+  {
+    "id": "P008",
+    "name": "Laptop Stand",
+    "category": "Electronics",
+    "price": 24.99
+  },
+  {
+    "id": "P009",
+    "name": "Tablet Charger",
+    "category": "Electronics",
+    "price": 18.5
+  },
+  {
+    "id": "P010",
+    "name": "Desk Lamp",
+    "category": "Home",
+    "price": 34.5
+  },
+  {
+    "id": "P011",
+    "name": "Coffee Grinder",
+    "category": "Home",
+    "price": 59.99
+  },
+  {
+    "id": "P012",
+    "name": "Cotton Towel",
+    "category": "Home",
+    "price": 12
+  },
+  {
+    "id": "P013",
+    "name": "Glass Bottle",
+    "category": "Home",
+    "price": 15.5
+  },
+  {
+    "id": "P014",
+    "name": "Kitchen Scale",
+    "category": "Home",
+    "price": 22.75
+  },
+  {
+    "id": "P015",
+    "name": "Storage Basket",
+    "category": "Home",
+    "price": 18.5
+  },
+  {
+    "id": "P016",
+    "name": "Wall Clock",
+    "category": "Home",
+    "price": 29.9
+  },
+  {
+    "id": "P017",
+    "name": "Travel Mug",
+    "category": "Home",
+    "price": 15.5
+  },
+  {
+    "id": "P018",
+    "name": "Running Shoes",
+    "category": "Sports",
+    "price": 79.99
+  },
+  {
+    "id": "P019",
+    "name": "Yoga Mat",
+    "category": "Sports",
+    "price": 24.99
+  },
+  {
+    "id": "P020",
+    "name": "Tennis Balls",
+    "category": "Sports",
+    "price": 8.5
+  },
+  {
+    "id": "P021",
+    "name": "Cycling Helmet",
+    "category": "Sports",
+    "price": 45
+  },
+  {
+    "id": "P022",
+    "name": "Sports Bottle",
+    "category": "Sports",
+    "price": 15.5
+  },
+  {
+    "id": "P023",
+    "name": "Jump Rope",
+    "category": "Sports",
+    "price": 9.99
+  },
+  {
+    "id": "P024",
+    "name": "Training Gloves",
+    "category": "Sports",
+    "price": 19.95
+  },
+  {
+    "id": "P025",
+    "name": "Clean Code",
+    "category": "Books",
+    "price": 42
+  },
+  {
+    "id": "P026",
+    "name": "Design Patterns",
+    "category": "Books",
+    "price": 54.5
+  },
+  {
+    "id": "P027",
+    "name": "Practical TypeScript",
+    "category": "Books",
+    "price": 35.99
+  },
+  {
+    "id": "P028",
+    "name": "Modern React",
+    "category": "Books",
+    "price": 32.5
+  },
+  {
+    "id": "P029",
+    "name": "Data Structures",
+    "category": "Books",
+    "price": 47
+  },
+  {
+    "id": "P030",
+    "name": "Testing Software",
+    "category": "Books",
+    "price": 29.9
+  }
+]

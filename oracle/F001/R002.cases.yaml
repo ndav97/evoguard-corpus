@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Reset; categoría All; búsqueda vacía; recorrer páginas si existen."
+      ],
+      "expected": "Conjunto P001–P030, sin duplicados ni ausencias."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Reset; elegir cada categoría y recorrer sus páginas si existen."
+      ],
+      "expected": "Electronics P001–P009; Home P010–P017; Sports P018–P024; Books P025–P030."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Reset; elegir Electronics, luego Books sin recargar."
+      ],
+      "expected": "Los resultados cambian de P001–P009 a P025–P030."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Reset; buscar 'bottle'; elegir Home, Sports, Electronics."
+      ],
+      "expected": "Respectivamente P013, P022, conjunto vacío."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Reset; categoría Books; buscar 'mouse'."
+      ],
+      "expected": "Cero productos y representación vacía observable."
+    }
+  ]
+}

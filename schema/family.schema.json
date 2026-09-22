@@ -1,0 +1,342 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/family.schema.json",
+  "title": "family",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^F[0-9]{3}$"
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "GENERATED",
+        "VALIDATED",
+        "AUDITED",
+        "FROZEN"
+      ]
+    },
+    "origin": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "synthetic"
+        },
+        "construction": {
+          "const": "multimodel"
+        }
+      },
+      "required": [
+        "type",
+        "construction"
+      ],
+      "additionalProperties": false
+    },
+    "technology": {
+      "type": "object",
+      "properties": {
+        "framework": {
+          "const": "React"
+        },
+        "language": {
+          "const": "TypeScript"
+        },
+        "build_tool": {
+          "const": "Vite"
+        },
+        "stack_manifest": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "framework",
+        "language",
+        "build_tool",
+        "stack_manifest"
+      ],
+      "additionalProperties": false
+    },
+    "structural_profile": {
+      "type": "object",
+      "properties": {
+        "state_strategy": {
+          "const": "useState"
+        },
+        "topology": {
+          "const": "centralized"
+        },
+        "derived_state": {
+          "const": true
+        },
+        "reducer": {
+          "const": false
+        },
+        "effects": {
+          "const": false
+        },
+        "persistence": {
+          "const": false
+        },
+        "external_state_manager": {
+          "const": false
+        },
+        "external_backend": {
+          "const": false
+        },
+        "relevant_components": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "const": 5
+            },
+            "max": {
+              "const": 20
+            },
+            "binding": {
+              "const": "audit_guideline"
+            }
+          },
+          "required": [
+            "min",
+            "max",
+            "binding"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "state_strategy",
+        "topology",
+        "derived_state",
+        "reducer",
+        "effects",
+        "persistence",
+        "external_state_manager",
+        "external_backend",
+        "relevant_components"
+      ],
+      "additionalProperties": false
+    },
+    "pilot": {
+      "type": "object",
+      "properties": {
+        "episode_id": {
+          "const": "E001"
+        },
+        "initial_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^R[0-9]{3}$"
+          },
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "turns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^T[0-9]{3}$"
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "episode_id",
+        "initial_requirements",
+        "turns"
+      ],
+      "additionalProperties": false
+    },
+    "generation_plan": {
+      "type": "object",
+      "properties": {
+        "V0": {
+          "enum": [
+            "openai",
+            "anthropic",
+            "google",
+            "local_a",
+            "local_b"
+          ]
+        },
+        "V1": {
+          "enum": [
+            "openai",
+            "anthropic",
+            "google",
+            "local_a",
+            "local_b"
+          ]
+        },
+        "V2": {
+          "enum": [
+            "openai",
+            "anthropic",
+            "google",
+            "local_a",
+            "local_b"
+          ]
+        },
+        "V3": {
+          "enum": [
+            "openai",
+            "anthropic",
+            "google",
+            "local_a",
+            "local_b"
+          ]
+        }
+      },
+      "required": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "count": {
+          "const": 30
+        },
+        "category_counts": {
+          "type": "object",
+          "properties": {
+            "Electronics": {
+              "const": 9
+            },
+            "Home": {
+              "const": 8
+            },
+            "Sports": {
+              "const": 7
+            },
+            "Books": {
+              "const": 6
+            }
+          },
+          "required": [
+            "Electronics",
+            "Home",
+            "Sports",
+            "Books"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "count",
+        "category_counts"
+      ],
+      "additionalProperties": false
+    },
+    "oracle": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "CASES_SPECIFIED_ADAPTER_PENDING"
+        },
+        "stability_runs_required": {
+          "const": 5
+        }
+      },
+      "required": [
+        "path",
+        "status",
+        "stability_runs_required"
+      ],
+      "additionalProperties": false
+    },
+    "reference_versions": {
+      "type": "object",
+      "properties": {
+        "V0": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V1": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V2": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "V3": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        }
+      },
+      "required": [
+        "V0",
+        "V1",
+        "V2",
+        "V3"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "protocol_version",
+    "family_id",
+    "slug",
+    "name",
+    "status",
+    "origin",
+    "technology",
+    "structural_profile",
+    "pilot",
+    "generation_plan",
+    "fixture",
+    "oracle",
+    "reference_versions"
+  ],
+  "additionalProperties": false
+}

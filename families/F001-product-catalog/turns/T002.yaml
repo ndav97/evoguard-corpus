@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Muestra los productos en páginas de tamaño fijo de 10 resultados, salvo la última que contiene los restantes, después de aplicar búsqueda, categoría y ordenamiento. El tamaño no es configurable. Cada cambio de búsqueda o categoría vuelve a la primera página, incluso si la página anterior todavía existe. Conserva el criterio de ordenamiento y permite solo navegación a páginas existentes; con cero resultados no debe haber navegación inválida. Cambiar orden conserva el número de página.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}
