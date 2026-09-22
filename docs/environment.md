@@ -19,6 +19,15 @@ Docker Desktop 4.92.0 está instalado y sus procesos están activos. El cliente 
 
 La consulta wsl --list --verbose informa que WSL no está instalado. Es un indicio relevante para revisar el arranque del motor Linux, no una demostración de causa única del error 500. No se instalaron componentes de Windows, reiniciaron servicios ni ejecutaron contenedores durante esta revisión.
 
+## Instalación de WSL para reparar Docker
+Posteriormente, el usuario pidió dejar Docker operativo. Se confirmó virtualización de firmware habilitada e hipervisor presente. Una consulta elevada encontró VirtualMachinePlatform y Microsoft-Windows-Subsystem-Linux deshabilitados.
+
+Se ejecutó wsl --install --no-distribution con autorización administrativa de Windows: instaló WSL 2.7.14, habilitó VirtualMachinePlatform y terminó con exit 0 indicando reinicio requerido. La consulta posterior wsl --version confirmó 2.7.14.0 y kernel 6.18.33.2-2. El registro Component Based Servicing/RebootPending existe.
+
+No se instaló una distribución de usuario, no se reinició automáticamente y aún no se verificó ejecución de contenedores. Estado actual: **reinicio de Windows pendiente, seguido de verificación del motor Docker**. La observación HTTP 500 anterior se conserva como antecedente, no como una medición posterior a reiniciar.
+
+Tras reiniciar: abrir Docker Desktop, esperar inicio del motor, comprobar docker version y docker info, y ejecutar docker run --rm hello-world para verificar un contenedor Linux real. Solo después actualizar el estado como operativo. Referencia: [instalación de WSL](https://learn.microsoft.com/en-us/windows/wsl/basic-commands).
+
 ## Estado experimental
 Las versiones npm se consultaron en el registro después de esta inspección. Se fijan dependencias del scaffold y las herramientas locales, **no se declara congelado el entorno experimental**.
 La generación real requiere Linux reproducible, imagen por digest, versiones de runtime y navegador, caché offline de dependencias, mismas herramientas para todos los modelos y bloqueo de Internet externo.

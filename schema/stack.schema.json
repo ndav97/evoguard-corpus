@@ -27,9 +27,12 @@
         "docker_cli_path": "C:/Users/nsdav/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe",
         "docker_in_session_path": false,
         "docker_in_user_path": true,
-        "docker_engine_status": "UNAVAILABLE_HTTP_500",
+        "docker_engine_status": "PENDING_RESTART_AND_VERIFICATION",
         "docker_context": "desktop-linux",
-        "wsl_status": "NOT_INSTALLED_REPORTED_BY_WSL"
+        "wsl_status": "INSTALLED_RESTART_REQUIRED",
+        "wsl_version": "2.7.14.0",
+        "wsl_kernel_version": "6.18.33.2-2",
+        "windows_restart_required": true
       }
     },
     "experimental": {
