@@ -8,7 +8,15 @@
     "git": "2.55.0.windows.5",
     "node": "26.7.0",
     "npm": "11.19.0",
-    "docker_cli_available": false
+    "docker_cli_available": true,
+    "docker_cli_version": "29.8.0",
+    "docker_desktop_version": "4.92.0",
+    "docker_cli_path": "C:/Users/nsdav/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe",
+    "docker_in_session_path": false,
+    "docker_in_user_path": true,
+    "docker_engine_status": "UNAVAILABLE_HTTP_500",
+    "docker_context": "desktop-linux",
+    "wsl_status": "NOT_INSTALLED_REPORTED_BY_WSL"
   },
   "experimental": {
     "os": "linux",
