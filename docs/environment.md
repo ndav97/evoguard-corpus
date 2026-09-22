@@ -7,7 +7,7 @@ Fecha local: 2026-09-22 (America/Lima).
 | Git | 2.55.0.windows.5; C:/Program Files/Git/cmd/git.exe |
 | Node | v26.7.0; C:/nvm4w/nodejs/node.exe |
 | npm | 11.19.0; C:/nvm4w/nodejs/npm.ps1 |
-| Docker | Desktop 4.92.0 instalado y activo; CLI 29.8.0 por ruta directa; motor Linux devuelve HTTP 500 |
+| Docker | Desktop 4.92.0; cliente y motor 29.8.0 operativos en Linux/WSL2; hello-world ejecutado correctamente |
 | Git autor inicial | Sin configuración; usuario proporcionó identidad para este repo |
 
 No se instaló ni actualizó Git, Node, npm o Docker. No se infiere ausencia absoluta de Docker a partir de PATH.
@@ -27,6 +27,13 @@ Se ejecutó wsl --install --no-distribution con autorización administrativa de 
 No se instaló una distribución de usuario, no se reinició automáticamente y aún no se verificó ejecución de contenedores. Estado actual: **reinicio de Windows pendiente, seguido de verificación del motor Docker**. La observación HTTP 500 anterior se conserva como antecedente, no como una medición posterior a reiniciar.
 
 Tras reiniciar: abrir Docker Desktop, esperar inicio del motor, comprobar docker version y docker info, y ejecutar docker run --rm hello-world para verificar un contenedor Linux real. Solo después actualizar el estado como operativo. Referencia: [instalación de WSL](https://learn.microsoft.com/en-us/windows/wsl/basic-commands).
+
+## Verificación posterior al reinicio
+El reinicio eliminó la condición RebootPending. Docker Desktop no estaba iniciado; al iniciarlo, el cliente y servidor respondieron correctamente: Engine 29.8.0, OS linux, arquitectura amd64, kernel 6.18.33.2-microsoft-standard-WSL2. El comando docker ya se resuelve desde el PATH de esta sesión.
+
+Se ejecutó docker run --rm hello-world: descargó la imagen oficial, creó y ejecutó el contenedor, mostró Hello from Docker! y terminó con código 0. El contenedor se eliminó automáticamente; la imagen queda en caché. Digest verificado: hello-world@sha256:5e23090353324d887c48ad5e5c56d294eab81588df9605b07d1afe895f9cc8f8. WSL muestra docker-desktop en estado Running y versión 2.
+
+**Estado actual: Docker operativo.** Las observaciones anteriores son el historial del diagnóstico y reparación. Esta prueba comprueba instalación/descarga/ejecución; no congela la imagen experimental del corpus ni implementa su aislamiento.
 
 ## Estado experimental
 Las versiones npm se consultaron en el registro después de esta inspección. Se fijan dependencias del scaffold y las herramientas locales, **no se declara congelado el entorno experimental**.

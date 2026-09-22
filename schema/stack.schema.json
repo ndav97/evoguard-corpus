@@ -25,14 +25,17 @@
         "docker_cli_version": "29.8.0",
         "docker_desktop_version": "4.92.0",
         "docker_cli_path": "C:/Users/nsdav/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe",
-        "docker_in_session_path": false,
+        "docker_in_session_path": true,
         "docker_in_user_path": true,
-        "docker_engine_status": "PENDING_RESTART_AND_VERIFICATION",
+        "docker_engine_status": "OPERATIONAL_VERIFIED_HELLO_WORLD",
         "docker_context": "desktop-linux",
-        "wsl_status": "INSTALLED_RESTART_REQUIRED",
+        "wsl_status": "OPERATIONAL_WSL2",
         "wsl_version": "2.7.14.0",
         "wsl_kernel_version": "6.18.33.2-2",
-        "windows_restart_required": true
+        "windows_restart_required": false,
+        "docker_engine_version": "29.8.0",
+        "docker_engine_os": "linux",
+        "docker_smoke_test_digest": "hello-world@sha256:5e23090353324d887c48ad5e5c56d294eab81588df9605b07d1afe895f9cc8f8"
       }
     },
     "experimental": {
