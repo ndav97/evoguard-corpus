@@ -29,3 +29,16 @@ No hay hallazgos de revisión pendientes en el alcance preparatorio. El revisor 
 - Cualquier expansión del validador a referencias generadas exige implementar los controles funcionales; en esta fase rechaza estados distintos de DRAFT deliberadamente.
 
 Reproducir: npm ci; npm --prefix templates/react-vite ci; npm run check. Verificar el bloqueo por separado con npm run generation:preflight.
+
+## Ampliación: aislamiento y runtime — 2026-09-23
+La evidencia histórica anterior corresponde a la entrega estructural inicial. Esta ampliación completa Linux reproducible y aislamiento preparatorio.
+
+- `npm run check`: 44 pruebas aprobadas, validación F001 y compilación del scaffold correctas.
+- `npm run environment:verify`: carga y checksum del archivo de imagen, dos contenedores limpios con instalación offline y build, Chromium localhost, sin red externa/host, secretos, oráculo ni historia del corpus; escritura raíz denegada y workspace editable.
+- Cierre real comprobado ante timeout y desbordamiento de salida. CLI open/exec/close verificado. No quedaron contenedores del runner.
+- Pruebas negativas: controles/fuentes de imagen alterados, evidencia cambiada, hash de fixture falso incluso recalculando hash del reporte, y estado BUILT rechazan autorización.
+- `generation:preflight` bloquea por modelos exactos, oráculo E2E y runner/adapters de proveedores; ya no por falta de aislamiento Linux. Evolución requiere exportador de historia validada.
+
+La revisión independiente del contenedor identificó cinco puntos corregidos: evidencia ligada también a controles/payload, cierre independiente del manifiesto actual, hashes de las mismas fuentes usadas en build, revocación previa a reverificar y limpieza por error del cliente Docker incluyendo exceso de salida. No hubo hallazgos críticos. Las correcciones se comprobaron mediante las pruebas descritas; no se afirma una segunda revisión independiente.
+
+Evidencia observada en [verification/container.json](verification/container.json); operación y alcance en [docker/README.md](../docker/README.md). No se ejecutaron APIs, no se eligieron modelos y no se produjo ninguna referencia funcional.

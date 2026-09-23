@@ -1,0 +1,6 @@
+{
+  "image": "node@sha256:ee507d1bb1ba6902cbe0fe1e618610146dbb1b350708cbf41f7a300f1ec7396e",
+  "source_tag": "node:26.7.0-bookworm-slim",
+  "platform": "linux/amd64",
+  "selected_at": "2026-09-23"
+}

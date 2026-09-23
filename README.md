@@ -10,7 +10,10 @@ npm run family:validate -- F001
 npm run packet:preview -- F001 V0
 npm run generation:preflight
 ```
-El último comando debe rechazar la generación mientras falten Docker/entorno congelado, modelos exactos y oráculo E2E. No llama APIs. El preview escribe solo insumos visibles en runs/preflight; **no es un workspace aislado ni ejecuta agentes**.
+El último comando rechaza la generación mientras falten modelos exactos, runner de proveedores y oráculo E2E. No llama APIs. El preview escribe solo insumos visibles en runs/preflight; **no es un workspace aislado ni ejecuta agentes**.
+
+## Entorno Linux verificado
+La imagen local está guardada por SHA-256, con dependencias offline y Chromium. `npm run environment:verify` carga el archivo guardado y prueba dos contenedores limpios. Consulta [operación y reproducción](docker/README.md) y [evidencia](docs/verification/container.json). `npm run environment:build` reconstruye y exige verificar de nuevo antes de abrir sesiones.
 
 ## Contenido
 - schema/: JSON Schema draft-07, versión 1.0.0, validación estricta.
@@ -24,6 +27,6 @@ El último comando debe rechazar la generación mientras falten Docker/entorno c
 
 ## Límites actuales
 La validación estructural no equivale a validar F001 funcionalmente. app/ y generation/V0–V3 están vacíos intencionalmente. No hay modelos locales seleccionados, llamadas a proveedores, etiquetas de impacto/riesgo ni commits de referencia.
-La independencia del oráculo exige un contenedor que solo monte el repositorio de aplicación, con historia pasada saneada; separar carpetas no basta. No ejecutar un agente experimental en la raíz de este repositorio.
+El sandbox implementado recibe únicamente el scaffold, fixture y requisitos iniciales, sin montar archivos del host ni copiar la historia Git del corpus. La exportación de referencias posteriores está pendiente y V1–V3 se rechazan. No ejecutar un agente experimental en la raíz de este repositorio.
 
 Consulta docs/protocol-v1.0.md y docs/environment.md antes de iniciar generación.

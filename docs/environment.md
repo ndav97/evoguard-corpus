@@ -41,3 +41,12 @@ La generación real requiere Linux reproducible, imagen por digest, versiones de
 El acceso a npm durante esta preparación no es una ejecución experimental.
 
 Fuentes técnicas consultadas: [Vite](https://vite.dev/guide/) y [Ajv / JSON Schema](https://ajv.js.org/json-schema.html).
+
+## Runtime Linux verificado — 2026-09-23
+Se construyó y archivó la imagen experimental de infraestructura con base oficial Node 26.7.0 bookworm-slim fijada por digest. npm 11.19.0, Git 2.39.5, Playwright 1.63.0 y Chromium headless 153.0.8010.12 se observaron dentro de dos contenedores limpios. Identificadores, hashes y evidencia completos en `config/container.json` y `docs/verification/container.json`.
+
+El archivo local `.artifacts/evoguard-runtime.tar` ocupa 415340032 bytes y está excluido de Git. Su carga, instalación de dependencias offline, compilación y navegador localhost pasaron. La red externa/host, escritura en raíz y acceso a archivos/secretos del host se comprobaron bloqueados. También se verificó cierre ante timeout y exceso de salida; no quedaron contenedores de verificación activos.
+
+Dos descargas de la base MCR Playwright fallaron por truncamiento. Se usó Node oficial; la descarga inicial de sus capas se completó por el host con hashes verificados y Docker confirmó después el digest oficial. La instalación posterior de paquetes y navegador durante build funcionó. Esto pertenece a preparación, no a una ejecución experimental.
+
+Estado actual: **RUNTIME_VERIFIED**. `experimental_frozen` continúa false: faltan proveedores/modelos y evaluación independiente para habilitar generación. F001 sigue DRAFT. Instrucciones de reproducción y límites en [docker/README.md](../docker/README.md).

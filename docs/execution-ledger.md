@@ -21,3 +21,8 @@ Stack → scaffold: versiones exactas concuerdan con package.json y lockfiles.
 - Autor Git configurado solo en este repositorio, usando la identidad entregada por el usuario.
 
 No pendientes menores diferidos de la revisión. Pendientes de la siguiente etapa: entorno Linux reproducible, selección posterior de modelos, runner experimental y oráculo E2E; no forman parte de esta creación estructural.
+
+## Continuación autorizada — 2026-09-23
+Se completó el entorno Linux y aislamiento, según `docs/superpowers/plans/2026-09-22-container-isolation.md`. La base oficial se fijó por digest, se guardó la imagen final y se verificó su carga. Dos contenedores limpios pasaron build offline, navegador y controles de aislamiento. Se probaron timeout/exceso de salida y ciclo CLI, con limpieza de contenedores.
+
+44 pruebas del repositorio pasan. La especificación permanece DRAFT; no se genera V0 ni se seleccionan modelos locales. Pendiente para la siguiente fase: runner/proveedores, modelos exactos, oráculo E2E/adapter y exportador auditado de referencias para evolución. El preflight sigue impidiendo generación.

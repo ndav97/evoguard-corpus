@@ -60,7 +60,7 @@ test('reparación acepta solo feedback visible de desarrollo', () => {
 });
 test('preflight bloquea generación sin requisitos operativos', () => {
   const b = generationBlockers(root);
-  assert.match(b.join('\n'), /Docker|Linux/);
   assert.match(b.join('\n'), /modelo/);
   assert.match(b.join('\n'), /oráculo/);
+  assert.match(b.join('\n'), /adapters de proveedores/);
 });

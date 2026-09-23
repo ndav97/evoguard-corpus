@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "status": "VERIFIED",
+  "platform": "linux/amd64",
+  "base_image": "node@sha256:ee507d1bb1ba6902cbe0fe1e618610146dbb1b350708cbf41f7a300f1ec7396e",
+  "image_id": "sha256:2cd750482467e446191d7e1fcb6b841f375baf5fd20caaafa08572ba0cf3eff5",
+  "inputs": {
+    "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
+    "docker/Dockerfile": "33d55f7e40666fb95c7c990acc09b6a2a917ac0ccc7e1930052660527f77cd27",
+    "docker/init.mjs": "8c1e72ab01217830f1fe6fd06ee1a68f2dbc36a0c74af693774786ebc83a054c",
+    "templates/react-vite/package.json": "76ff4f08fea52a541431e67e97a788d7a05c08ec89662365428bd11039c59de9",
+    "templates/react-vite/package-lock.json": "a5837b53b64b1f68af09b5b30489ee53c00e316d1f42145c3cf7316b062eeca3"
+  },
+  "archive": {
+    "path": ".artifacts/evoguard-runtime.tar",
+    "sha256": "134e1ce725ed7a2a830fbb230dc13064c915d84970a025e8158f46668f4de3be"
+  },
+  "verification": {
+    "path": "docs/verification/container.json",
+    "sha256": "28dfa0e8fdea74e7ce11596bae2f780e60890e30c8d9f450a2af8da665a15ec1"
+  },
+  "verification_inputs": {
+    "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
+    "docker/Dockerfile": "33d55f7e40666fb95c7c990acc09b6a2a917ac0ccc7e1930052660527f77cd27",
+    "docker/init.mjs": "8c1e72ab01217830f1fe6fd06ee1a68f2dbc36a0c74af693774786ebc83a054c",
+    "templates/react-vite/package.json": "76ff4f08fea52a541431e67e97a788d7a05c08ec89662365428bd11039c59de9",
+    "templates/react-vite/package-lock.json": "a5837b53b64b1f68af09b5b30489ee53c00e316d1f42145c3cf7316b062eeca3",
+    "templates/react-vite/tsconfig.json": "b9a0e2fca1069c382b8e316ab6190836b1d75059ca4bb7af44f1b4ee592ba7f9",
+    "templates/react-vite/vite.config.ts": "2e9cb6f3c7d933a8df2b4923749f4362a1e12611058bd4bea6873a53098cd25b",
+    "templates/react-vite/index.html": "51fbebfe78a2600f59120aa039c14db07c4d849c5cc5a23599a1a6dcde49a92e",
+    "templates/react-vite/src/App.tsx": "3d364951397a141db0090129e50780ea509e1fe49fd43187304872f450f58653",
+    "templates/react-vite/src/main.tsx": "c922b796e04fbcff1c9734ef34acb52073a3bf064b281d59359780878d5cb465",
+    "runner/sandbox/policy.mjs": "c42629726b94380a7a863429667dfb2343797933b94f8c3bfdf0353e03884f1d",
+    "runner/sandbox/docker.mjs": "520e9dc2c4e0f892aaef8c7acc74593a79c3abe5dc698eb0e1b2899555c09fc4",
+    "runner/sandbox/lock.mjs": "b5e5223ace7a054baac47f363028c6f006cb32ead01f08d3a06882511cd1468d",
+    "runner/sandbox/build.mjs": "5322123d0f8758dc197d3650ba1d4e8c58683923828cde481d33efe30af8a6e0",
+    "runner/sandbox/verify.mjs": "a3faceb8dd119da1f44bddcde08ab9eb814d821bd8dc5bba16179a666c9fe4bf",
+    "runner/sandbox/probe.mjs": "982ada4464ab006d0341562125307d0ca6bebc2fd04fbadb278dc2a8e7c09e6f",
+    "runner/sandbox/cli.mjs": "ff10056c92bccdeb5c80ea4f96b6560cf46aef81c4c9057d90fad8dab15ae8ae",
+    "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
+    "runner/packet.mjs": "f737ef7c73ceea65873f43dad258b0d159e58cf984a3618d679fcf338e815a32",
+    "runner/validation/corpus.mjs": "9d2a8d6ef33a072096fc456c77e41e722f71cffa64f39e9a2d61af1cd42104db",
+    "prompts/common.md": "927047ae76eae5a131119180908fd0470c28a41de738ca94dcef210f5def70ce",
+    "prompts/generate-v0.md": "2459c30e54bf87c97ebe9951f0045f760a05eb9a9d3f2f4342b105387a05fd56",
+    "families/F001-product-catalog/fixtures/products.json": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
+    "families/F001-product-catalog/requirements/R001.yaml": "bd55b91c3efd5c70ec22c6365ea2c23eac9233a2adf0389e56611a9050a356e2",
+    "families/F001-product-catalog/requirements/R002.yaml": "3c25c1d694be66380e1fa0fbe66c6bcebf3ca6f8139e3f0f535b77ac32d31e2e"
+  }
+}
