@@ -10,7 +10,7 @@ export function generationBlockers(root) {
   } catch(error) {blockers.push(`Linux/Docker: ${error.message}`);}
   if (Object.values(data.provenance.models).some(m=>!m)) blockers.push('Versiones exactas de modelos sin seleccionar.');
   if (data.family.oracle.status === 'CASES_SPECIFIED_ADAPTER_PENDING') blockers.push('Falta implementar y verificar el adapter y oráculo E2E independiente.');
-  blockers.push('Runner experimental/adapters de proveedores aún no implementados; generación deshabilitada. Evolución posterior a V0 requiere exportador auditado de historia de referencias.');
+  blockers.push('Runner experimental/adapters de proveedores reales aún no implementados; núcleo disponible solo en simulación y generación deshabilitada. Evolución posterior a V0 requiere exportador auditado de historia de referencias.');
   return blockers;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

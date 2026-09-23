@@ -26,3 +26,10 @@ No pendientes menores diferidos de la revisión. Pendientes de la siguiente etap
 Se completó el entorno Linux y aislamiento, según `docs/superpowers/plans/2026-09-22-container-isolation.md`. La base oficial se fijó por digest, se guardó la imagen final y se verificó su carga. Dos contenedores limpios pasaron build offline, navegador y controles de aislamiento. Se probaron timeout/exceso de salida y ciclo CLI, con limpieza de contenedores.
 
 44 pruebas del repositorio pasan. La especificación permanece DRAFT; no se genera V0 ni se seleccionan modelos locales. Pendiente para la siguiente fase: runner/proveedores, modelos exactos, oráculo E2E/adapter y exportador auditado de referencias para evolución. El preflight sigue impidiendo generación.
+
+## Runner y simulación — 2026-09-23
+Se implementó el motor por pasos con herramientas, 3 intentos, 25 ciclos, timeout por intento, reparación conservando workspace y reasignación limpia por anillo. Solo se expone modo simulation. Se conservaron resultados y parches instrumentales fuera de los runs experimentales.
+
+TDD: pruebas nuevas fallaron por comportamiento ausente, luego pasaron; la revisión añadió regresión para aceptación durante timeout de snapshot. Las dos correcciones de tiempos límite se comprobaron con pruebas y nuevo ensayo Docker. Suite final: 58 PASS. Ensayo final: cuatro escenarios, 24 intentos, 13 contenedores cerrados. Plan y evidencia enlazados desde verification.md.
+
+Pendiente: adaptadores de modelos reales y métricas, oráculo E2E/adapter, persistencia/exportación de referencias funcionales, selección exacta de modelos y habilitación explícita de generación. F001 sigue DRAFT; no se generó V0.

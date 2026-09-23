@@ -14,7 +14,8 @@
     "check": "npm run corpus:validate && npm test && npm run scaffold:build",
     "environment:build": "node runner/sandbox/build.mjs",
     "environment:verify": "node runner/sandbox/verify.mjs",
-    "sandbox": "node runner/sandbox/cli.mjs"
+    "sandbox": "node runner/sandbox/cli.mjs",
+    "runner:simulate": "node runner/simulation/cli.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",

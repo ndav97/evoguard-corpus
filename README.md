@@ -16,6 +16,7 @@ El último comando rechaza la generación mientras falten modelos exactos, runne
 La imagen local está guardada por SHA-256, con dependencias offline y Chromium. `npm run environment:verify` carga el archivo guardado y prueba dos contenedores limpios. Consulta [operación y reproducción](docker/README.md) y [evidencia](docs/verification/container.json). `npm run environment:build` reconstruye y exige verificar de nuevo antes de abrir sesiones.
 
 ## Contenido
+- runner/execution/ y runner/simulation/: motor de intentos y ensayo con respuestas guionadas; ejecutar `npm run runner:simulate`. No genera V0 ni llama modelos.
 - schema/: JSON Schema draft-07, versión 1.0.0, validación estricta.
 - families/F001-product-catalog/: manifiestos, 5 requisitos, 3 turnos y 30 productos.
 - prompts/: instrucciones comunes, generación, evolución y reparación.

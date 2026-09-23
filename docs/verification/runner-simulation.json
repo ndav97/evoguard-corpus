@@ -1,0 +1,59 @@
+{
+  "artifact_type": "runner_simulation",
+  "experimental": false,
+  "id": "c103f65d-bdde-4745-a8eb-793989ca179d",
+  "image_id": "sha256:2cd750482467e446191d7e1fcb6b841f375baf5fd20caaafa08572ba0cf3eff5",
+  "scenarios": [
+    {
+      "name": "repair",
+      "status": "SIMULATED_ACCEPTED",
+      "attempts": 2,
+      "workspaces_opened": 1,
+      "workspaces_closed": 1
+    },
+    {
+      "name": "oracle-reassignment",
+      "status": "SIMULATED_ACCEPTED",
+      "attempts": 2,
+      "workspaces_opened": 2,
+      "workspaces_closed": 2
+    },
+    {
+      "name": "exhaustion",
+      "status": "SIMULATED_BLOCKED",
+      "attempts": 15,
+      "workspaces_opened": 5,
+      "workspaces_closed": 5
+    },
+    {
+      "name": "tool-timeout",
+      "status": "SIMULATED_BLOCKED",
+      "attempts": 5,
+      "workspaces_opened": 5,
+      "workspaces_closed": 5
+    }
+  ],
+  "status": "PASS",
+  "verified_at": "2026-09-23",
+  "unit_tests_passed": 58,
+  "source_sha256": {
+    "runner/simulation/cli.mjs": "e0f4c351c9afa64c022b1c54c986fe41492a4c654d9b96695c6affdd5688f5bc",
+    "config/policy.json": "5973e8bcb84777eaf1eed1a91a18bd4950c456be08a7c186e63ad38a0b0e28fb",
+    "runner/execution/engine.mjs": "efa9d2fbe462193cfd61fa047561d27a8182bf861000d6fd1e7ab071aa0c0ca9",
+    "tests/execution.test.mjs": "2452d10d21be50469f5f093c9633f2f3a71830ed400f8c63221177bbb0053b75"
+  },
+  "local_evidence": {
+    "summary.json": "ffa4526eabef7461091db5b2b3bd4c2cb64134907432e70bcbb5ad03494dc21c",
+    "repair.evaluator.jsonl": "46cde88749b0c34cf3dd05b82b5ac3ef27664db05747ccfbc098679eb7fd285d",
+    "oracle-reassignment.events.jsonl": "0833c30cb684a8c85b1ec53a2b13f8f1bde4f55a04effe27e186a1c05a887851",
+    "oracle-reassignment.evaluator.jsonl": "b56d1b55d06ab8205bd400b4d6ebba54245c975cd43e5d62ecdee667c8247af5",
+    "repair.events.jsonl": "9f7bce2a195aa136d4d58b191c8675716a34c286b0e0a8ebca2ea27dadcef3d4",
+    "exhaustion.events.jsonl": "7d98836b91bbcd1d14828cb44677e8a164806ddc8b6f2f6eea2919e0e66e900f",
+    "oracle-reassignment.json": "e695559c9f121fa878a3ace27f0da97339807675506f585f74c9441e1cba0f62",
+    "tool-timeout.json": "d1769e28f247bc50f62bf0177877941678e36ca0113ea240ec3106da6a0810c9",
+    "exhaustion.evaluator.jsonl": "03a51a715a2626953355cee82600841e5ce69c5c3e87f09ce51113d512bae121",
+    "repair.json": "f46f9d7e5a8d2e0f782335e8229a2625af147c3ff1a2f2995dea2c06c711a4eb",
+    "exhaustion.json": "baa228c48f181423534a7e41201e50359b006b9f7ab3829ea3ca0697b1b0704a",
+    "tool-timeout.events.jsonl": "4e87351290dd8bbce028eee2094f74e51264b4b2c63c727db320edb9ce7ee794"
+  }
+}

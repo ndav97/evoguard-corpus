@@ -42,3 +42,12 @@ La evidencia histórica anterior corresponde a la entrega estructural inicial. E
 La revisión independiente del contenedor identificó cinco puntos corregidos: evidencia ligada también a controles/payload, cierre independiente del manifiesto actual, hashes de las mismas fuentes usadas en build, revocación previa a reverificar y limpieza por error del cliente Docker incluyendo exceso de salida. No hubo hallazgos críticos. Las correcciones se comprobaron mediante las pruebas descritas; no se afirma una segunda revisión independiente.
 
 Evidencia observada en [verification/container.json](verification/container.json); operación y alcance en [docker/README.md](../docker/README.md). No se ejecutaron APIs, no se eligieron modelos y no se produjo ninguna referencia funcional.
+
+## Motor y ensayo simulado — 2026-09-23
+- Suite completa: 58 pruebas aprobadas, validación F001 y build del scaffold correctos.
+- Ensayo Docker: reparación (2 intentos/1 workspace), fallo simulado de oracle y reasignación (2/2), agotamiento técnico (15/5) y timeout de comando real (5/5). Total 24 intentos y 13 contenedores cerrados; sin recursos del runner remanentes.
+- Build y typecheck reales en el contenedor. Agente, tests de desarrollo, oráculo y arquitectura guionados; no se generó código de catálogo. Los parches contienen un marcador instrumental.
+- Pruebas negativas cubren ciclos, respuesta/evaluación inválidas, error de infraestructura, logger fallido, snapshot/cierre fallidos y rechazo de modo real. El preflight conserva bloqueo de generación.
+- Revisión independiente: se corrigieron aceptación prematura ante timeout del snapshot y clasificación de timeout de comando. En ambos casos se observó una prueba fallar y pasar tras la corrección. Se repitió el ensayo con el código corregido; no se afirma segunda revisión independiente.
+
+Resumen y hashes: [verification/runner-simulation.json](verification/runner-simulation.json). Trazas completas en `.artifacts/simulations/c103f65d-bdde-4745-a8eb-793989ca179d/`, fuera de Git y separadas de runs experimentales. Las pruebas de infraestructura no validan R001–R005.
