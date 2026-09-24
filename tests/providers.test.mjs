@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createProviderAdapter,createProviderPool} from '../runner/providers/adapter.mjs';
 import {requestJson} from '../runner/providers/http.mjs';
 import {createServer} from 'node:http';
+import {connectionFor,credentialsFromEnv} from '../runner/providers/connection.mjs';
 const models=JSON.parse(readFileSync(new URL('../config/models.json',import.meta.url))).models;
 const action=JSON.stringify({type:'tool',argv:['node','--version']});
 const fixtures={
@@ -91,4 +92,50 @@ test('conserva uso observado en respuestas incompletas de los cuatro transportes
     await assert.rejects(adapter.next({...context,provider}));
     assert.equal(record.tokens.input,7);assert.equal(record.tokens.output,3);assert.equal(record.observed_model,config.api_model_id);
   }
+});
+test('Synterolink usa su endpoint y registra intermediario sin enviar clave directa',async()=>{
+  const config={...models.openai,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1'};
+  const keys=credentialsFromEnv({openai:config},{OPENAI_API_KEY:'DIRECT_ONLY',SYNTEROLINK_API_KEY:'GATEWAY_ONLY'});
+  let url,record;
+  const adapter=createProviderAdapter({provider:'openai',config,apiKey:keys.openai,onCall:r=>record=r,fetchImpl:async(endpoint,options)=>{
+    url=endpoint;assert.equal(options.headers.authorization,'Bearer GATEWAY_ONLY');
+    assert.equal(JSON.parse(options.body).store,false);
+    return Response.json(fixtures.openai);
+  }});
+  await adapter.next(context);
+  assert.equal(url,'https://api.synterolink.com/v1/responses');
+  assert.equal(record.access_provider,'synterolink');
+  assert.equal(record.base_url,'https://api.synterolink.com/v1');
+  assert.equal(credentialsFromEnv({openai:config},{OPENAI_API_KEY:'DIRECT_ONLY'}).openai,undefined);
+});
+test('rechaza destinos no autorizados y rutas Synterolink no confirmadas',()=>{
+  for(const base_url of ['http://api.synterolink.com/v1','https://api.synterolink.com.evil.test/v1','https://user:secret@api.synterolink.com/v1','https://api.synterolink.com/v1?key=secret']) {
+    assert.throws(()=>connectionFor('openai',{...models.openai,access_provider:'synterolink',base_url}),/CONNECTION/);
+  }
+  assert.throws(()=>connectionFor('google',{...models.google,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1'}),/CONNECTION/);
+});
+test('Gemini via Synterolink usa v1beta y clave específica antes de la común',async()=>{
+  const config={...models.google,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1beta'};
+  const keys=credentialsFromEnv({google:config},{SYNTEROLINK_GOOGLE_API_KEY:'SPECIFIC',SYNTEROLINK_API_KEY:'COMMON',GEMINI_API_KEY:'DIRECT_ONLY'});
+  const adapter=createProviderAdapter({provider:'google',config,apiKey:keys.google,fetchImpl:async(url,options)=>{
+    assert.equal(url,'https://api.synterolink.com/v1beta/models/gemini-3.1-pro-preview:generateContent');
+    assert.equal(options.headers['x-goog-api-key'],'SPECIFIC');return Response.json(fixtures.google);
+  }});
+  assert.equal((await adapter.next({...context,provider:'google'})).type,'tool');
+  assert.equal(credentialsFromEnv({google:config},{GEMINI_API_KEY:'DIRECT_ONLY'}).google,undefined);
+});
+test('Sonnet via Synterolink conserva Messages y autenticación Anthropic',async()=>{
+  const config={...models.anthropic,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1'};
+  let record;
+  const keys=credentialsFromEnv({anthropic:config},{ANTHROPIC_API_KEY:'DIRECT_ONLY',SYNTEROLINK_API_KEY:'GATEWAY_ONLY'});
+  const adapter=createProviderAdapter({provider:'anthropic',config,apiKey:keys.anthropic,onCall:r=>record=r,fetchImpl:async(url,options)=>{
+    assert.equal(url,'https://api.synterolink.com/v1/messages');
+    assert.equal(options.headers['x-api-key'],'GATEWAY_ONLY');
+    assert.equal(options.headers['anthropic-version'],'2023-06-01');
+    assert.equal(JSON.parse(options.body).model,'claude-sonnet-5');
+    return Response.json(fixtures.anthropic);
+  }});
+  await adapter.next({...context,provider:'anthropic'});
+  assert.equal(record.access_provider,'synterolink');
+  assert.equal(credentialsFromEnv({anthropic:config},{ANTHROPIC_API_KEY:'DIRECT_ONLY'}).anthropic,undefined);
 });

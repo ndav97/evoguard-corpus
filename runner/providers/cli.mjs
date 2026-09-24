@@ -4,10 +4,11 @@ import {join} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {createProviderAdapter} from './adapter.mjs';
 import {requestJson} from './http.mjs';
+import {connectionFor,credentialsFromEnv} from './connection.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const models=JSON.parse(readFileSync(join(root,'config/models.json'),'utf8')).models;
-const credentials={openai:process.env.OPENAI_API_KEY,anthropic:process.env.ANTHROPIC_API_KEY,google:process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY};
+const credentials=credentialsFromEnv(models,process.env);
 async function main() {
   const [mode,...selected]=process.argv.slice(2);
   if(!['inspect','smoke'].includes(mode)||selected.some(p=>!models[p])||(mode==='inspect'&&selected.length))throw Error('Uso: providers inspect | providers smoke <proveedor...>');
@@ -20,7 +21,8 @@ async function main() {
   } catch { /* Se informa indisponibilidad sin inventar metadatos. */ }
   for(const provider of mode==='inspect'?Object.keys(models):selected) {
     const config=models[provider];
-    const row={provider,display_name:config.display_name,api_model_id:config.api_model_id,status:'NOT_TESTED'};
+    const connection=connectionFor(provider,config);
+    const row={provider,access_provider:connection.access_provider,base_url:connection.base_url,credential_env:connection.credential_env,display_name:config.display_name,api_model_id:config.api_model_id,status:'NOT_TESTED'};
     if(config.transport==='ollama') {
       const local=tags?.models?.find(m=>m.name===config.api_model_id);
       row.runtime=version?.version??null;

@@ -31,3 +31,8 @@ La continuación de “evoguard chat” fija GPT-5.6 Sol, Claude Sonnet 5, Gemin
 Los adaptadores usan JSON estructurado común para acciones del runner; no herramientas específicas de un proveedor. Los parámetros de preparación quedan explícitos en config/models.json y no constituyen congelamiento del piloto. El contexto local se limita conservadoramente sin truncamiento silencioso; el packet/historial experimental requiere una política de contexto antes de generación.
 
 Ambos modelos locales se encontraron instalados en Ollama 0.32.15, Q4_K_M; se fijaron digests observados y se verificó respuesta mínima sin tarea F001. No se descargaron modelos ni se alteró la selección. Las claves comerciales no estaban disponibles en el entorno de la sesión; no se efectuaron llamadas comerciales. La configuración con .env es optativa, ignorada por Git y no se carga automáticamente.
+
+## Acceso comercial mediante Synterolink
+El usuario aclaró que sus claves pertenecen a Synterolink y proporcionó tres ejemplos OpenCode sin secretos. Se configuraron Responses y Messages bajo https://api.synterolink.com/v1 y Gemini nativo bajo https://api.synterolink.com/v1beta. Se preservó el pool elegido y se separó familia de modelo de intermediario en los registros. Las claves Synterolink tienen variables propias, compartida o por proveedor, sin fallback a claves directas. Sonnet 5 conserva su ID previo: el ejemplo Anthropic solo identifica transporte, no catálogo.
+
+La compatibilidad de las rutas está implementada y comprobada con transporte controlado; la conectividad autenticada sigue pendiente. Ninguna clave enmascarada se trata como credencial real. No se generó V0 ni se hicieron solicitudes comerciales autenticadas.

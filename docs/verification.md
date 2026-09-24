@@ -60,3 +60,6 @@ Resumen y hashes: [verification/runner-simulation.json](verification/runner-simu
 - Revisión independiente detectó pérdida de uso observado en respuestas truncadas/rechazadas; se reprodujo en una prueba fallida y se corrigió extrayendo modelo/tokens antes de validar terminación. No hubo hallazgos críticos. La prueba pasa en los cuatro transportes; no se afirma segunda revisión independiente.
 
 No se generó V0 ni se habilitó generación experimental. Los parámetros preparatorios y el manejo de contexto aún requieren cierre antes del piloto.
+
+## Rutas Synterolink
+75 pruebas aprobadas, validación F001 y build correctos. Pruebas añadidas para los tres endpoints, headers nativos, clave específica/común, no reutilización de claves directas, rechazo de hosts/rutas no autorizados y registro del intermediario. El diagnóstico encontró claves Synterolink ausentes en la sesión; no se probó conectividad comercial real. La evidencia de conectividad anterior conserva su carácter histórico y no demuestra acceso a Synterolink.

@@ -19,7 +19,7 @@ npm run providers -- smoke local_a local_b
 
 inspect comprueba presencia de credenciales y metadatos locales sin inferencia. smoke requiere etiquetas explícitas, envía un mensaje instrumental mínimo y nunca ejecuta argv ni envía F001. Las pruebas comerciales pueden consumir tokens; no se ejecutan por defecto. Cada llamada local verifica digest antes y después y descarga el modelo de memoria al finalizar mediante keep_alive=0, sin borrar sus archivos.
 
-Credenciales: OPENAI_API_KEY, ANTHROPIC_API_KEY y GEMINI_API_KEY (alternativa GOOGLE_API_KEY). Se leen solo del entorno de este proceso. Para un archivo `.env` local excluido de Git, partir de `.env.example`, completar las claves localmente y ejecutar:
+La configuración actual usa Synterolink para los tres modelos comerciales. Credencial común: SYNTEROLINK_API_KEY. Si hay claves diferentes, usar SYNTEROLINK_OPENAI_API_KEY, SYNTEROLINK_ANTHROPIC_API_KEY y SYNTEROLINK_GOOGLE_API_KEY; cada una tiene prioridad sobre la común. Nunca se reutilizan claves directas de OpenAI/Anthropic/Google para Synterolink. Se leen solo del entorno de este proceso. Para un archivo `.env` local excluido de Git, partir de `.env.example`, completar las claves localmente y ejecutar:
 
 ```powershell
 node --env-file=.env runner/providers/cli.mjs inspect
@@ -34,7 +34,21 @@ No pegar claves en mensajes ni incorporarlas a config/models.json. No se buscan 
 
 Los cuatro transportes usan un JSON común `{type,argv}` con validación estricta. Se emplean salidas estructuradas, no el tool calling nativo de cada proveedor. El mismo historial visible se serializa como texto; no se envían estados privados del coordinador, razonamiento interno ni resultados del oráculo. Los campos superiores permitidos son packet, messages, attempt y cycle. El coordinador debe construir el packet con las funciones existentes.
 
-URLs fijas de proveedores y Ollama en 127.0.0.1:11434. Redirecciones prohibidas, sin reintentos automáticos, respuesta máxima 2 MiB, timeout/cancelación propagados. Credenciales y errores del servidor no se serializan en logs. Los errores retornan códigos sanitizados. Un callback de registro fallido propaga el error: el coordinador no debe continuar sin evidencia.
+Destinos permitidos explícitos en connection.mjs: APIs directas, Synterolink y Ollama en 127.0.0.1:11434. Redirecciones prohibidas, sin reintentos automáticos, respuesta máxima 2 MiB, timeout/cancelación propagados. Credenciales y errores del servidor no se serializan en logs. Los errores retornan códigos sanitizados. Un callback de registro fallido propaga el error: el coordinador no debe continuar sin evidencia.
+
+## Synterolink
+
+Rutas basadas en los tres ejemplos OpenCode proporcionados por el usuario:
+
+| Modelo elegido | Ruta | Autenticación del transporte |
+|---|---|---|
+| GPT-5.6 Sol | https://api.synterolink.com/v1/responses | Authorization: Bearer |
+| Claude Sonnet 5 | https://api.synterolink.com/v1/messages | x-api-key + anthropic-version |
+| Gemini 3.1 Pro | https://api.synterolink.com/v1beta/models/gemini-3.1-pro-preview:generateContent | x-goog-api-key |
+
+Se mantienen los identificadores elegidos. El ejemplo Anthropic no enumera modelos; el acceso a claude-sonnet-5 debe confirmarse con la clave. No se copian los otros modelos del catálogo ni se elevan automáticamente los límites de generación. El ejemplo Gemini utiliza opciones propias del SDK; nuestro adaptador REST mantiene thinkingLevel high como parámetro preparatorio explícito.
+
+La procedencia de cada llamada distingue provider (familia del modelo), access_provider (synterolink), base_url y modelo solicitado/reportado. observed_model es lo que informa el intermediario, no una verificación independiente de sus pesos o enrutamiento. store=false se conserva en las peticiones Responses; su cumplimiento por el servicio no se ha auditado. La configuración de rutas y los tests con respuestas controladas no prueban acceso real ni compatibilidad completa con salidas estructuradas: queda pendiente smoke con clave local válida.
 
 onCall recibe modelo solicitado/observado, parámetros, fecha/duración, tokens disponibles, resultado y código de fallo. Se conserva uso incluso en respuestas incompletas. Costo desconocido permanece null; no se estima precio ni se equiparan los contadores de razonamiento de diferentes APIs. Los cuerpos completos y headers no se registran. Los informes de smoke se guardan en .artifacts/providers y se marcan experimental=false.
 

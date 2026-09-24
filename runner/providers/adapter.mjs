@@ -1,4 +1,5 @@
 import {requestJson,providerError} from './http.mjs';
+import {connectionFor} from './connection.mjs';
 export const ACTION_SCHEMA={type:'object',properties:{type:{type:'string',enum:['tool','deliver','technical_failure']},argv:{type:'array',items:{type:'string'}}},required:['type','argv'],additionalProperties:false};
 const INSTRUCTION='Return exactly one JSON action matching the supplied schema. type=tool executes argv in the isolated Linux workspace; use argv ["sh","-lc","command"] when a shell is needed. type=deliver submits the work. type=technical_failure gives up. argv must be empty for non-tool actions. Do not execute tools yourself. Use only the current packet and visible history. No Internet or new dependencies.';
 const TRANSPORT={openai:'openai',anthropic:'anthropic',google:'google',local_a:'ollama',local_b:'ollama'};
@@ -11,6 +12,7 @@ function parseAction(text) {
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{}}) {
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
+  const connection=connectionFor(provider,config);
   if(config.transport==='ollama'&&(config.context!==8192||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
   return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=provider.startsWith('local_')?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
@@ -20,7 +22,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const timer=setTimeout(()=>controller.abort(),timeout);
     const combined=signal?AbortSignal.any([signal,controller.signal]):controller.signal;
     const started=Date.now();
-    const metadata={provider,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null};
+    const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
       const tags=await request('http://127.0.0.1:11434/api/tags');
@@ -34,7 +36,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(config.transport==='ollama'&&Buffer.byteLength(input+INSTRUCTION+JSON.stringify(ACTION_SCHEMA))>config.context-config.max_output_tokens-512)throw providerError('CONTEXT_LIMIT');
       let raw,text;
       if(config.transport==='openai') {
-        raw=await request('https://api.openai.com/v1/responses',{model:config.api_model_id,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},{authorization:`Bearer ${apiKey}`});
+        raw=await request(`${connection.base_url}/responses`,{model:config.api_model_id,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},{authorization:`Bearer ${apiKey}`});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:number(raw.usage?.output_tokens_details?.reasoning_tokens)};
         if(raw.status!=='completed')throw providerError('INCOMPLETE_RESPONSE');
@@ -42,13 +44,13 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         if(blocks.some(b=>b.type==='refusal'))throw providerError('MODEL_REFUSAL');
         text=blocks.filter(b=>b.type==='output_text').map(b=>b.text).join('');
       } else if(config.transport==='anthropic') {
-        raw=await request('https://api.anthropic.com/v1/messages',{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content:input}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning,format:{type:'json_schema',schema:ACTION_SCHEMA}}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
+        raw=await request(`${connection.base_url}/messages`,{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content:input}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning,format:{type:'json_schema',schema:ACTION_SCHEMA}}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:null};
         if(raw.stop_reason!=='end_turn')throw providerError('INCOMPLETE_RESPONSE');
         text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
       } else if(config.transport==='google') {
-        raw=await request(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
+        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount)};
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
