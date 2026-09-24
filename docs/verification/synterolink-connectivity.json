@@ -1,0 +1,258 @@
+{
+  "initial": {
+    "artifact_type": "provider_connectivity",
+    "experimental": false,
+    "created_at": "2026-09-24T04:04:47.764Z",
+    "mode": "smoke",
+    "models": [
+      {
+        "provider": "openai",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1",
+        "credential_env": [
+          "SYNTEROLINK_OPENAI_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "GPT-5.6 Sol",
+        "api_model_id": "gpt-5.6-sol",
+        "status": "SMOKE_PASS",
+        "call": {
+          "provider": "openai",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1",
+          "display_name": "GPT-5.6 Sol",
+          "requested_model": "gpt-5.6-sol",
+          "observed_model": "gpt-5.6-sol",
+          "started_at": "2026-09-24T04:04:47.797Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "medium",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 390,
+            "output": 294,
+            "reasoning": 286
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 9897
+        }
+      },
+      {
+        "provider": "anthropic",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1",
+        "credential_env": [
+          "SYNTEROLINK_ANTHROPIC_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "Claude Sonnet 5",
+        "api_model_id": "claude-sonnet-5",
+        "status": "SMOKE_FAILED",
+        "call": {
+          "provider": "anthropic",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1",
+          "display_name": "Claude Sonnet 5",
+          "requested_model": "claude-sonnet-5",
+          "observed_model": "claude-sonnet-5",
+          "started_at": "2026-09-24T04:04:57.694Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "high",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 44,
+            "output": 118,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "ERROR",
+          "error_code": "INVALID_ACTION_JSON",
+          "duration_ms": 4648
+        },
+        "error_code": "INVALID_ACTION_JSON"
+      },
+      {
+        "provider": "google",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1beta",
+        "credential_env": [
+          "SYNTEROLINK_GOOGLE_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "Gemini 3.1 Pro",
+        "api_model_id": "gemini-3.1-pro-preview",
+        "status": "SMOKE_PASS",
+        "call": {
+          "provider": "google",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1beta",
+          "display_name": "Gemini 3.1 Pro",
+          "requested_model": "gemini-3.1-pro-preview",
+          "observed_model": "gemini-3.1-pro-preview",
+          "started_at": "2026-09-24T04:05:02.342Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "high",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 117,
+            "output": 68,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 3714
+        }
+      }
+    ]
+  },
+  "source_sha256": {
+    "runner/providers/cli.mjs": "e6e357f41a9b5c8cf3d6fa6bc670c48834e0c9be9e555b4fe266783906544b26",
+    "config/models.json": "a2d58636266565d60a834f3eb3cf71992dbda38e9fd4ba21cdaca5ef09e4a152",
+    "runner/providers/connection.mjs": "234d7c170ec47a2f652ade2ccbd82cc50d849af0d3c3da85124d20494357cf5a",
+    "runner/providers/http.mjs": "e7a0e2d0cddc3828fbf75d85d217eb3b093fcd54bebb0022e8c34ea081085472",
+    "runner/providers/adapter.mjs": "4223d10a078682138bd882385b7fadcef32caaaf7221bad42aa7871f50a30252"
+  },
+  "artifact_type": "provider_connectivity",
+  "status": "COMMERCIAL_SMOKE_PASS",
+  "final": {
+    "artifact_type": "provider_connectivity",
+    "experimental": false,
+    "created_at": "2026-09-24T04:06:29.761Z",
+    "mode": "smoke",
+    "models": [
+      {
+        "provider": "openai",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1",
+        "credential_env": [
+          "SYNTEROLINK_OPENAI_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "GPT-5.6 Sol",
+        "api_model_id": "gpt-5.6-sol",
+        "status": "SMOKE_PASS",
+        "call": {
+          "provider": "openai",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1",
+          "display_name": "GPT-5.6 Sol",
+          "requested_model": "gpt-5.6-sol",
+          "observed_model": "gpt-5.6-sol",
+          "started_at": "2026-09-24T04:06:29.798Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "medium",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 470,
+            "output": 495,
+            "reasoning": 487
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 11962
+        }
+      },
+      {
+        "provider": "anthropic",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1",
+        "credential_env": [
+          "SYNTEROLINK_ANTHROPIC_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "Claude Sonnet 5",
+        "api_model_id": "claude-sonnet-5",
+        "status": "SMOKE_PASS",
+        "call": {
+          "provider": "anthropic",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1",
+          "display_name": "Claude Sonnet 5",
+          "requested_model": "claude-sonnet-5",
+          "observed_model": "claude-sonnet-5",
+          "started_at": "2026-09-24T04:06:41.761Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "high",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 133,
+            "output": 159,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 5310
+        }
+      },
+      {
+        "provider": "google",
+        "access_provider": "synterolink",
+        "base_url": "https://api.synterolink.com/v1beta",
+        "credential_env": [
+          "SYNTEROLINK_GOOGLE_API_KEY",
+          "SYNTEROLINK_API_KEY"
+        ],
+        "display_name": "Gemini 3.1 Pro",
+        "api_model_id": "gemini-3.1-pro-preview",
+        "status": "SMOKE_PASS",
+        "call": {
+          "provider": "google",
+          "access_provider": "synterolink",
+          "base_url": "https://api.synterolink.com/v1beta",
+          "display_name": "Gemini 3.1 Pro",
+          "requested_model": "gemini-3.1-pro-preview",
+          "observed_model": "gemini-3.1-pro-preview",
+          "started_at": "2026-09-24T04:06:47.072Z",
+          "parameters": {
+            "context": null,
+            "max_output_tokens": 4096,
+            "reasoning": "high",
+            "temperature": null,
+            "seed": null
+          },
+          "digest": null,
+          "tokens": {
+            "input": 204,
+            "output": 72,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 4701
+        }
+      }
+    ]
+  },
+  "experimental": false,
+  "tests_passed": 75
+}

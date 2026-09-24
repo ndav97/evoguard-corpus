@@ -31,7 +31,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     try {
       if(config.transport!=='ollama'&&(!apiKey||typeof apiKey!=='string'))throw providerError('CREDENTIAL_MISSING');
       // Allowlist outer context: never serialize the coordinator or its private fields.
-      const input=JSON.stringify({packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle});
+      const input=JSON.stringify({response_contract:{schema:ACTION_SCHEMA,instruction:'Return exactly one JSON object matching this schema. No Markdown, code fences, commentary or additional fields. Non-tool actions require argv: [].'},packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle});
       if(Buffer.byteLength(input)>1048576)throw providerError('INPUT_TOO_LARGE');
       if(config.transport==='ollama'&&Buffer.byteLength(input+INSTRUCTION+JSON.stringify(ACTION_SCHEMA))>config.context-config.max_output_tokens-512)throw providerError('CONTEXT_LIMIT');
       let raw,text;

@@ -27,6 +27,10 @@ for(const provider of Object.keys(models)) test(`${provider}: petición propia, 
   assert.ok((provider==='google'?request.url:request.body).includes(config.api_model_id));assert.equal(observation.tokens.input,7);
   assert.equal(observation.cost_usd,null);assert.ok(!JSON.stringify(observation).includes('FAKE_TEST_KEY'));
   const body=JSON.parse(request.body);
+  const visible=JSON.parse(provider==='openai'?body.input:provider==='google'?body.contents[0].parts[0].text:body.messages.at(-1).content);
+  assert.equal(visible.response_contract.schema.additionalProperties,false);
+  assert.deepEqual(visible.response_contract.schema.required,['type','argv']);
+  assert.match(visible.response_contract.instruction,/No Markdown/);
   if(provider==='openai'){assert.equal(body.store,false);assert.equal(body.text.format.strict,true);assert.equal(body.reasoning.effort,'medium');}
   if(provider==='anthropic'){assert.equal(body.output_config.format.type,'json_schema');assert.equal(request.headers['anthropic-version'],'2023-06-01');}
   if(provider==='google'){assert.ok(request.url.endsWith(':generateContent'));assert.equal(request.headers['x-goog-api-key'],'FAKE_TEST_KEY');}

@@ -63,3 +63,8 @@ No se generó V0 ni se habilitó generación experimental. Los parámetros prepa
 
 ## Rutas Synterolink
 75 pruebas aprobadas, validación F001 y build correctos. Pruebas añadidas para los tres endpoints, headers nativos, clave específica/común, no reutilización de claves directas, rechazo de hosts/rutas no autorizados y registro del intermediario. El diagnóstico encontró claves Synterolink ausentes en la sesión; no se probó conectividad comercial real. La evidencia de conectividad anterior conserva su carácter histórico y no demuestra acceso a Synterolink.
+
+## Conectividad autenticada Synterolink
+Tras configurar el usuario .env, GPT-5.6 Sol y Gemini pasaron la primera comprobación. Sonnet respondió HTTP 200/modelo claude-sonnet-5, pero envolvió el JSON en Markdown y fue rechazado por el parser. Un diagnóstico acotado confirmó ese formato; no se registraron claves ni razonamiento interno.
+
+Se incluyó el contrato de respuesta en el mensaje visible común de los cinco adaptadores; pruebas de envío fallaron antes y pasaron después del cambio. No se relajó el parser. La comprobación final autenticada pasó para openai/anthropic/google; evidencia en [verification/synterolink-connectivity.json](verification/synterolink-connectivity.json). Suite completa: 75 PASS y build correcto. No se envió F001 ni se ejecutaron acciones propuestas por los modelos. Generación experimental todavía bloqueada.

@@ -40,3 +40,8 @@ Se registró el pool elegido en config/models.json y se implementaron Responses,
 Pruebas primero y posterior implementación: 13 pruebas nuevas de adaptadores/transporte; suite total 71 PASS. Revisión corrigió preservación de métricas en respuestas fallidas. Dos modelos locales respondieron realmente y quedaron registrados sus digests, Q4_K_M y Ollama 0.32.15. Las tres APIs comerciales esperan credenciales; no se buscaron claves en otros proyectos ni se inventó conectividad.
 
 Pendiente para generación: verificación comercial, política definitiva de contexto, integración experimental con trazabilidad de referencias y oráculo E2E. F001 sigue DRAFT. No hubo código funcional de V0, cambios al runtime verificado ni llamadas comerciales.
+
+## Comprobación comercial autorizada después de configurar .env
+Se ejecutaron mensajes instrumentales por Synterolink. El primer ensayo detectó salida Markdown de Sonnet, sin fallo de autenticación. Tras añadir el contrato JSON explícito al mensaje común, los tres modelos pasaron el ensayo final. Evidencia y uso observado conservados sin secretos en docs/verification/synterolink-connectivity.json; 75 pruebas y build pasan. .env continúa excluido de Git.
+
+La conectividad comercial deja de estar pendiente. Permanecen política de contexto, oráculo E2E e integración/persistencia de referencias antes de generar V0.
