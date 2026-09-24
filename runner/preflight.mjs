@@ -8,9 +8,9 @@ export function generationBlockers(root) {
     const lock=readContainerLock(root);
     if(data.stack.experimental.image_digest!==lock.image_id) blockers.push('Linux/Docker: stack e imagen verificada no coinciden.');
   } catch(error) {blockers.push(`Linux/Docker: ${error.message}`);}
-  if (Object.values(data.provenance.models).some(m=>!m)) blockers.push('Versiones exactas de modelos sin seleccionar.');
+  if (Object.values(data.provenance.models).some(m=>!m)) blockers.push('Modelos seleccionados en config/models.json; falta congelar parámetros y registrar modelos de ejecuciones experimentales.');
   if (data.family.oracle.status === 'CASES_SPECIFIED_ADAPTER_PENDING') blockers.push('Falta implementar y verificar el adapter y oráculo E2E independiente.');
-  blockers.push('Runner experimental/adapters de proveedores reales aún no implementados; núcleo disponible solo en simulación y generación deshabilitada. Evolución posterior a V0 requiere exportador auditado de historia de referencias.');
+  blockers.push('Integración experimental de adapters de proveedores pendiente de conectividad completa, política de contexto y registro/exportación de referencias; generación deshabilitada. Evolución posterior a V0 requiere exportador auditado de historia de referencias.');
   return blockers;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

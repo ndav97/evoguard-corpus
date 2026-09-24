@@ -9,7 +9,7 @@
 - `evaluator.check(stage, workspace, {signal,timeout})`: devuelve `{status,feedback?}`. Stages: typecheck, build, development_tests, independent_oracle, architecture. Solo los tres primeros pueden dar feedback de reparación. El evaluador conserva sus detalles privados fuera del workspace.
 - `emit(event)`: escritura síncrona del registro del coordinador; un fallo detiene la tarea. No enviar este registro completo al agente: incluye resultados externos. El adaptador recibe exclusivamente su historial visible.
 
-El contrato histórico `agents/contracts.ts` describe una futura llamada monolítica de proveedor; no es una implementación ni la interfaz por paso del motor actual. Los adaptadores reales deberán implementar la interfaz anterior y registrar identidad exacta del modelo, tokens/costos, exportación de candidatos y auditoría antes de habilitar generación.
+El contrato histórico `agents/contracts.ts` describe una futura llamada monolítica de proveedor; no es la interfaz por paso del motor actual. Los adaptadores de `providers/` implementan next y metadatos de llamadas. Aún se requiere verificar acceso comercial, integrar registro/exportación de candidatos y auditoría antes de habilitar generación.
 
 ## Semántica
 

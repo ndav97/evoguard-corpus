@@ -33,3 +33,10 @@ Se implementó el motor por pasos con herramientas, 3 intentos, 25 ciclos, timeo
 TDD: pruebas nuevas fallaron por comportamiento ausente, luego pasaron; la revisión añadió regresión para aceptación durante timeout de snapshot. Las dos correcciones de tiempos límite se comprobaron con pruebas y nuevo ensayo Docker. Suite final: 58 PASS. Ensayo final: cuatro escenarios, 24 intentos, 13 contenedores cerrados. Plan y evidencia enlazados desde verification.md.
 
 Pendiente: adaptadores de modelos reales y métricas, oráculo E2E/adapter, persistencia/exportación de referencias funcionales, selección exacta de modelos y habilitación explícita de generación. F001 sigue DRAFT; no se generó V0.
+
+## Continuación de evoguard chat — pool y adaptadores
+Se registró el pool elegido en config/models.json y se implementaron Responses, Messages, Gemini generateContent y Ollama chat. El dispatcher implementa la interfaz next del motor; el único CLI nuevo hace inspección o conectividad instrumental, nunca generación. Registro de parámetros/modelo observado/tokens/duración con costo desconocido null y errores sanitizados.
+
+Pruebas primero y posterior implementación: 13 pruebas nuevas de adaptadores/transporte; suite total 71 PASS. Revisión corrigió preservación de métricas en respuestas fallidas. Dos modelos locales respondieron realmente y quedaron registrados sus digests, Q4_K_M y Ollama 0.32.15. Las tres APIs comerciales esperan credenciales; no se buscaron claves en otros proyectos ni se inventó conectividad.
+
+Pendiente para generación: verificación comercial, política definitiva de contexto, integración experimental con trazabilidad de referencias y oráculo E2E. F001 sigue DRAFT. No hubo código funcional de V0, cambios al runtime verificado ni llamadas comerciales.

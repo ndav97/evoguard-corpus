@@ -24,3 +24,10 @@ Estas decisiones concretan detalles antes no fijados; no se atribuyen al texto l
 - Timeout, agotamiento de ciclos o technical_failure reasignan sin reparar un proceso incierto. Fallos visibles de build/typecheck/tests permiten intentos 2/3 en el mismo workspace. Oracle/arquitectura fallidos reasignan sin feedback privado. Fallos de infraestructura detienen la tarea.
 - No se conserva aceptación si falla la captura o cierre. Un snapshot null por timeout indica evidencia no capturada, nunca parche válido.
 - Los escenarios guionados usan Docker real, marcador instrumental, compilación real y evaluaciones funcionales simuladas. Se registran aparte en .artifacts/simulations; no confundir PASS del ensayo con validación funcional.
+
+## Pool seleccionado y adaptadores — 2026-09-23
+La continuación de “evoguard chat” fija GPT-5.6 Sol, Claude Sonnet 5, Gemini 3.1 Pro, qwen2.5-coder:7b y granite3.3:8b, ambos locales con contexto 8192. La selección se guarda en config/models.json; provenance.models sigue sin uso experimental registrado. Las APIs comerciales utilizan IDs documentados, separados de display_name. Gemini se documenta actualmente como gemini-3.1-pro-preview.
+
+Los adaptadores usan JSON estructurado común para acciones del runner; no herramientas específicas de un proveedor. Los parámetros de preparación quedan explícitos en config/models.json y no constituyen congelamiento del piloto. El contexto local se limita conservadoramente sin truncamiento silencioso; el packet/historial experimental requiere una política de contexto antes de generación.
+
+Ambos modelos locales se encontraron instalados en Ollama 0.32.15, Q4_K_M; se fijaron digests observados y se verificó respuesta mínima sin tarea F001. No se descargaron modelos ni se alteró la selección. Las claves comerciales no estaban disponibles en el entorno de la sesión; no se efectuaron llamadas comerciales. La configuración con .env es optativa, ignorada por Git y no se carga automáticamente.

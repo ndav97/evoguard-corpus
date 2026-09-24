@@ -1,0 +1,151 @@
+{
+  "inspection": {
+    "artifact_type": "provider_connectivity",
+    "experimental": false,
+    "created_at": "2026-09-24T03:40:52.782Z",
+    "mode": "inspect",
+    "models": [
+      {
+        "provider": "openai",
+        "display_name": "GPT-5.6 Sol",
+        "api_model_id": "gpt-5.6-sol",
+        "status": "CREDENTIAL_MISSING"
+      },
+      {
+        "provider": "anthropic",
+        "display_name": "Claude Sonnet 5",
+        "api_model_id": "claude-sonnet-5",
+        "status": "CREDENTIAL_MISSING"
+      },
+      {
+        "provider": "google",
+        "display_name": "Gemini 3.1 Pro",
+        "api_model_id": "gemini-3.1-pro-preview",
+        "status": "CREDENTIAL_MISSING"
+      },
+      {
+        "provider": "local_a",
+        "display_name": "Qwen2.5-Coder 7B",
+        "api_model_id": "qwen2.5-coder:7b",
+        "status": "LOCAL_PRESENT",
+        "runtime": "0.32.15",
+        "local": {
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "format": "gguf",
+          "parameter_size": "7.6B",
+          "quantization": "Q4_K_M",
+          "configured_context": 8192
+        }
+      },
+      {
+        "provider": "local_b",
+        "display_name": "Granite 3.3 8B",
+        "api_model_id": "granite3.3:8b",
+        "status": "LOCAL_PRESENT",
+        "runtime": "0.32.15",
+        "local": {
+          "digest": "fd429f23b90980ed1bef53b990894e7b0199331f6ae90c5650240a7d5b70f1f7",
+          "format": "gguf",
+          "parameter_size": "8.2B",
+          "quantization": "Q4_K_M",
+          "configured_context": 8192
+        }
+      }
+    ]
+  },
+  "experimental": false,
+  "tests_passed": 71,
+  "status": "LOCAL_PASS_COMMERCIAL_PENDING",
+  "source_sha256": {
+    "config/models.json": "055a541dd0aaa34a0c0538adea1019b039b4f3526b4f4a2b5df736647cfb6f35",
+    "tests/providers.test.mjs": "f3d3ceadd33ffb6b7b8258652ea8147f61f6adc3e9ba7f85a3688f5eb48fd1df",
+    "runner/providers/adapter.mjs": "e4ddc68f54049b4212956ed1592a7e69e8811c2b33799a4124f8fc3235e3a448",
+    "runner/providers/http.mjs": "e7a0e2d0cddc3828fbf75d85d217eb3b093fcd54bebb0022e8c34ea081085472",
+    "runner/providers/cli.mjs": "9f1db97a9c0b112d350d20b92acd9504fae54b5968f09caebf81666f6a093b13"
+  },
+  "artifact_type": "provider_connectivity",
+  "smoke": {
+    "artifact_type": "provider_connectivity",
+    "experimental": false,
+    "created_at": "2026-09-24T03:44:49.912Z",
+    "mode": "smoke",
+    "models": [
+      {
+        "provider": "local_a",
+        "display_name": "Qwen2.5-Coder 7B",
+        "api_model_id": "qwen2.5-coder:7b",
+        "status": "SMOKE_PASS",
+        "runtime": "0.32.15",
+        "local": {
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "format": "gguf",
+          "parameter_size": "7.6B",
+          "quantization": "Q4_K_M",
+          "configured_context": 8192
+        },
+        "call": {
+          "provider": "local_a",
+          "display_name": "Qwen2.5-Coder 7B",
+          "requested_model": "qwen2.5-coder:7b",
+          "observed_model": "qwen2.5-coder:7b",
+          "started_at": "2026-09-24T03:44:49.947Z",
+          "parameters": {
+            "context": 8192,
+            "max_output_tokens": 1024,
+            "reasoning": null,
+            "temperature": 0,
+            "seed": 42
+          },
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "tokens": {
+            "input": 129,
+            "output": 15,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 6585
+        }
+      },
+      {
+        "provider": "local_b",
+        "display_name": "Granite 3.3 8B",
+        "api_model_id": "granite3.3:8b",
+        "status": "SMOKE_PASS",
+        "runtime": "0.32.15",
+        "local": {
+          "digest": "fd429f23b90980ed1bef53b990894e7b0199331f6ae90c5650240a7d5b70f1f7",
+          "format": "gguf",
+          "parameter_size": "8.2B",
+          "quantization": "Q4_K_M",
+          "configured_context": 8192
+        },
+        "call": {
+          "provider": "local_b",
+          "display_name": "Granite 3.3 8B",
+          "requested_model": "granite3.3:8b",
+          "observed_model": "granite3.3:8b",
+          "started_at": "2026-09-24T03:44:56.533Z",
+          "parameters": {
+            "context": 8192,
+            "max_output_tokens": 1024,
+            "reasoning": null,
+            "temperature": 0,
+            "seed": 42
+          },
+          "digest": "fd429f23b90980ed1bef53b990894e7b0199331f6ae90c5650240a7d5b70f1f7",
+          "tokens": {
+            "input": 131,
+            "output": 16,
+            "reasoning": null
+          },
+          "cost_usd": null,
+          "status": "PASS",
+          "error_code": null,
+          "duration_ms": 6826
+        }
+      }
+    ]
+  }
+}

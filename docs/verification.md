@@ -51,3 +51,12 @@ Evidencia observada en [verification/container.json](verification/container.json
 - Revisión independiente: se corrigieron aceptación prematura ante timeout del snapshot y clasificación de timeout de comando. En ambos casos se observó una prueba fallar y pasar tras la corrección. Se repitió el ensayo con el código corregido; no se afirma segunda revisión independiente.
 
 Resumen y hashes: [verification/runner-simulation.json](verification/runner-simulation.json). Trazas completas en `.artifacts/simulations/c103f65d-bdde-4745-a8eb-793989ca179d/`, fuera de Git y separadas de runs experimentales. Las pruebas de infraestructura no validan R001–R005.
+
+## Adaptadores y conectividad — 2026-09-23
+- Suite completa: 71 pruebas aprobadas, validación estructural y build correctos. Solicitudes por proveedor, acciones estrictas, salida incompleta, campos privados, credenciales ausentes y digest/contexto locales incorrectos comprobados.
+- Transporte HTTP probado contra servidor local real: cancelación durante lectura, límite de 2 MiB y rechazo de redirecciones. Los tests comerciales usan respuestas controladas; no demuestran acceso a cuentas.
+- Qwen2.5-Coder 7B y Granite 3.3 8B pasaron smoke real con Ollama, petición instrumental sin F001 ni ejecución de herramientas. Metadatos completos en verification/provider-connectivity.json.
+- OpenAI/Anthropic/Google: credenciales ausentes, conectividad no probada. Se conserva este pendiente explícito.
+- Revisión independiente detectó pérdida de uso observado en respuestas truncadas/rechazadas; se reprodujo en una prueba fallida y se corrigió extrayendo modelo/tokens antes de validar terminación. No hubo hallazgos críticos. La prueba pasa en los cuatro transportes; no se afirma segunda revisión independiente.
+
+No se generó V0 ni se habilitó generación experimental. Los parámetros preparatorios y el manejo de contexto aún requieren cierre antes del piloto.
