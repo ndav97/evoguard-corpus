@@ -76,3 +76,12 @@ Decisiones tomadas por Claude con autorización general del usuario:
 - **Generación** (`npm run corpus:generate -- all`): una tarea por versión, empezando por el proveedor del `generation_plan`, con commit Git por versión (referencia o intento sin referencia). Nunca sobrescribe una referencia; si una versión queda BLOCKED se detiene y conserva los registros.
 - **Auditoría** (`npm run corpus:audit -- --freeze`): por referencia reconstruye la historia (hash exacto), repite typecheck/build/tests, arquitectura, 5 ejecuciones del oráculo con resultado idéntico y PASS, coherencia de registros y ausencia de fugas (oráculo, procedencia, secretos, requisitos futuros) en la historia visible. La revisión de similitud se declara `NOT_APPLICABLE_SINGLE_FAMILY` hasta que existan otras familias.
 - **Parche vacío** aceptado como válido: una versión aceptada sin cambios de código produce un commit vacío reproducible.
+
+## Protocolo de acciones 1.1 y diagnóstico de proveedores — 2026-09-25
+Decisiones de Claude con autorización del usuario (detalle en `docs/protocol-v1.1-actions.md`):
+- **Mismo protocolo para los cinco modelos.** Acciones estructuradas (`read_file`, `list_files`, `write_file`, `edit_file`, `run_checks`) además de `tool`, vista inicial del workspace y aviso de bucles. Solo cambian las affordances; el contenido informativo (requisitos, `ui_contract`, feedback visible) es el mismo, y el oráculo sigue privado.
+- **Normalización acotada**: se acepta un bloque Markdown que envuelva todo el JSON, registrado como `markdown_fence`. Revierte parcialmente la decisión del 2026-09-23 de no relajar el parser, porque con Synterolink ese formato aparece como artefacto de transporte y su rechazo sesgaba la comparación entre modelos. Otro texto alrededor del JSON sigue siendo inválido.
+- **Texto rechazado conservado** (recortado, con hash y secretos redactados) para distinguir problemas del proveedor de problemas del modelo.
+- **`keep_alive` de Ollama a 15 min**, solo para velocidad; no altera la inferencia.
+- **Rutas protegidas** (`TASK.json`, `fixtures/`, `.git/`, `node_modules/`, `dist/`) para las acciones de escritura; el shell (`tool`) conserva el comportamiento 1.0 y la arquitectura sigue detectando cambios de fixture o dependencias.
+- **F001 no se modifica**: está FROZEN con protocolo 1.0. Recomendación: regenerarla como revisión 2 con 1.1 cuando los proveedores estén sanos, para que sea comparable con las familias nuevas.

@@ -3,7 +3,7 @@
 Estado al 2026-09-24: la infraestructura de F001 está completa y ensayada de punta a punta (generación V0→V3, auditoría 5/5 y congelamiento) con constructores guionados. Solo falta la ejecución real con modelos (`scripts\run-f001.cmd`). Este documento fija qué hacer después, con la evidencia de F001.
 
 ## 0. Prioridad: salidas JSON inválidas de Sonnet y Gemini
-Ver `docs/execution-ledger.md` («Hallazgo que debe resolverse antes de F002–F010»). Guardar el texto rechazado, reproducir con `npm run providers` y corregir el adaptador antes de cualquier generación nueva; repetir después `npm run pipeline:rehearse`.
+Hecho el 2026-09-25: el adaptador guarda el texto rechazado y admite, registrándolo, el bloque Markdown envolvente; protocolo 1.1 para los cinco modelos (`docs/protocol-v1.1-actions.md`). Pendiente: cuando Synterolink confirme la solución, ejecutar `npm run providers:diagnose`; si algún proveedor no queda `HEALTHY`, revisar los ejemplos rechazados antes de generar.
 
 ## 1. Antes de especificar familias nuevas: revisar F001 real
 Con `runs/corpus-generation/F001/*/summary.json`, `calls.jsonl` y `docs/verification/f001-audit.json`:

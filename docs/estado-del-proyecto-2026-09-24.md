@@ -10,6 +10,8 @@
 
 > **F001 COMPLETA — 25/09/2026 00:27.** Ejecución real: V0, V1 y V2 aceptadas por Gemini, V3 por GPT-5.6 (tras reasignaciones del protocolo). Auditoría PASS con oráculo estable 5/5 en las cuatro versiones y familia **FROZEN**. Hallazgo prioritario antes de F002–F010: Sonnet y Gemini devolvieron JSON no parseable en el 60–80 % de sus llamadas vía Synterolink (Sonnet no completó ninguna versión), lo que sesga la comparación entre modelos. Hay que diagnosticarlo y corregirlo en el adaptador. Detalle en `docs/execution-ledger.md`; siguiente paso en `docs/paso-9-preparacion-familias.md`.
 
+> **25/09/2026 — protocolo 1.1 y diagnóstico de proveedores.** Synterolink confirmó problemas con los modelos comerciales; los modelos locales correrán en GPU alquilada. Mientras tanto: protocolo de acciones 1.1 para los cinco modelos (lectura, escritura y edición de archivos, `run_checks`, vista inicial del workspace, aviso de bucles), registro del texto rechazado y `npm run providers:diagnose` para comprobar a los proveedores antes de generar. Ensayo integral PASS con las acciones nuevas en contenedores reales; 138/138 pruebas. Detalle en `docs/protocol-v1.1-actions.md`.
+
 Fecha de corte: **24 de septiembre de 2026**. Último commit observado: `759ba0d`. Este informe incluye también cambios locales sin commit; por tanto, el estado descrito no se reproduce únicamente recuperando ese commit.
 
 ## 1. Estado general
