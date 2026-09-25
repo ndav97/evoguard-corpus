@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "status": "PROVISIONAL",
+  "status": "CALIBRATED",
   "scope": "context_limited_models",
   "applies_to": [
     "local_a",
@@ -15,9 +15,14 @@
   },
   "estimator": {
     "method": "utf8_bytes_per_token_lower_bound",
-    "bytes_per_token": 2.5,
+    "bytes_per_token": 3.31,
     "safety_factor": 0.8,
-    "calibration": null
+    "calibration": {
+      "evidence": "docs/verification/context-calibration.json",
+      "measured_at": "2026-09-25T02:49:20.395Z",
+      "minimum_bytes_per_token": 3.3149,
+      "samples": 16
+    }
   },
   "history": {
     "recent_steps": 2,

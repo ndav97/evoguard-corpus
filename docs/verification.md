@@ -88,3 +88,8 @@ Esta evidencia calibra el evaluador; no valida ninguna aplicación F001 ni habil
 ## Política de contexto — 2026-09-24
 - 115/115 pruebas (incluye `tests/context.test.mjs`, 9). Evidencia del contenedor vigente.
 - Calibración pendiente en el equipo del usuario: `npm run context:calibrate` (informe) y `-- --write` (fija `bytes_per_token` y escribe `docs/verification/context-calibration.json`). Ensayo del script contra un Ollama simulado: flujo correcto de lectura, cálculo y escritura; sin valor probatorio sobre los tokenizadores.
+
+## Calibración de contexto — 2026-09-24
+- Evidencia: `docs/verification/context-calibration.json` (Ollama 0.32.15, 16 mediciones). Mínimo 3,3149 B/token (granite3.3:8b, JSON); qwen2.5-coder:7b 3,6418.
+- Estimador: 3,31 B/token × 0,8. Margen real frente al núcleo V3 de Granite: 4261 estimados contra 3101 medidos.
+- Se mantiene el factor 0,8 porque contenidos no medidos (hashes, lockfiles, código minificado) pueden tener proporciones menores; el control posterior `CONTEXT_ESTIMATE_VIOLATION` detecta subestimaciones.

@@ -1,0 +1,121 @@
+{
+  "artifact_type": "context_calibration",
+  "experimental": false,
+  "measured_at": "2026-09-25T02:49:20.395Z",
+  "ollama_version": "0.32.15",
+  "measure_num_ctx": 16384,
+  "method": "prompt_eval_count de /api/chat con la misma instrucción, esquema y entrada que el adaptador; keep_alive 0",
+  "results": {
+    "local_a": {
+      "model": "qwen2.5-coder:7b",
+      "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+      "samples": [
+        {
+          "name": "V0-core",
+          "bytes": 6058,
+          "tokens": 1433,
+          "bytes_per_token": 4.2275
+        },
+        {
+          "name": "V1-core",
+          "bytes": 7619,
+          "tokens": 1812,
+          "bytes_per_token": 4.2047
+        },
+        {
+          "name": "V2-core",
+          "bytes": 9600,
+          "tokens": 2300,
+          "bytes_per_token": 4.1739
+        },
+        {
+          "name": "V3-core",
+          "bytes": 11282,
+          "tokens": 2730,
+          "bytes_per_token": 4.1326
+        },
+        {
+          "name": "V3-code",
+          "bytes": 12443,
+          "tokens": 3109,
+          "bytes_per_token": 4.0023
+        },
+        {
+          "name": "V3-tsc",
+          "bytes": 14565,
+          "tokens": 3806,
+          "bytes_per_token": 3.8269
+        },
+        {
+          "name": "V3-spanish",
+          "bytes": 17138,
+          "tokens": 4104,
+          "bytes_per_token": 4.1759
+        },
+        {
+          "name": "V3-json",
+          "bytes": 15139,
+          "tokens": 4157,
+          "bytes_per_token": 3.6418
+        }
+      ],
+      "min_bytes_per_token": 3.6418
+    },
+    "local_b": {
+      "model": "granite3.3:8b",
+      "digest": "fd429f23b90980ed1bef53b990894e7b0199331f6ae90c5650240a7d5b70f1f7",
+      "samples": [
+        {
+          "name": "V0-core",
+          "bytes": 6058,
+          "tokens": 1622,
+          "bytes_per_token": 3.7349
+        },
+        {
+          "name": "V1-core",
+          "bytes": 7619,
+          "tokens": 2065,
+          "bytes_per_token": 3.6896
+        },
+        {
+          "name": "V2-core",
+          "bytes": 9600,
+          "tokens": 2620,
+          "bytes_per_token": 3.6641
+        },
+        {
+          "name": "V3-core",
+          "bytes": 11282,
+          "tokens": 3101,
+          "bytes_per_token": 3.6382
+        },
+        {
+          "name": "V3-code",
+          "bytes": 12443,
+          "tokens": 3499,
+          "bytes_per_token": 3.5562
+        },
+        {
+          "name": "V3-tsc",
+          "bytes": 14565,
+          "tokens": 4208,
+          "bytes_per_token": 3.4613
+        },
+        {
+          "name": "V3-spanish",
+          "bytes": 17138,
+          "tokens": 4677,
+          "bytes_per_token": 3.6643
+        },
+        {
+          "name": "V3-json",
+          "bytes": 15139,
+          "tokens": 4567,
+          "bytes_per_token": 3.3149
+        }
+      ],
+      "min_bytes_per_token": 3.3149
+    }
+  },
+  "minimum_bytes_per_token": 3.3149
+}

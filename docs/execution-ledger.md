@@ -70,3 +70,8 @@ Implementada según `docs/operational-decisions.md`: `config/context.json`, `run
 Medición provisional (estimador 2,5 × 0,8): núcleo V0 3110, V1 3891, V2 4881 y V3 5722 tokens estimados de 6656. Con ~3,2 B/token (ensayo del script contra un Ollama simulado), V3 ocupa ~4440 y deja ~2200 para historial. Ninguna cifra es medición real de los tokenizadores: falta ejecutar la calibración en el equipo con Ollama.
 
 Verificación (copia Linux con la evidencia de contenedor reverificada por el usuario): 115/115 pruebas, validación F001 correcta; no se modificaron archivos del payload verificado.
+
+## Calibración de contexto — 2026-09-24
+Ejecutada por el usuario con Ollama 0.32.15 (`npm run context:calibrate -- --write`): 8 muestras por modelo, prompt_eval_count real con la misma instrucción, esquema y entrada que el adaptador. Proporción mínima: qwen2.5-coder:7b 3,64 B/token; granite3.3:8b 3,31 B/token (muestra JSON del fixture). Se fija `bytes_per_token` 3,31 con factor de seguridad 0,8; `config/context.json` pasa a CALIBRATED y la evidencia queda en `docs/verification/context-calibration.json`.
+
+Tokens reales del núcleo (Granite, el más exigente): V0 1622, V1 2065, V2 2620, V3 3101. Con la estimación conservadora el núcleo ocupa V0 2288, V1 2878, V2 3626 y V3 4261 de 6656, y deja 4368, 3778, 3030 y 2395 tokens estimados para historial. El preflight ya no bloquea por contexto. Pruebas sin navegador en el equipo: 97/97.
