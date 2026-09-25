@@ -5,6 +5,7 @@ import {randomUUID} from 'node:crypto';
 import {createProviderAdapter} from './adapter.mjs';
 import {requestJson} from './http.mjs';
 import {connectionFor,credentialsFromEnv} from './connection.mjs';
+import {ollamaBase} from './ollama.mjs';
 import {loadCorpus} from '../validation/corpus.mjs';
 import {makePacket} from '../packet.mjs';
 
@@ -55,8 +56,8 @@ async function main() {
   const report={artifact_type:'provider_connectivity',experimental:false,created_at:new Date().toISOString(),mode,models:[]};
   let tags,version;
   try {
-    version=await requestJson('http://127.0.0.1:11434/api/version',{signal:AbortSignal.timeout(5000)});
-    tags=await requestJson('http://127.0.0.1:11434/api/tags',{signal:AbortSignal.timeout(5000)});
+    version=await requestJson(`${ollamaBase()}/api/version`,{signal:AbortSignal.timeout(5000)});
+    tags=await requestJson(`${ollamaBase()}/api/tags`,{signal:AbortSignal.timeout(5000)});
   } catch { /* Se informa indisponibilidad sin inventar metadatos. */ }
   for(const provider of mode==='inspect'?Object.keys(models):selected) {
     const config=models[provider];

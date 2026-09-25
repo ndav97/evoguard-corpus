@@ -13,9 +13,10 @@ const sha = text => createHash('sha256').update(text).digest('hex');
 const SECRET = /(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|x-api-key|authorization:\s*bearer|SYNTEROLINK_[A-Z_]*KEY\s*=)/i;
 
 export function createTaskStore(root, { mode, familyId = 'F001', version, taskId = randomUUID() }) {
-  if (!['rehearsal', 'experimental'].includes(mode)) throw new Error('Modo de almacenamiento inválido');
-  const dir = mode === 'rehearsal' ? join(root, '.artifacts/rehearsals', taskId) : join(root, 'runs/corpus-generation', familyId, version, taskId);
-  const privateDir = mode === 'rehearsal' ? join(dir, 'evaluator') : join(root, 'evaluator/runs', familyId, version, taskId);
+  // bench: banco de prueba de modelos locales (.artifacts/bench, fuera de Git; nunca referencia del corpus).
+  if (!['rehearsal', 'experimental', 'bench'].includes(mode)) throw new Error('Modo de almacenamiento inválido');
+  const dir = mode === 'experimental' ? join(root, 'runs/corpus-generation', familyId, version, taskId) : join(root, mode === 'bench' ? '.artifacts/bench' : '.artifacts/rehearsals', taskId);
+  const privateDir = mode === 'experimental' ? join(root, 'evaluator/runs', familyId, version, taskId) : join(dir, 'evaluator');
   if (existsSync(dir)) throw new Error('La tarea ya existe; no se sobrescriben registros');
   mkdirSync(dir, { recursive: true });
   mkdirSync(privateDir, { recursive: true });

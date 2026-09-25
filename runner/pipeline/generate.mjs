@@ -14,6 +14,7 @@ import { makePacket } from '../packet.mjs';
 import { generationBlockers } from '../preflight.mjs';
 import { createProviderPool } from '../providers/adapter.mjs';
 import { credentialsFromEnv } from '../providers/connection.mjs';
+import { withRetries } from '../providers/retry.mjs';
 import { seedFiles } from '../sandbox/policy.mjs';
 import { evolutionSeed } from '../sandbox/lineage.mjs';
 import { sandboxWorkspaces } from './workspace.mjs';
@@ -22,28 +23,12 @@ import { createTaskStore, saveReference, CORPUS_REFERENCES } from './store.mjs';
 
 let root = fileURLToPath(new URL('../../', import.meta.url));
 const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
-const TRANSIENT = /^(HTTP_(408|409|425|429|5\d\d)|REQUEST_ABORTED|NETWORK_ERROR|EMPTY_RESPONSE|INVALID_JSON_RESPONSE|INVALID_RESPONSE)$/;
 const readJson = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
 const writeJson = (path, value) => writeFileSync(join(root, path), JSON.stringify(value, null, 2) + '\n');
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
 
-// Reintenta errores transitorios del proveedor (no del modelo) con espera creciente.
-function withRetries(pool, store) {
-  return {
-    async next(context, options) {
-      store.track(context);
-      for (let retry = 0; ; retry++) {
-        try { return await pool.next(context, options); }
-        catch (error) {
-          if (!TRANSIENT.test(error.code ?? '') || retry >= 3 || options?.signal?.aborted) throw error;
-          const wait = [15000, 60000, 180000][retry];
-          log(`  ${context.provider} a${context.attempt} c${context.cycle}: ${error.code}; reintento en ${wait / 1000}s`);
-          await new Promise(resolve => setTimeout(resolve, wait));
-        }
-      }
-    }
-  };
-}
+// Reintentos de errores transitorios del transporte: runner/providers/retry.mjs.
+const retrying = (pool, store) => withRetries(pool, { before: context => store.track(context), onRetry: ({ context, code, wait }) => log(`  ${context.provider} a${context.attempt} c${context.cycle}: ${code}; reintento en ${wait / 1000}s`) });
 
 function git(args) { return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim(); }
 
@@ -97,7 +82,7 @@ export async function generate(version, { commit = true, repoRoot, adapterFactor
   const pool = adapterFactory ? adapterFactory({ store, version }) : createProviderPool({ models, credentials, onCall: call => store.call(call) });
   const result = await runTask({
     mode: 'experimental', preflightBlockers: [], packet, policy: data.policy, initialProvider,
-    adapter: withRetries(pool, store),
+    adapter: retrying(pool, store),
     workspaces: sandboxWorkspaces(root, { seed, onOpen: () => log(`  workspace abierto`) }),
     evaluator: createPipelineEvaluator({ root, version, privateSink: record => store.private(record) }),
     emit: event => {

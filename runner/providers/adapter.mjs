@@ -1,5 +1,6 @@
 import {requestJson,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
+import {ollamaBase} from './ollama.mjs';
 import {createHash} from 'node:crypto';
 import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
 import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
@@ -10,7 +11,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
   const connection=connectionFor(provider,config);
-  if(config.transport==='ollama'&&(config.context!==8192||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
+  if(config.transport==='ollama'&&(!Number.isInteger(config.context)||config.context<4096||config.context>262144||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
   // Ventana limitada => contexto gestionado (config/context.json). Comerciales: contexto completo, sin cambios.
   const managed=contextPolicy.applies_to.includes(provider);
   if(managed!==(config.context!==null))throw providerError('CONTEXT_POLICY_MISMATCH');
@@ -26,7 +27,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
-      const tags=await request('http://127.0.0.1:11434/api/tags');
+      const tags=await request(`${ollamaBase()}/api/tags`);
       if(!tags.models?.some(m=>m.name===config.api_model_id&&m.digest===config.digest))throw providerError('MODEL_DIGEST_MISMATCH');
     };
     try {
@@ -65,7 +66,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');
       } else {
         await verifyLocal();
-        raw=await request('http://127.0.0.1:11434/api/chat',{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
+        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
         if(raw.done!==true||raw.done_reason!=='stop')throw providerError('INCOMPLETE_RESPONSE');

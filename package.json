@@ -21,7 +21,9 @@
     "context:calibrate": "node runner/context/calibrate.mjs",
     "pipeline:rehearse": "node runner/pipeline/rehearse.mjs",
     "corpus:generate": "node --env-file-if-exists=.env runner/pipeline/generate.mjs",
-    "corpus:audit": "node runner/pipeline/audit.mjs"
+    "corpus:audit": "node runner/pipeline/audit.mjs",
+    "bench:local": "node runner/bench/local.mjs",
+    "bench:selftest": "node runner/bench/selftest.mjs V0,V1,V2,V3"
   },
   "devDependencies": {
     "ajv": "8.20.0",

@@ -1,4 +1,5 @@
 import {providerError} from './http.mjs';
+import {ollamaBase} from './ollama.mjs';
 const direct={
   openai:{base_url:'https://api.openai.com/v1',credential_env:['OPENAI_API_KEY']},
   anthropic:{base_url:'https://api.anthropic.com/v1',credential_env:['ANTHROPIC_API_KEY']},
@@ -16,7 +17,7 @@ export function connectionFor(provider,config) {
   }
   const expected=provider.startsWith('local_')?'ollama':provider;
   if(access!==expected||(config.base_url!==undefined&&config.base_url!==direct[provider].base_url))throw providerError('CONNECTION_INVALID');
-  return {access_provider:access,...direct[provider]};
+  return {access_provider:access,...direct[provider],...(provider.startsWith('local_')?{base_url:ollamaBase()}:{})};
 }
 export function credentialsFromEnv(models,env) {
   return Object.fromEntries(Object.entries(models).map(([provider,config])=>{

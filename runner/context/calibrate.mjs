@@ -12,9 +12,10 @@ import { loadCorpus } from '../validation/corpus.mjs';
 import { makePacket } from '../packet.mjs';
 import { buildContextInput, loadContextPolicy, validatePolicy } from './policy.mjs';
 import { ACTION_SCHEMA, INSTRUCTION, RESPONSE_CONTRACT } from '../providers/adapter.mjs';
+import { ollamaBase } from '../providers/ollama.mjs';
 
 const root = new URL('../../', import.meta.url);
-const OLLAMA = 'http://127.0.0.1:11434';
+const OLLAMA = ollamaBase();
 const MEASURE_CTX = 16384;
 
 function sampleHistories() {
