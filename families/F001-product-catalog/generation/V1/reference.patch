@@ -1,0 +1,84 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index 209be41..39c2d3d 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,14 +1,16 @@
+ import { useState } from 'react';
+ import productsData from '../fixtures/products.json';
+-import { filterProducts, Product } from './utils';
++import { filterProducts, sortProducts, Product } from './utils';
+ 
+ const products = productsData as Product[];
+ 
+ export default function App() {
+   const [search, setSearch] = useState("");
+   const [category, setCategory] = useState("All");
++  const [sortOrder, setSortOrder] = useState("");
+ 
+   const filteredProducts = filterProducts(products, search, category);
++  const sortedProducts = sortProducts(filteredProducts, sortOrder);
+ 
+   return (
+     <main>
+@@ -40,11 +42,26 @@ export default function App() {
+       </div>
+ 
+       <div>
+-        {filteredProducts.length === 0 ? (
++        <label htmlFor="sortOrder">Orden</label>
++        <select 
++          id="sortOrder"
++          value={sortOrder}
++          onChange={(e) => setSortOrder(e.target.value)}
++        >
++          <option value="">Sin orden</option>
++          <option value="name-asc">name-asc</option>
++          <option value="name-desc">name-desc</option>
++          <option value="price-asc">price-asc</option>
++          <option value="price-desc">price-desc</option>
++        </select>
++      </div>
++
++      <div>
++        {sortedProducts.length === 0 ? (
+           <p>No hay resultados</p>
+         ) : (
+           <ul>
+-            {filteredProducts.map(p => (
++            {sortedProducts.map(p => (
+               <li key={p.id}>{p.id} {p.name}</li>
+             ))}
+           </ul>
+diff --git a/src/utils.ts b/src/utils.ts
+index 709770e..829ad20 100644
+--- a/src/utils.ts
++++ b/src/utils.ts
+@@ -13,3 +13,28 @@ export function filterProducts(products: Product[], search: string, category: st
+     return categoryMatch && searchMatch;
+   });
+ }
++
++export function sortProducts(products: Product[], sortOrder: string): Product[] {
++  if (!sortOrder) return products;
++  
++  const sorted = [...products];
++  
++  sorted.sort((a, b) => {
++    if (sortOrder === "name-asc") {
++      const nameA = a.name.toLowerCase();
++      const nameB = b.name.toLowerCase();
++      return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
++    } else if (sortOrder === "name-desc") {
++      const nameA = a.name.toLowerCase();
++      const nameB = b.name.toLowerCase();
++      return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
++    } else if (sortOrder === "price-asc") {
++      return a.price - b.price;
++    } else if (sortOrder === "price-desc") {
++      return b.price - a.price;
++    }
++    return 0;
++  });
++  
++  return sorted;
++}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F001",
+  "version": "V1",
+  "base_commit": "496409a9d3349258253f1b6ff1bd708e6c0046b3",
+  "candidate_commit": "92ae6f6aacf92132a06c3a929dbd1a79434b5cc1",
+  "patch_sha256": "cc32f6807b620bf223b2bcccf662644cdd31949df5bb110e3b040935390ca80f",
+  "task_packet_sha256": "55ccb9cd25f783cb45356521af3a59ad0d262798df798dfaa60190dbcdc545cb",
+  "attempt": "02-google-a1",
+  "generator": {
+    "provider": "google",
+    "model": "gemini-3.1-pro-preview",
+    "temperature": null,
+    "seed": null
+  },
+  "logs_path": "runs/corpus-generation/F001/V1/79d57b46-948a-4634-8cfb-2738ef52076b",
+  "accepted_at": "2026-09-25T04:58:28.707Z"
+}

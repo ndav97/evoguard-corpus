@@ -1,0 +1,42 @@
+{
+  "artifact_type": "corpus_generation",
+  "mode": "experimental",
+  "experimental": true,
+  "task_id": "79d57b46-948a-4634-8cfb-2738ef52076b",
+  "family_id": "F001",
+  "version": "V1",
+  "status": "ACCEPTED",
+  "attempts": [
+    {
+      "id": "01-anthropic-a1",
+      "provider": "anthropic",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "failure_reason": "CYCLE_LIMIT",
+      "validation": {
+        "build": "NOT_RUN",
+        "typecheck": "NOT_RUN",
+        "development_tests": "NOT_RUN",
+        "independent_oracle": "NOT_RUN",
+        "architecture": "NOT_RUN"
+      },
+      "candidate_commit": null
+    },
+    {
+      "id": "02-google-a1",
+      "provider": "google",
+      "attempt": 1,
+      "outcome": "ACCEPTED",
+      "failure_reason": null,
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "PASS"
+      },
+      "candidate_commit": "92ae6f6aacf92132a06c3a929dbd1a79434b5cc1"
+    }
+  ],
+  "accepted": "02-google-a1"
+}

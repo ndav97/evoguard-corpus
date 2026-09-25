@@ -18,6 +18,6 @@
     "R003"
   ],
   "provider": "anthropic",
-  "reference_commit": null,
-  "patch_path": null
+  "reference_commit": "92ae6f6aacf92132a06c3a929dbd1a79434b5cc1",
+  "patch_path": "generation/V1/reference.patch"
 }

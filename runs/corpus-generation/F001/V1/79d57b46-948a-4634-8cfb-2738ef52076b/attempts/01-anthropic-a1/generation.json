@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F001",
+  "version": "V1",
+  "artifact_type": "reference_candidate",
+  "generator": {
+    "provider": "anthropic",
+    "model": "claude-sonnet-5",
+    "temperature": null,
+    "seed": null
+  },
+  "attempt": 1,
+  "repair_count": 0,
+  "base_commit": "496409a9d3349258253f1b6ff1bd708e6c0046b3",
+  "candidate_commit": null,
+  "prompt_sha256": "802d1bfacd38a1b9393405fcc24e01a578f398dfcc9b5bd6a2705f3dcd13c1d8",
+  "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
+  "stack_sha256": "be0b62e406cf8b0ff96cbcd6f068d297a7510c0f672574eb330c4cadf1dcb47c",
+  "started_at": "2026-09-25T04:50:47.984Z",
+  "finished_at": "2026-09-25T04:54:52.748Z",
+  "tokens": {
+    "input": 103053,
+    "output": 9524
+  },
+  "cost_usd": null,
+  "cycles": 25,
+  "duration_seconds": 244.764,
+  "validation": {
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "development_tests": "NOT_RUN",
+    "independent_oracle": "NOT_RUN",
+    "architecture": "NOT_RUN"
+  },
+  "outcome": "REASSIGN",
+  "failure_reason": "CYCLE_LIMIT",
+  "logs_path": "runs/corpus-generation/F001/V1/79d57b46-948a-4634-8cfb-2738ef52076b/attempts/01-anthropic-a1"
+}
