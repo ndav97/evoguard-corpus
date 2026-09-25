@@ -8,6 +8,8 @@
 
 > **Pasos 5–8 (24/09/2026, noche).** Implementados y ensayados de punta a punta en el entorno Linux de Claude con la misma imagen del usuario: pipeline real (evaluación en sandbox, oráculo en contenedor aislado, arquitectura, persistencia, historia evolutiva auditada), preflight comprobable (despejado), `corpus:generate` y `corpus:audit`. Ensayo completo con constructores guionados en copia desechable: V0→V3 aceptadas, auditoría PASS (5/5 por versión) y FROZEN. **Falta solo la ejecución real con modelos**, posible únicamente en el equipo del usuario (Docker, claves de Synterolink y Ollama): doble clic en `scripts\run-f001.cmd`. Hace verificación nativa, ensayo, generación V0–V3, auditoría y congelamiento, con commits por etapa y log en `.artifacts\run-f001-*.log`. Después: `docs/paso-9-preparacion-familias.md`.
 
+> **F001 COMPLETA — 25/09/2026 00:27.** Ejecución real: V0, V1 y V2 aceptadas por Gemini, V3 por GPT-5.6 (tras reasignaciones del protocolo). Auditoría PASS con oráculo estable 5/5 en las cuatro versiones y familia **FROZEN**. Hallazgo prioritario antes de F002–F010: Sonnet y Gemini devolvieron JSON no parseable en el 60–80 % de sus llamadas vía Synterolink (Sonnet no completó ninguna versión), lo que sesga la comparación entre modelos. Hay que diagnosticarlo y corregirlo en el adaptador. Detalle en `docs/execution-ledger.md`; siguiente paso en `docs/paso-9-preparacion-familias.md`.
+
 Fecha de corte: **24 de septiembre de 2026**. Último commit observado: `759ba0d`. Este informe incluye también cambios locales sin commit; por tanto, el estado descrito no se reproduce únicamente recuperando ese commit.
 
 ## 1. Estado general

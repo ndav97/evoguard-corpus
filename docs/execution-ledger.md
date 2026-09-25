@@ -87,3 +87,21 @@ Implementado: preflight comprobable, ciclo de vida en esquemas y validador, `run
 Ensayo completo en copia desechable del repositorio (entorno Linux de Claude, misma imagen), con constructores guionados en lugar de modelos: V0 (openai) → V1 (anthropic) → V2 (google) → V3 (local_a) aceptadas con un commit por versión y manifiestos coherentes (VALIDATED); auditoría PASS con oráculo 5/5 estable en V0 (10/10), V1 (17/17), V2 (25/25) y V3 (33/33) en ~2 min; congelamiento FROZEN y preflight bloqueando una regeneración. Esa copia se descartó: ninguna referencia instrumental entró en el corpus. Suite: 126 pruebas.
 
 Pendiente del corpus real: ejecutar `npm run corpus:generate -- all` en el equipo del usuario (único entorno con Docker, credenciales de Synterolink y Ollama).
+
+## Resultados de la ejecución real de F001 — 2026-09-24/25
+Ejecución con `scripts\run-f001.cmd` en el equipo del usuario (23:27 → 00:27, ~1 h). Verificación nativa del contenedor y ensayo integral PASS; generación V0–V3 con modelos reales; auditoría PASS sin hallazgos; F001 **FROZEN** (commits `edbc5cf`, `1deff26`, `efc6cde`, `6f5859e`, `892950c`).
+
+| Versión | Aceptada por | Intentos previos (motivo) | Ciclos / duración del aceptado | Oráculo en auditoría |
+|---|---|---|---|---|
+| V0 | google (Gemini 3.1 Pro) | openai: FAIL del oráculo; anthropic: límite de 25 ciclos | 20 / 332 s | 10/10 ×5 |
+| V1 | google | anthropic: límite de 25 ciclos | 21 / 214 s | 17/17 ×5 |
+| V2 | google | — | 16 / 282 s | 25/25 ×5 |
+| V3 | openai (GPT-5.6 Sol) | local_a: `technical_failure`; local_b: FAIL del oráculo | 8 / 444 s | 33/33 ×5 |
+
+Tres de cuatro referencias las produjo Gemini (V1 estaba asignada a anthropic y V3 a local_a; la reasignación del protocolo funcionó como estaba previsto). Historia reproducible, arquitectura PASS y sin fugas en las cuatro versiones.
+
+### Hallazgo que debe resolverse antes de F002–F010
+- **Salidas `INVALID_ACTION_JSON` masivas en los comerciales vía Synterolink**: anthropic 18/25 llamadas en V0 y 20/25 en V1; google 15/20, 17/21 y 12/16; openai ninguna. Anthropic no llegó a entregar en ninguna versión por agotar los ciclos con respuestas no parseables. Es muy probable que sea un problema de formato de transporte (texto alrededor del JSON, bloques de código o mezcla con razonamiento), no de capacidad, y **sesga la comparación entre modelos**. El adaptador no guarda el texto crudo rechazado, así que la causa no puede confirmarse con los registros actuales. Acción recomendada: guardar el texto rechazado (acotado y sin secretos) en `calls.jsonl`, reproducir con el smoke de proveedores y corregir el parser o el contrato de salida estructurada por proveedor **antes** de generar las otras familias. F001 queda congelada tal cual; si se decide regenerarla, abrir una nueva revisión.
+- Locales: 23–25 ciclos con menos de 800 tokens de salida en total; no produjeron un candidato válido. No hubo errores de contexto (`CONTEXT_LIMIT`). Con 1024 tokens de salida por acción su rendimiento es muy limitado.
+- Tokens de openai en `null` en los registros por intento porque una llamada terminó en HTTP 524 (transitorio, reintentado): la suma exige que todas las llamadas reporten uso. Los totales observables están en `calls.jsonl` (V0: 60,5k entrada / 28,1k salida).
+- Métrica de auditoría: los candidatos concentran la UI en 1 componente detectado (guía 5–20). No es un rechazo, pero se anota para el perfil estructural del corpus.
