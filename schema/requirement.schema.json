@@ -52,6 +52,55 @@
       },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "ui_contract": {
+      "type": "object",
+      "description": "Contrato de interfaz observable que el constructor debe respetar y que usa el adaptador del oráculo. Se introduce con el requisito; no revela casos del oráculo.",
+      "properties": {
+        "initial_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "enum": [
+                  "searchbox",
+                  "combobox",
+                  "button",
+                  "listitem",
+                  "status"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rule": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "role",
+              "name",
+              "rule"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "initial_state",
+        "elements"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
@@ -61,7 +110,8 @@
     "introduced_at",
     "status",
     "description",
-    "acceptance"
+    "acceptance",
+    "ui_contract"
   ],
   "additionalProperties": false
 }

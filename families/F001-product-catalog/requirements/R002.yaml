@@ -26,5 +26,20 @@
       "id": "R002-A05",
       "description": "Un resultado vacío no muestra productos incorrectos."
     }
-  ]
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página la categoría seleccionada es All.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Categoría",
+        "rule": "Un <select> con nombre accesible «Categoría» y exactamente las opciones con valor All, Electronics, Home, Sports y Books. El cambio de opción actualiza los resultados inmediatamente."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Con cero resultados no se muestra ningún elemento de lista de producto ni el nombre de ningún producto; puede mostrarse un mensaje de lista vacía."
+      }
+    ]
+  }
 }

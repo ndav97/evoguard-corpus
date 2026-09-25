@@ -26,5 +26,20 @@
       "id": "R001-A05",
       "description": "La búsqueda se combina mediante conjunción con la categoría."
     }
-  ]
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página la búsqueda está vacía.",
+    "elements": [
+      {
+        "role": "searchbox",
+        "name": "Buscar",
+        "rule": "Un único campo de búsqueda <input type=\"search\"> con nombre accesible «Buscar» (mediante <label> o aria-label). Los resultados se actualizan al escribir, sin botón de envío."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada producto resultante se muestra como un elemento de lista (<li> dentro de <ul> u <ol>) cuyo texto visible comienza con su ID seguido de su nombre, p. ej. «P001 Wireless Mouse». Solo los productos resultantes se muestran así; ningún otro elemento de lista comienza con un ID de producto."
+      }
+    ]
+  }
 }

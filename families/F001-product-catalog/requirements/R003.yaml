@@ -34,5 +34,15 @@
       "id": "R003-A07",
       "description": "Cambiar categoría conserva el criterio de ordenamiento."
     }
-  ]
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página no hay orden explícito elegido y los productos conservan el orden del fixture.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Orden",
+        "rule": "Un <select> con nombre accesible «Orden» con opciones de valor name-asc, name-desc, price-asc y price-desc (nombre ascendente/descendente, precio de menor a mayor/de mayor a menor). Puede incluir además una opción inicial sin orden explícito."
+      }
+    ]
+  }
 }

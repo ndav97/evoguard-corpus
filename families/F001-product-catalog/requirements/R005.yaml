@@ -38,5 +38,25 @@
       "id": "R005-A08",
       "description": "Una categoría que excluye al seleccionado limpia la selección."
     }
-  ]
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página no hay producto seleccionado.",
+    "elements": [
+      {
+        "role": "button",
+        "name": null,
+        "rule": "Cada elemento de lista de producto contiene un botón que selecciona ese producto."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "El producto seleccionado, cuando está visible, se marca con aria-pressed=\"true\" (o aria-selected/aria-current=\"true\") en su propio elemento de lista; ningún otro producto lleva esa marca."
+      },
+      {
+        "role": "status",
+        "name": null,
+        "rule": "Un elemento con role=\"status\" siempre presente muestra el ID del producto seleccionado (p. ej. «Seleccionado: P001 Wireless Mouse»), también cuando no está en la página visible; sin selección no muestra ningún ID de producto."
+      }
+    ]
+  }
 }

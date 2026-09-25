@@ -13,4 +13,5 @@ export interface CatalogAdapter {
   canNext(): Promise<boolean>;
   canPrevious(): Promise<boolean>;
 }
-// Se resolverán selectores accesibles contra la UI futura. No se impone DOM/arquitectura al generador.
+// Roles y nombres accesibles: ui_contract de cada requisito (families/F001-product-catalog/requirements).
+// Implementación: runner/oracle/ui-adapter.mjs. Fuera del contrato no se impone DOM ni arquitectura al generador.

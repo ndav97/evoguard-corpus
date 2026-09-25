@@ -38,5 +38,25 @@
       "id": "R004-A08",
       "description": "Con cero resultados no se muestra una página inválida."
     }
-  ]
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página se muestra la primera página.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Anterior",
+        "rule": "Un botón con nombre accesible «Anterior» que muestra la página previa; deshabilitado (atributo disabled) u omitido cuando no existe página previa."
+      },
+      {
+        "role": "button",
+        "name": "Siguiente",
+        "rule": "Un botón con nombre accesible «Siguiente» que muestra la página posterior; deshabilitado (atributo disabled) u omitido cuando no existe página posterior."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Solo los productos de la página actual se muestran como elementos de lista. Ningún indicador visible muestra valores inválidos como NaN, undefined o números negativos."
+      }
+    ]
+  }
 }

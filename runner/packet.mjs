@@ -7,7 +7,8 @@ export function makePacket(data, version) {
     const r = data.requirements.find(r=>r.id===id);
     if (!r) throw new Error(`Requisito no encontrado: ${id}`);
     // Allowlist: no serializar manifiestos, procedencia, providers o campos futuros.
-    return {id:r.id,description:r.description,acceptance:r.acceptance.map(a=>({id:a.id,description:a.description}))};
+    // ui_contract: interfaz observable del requisito (roles, nombres accesibles, estado inicial); no contiene casos del oráculo.
+    return {id:r.id,description:r.description,acceptance:r.acceptance.map(a=>({id:a.id,description:a.description})),ui_contract:{initial_state:r.ui_contract.initial_state,elements:r.ui_contract.elements.map(e=>({role:e.role,name:e.name,rule:e.rule}))}};
   });
   return {
     family_id: 'F001', version,
