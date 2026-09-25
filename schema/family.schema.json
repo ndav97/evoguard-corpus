@@ -268,7 +268,10 @@
           "minLength": 1
         },
         "status": {
-          "const": "CASES_SPECIFIED_ADAPTER_PENDING"
+          "enum": [
+            "CASES_SPECIFIED_ADAPTER_PENDING",
+            "E2E_CALIBRATED"
+          ]
         },
         "stability_runs_required": {
           "const": 5

@@ -49,7 +49,7 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
         const observed = [...new Set(own.map(call => call.observed_model).filter(Boolean))];
         const generation = {
           schema_version: '1.0.0', family_id: 'F001', version: packet.version, artifact_type: 'reference_candidate',
-          generator: { provider: row.provider, model: observed.length === 1 ? observed[0] : (config?.api_model_id ?? 'instrumental-script'), temperature: config?.temperature ?? null, seed: config?.seed ?? null },
+          generator: { provider: row.provider, model: observed.length ? observed.join('; ') : (models ? 'no-observado' : 'instrumental-script'), temperature: config?.temperature ?? null, seed: config?.seed ?? null },
           attempt: row.attempt, repair_count: row.attempt - 1,
           base_commit: row.base_commit, candidate_commit: row.candidate_commit ?? null,
           prompt_sha256: promptSha, fixture_sha256: fixtureSha256, stack_sha256: stackSha,

@@ -33,8 +33,8 @@ const root = git(['rev-parse', 'HEAD']);
 const history = [{ message: 'scaffold: isolated baseline (not V0)', commit: root }];
 for (const [index, step] of steps.entries()) {
   if (step.type === 'patch') {
-    if (typeof step.patch !== 'string' || !step.patch.length) throw new Error(`Parche vacío en paso ${index}`);
-    git(['apply', '--index', '--binary', '--whitespace=nowarn', '-'], step.patch);
+    if (typeof step.patch !== 'string') throw new Error(`Parche inválido en paso ${index}`);
+    if (step.patch.length) git(['apply', '--index', '--binary', '--whitespace=nowarn', '-'], step.patch);
   } else if (step.type === 'task') {
     const packet = JSON.parse(step.content);
     if (!['V1', 'V2', 'V3'].includes(packet.version)) throw new Error('Tarea evolutiva inválida');

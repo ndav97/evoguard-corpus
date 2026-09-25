@@ -1,3 +1,6 @@
+import { mkdtempSync, cpSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, basename } from 'node:path';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
@@ -58,9 +61,20 @@ test('reparación acepta solo feedback visible de desarrollo', () => {
   assert.throws(() => makeRepairPrompt(load(), {source:'build', text:'error'}, 4), /intento/);
   assert.match(makeRepairPrompt(load(), {source:'build', text:'TS error'}, 2), /TS error/);
 });
-test('preflight bloquea generación sin requisitos operativos', () => {
-  const b = generationBlockers(root);
-  assert.match(b.join('\n'), /modelo/i);
-  assert.match(b.join('\n'), /oráculo/);
-  assert.match(b.join('\n'), /adapters de proveedores/);
+test('preflight: cada bloqueo corresponde a una condición comprobable', () => {
+  const d = mkdtempSync(join(tmpdir(), 'evoguard-preflight-'));
+  try {
+    for (const item of ['config','docker','runner','templates','families','oracle','schema','prompts','docs','runs','README.md','package.json','package-lock.json']) {
+      cpSync(join(root,item), join(d,item), {recursive:true, filter:p=>!['node_modules','dist'].includes(basename(p))});
+    }
+    const context = JSON.parse(readFileSync(join(d,'config/context.json'),'utf8'));
+    context.status = 'PROVISIONAL'; writeFileSync(join(d,'config/context.json'), JSON.stringify(context));
+    const family = JSON.parse(readFileSync(join(d,'families/F001-product-catalog/family.yaml'),'utf8'));
+    family.oracle.status = 'CASES_SPECIFIED_ADAPTER_PENDING'; writeFileSync(join(d,'families/F001-product-catalog/family.yaml'), JSON.stringify(family));
+    writeFileSync(join(d,'runner/pipeline/evaluator.mjs'), readFileSync(join(d,'runner/pipeline/evaluator.mjs'),'utf8') + '\n// cambio\n');
+    const models = JSON.parse(readFileSync(join(d,'config/models.json'),'utf8'));
+    models.models.local_b.digest = null; writeFileSync(join(d,'config/models.json'), JSON.stringify(models));
+    const text = generationBlockers(d).join('\n');
+    for (const expected of [/contexto/, /Oráculo E2E/, /cambió código ensayado.*evaluator\.mjs/, /local_b sin digest/]) assert.match(text, expected);
+  } finally { rmSync(d, {recursive:true, force:true}); }
 });

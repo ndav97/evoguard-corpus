@@ -18,6 +18,7 @@ import { evolutionSeed, auditPatch } from '../sandbox/lineage.mjs';
 import { seedFiles } from '../sandbox/policy.mjs';
 import { openSandbox, closeSandbox } from '../sandbox/docker.mjs';
 import { workspaceOps } from './workspace.mjs';
+import { pipelineFingerprint } from './sources.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = name => readFileSync(join(root, 'tests/fixtures/rehearsal', name), 'utf8');
@@ -111,7 +112,11 @@ async function main() {
   } finally { closeSandbox(session.name, session.image); }
   console.log('  V1 reconstruido desde la referencia V0 del ensayo: historia y hashes reproducibles');
 
-  writeFileSync(join(store.dir, 'rehearsal-check.json'), JSON.stringify({ status: 'PASS', experimental: false, image_id: lock.image_id, checked_at: new Date().toISOString() }, null, 2) + '\n', { flag: 'wx' });
+  const evidence = { artifact_type: 'pipeline_rehearsal', status: 'PASS', experimental: false, task_id: store.taskId, image_id: lock.image_id, checked_at: new Date().toISOString(),
+    outcomes: records.map(r => ({ provider: r.generator.provider, attempt: r.attempt, outcome: r.outcome, validation: r.validation })), evolution_seed_v1: 'PASS', sources_sha256: pipelineFingerprint(root) };
+  writeFileSync(join(store.dir, 'rehearsal-check.json'), JSON.stringify(evidence, null, 2) + '\n', { flag: 'wx' });
+  // Evidencia versionada para el preflight (sin registros del ensayo, que quedan fuera de Git).
+  writeFileSync(join(root, 'docs/verification/pipeline-rehearsal.json'), JSON.stringify(evidence, null, 2) + '\n');
   console.log(`PASS: ensayo integral guardado en ${store.dir}`);
 }
 

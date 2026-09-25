@@ -99,3 +99,8 @@ Esta evidencia calibra el evaluador; no valida ninguna aplicación F001 ni habil
 - Oráculo en contenedor aislado: página de calibración V3 33/33 PASS (~8,5 s); mutante de conjunción V0 7/10 FAIL; sin contenedores remanentes.
 - Ensayo integral `npm run pipeline:rehearse` (43769398-211a-4adb-9c26-2d7a65536e8a): reparación, rechazo del oráculo, rechazo de arquitectura, aceptación con commit, registros `generation.json` válidos contra el esquema, canal privado separado y reconstrucción de V1 con hashes reproducibles.
 - `tests/pipeline.test.mjs` (10) sin Docker: arquitectura, evaluador, linaje y auditoría, modos del motor y persistencia.
+
+## Pasos 6–8 (herramientas) — 2026-09-24
+- Preflight despejado en el repositorio real tras reverificar el contenedor y repetir el ensayo integral.
+- Ensayo del camino experimental V0→V3 con constructores guionados en copia desechable: 4 referencias, auditoría PASS (5/5 por versión), FROZEN. Sin efecto sobre el corpus real.
+- 126 pruebas (incluye preflight por condiciones, ciclo de vida y manejo de errores del modelo).

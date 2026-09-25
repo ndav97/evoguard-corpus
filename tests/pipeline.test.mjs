@@ -159,3 +159,30 @@ test('el prompt común declara los comandos visibles exactos del pipeline', () =
   const common = readFileSync(join(root, 'prompts/common.md'), 'utf8');
   for (const argv of Object.values(VISIBLE_COMMANDS)) assert.ok(common.includes(argv.join(' ')), argv.join(' '));
 });
+
+test('motor: salida inválida del modelo consume un ciclo con aviso visible; ventana insuficiente reasigna', async () => {
+  let calls = 0;
+  const seen = [];
+  const invalid = harness('rehearsal', { adapter: { async next(ctx) {
+    seen.push(JSON.stringify(ctx.messages));
+    calls++;
+    if (calls === 1) throw Object.assign(new Error('INVALID_ACTION_JSON'), { code: 'INVALID_ACTION_JSON' });
+    return ctx.cycle === 2 ? { type: 'tool', argv: ['x'] } : { type: 'deliver' };
+  } } });
+  const result = await runTask(invalid);
+  assert.equal(result.status, 'ACCEPTED');
+  assert.equal(result.attempts[0].cycles, 3);
+  assert.match(seen[1], /Respuesta inválida \(INVALID_ACTION_JSON\)/);
+  assert.ok(result.events.some(e => e.type === 'model_output_error'));
+  let first = true;
+  const context = harness('rehearsal', { adapter: { async next(ctx) {
+    if (first) { first = false; throw Object.assign(new Error('CONTEXT_WINDOW_TOO_SMALL'), { code: 'CONTEXT_WINDOW_TOO_SMALL' }); }
+    return ctx.cycle === 1 ? { type: 'tool', argv: ['x'] } : { type: 'deliver' };
+  } } });
+  const reassigned = await runTask(context);
+  assert.deepEqual(reassigned.attempts.map(a => [a.provider, a.outcome, a.reason]), [['openai', 'REASSIGN', 'CONTEXT_LIMIT'], ['anthropic', 'ACCEPTED', null]]);
+  const infra = harness('rehearsal', { adapter: { async next() { throw Object.assign(new Error('HTTP_401'), { code: 'HTTP_401' }); } } });
+  const stopped = await runTask(infra);
+  assert.equal(stopped.status, 'INFRA_ERROR');
+  assert.equal(stopped.attempts[0].error_code, 'HTTP_401');
+});

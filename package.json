@@ -18,7 +18,9 @@
     "runner:simulate": "node runner/simulation/cli.mjs",
     "providers": "node runner/providers/cli.mjs",
     "context:calibrate": "node runner/context/calibrate.mjs",
-    "pipeline:rehearse": "node runner/pipeline/rehearse.mjs"
+    "pipeline:rehearse": "node runner/pipeline/rehearse.mjs",
+    "corpus:generate": "node --env-file-if-exists=.env runner/pipeline/generate.mjs",
+    "corpus:audit": "node runner/pipeline/audit.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",

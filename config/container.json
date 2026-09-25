@@ -17,7 +17,7 @@
   },
   "verification": {
     "path": "docs/verification/container.json",
-    "sha256": "ef2797af551c997053c9aa07df13f194f8099fa637958ab7bce76f9fdfea1758"
+    "sha256": "88c8cbeab0d58ac11dd3d7133d730c66f0ca6799d6b62ec7d3b9527631632e3b"
   },
   "verification_inputs": {
     "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
@@ -32,8 +32,8 @@
     "templates/react-vite/src/main.tsx": "c922b796e04fbcff1c9734ef34acb52073a3bf064b281d59359780878d5cb465",
     "runner/sandbox/policy.mjs": "3b45151dc648413951461c4955af23178ae68433bcc4a0c4e8575257b941489c",
     "runner/sandbox/docker.mjs": "86d12ec06193a6cadfd01688a491bcba537566061c55f883180dee47b9a98879",
-    "runner/sandbox/seed-init.mjs": "ea32682329e17a034a021c2949e6c0f425ab3aef20bc848b97ae300258e01c3e",
-    "runner/sandbox/lineage.mjs": "4d0c9d7f0492c2e1ffc03eff536b02d977500426f7b59b3bf03814f2909e0c40",
+    "runner/sandbox/seed-init.mjs": "5aa60f8a6b1bd7d4aa6247f90eac1f433d2b6c5438602fbf3bd5217dfa9aa7ae",
+    "runner/sandbox/lineage.mjs": "ed45cff4d150ddadd00f9f5be9269c0fe72b447188d45f66d3a95b9f28365e26",
     "runner/sandbox/lock.mjs": "b5e5223ace7a054baac47f363028c6f006cb32ead01f08d3a06882511cd1468d",
     "runner/sandbox/build.mjs": "5322123d0f8758dc197d3650ba1d4e8c58683923828cde481d33efe30af8a6e0",
     "runner/sandbox/verify.mjs": "a3faceb8dd119da1f44bddcde08ab9eb814d821bd8dc5bba16179a666c9fe4bf",
@@ -41,7 +41,7 @@
     "runner/sandbox/cli.mjs": "ff10056c92bccdeb5c80ea4f96b6560cf46aef81c4c9057d90fad8dab15ae8ae",
     "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
     "runner/packet.mjs": "f7cd0124331254ec63a0c12a781f40dca4dbcb500bf783d3487cba477d52a8bc",
-    "runner/validation/corpus.mjs": "9d2a8d6ef33a072096fc456c77e41e722f71cffa64f39e9a2d61af1cd42104db",
+    "runner/validation/corpus.mjs": "ac49a4fb5cd7582540d21b80f5f7433f0e6f8a1ee275a87ba091418df4622fdd",
     "prompts/common.md": "24107c85f10d7b8bd491f0ce44b857bfd602b93abcd3d84c438d118a73745057",
     "prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",
     "families/F001-product-catalog/fixtures/products.json": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",

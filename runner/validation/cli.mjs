@@ -6,5 +6,5 @@ try {
   const data = loadCorpus(root);
   const errors = validateCorpus(data, root);
   if (errors.length) { console.error(errors.join('\n')); process.exitCode = 1; }
-  else console.log(`F001: especificación válida; ${data.requirements.length} requisitos, ${data.turns.length} turnos, ${data.products.length} productos, ${data.oracleCases.reduce((n,c)=>n+c.cases.length,0)} casos declarativos. Estado DRAFT; no es validación funcional.`);
+  else console.log(`F001: especificación válida; ${data.requirements.length} requisitos, ${data.turns.length} turnos, ${data.products.length} productos, ${data.oracleCases.reduce((n,c)=>n+c.cases.length,0)} casos declarativos. Estado ${data.family.status}.`);
 } catch (error) { console.error(error.message); process.exitCode = 1; }

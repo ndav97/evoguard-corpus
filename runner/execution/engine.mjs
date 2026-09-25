@@ -8,6 +8,8 @@ const MODES={
   rehearsal:{artifact:'pipeline_rehearsal',accepted:'ACCEPTED',blocked:'BLOCKED'},
   experimental:{artifact:'corpus_generation',accepted:'ACCEPTED',blocked:'BLOCKED'}
 };
+const MODEL_OUTPUT_ERRORS=new Set(['INVALID_ACTION_JSON','INVALID_ACTION','MODEL_REFUSAL','INCOMPLETE_RESPONSE']);
+const CONTEXT_ERRORS=new Set(['CONTEXT_CORE_TOO_LARGE','CONTEXT_WINDOW_TOO_SMALL']);
 const timeoutError=()=>Object.assign(new Error('Límite temporal del intento'),{code:'ATTEMPT_TIMEOUT'});
 
 function validate(options) {
@@ -69,7 +71,17 @@ export async function runTask(options) {
           let delivered=false;
           for(let cycle=1;cycle<=25;cycle++) {
             row.cycles=cycle;
-            const response=await bounded(opts=>adapter.next(clone({provider,attempt,cycle,packet,messages}),opts));
+            let response;
+            try {response=await bounded(opts=>adapter.next(clone({provider,attempt,cycle,packet,messages}),opts));}
+            catch(error) {
+              // Salida inválida del modelo: consume el ciclo y se informa visiblemente; no es infraestructura.
+              if(MODEL_OUTPUT_ERRORS.has(error.code)) {
+                record('model_output_error',{provider,attempt,cycle,code:error.code});
+                messages.push({role:'user',content:{source:'runner',feedback:`Respuesta inválida (${error.code}). Devuelve exactamente un objeto JSON {"type":...,"argv":[...]} según el contrato de respuesta.`,attempt}});
+                continue;
+              }
+              throw error;
+            }
             if(!response || !['tool','deliver','technical_failure'].includes(response.type) || JSON.stringify(response).length>262144) throw new Error('Respuesta de adaptador inválida');
             record('response',{provider,attempt,cycle,response});
             messages.push({role:'assistant',content:clone(response)});
@@ -112,8 +124,10 @@ export async function runTask(options) {
           }
           if(row.outcome===mode.accepted) {result.status=mode.accepted;stop=true;}
         } catch(error) {
-          row.reason=error.code==='ATTEMPT_TIMEOUT'?'TIMEOUT':'INFRA_ERROR';
-          row.outcome=error.code==='ATTEMPT_TIMEOUT'?'REASSIGN':'INFRA_ERROR';
+          // Timeout y ventana de contexto insuficiente son límites del intento/modelo: reasignan. Lo demás es infraestructura.
+          row.reason=error.code==='ATTEMPT_TIMEOUT'?'TIMEOUT':CONTEXT_ERRORS.has(error.code)?'CONTEXT_LIMIT':'INFRA_ERROR';
+          row.outcome=row.reason==='INFRA_ERROR'?'INFRA_ERROR':'REASSIGN';
+          if(row.outcome==='INFRA_ERROR') row.error_code=/^[A-Z0-9_]+$/.test(error.code??'')?error.code:null;
           if(row.outcome==='INFRA_ERROR') {result.status='INFRA_ERROR';stop=true;}
         } finally {
           controller.abort();row.duration_ms=Date.now()-started;row.finished_at=new Date().toISOString();

@@ -1,0 +1,78 @@
+{
+  "artifact_type": "pipeline_rehearsal",
+  "status": "PASS",
+  "experimental": false,
+  "task_id": "aab26c06-3c07-46d0-bc3b-27f25c5112ba",
+  "image_id": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
+  "checked_at": "2026-09-25T03:49:45.050Z",
+  "outcomes": [
+    {
+      "provider": "openai",
+      "attempt": 1,
+      "outcome": "REPAIR",
+      "validation": {
+        "build": "NOT_RUN",
+        "typecheck": "FAIL",
+        "development_tests": "NOT_RUN",
+        "independent_oracle": "NOT_RUN",
+        "architecture": "NOT_RUN"
+      }
+    },
+    {
+      "provider": "openai",
+      "attempt": 2,
+      "outcome": "REASSIGN",
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "FAIL",
+        "architecture": "NOT_RUN"
+      }
+    },
+    {
+      "provider": "anthropic",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "FAIL"
+      }
+    },
+    {
+      "provider": "google",
+      "attempt": 1,
+      "outcome": "ACCEPTED",
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "PASS"
+      }
+    }
+  ],
+  "evolution_seed_v1": "PASS",
+  "sources_sha256": {
+    "runner/execution/engine.mjs": "c9fe918c3a1f54e4b455b42e33fc4fa2cb8c0c4db5795465b5f8bb9e4db47003",
+    "runner/pipeline/workspace.mjs": "8348496b9cdf63ca87e7b128b7e56b0f9db14e8143200c08adec051c0d4b3dbe",
+    "runner/pipeline/evaluator.mjs": "a6d8809e790643e34b928b38dd2028f4bfa56ec0bade10f88bda511ef1d329f6",
+    "runner/pipeline/architecture.mjs": "ffcd16d49147fbe3edadc17196a8c26836add52db9bad9c1529d75bdb755fc17",
+    "runner/pipeline/store.mjs": "8e1fd767724b1e621b8c3a901fbecd39b7403959eed1b386d89c30e1bb725bbf",
+    "runner/pipeline/rehearse.mjs": "a3bad4374f040c4586e14c02549809a67b8630a3a9c67c236bcabe9c64dfdb0f",
+    "runner/oracle/evaluate.mjs": "332dfb054c404abb52e0756581faf915916607eed3b7a655f027c588245031e6",
+    "runner/oracle/plans.mjs": "badcdc45fe5409aaa1f61464bd72bf1779f670902e48fb90a4833b83bb86cb2b",
+    "runner/oracle/reference.mjs": "e91ef1974beb84a34a2caa70a2125eb5229e811535f7484b44e358e9d384c88a",
+    "runner/oracle/ui-adapter.mjs": "6f61d8ccb1809f52a37e0d2dfdb4c923d3c1b08f731ba94cd816f163aedc8a02",
+    "runner/oracle/remote.mjs": "2051e8ca824b072e8921f013d2d96447f16212b33e441baa0a7b6eee8038b79b",
+    "runner/oracle/container.mjs": "652f25a72da189316ea6082f5842d32ddbae3bbc72aef9e891250fce91537b1a",
+    "runner/oracle/spec-lock.json": "9876da24275aa2c0e37f99feeb56f98f6bb9e19f58181ebe46932c91afe3a839",
+    "runner/sandbox/docker.mjs": "86d12ec06193a6cadfd01688a491bcba537566061c55f883180dee47b9a98879",
+    "runner/sandbox/policy.mjs": "3b45151dc648413951461c4955af23178ae68433bcc4a0c4e8575257b941489c",
+    "runner/sandbox/lineage.mjs": "ed45cff4d150ddadd00f9f5be9269c0fe72b447188d45f66d3a95b9f28365e26",
+    "runner/sandbox/seed-init.mjs": "5aa60f8a6b1bd7d4aa6247f90eac1f433d2b6c5438602fbf3bd5217dfa9aa7ae"
+  }
+}

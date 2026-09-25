@@ -61,7 +61,7 @@
   },
   "oracle": {
     "path": "oracle/F001",
-    "status": "CASES_SPECIFIED_ADAPTER_PENDING",
+    "status": "E2E_CALIBRATED",
     "stability_runs_required": 5
   },
   "reference_versions": {

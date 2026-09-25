@@ -42,7 +42,10 @@
       "additionalProperties": false
     },
     "artifact_scope": {
-      "const": "specification_and_neutral_scaffold_only"
+      "enum": [
+        "specification_and_neutral_scaffold_only",
+        "specification_scaffold_and_references"
+      ]
     },
     "authorship": {
       "type": "object",
@@ -51,7 +54,10 @@
           "const": "Codex"
         },
         "reference_application_generator": {
-          "type": "null"
+          "enum": [
+            null,
+            "multimodel_pipeline"
+          ]
         },
         "human_functional_corrections": {
           "const": false
@@ -158,7 +164,11 @@
       "type": "object",
       "properties": {
         "status": {
-          "const": "NOT_STARTED"
+          "enum": [
+            "NOT_STARTED",
+            "PASSED",
+            "FAILED"
+          ]
         },
         "reviewer": {
           "type": [
@@ -187,7 +197,12 @@
       "type": "object",
       "properties": {
         "status": {
-          "const": "NOT_STARTED"
+          "enum": [
+            "NOT_STARTED",
+            "NOT_APPLICABLE_SINGLE_FAMILY",
+            "PASSED",
+            "FAILED"
+          ]
         },
         "exclude": {
           "type": "array",

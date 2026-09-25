@@ -93,7 +93,7 @@ export function validateCorpus(data, root) {
     equal(t.active_after, reqIds.slice(0,i+3), `${t.id}: active_after inválido`);
     demand(t.provider === f.generation_plan[t.to_version], `${t.id}: proveedor inválido`);
     demand(t.reference_commit === f.reference_versions[t.to_version], `${t.id}: referencia distinta al manifiesto`);
-    demand(t.patch_path === null, `${t.id}: no hay patches antes de generar referencias`);
+    demand(t.patch_path === (t.reference_commit ? `generation/${t.to_version}/reference.patch` : null), `${t.id}: patch_path inconsistente con su referencia`);
   });
   equal(ps.map(p=>p.id), Array.from({length:30},(_,i)=>`P${String(i+1).padStart(3,'0')}`), 'IDs de productos deben ser P001–P030 únicos y ordenados');
   demand(new Set(ps.map(p=>p.name.toLowerCase())).size === 30, 'Nombres de productos no únicos');
@@ -107,9 +107,27 @@ export function validateCorpus(data, root) {
   demand(f.technology.stack_manifest === 'config/stack.json' && p.scaffold.path === 'templates/react-vite', 'Ruta del stack/scaffold inválida');
   demand(f.oracle.path === 'oracle/F001', 'Ruta de oráculo inválida');
   equal(p.references, f.reference_versions, 'Referencias y procedencia no coinciden');
-  demand(f.status === 'DRAFT' && Object.values(f.reference_versions).every(v=>v===null), 'Este repositorio preparatorio debe seguir DRAFT sin referencias; congelamiento no demostrado');
-  demand(Object.values(p.models).every(v=>v===null), 'No seleccionar modelos en esta fase');
-  demand(data.stack.experimental_frozen === false, 'No declarar congelamiento experimental en esta fase');
+  // Ciclo de vida: DRAFT (sin referencias) → GENERATED (≥1, consecutivas desde V0) → VALIDATED (V0–V3)
+  // → AUDITED (auditoría aprobada) → FROZEN (además estabilidad del oráculo registrada).
+  const versions = ['V0','V1','V2','V3'];
+  const refs = versions.map(v => f.reference_versions[v]);
+  const count = refs.filter(Boolean).length;
+  demand(refs.every((r,i) => !r || refs.slice(0,i).every(Boolean)), 'Referencias no consecutivas desde V0');
+  for (const [i,v] of versions.entries()) {
+    if (!refs[i]) continue;
+    const refPath = join(root, FAMILY_PATH, 'generation', v, 'reference.json');
+    if (!existsSync(refPath)) { demand(false, `${v}: falta generation/${v}/reference.json`); continue; }
+    const ref = JSON.parse(readFileSync(refPath, 'utf8'));
+    demand(ref.candidate_commit === refs[i] && ref.version === v, `${v}: reference.json no coincide con family.yaml`);
+    demand(existsSync(join(root, FAMILY_PATH, 'generation', v, 'reference.patch')) && existsSync(join(root, FAMILY_PATH, 'generation', v, 'task.json')), `${v}: faltan parche o tarea de la referencia`);
+    demand(p.models[ref.generator?.provider] !== null, `${v}: procedencia sin modelo del generador`);
+  }
+  const needed = { DRAFT: [0,0], GENERATED: [1,4], VALIDATED: [4,4], AUDITED: [4,4], FROZEN: [4,4] }[f.status];
+  demand(needed && count >= needed[0] && count <= needed[1], `Estado ${f.status} incompatible con ${count} referencias`);
+  if (f.status === 'DRAFT') demand(Object.values(p.models).every(v=>v===null), 'DRAFT no registra modelos de ejecuciones');
+  demand(count === 0 ? p.artifact_scope === 'specification_and_neutral_scaffold_only' && p.authorship.reference_application_generator === null : p.artifact_scope === 'specification_scaffold_and_references' && p.authorship.reference_application_generator === 'multimodel_pipeline', 'Alcance/autoría de procedencia inconsistente con las referencias');
+  demand(['AUDITED','FROZEN'].includes(f.status) === (p.audit.status === 'PASSED'), 'Estado de auditoría inconsistente');
+  demand(data.stack.experimental_frozen === (f.status === 'FROZEN'), 'experimental_frozen solo cuando la familia está FROZEN');
   equal(data.oracleCases.map(c=>c.requirement_id), reqIds, 'Oráculo incompleto');
   rs.forEach((r,i)=> {
     const c = data.oracleCases.find(c=>c.requirement_id===r.id);

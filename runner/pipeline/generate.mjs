@@ -1,0 +1,147 @@
+// Generación experimental del corpus F001 (Pasos 7–8).
+// Uso: npm run corpus:generate -- V0|V1|V2|V3|all [--no-commit]
+// Cada versión: preflight despejado → seed desde la referencia previa → runTask(mode: experimental) con los
+// cinco proveedores reales → registros en runs/ y evaluator/runs/ → si ACCEPTED, referencia en
+// families/F001-product-catalog/generation/<V>/ y actualización de family/provenance/turnos → commit Git.
+// Nunca corrige código de un candidato ni revela resultados del oráculo al constructor.
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { runTask } from '../execution/engine.mjs';
+import { loadCorpus, validateCorpus } from '../validation/corpus.mjs';
+import { makePacket } from '../packet.mjs';
+import { generationBlockers } from '../preflight.mjs';
+import { createProviderPool } from '../providers/adapter.mjs';
+import { credentialsFromEnv } from '../providers/connection.mjs';
+import { seedFiles } from '../sandbox/policy.mjs';
+import { evolutionSeed } from '../sandbox/lineage.mjs';
+import { sandboxWorkspaces } from './workspace.mjs';
+import { createPipelineEvaluator } from './evaluator.mjs';
+import { createTaskStore, saveReference, CORPUS_REFERENCES } from './store.mjs';
+
+let root = fileURLToPath(new URL('../../', import.meta.url));
+const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
+const TRANSIENT = /^(HTTP_(408|409|425|429|5\d\d)|REQUEST_ABORTED|NETWORK_ERROR|EMPTY_RESPONSE|INVALID_JSON_RESPONSE|INVALID_RESPONSE)$/;
+const readJson = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
+const writeJson = (path, value) => writeFileSync(join(root, path), JSON.stringify(value, null, 2) + '\n');
+const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
+
+// Reintenta errores transitorios del proveedor (no del modelo) con espera creciente.
+function withRetries(pool, store) {
+  return {
+    async next(context, options) {
+      store.track(context);
+      for (let retry = 0; ; retry++) {
+        try { return await pool.next(context, options); }
+        catch (error) {
+          if (!TRANSIENT.test(error.code ?? '') || retry >= 3 || options?.signal?.aborted) throw error;
+          const wait = [15000, 60000, 180000][retry];
+          log(`  ${context.provider} a${context.attempt} c${context.cycle}: ${error.code}; reintento en ${wait / 1000}s`);
+          await new Promise(resolve => setTimeout(resolve, wait));
+        }
+      }
+    }
+  };
+}
+
+function git(args) { return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim(); }
+
+// Registra la referencia aceptada en los manifiestos de la familia.
+function recordReference(version, reference, record, { instrumental = false } = {}) {
+  const familyPath = 'families/F001-product-catalog/family.yaml';
+  const provenancePath = 'families/F001-product-catalog/provenance.yaml';
+  const family = readJson(familyPath);
+  const provenance = readJson(provenancePath);
+  family.reference_versions[version] = reference.candidate_commit;
+  provenance.references[version] = reference.candidate_commit;
+  provenance.artifact_scope = 'specification_scaffold_and_references';
+  provenance.authorship.reference_application_generator = 'multimodel_pipeline';
+  const models = provenance.models;
+  const observed = record.generator.model;
+  if (observed === 'no-observado' && !instrumental) throw new Error('Referencia sin modelo observado: no se registra procedencia');
+  models[record.generator.provider] = models[record.generator.provider] && models[record.generator.provider] !== observed ? `${models[record.generator.provider]}; ${observed}` : observed;
+  const count = Object.values(family.reference_versions).filter(Boolean).length;
+  family.status = count === 4 ? 'VALIDATED' : 'GENERATED';
+  writeJson(familyPath, family);
+  writeJson(provenancePath, provenance);
+  if (version !== 'V0') {
+    const turn = `families/F001-product-catalog/turns/T00${VERSIONS.indexOf(version)}.yaml`;
+    const data = readJson(turn);
+    data.reference_commit = reference.candidate_commit;
+    data.patch_path = `generation/${version}/reference.patch`;
+    writeJson(turn, data);
+  }
+}
+
+// options.adapterFactory y repoRoot: solo para ensayos en una copia desechable del repositorio.
+export async function generate(version, { commit = true, repoRoot, adapterFactory } = {}) {
+  if (repoRoot) root = repoRoot;
+  const blockers = generationBlockers(root);
+  if (blockers.length) throw new Error('Preflight bloquea la generación:\n' + blockers.map(b => `- ${b}`).join('\n'));
+  const data = loadCorpus(root);
+  const index = VERSIONS.indexOf(version);
+  if (data.family.reference_versions[version]) throw new Error(`${version} ya tiene referencia; no se regenera`);
+  if (index > 0 && !data.family.reference_versions[VERSIONS[index - 1]]) throw new Error(`${version} requiere la referencia ${VERSIONS[index - 1]}`);
+  const models = readJson('config/models.json').models;
+  const credentials = adapterFactory ? {} : credentialsFromEnv(models, process.env);
+  const missing = adapterFactory ? [] : ['openai', 'anthropic', 'google'].filter(provider => !credentials[provider]);
+  if (missing.length) throw new Error(`Faltan credenciales en el entorno para: ${missing.join(', ')} (usar .env con SYNTEROLINK_API_KEY)`);
+
+  const packet = makePacket(data, version);
+  const seed = evolutionSeed(root, version, CORPUS_REFERENCES(root));
+  const taskText = index === 0 ? seedFiles(root, 'V0')['TASK.json'] : seed.task;
+  const store = createTaskStore(root, { mode: 'experimental', version });
+  const initialProvider = data.family.generation_plan[version];
+  log(`${version}: tarea ${store.taskId}, proveedor inicial ${initialProvider}`);
+  const pool = adapterFactory ? adapterFactory({ store, version }) : createProviderPool({ models, credentials, onCall: call => store.call(call) });
+  const result = await runTask({
+    mode: 'experimental', preflightBlockers: [], packet, policy: data.policy, initialProvider,
+    adapter: withRetries(pool, store),
+    workspaces: sandboxWorkspaces(root, { seed, onOpen: () => log(`  workspace abierto`) }),
+    evaluator: createPipelineEvaluator({ root, version, privateSink: record => store.private(record) }),
+    emit: event => {
+      store.event(event);
+      if (event.type === 'evaluation') log(`  ${event.provider} a${event.attempt} ${event.stage}: ${event.status}`);
+      if (event.type === 'attempt_finished') log(`  ${event.provider} a${event.attempt}: ${event.outcome}${event.reason ? ` (${event.reason})` : ''}, ${event.cycles} ciclos`);
+      if (event.type === 'model_output_error') log(`  ${event.provider} a${event.attempt} c${event.cycle}: salida inválida ${event.code}`);
+    }
+  });
+  const { summary, records } = store.finalize(result, { packet, models, stackText: readFileSync(join(root, 'config/stack.json'), 'utf8'), fixtureSha256: data.family.fixture.sha256 });
+  let reference = null;
+  if (summary.status === 'ACCEPTED') {
+    const record = records.find(r => r.outcome === 'ACCEPTED');
+    const patch = readFileSync(join(store.dir, 'attempts', record.id, 'patch.diff'), 'utf8');
+    reference = saveReference(root, CORPUS_REFERENCES(root), { version, record, patch, taskText, taskDir: store.dir });
+    recordReference(version, reference, record, { instrumental: Boolean(adapterFactory) });
+    const errors = validateCorpus(loadCorpus(root), root);
+    if (errors.length) throw new Error('Corpus inconsistente tras registrar la referencia:\n' + errors.join('\n'));
+    log(`${version}: ACEPTADA (${record.generator.provider}, ${record.id}) commit ${reference.candidate_commit}`);
+  } else log(`${version}: ${summary.status} — sin referencia`);
+  if (commit) {
+    git(['add', 'runs/corpus-generation', 'evaluator/runs', 'families/F001-product-catalog']);
+    const message = reference
+      ? `corpus: F001 ${version} reference generated by ${reference.generator.provider}\n\nTask ${store.taskId}; accepted attempt ${reference.attempt}; candidate ${reference.candidate_commit}.`
+      : `corpus: F001 ${version} attempt without reference (${summary.status})\n\nTask ${store.taskId}; records kept for audit.`;
+    git(['commit', '-q', '-m', message]);
+    log(`  commit ${git(['rev-parse', '--short', 'HEAD'])}`);
+  }
+  return summary.status;
+}
+
+async function main() {
+  const [target, ...flags] = process.argv.slice(2);
+  const commit = !flags.includes('--no-commit');
+  if (!['all', ...VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- V0|V1|V2|V3|all [--no-commit]');
+  const data = loadCorpus(root);
+  const pending = target === 'all' ? VERSIONS.filter(v => !data.family.reference_versions[v]) : [target];
+  for (const version of pending) {
+    const status = await generate(version, { commit });
+    if (status !== 'ACCEPTED') { log(`Detenido en ${version} (${status}).`); process.exitCode = 2; return; }
+  }
+  log('Generación completa.');
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  main().catch(error => { console.error(`[${new Date().toISOString()}] ERROR: ${error.stack ?? error.message}`); process.exitCode = 1; });
+}

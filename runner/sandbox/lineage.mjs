@@ -18,8 +18,9 @@ const FORBIDDEN_PATH = /^(TASK\.json|fixtures\/|node_modules\/|dist\/|coverage\/
 // Rechaza parches que tocan archivos del pipeline, rutas peligrosas, secretos o tamaños excesivos.
 export function auditPatch(patch, label = 'parche') {
   const problems = [];
-  if (typeof patch !== 'string' || !patch.length) problems.push('vacío');
-  else {
+  // Un parche vacío es válido: la versión se aceptó sin cambios de código (commit vacío reproducible).
+  if (typeof patch !== 'string') problems.push('no textual');
+  else if (patch.length) {
     if (Buffer.byteLength(patch) > 4 * 1024 * 1024) problems.push('mayor de 4 MiB');
     const paths = [...patch.matchAll(/^diff --git a\/(\S+) b\/(\S+)$/gm)].flatMap(m => [m[1], m[2]]);
     if (!paths.length) problems.push('sin cabeceras diff --git');
@@ -44,12 +45,13 @@ export function loadReference(referencesDir, version) {
 }
 
 // Seed para abrir el workspace de `version` (V0 devuelve el scaffold sin pasos).
-export function evolutionSeed(root, version, referencesDir) {
+// through: true reconstruye hasta la referencia de `version` inclusive, sin tarea siguiente (auditoría).
+export function evolutionSeed(root, version, referencesDir, { through = false } = {}) {
   const index = VERSIONS.indexOf(version);
   if (index < 0) throw new Error(`Versión desconocida: ${version}`);
   const files = seedFiles(root, 'V0');
-  if (index === 0) return { files, steps: [] };
-  const previous = VERSIONS.slice(0, index).map(v => ({ version: v, ...loadReference(referencesDir, v) }));
+  if (index === 0 && !through) return { files, steps: [] };
+  const previous = VERSIONS.slice(0, index + (through ? 1 : 0)).map(v => ({ version: v, ...loadReference(referencesDir, v) }));
   // La base debe ser exactamente la que recibió V0 (su TASK.json histórico).
   files['TASK.json'] = previous[0].task;
   const steps = [{ type: 'expect', expect: previous[0].reference.base_commit }];
@@ -58,6 +60,7 @@ export function evolutionSeed(root, version, referencesDir) {
     auditPatch(item.patch, `reference ${item.version}`);
     steps.push({ type: 'patch', patch: item.patch, message: `reference: ${item.version}`, expect: item.reference.candidate_commit });
   }
+  if (through) return { files, steps, task: previous.at(-1).task };
   const data = loadCorpus(root);
   const current = JSON.stringify(makePacket(data, version), null, 2) + '\n';
   steps.push({ type: 'task', content: current, message: `task: ${version}` });
