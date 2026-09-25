@@ -5,6 +5,9 @@ Estado al 2026-09-24: la infraestructura de F001 está completa y ensayada de pu
 ## 0. Prioridad: salidas JSON inválidas de Sonnet y Gemini
 Hecho el 2026-09-25: el adaptador guarda el texto rechazado y admite, registrándolo, el bloque Markdown envolvente; protocolo 1.1 para los cinco modelos (`docs/protocol-v1.1-actions.md`). Pendiente: cuando Synterolink confirme la solución, ejecutar `npm run providers:diagnose`; si algún proveedor no queda `HEALTHY`, revisar los ejemplos rechazados antes de generar.
 
+## 0b. Modelos locales
+Banco listo (paso 3, `docs/gpu-vast-ai.md`): ejecutarlo en Vast.ai, elegir `local_a`/`local_b` con el criterio documentado, congelar de nuevo `config/models.json` y recalibrar el contexto antes de generar.
+
 ## 1. Antes de especificar familias nuevas: revisar F001 real
 Con `runs/corpus-generation/F001/*/summary.json`, `calls.jsonl` y `docs/verification/f001-audit.json`:
 - tasa de aceptación por proveedor y versión; reparaciones y reasignaciones por etapa (typecheck/build/tests/oráculo/arquitectura);

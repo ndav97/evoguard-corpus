@@ -85,3 +85,12 @@ Decisiones de Claude con autorización del usuario (detalle en `docs/protocol-v1
 - **`keep_alive` de Ollama a 15 min**, solo para velocidad; no altera la inferencia.
 - **Rutas protegidas** (`TASK.json`, `fixtures/`, `.git/`, `node_modules/`, `dist/`) para las acciones de escritura; el shell (`tool`) conserva el comportamiento 1.0 y la arquitectura sigue detectando cambios de fixture o dependencias.
 - **F001 no se modifica**: está FROZEN con protocolo 1.0. Recomendación: regenerarla como revisión 2 con 1.1 cuando los proveedores estén sanos, para que sea comparable con las familias nuevas.
+
+## Banco de modelos locales en GPU alquilada (paso 3) — 2026-09-25
+Decisiones de Claude con autorización del usuario (proveedor elegido por el usuario: Vast.ai):
+- **Arquitectura**: el pipeline sigue en el equipo del usuario; solo Ollama corre en la GPU alquilada, accesible por túnel SSH en `127.0.0.1:11435` (`EVOGUARD_OLLAMA_PORT`). El host siempre es 127.0.0.1: no se admite un Ollama expuesto públicamente. En la instancia, Ollama escucha solo en loopback.
+- **Banco = pipeline real con un solo modelo**: mismas etapas, protocolo 1.1 y tope de intentos que la generación, partiendo de las referencias congeladas de F001; sin reasignación (`singleProvider`, permitido solo en modo ensayo). Sus resultados nunca son referencias del corpus.
+- **Estimador por candidato**: antes de cada candidato se mide su tokenizador (núcleo V3 y fixture) porque la calibración oficial es de Qwen2.5/Granite. La política de producción sigue fijando los locales a 8 192 hasta un nuevo congelamiento: un local con otro contexto y la política actual da `CONTEXT_POLICY_MISMATCH`.
+- **Candidatos iniciales** (`config/local-bench.json`): las dos líneas base del pool actual (Qwen2.5-Coder 7B y Granite 3.3 8B a 8k/1024), Qwen2.5-Coder 7B a 32k/4096, Qwen2.5-Coder 14B, Devstral 24B, Qwen3-Coder 30B (MoE) y Qwen2.5-Coder 32B a 16k. Todos caben en 24 GB en Q4.
+- **Criterio de selección** (documentado en `docs/gpu-vast-ai.md`): al menos 3/4 tareas aceptadas, sin errores de infraestructura del modelo, sin bucles persistentes, tiempos compatibles con el tope de 1 h por intento y dos familias de modelos distintas.
+- **Reintentos de transporte comunes** (`runner/providers/retry.mjs`): la autoprueba reveló conexiones HTTP reutilizadas y ya cerradas tras la evaluación, situación que también puede darse por el túnel SSH; se reintentan como errores de red (el banco con esperas cortas y la generación con las de antes). Una salida inválida del modelo nunca se reintenta: consume un ciclo.
