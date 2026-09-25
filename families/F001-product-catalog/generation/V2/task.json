@@ -1,0 +1,374 @@
+{
+  "family_id": "F001",
+  "version": "V2",
+  "prompt": "Eres un agente de desarrollo que trabaja en un repositorio de aplicación React + TypeScript + Vite.\nCumple exclusivamente la solicitud y los requisitos vigentes proporcionados. Usa componentes funcionales, estado local useState centralizado y datos derivados; mantén modularidad razonable (guía de auditoría: 5–20 componentes relevantes).\nNo uses useReducer, useEffect, persistencia, gestores externos, backend, autenticación ni servicios externos. Usa exclusivamente el fixture recibido, sin modificar sus registros.\nDecide libremente nombres de componentes, funciones, archivos y representación del estado. La interfaz observable debe cumplir el contrato `ui_contract` de cada requisito vigente (roles, nombres accesibles, valores de opciones, marcas de estado y estado inicial); fuera de ese contrato, el aspecto visual es libre. No añadas funcionalidades no solicitadas.\nPuedes explorar todo el repositorio de aplicación y su historia disponible, leer/escribir archivos, crear y modificar pruebas de desarrollo, ejecutar terminal, búsqueda local, typecheck/build, tests y navegador/Playwright local.\nNo accedas a Internet externo ni añadas dependencias. Usa únicamente dependencias preinstaladas o npm ci con caché offline y lockfile. No cambies las versiones del stack.\nCrea y ejecuta tus pruebas de desarrollo, typecheck y build. Al entregar, el pipeline ejecuta exactamente `node node_modules/typescript/bin/tsc --noEmit`, `node node_modules/vite/bin/vite.js build` y `node node_modules/vitest/vitest.mjs run` (pruebas de desarrollo con Vitest; debe existir al menos una). Explica al entregar qué cambió y qué comandos ejecutaste y sus resultados. No crees commits: el pipeline los registra.\nLímite de esta entrega: 25 ciclos agente-herramientas. Las reparaciones continúan sobre tu propio código anterior. No inventes resultados de comandos.\n\nEvoluciona la aplicación desde la referencia validada recibida aplicando la solicitud del turno actual adjunta.\nPreserva todos los requisitos anteriores incluidos en el catálogo vigente y satisface el requisito nuevo. Mantén el `ui_contract` de los requisitos anteriores y añade el del requisito nuevo.\nPuedes inspeccionar y modificar las pruebas de desarrollo existentes; registra los cambios en la entrega. No partas de otro candidato ni cambies el fixture.\nEntrega implementación, pruebas de desarrollo y resultados de typecheck/build/tests.\n",
+  "request": "Muestra los productos en páginas de tamaño fijo de 10 resultados, salvo la última que contiene los restantes, después de aplicar búsqueda, categoría y ordenamiento. El tamaño no es configurable. Cada cambio de búsqueda o categoría vuelve a la primera página, incluso si la página anterior todavía existe. Conserva el criterio de ordenamiento y permite solo navegación a páginas existentes; con cero resultados no debe haber navegación inválida. Cambiar orden conserva el número de página.",
+  "requirements": [
+    {
+      "id": "R001",
+      "description": "Buscar productos por una parte del nombre.",
+      "acceptance": [
+        {
+          "id": "R001-A01",
+          "description": "Una coincidencia parcial del nombre devuelve los productos correspondientes."
+        },
+        {
+          "id": "R001-A02",
+          "description": "La búsqueda no distingue mayúsculas de minúsculas."
+        },
+        {
+          "id": "R001-A03",
+          "description": "Se ignoran los espacios iniciales y finales de la consulta."
+        },
+        {
+          "id": "R001-A04",
+          "description": "Una consulta vacía desactiva búsqueda y conserva los demás filtros."
+        },
+        {
+          "id": "R001-A05",
+          "description": "La búsqueda se combina mediante conjunción con la categoría."
+        }
+      ],
+      "ui_contract": {
+        "initial_state": "Al cargar la página la búsqueda está vacía.",
+        "elements": [
+          {
+            "role": "searchbox",
+            "name": "Buscar",
+            "rule": "Un único campo de búsqueda <input type=\"search\"> con nombre accesible «Buscar» (mediante <label> o aria-label). Los resultados se actualizan al escribir, sin botón de envío."
+          },
+          {
+            "role": "listitem",
+            "name": null,
+            "rule": "Cada producto resultante se muestra como un elemento de lista (<li> dentro de <ul> u <ol>) cuyo texto visible comienza con su ID seguido de su nombre, p. ej. «P001 Wireless Mouse». Solo los productos resultantes se muestran así; ningún otro elemento de lista comienza con un ID de producto."
+          }
+        ]
+      }
+    },
+    {
+      "id": "R002",
+      "description": "Filtrar productos por All, Electronics, Home, Sports o Books.",
+      "acceptance": [
+        {
+          "id": "R002-A01",
+          "description": "All no excluye productos por categoría."
+        },
+        {
+          "id": "R002-A02",
+          "description": "Cada categoría muestra solamente sus productos."
+        },
+        {
+          "id": "R002-A03",
+          "description": "Cambiar categoría actualiza inmediatamente los resultados."
+        },
+        {
+          "id": "R002-A04",
+          "description": "Búsqueda y categoría se aplican conjuntamente."
+        },
+        {
+          "id": "R002-A05",
+          "description": "Un resultado vacío no muestra productos incorrectos."
+        }
+      ],
+      "ui_contract": {
+        "initial_state": "Al cargar la página la categoría seleccionada es All.",
+        "elements": [
+          {
+            "role": "combobox",
+            "name": "Categoría",
+            "rule": "Un <select> con nombre accesible «Categoría» y exactamente las opciones con valor All, Electronics, Home, Sports y Books. El cambio de opción actualiza los resultados inmediatamente."
+          },
+          {
+            "role": "listitem",
+            "name": null,
+            "rule": "Con cero resultados no se muestra ningún elemento de lista de producto ni el nombre de ningún producto; puede mostrarse un mensaje de lista vacía."
+          }
+        ]
+      }
+    },
+    {
+      "id": "R003",
+      "description": "Ordenar por nombre o precio en ambas direcciones. Comparar nombres ASCII sin distinguir mayúsculas. En empates conservar el orden del fixture. Sin elegir orden explícito, conservar el orden del fixture.",
+      "acceptance": [
+        {
+          "id": "R003-A01",
+          "description": "Orden por nombre ascendente."
+        },
+        {
+          "id": "R003-A02",
+          "description": "Orden por nombre descendente."
+        },
+        {
+          "id": "R003-A03",
+          "description": "Orden por precio ascendente."
+        },
+        {
+          "id": "R003-A04",
+          "description": "Orden por precio descendente."
+        },
+        {
+          "id": "R003-A05",
+          "description": "Se ordenan solo productos que cumplen búsqueda y categoría."
+        },
+        {
+          "id": "R003-A06",
+          "description": "Cambiar búsqueda conserva el criterio de ordenamiento."
+        },
+        {
+          "id": "R003-A07",
+          "description": "Cambiar categoría conserva el criterio de ordenamiento."
+        }
+      ],
+      "ui_contract": {
+        "initial_state": "Al cargar la página no hay orden explícito elegido y los productos conservan el orden del fixture.",
+        "elements": [
+          {
+            "role": "combobox",
+            "name": "Orden",
+            "rule": "Un <select> con nombre accesible «Orden» con opciones de valor name-asc, name-desc, price-asc y price-desc (nombre ascendente/descendente, precio de menor a mayor/de mayor a menor). Puede incluir además una opción inicial sin orden explícito."
+          }
+        ]
+      }
+    },
+    {
+      "id": "R004",
+      "description": "Paginar después de filtros y orden con tamaño fijo de 10 resultados por página, salvo la última página que contiene los restantes. No es configurable. Cambiar orden conserva el número de página.",
+      "acceptance": [
+        {
+          "id": "R004-A01",
+          "description": "Cada página no final contiene exactamente 10 productos; la final contiene entre 1 y 10 si existen resultados. Con cero resultados no se muestran productos."
+        },
+        {
+          "id": "R004-A02",
+          "description": "Se puede acceder a páginas posteriores cuando hay más de 10 resultados."
+        },
+        {
+          "id": "R004-A03",
+          "description": "Se pagina después de aplicar búsqueda y categoría."
+        },
+        {
+          "id": "R004-A04",
+          "description": "La paginación conserva el ordenamiento seleccionado; cambiar orden conserva el número de página."
+        },
+        {
+          "id": "R004-A05",
+          "description": "Cambiar búsqueda vuelve a primera página."
+        },
+        {
+          "id": "R004-A06",
+          "description": "Cambiar categoría vuelve a primera página."
+        },
+        {
+          "id": "R004-A07",
+          "description": "No se puede navegar a una página inexistente."
+        },
+        {
+          "id": "R004-A08",
+          "description": "Con cero resultados no se muestra una página inválida."
+        }
+      ],
+      "ui_contract": {
+        "initial_state": "Al cargar la página se muestra la primera página.",
+        "elements": [
+          {
+            "role": "button",
+            "name": "Anterior",
+            "rule": "Un botón con nombre accesible «Anterior» que muestra la página previa; deshabilitado (atributo disabled) u omitido cuando no existe página previa."
+          },
+          {
+            "role": "button",
+            "name": "Siguiente",
+            "rule": "Un botón con nombre accesible «Siguiente» que muestra la página posterior; deshabilitado (atributo disabled) u omitido cuando no existe página posterior."
+          },
+          {
+            "role": "listitem",
+            "name": null,
+            "rule": "Solo los productos de la página actual se muestran como elementos de lista. Ningún indicador visible muestra valores inválidos como NaN, undefined o números negativos."
+          }
+        ]
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": "P001",
+      "name": "Wireless Mouse",
+      "category": "Electronics",
+      "price": 24.99
+    },
+    {
+      "id": "P002",
+      "name": "Mechanical Keyboard",
+      "category": "Electronics",
+      "price": 89.5
+    },
+    {
+      "id": "P003",
+      "name": "USB Hub",
+      "category": "Electronics",
+      "price": 19.99
+    },
+    {
+      "id": "P004",
+      "name": "Portable Monitor",
+      "category": "Electronics",
+      "price": 179
+    },
+    {
+      "id": "P005",
+      "name": "Noise Canceling Headphones",
+      "category": "Electronics",
+      "price": 129.99
+    },
+    {
+      "id": "P006",
+      "name": "Web Camera",
+      "category": "Electronics",
+      "price": 49.9
+    },
+    {
+      "id": "P007",
+      "name": "Bluetooth Speaker",
+      "category": "Electronics",
+      "price": 39.95
+    },
+    {
+      "id": "P008",
+      "name": "Laptop Stand",
+      "category": "Electronics",
+      "price": 24.99
+    },
+    {
+      "id": "P009",
+      "name": "Tablet Charger",
+      "category": "Electronics",
+      "price": 18.5
+    },
+    {
+      "id": "P010",
+      "name": "Desk Lamp",
+      "category": "Home",
+      "price": 34.5
+    },
+    {
+      "id": "P011",
+      "name": "Coffee Grinder",
+      "category": "Home",
+      "price": 59.99
+    },
+    {
+      "id": "P012",
+      "name": "Cotton Towel",
+      "category": "Home",
+      "price": 12
+    },
+    {
+      "id": "P013",
+      "name": "Glass Bottle",
+      "category": "Home",
+      "price": 15.5
+    },
+    {
+      "id": "P014",
+      "name": "Kitchen Scale",
+      "category": "Home",
+      "price": 22.75
+    },
+    {
+      "id": "P015",
+      "name": "Storage Basket",
+      "category": "Home",
+      "price": 18.5
+    },
+    {
+      "id": "P016",
+      "name": "Wall Clock",
+      "category": "Home",
+      "price": 29.9
+    },
+    {
+      "id": "P017",
+      "name": "Travel Mug",
+      "category": "Home",
+      "price": 15.5
+    },
+    {
+      "id": "P018",
+      "name": "Running Shoes",
+      "category": "Sports",
+      "price": 79.99
+    },
+    {
+      "id": "P019",
+      "name": "Yoga Mat",
+      "category": "Sports",
+      "price": 24.99
+    },
+    {
+      "id": "P020",
+      "name": "Tennis Balls",
+      "category": "Sports",
+      "price": 8.5
+    },
+    {
+      "id": "P021",
+      "name": "Cycling Helmet",
+      "category": "Sports",
+      "price": 45
+    },
+    {
+      "id": "P022",
+      "name": "Sports Bottle",
+      "category": "Sports",
+      "price": 15.5
+    },
+    {
+      "id": "P023",
+      "name": "Jump Rope",
+      "category": "Sports",
+      "price": 9.99
+    },
+    {
+      "id": "P024",
+      "name": "Training Gloves",
+      "category": "Sports",
+      "price": 19.95
+    },
+    {
+      "id": "P025",
+      "name": "Clean Code",
+      "category": "Books",
+      "price": 42
+    },
+    {
+      "id": "P026",
+      "name": "Design Patterns",
+      "category": "Books",
+      "price": 54.5
+    },
+    {
+      "id": "P027",
+      "name": "Practical TypeScript",
+      "category": "Books",
+      "price": 35.99
+    },
+    {
+      "id": "P028",
+      "name": "Modern React",
+      "category": "Books",
+      "price": 32.5
+    },
+    {
+      "id": "P029",
+      "name": "Data Structures",
+      "category": "Books",
+      "price": 47
+    },
+    {
+      "id": "P030",
+      "name": "Testing Software",
+      "category": "Books",
+      "price": 29.9
+    }
+  ]
+}

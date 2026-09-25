@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F001",
+  "version": "V2",
+  "artifact_type": "reference_candidate",
+  "generator": {
+    "provider": "google",
+    "model": "gemini-3.1-pro-preview",
+    "temperature": null,
+    "seed": null
+  },
+  "attempt": 1,
+  "repair_count": 0,
+  "base_commit": "b63ceb1a49401c00c038da28fd78d9dab0b46328",
+  "candidate_commit": "23037d8960ecc576dc85cd8c9a141c975935da51",
+  "prompt_sha256": "d6744916abc381e528efd4204926848c2e322d9faf79d3319cc535566c54d98d",
+  "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
+  "stack_sha256": "be0b62e406cf8b0ff96cbcd6f068d297a7510c0f672574eb330c4cadf1dcb47c",
+  "started_at": "2026-09-25T04:58:30.969Z",
+  "finished_at": "2026-09-25T05:03:13.326Z",
+  "tokens": {
+    "input": 72838,
+    "output": 34778
+  },
+  "cost_usd": null,
+  "cycles": 16,
+  "duration_seconds": 282.357,
+  "validation": {
+    "build": "PASS",
+    "typecheck": "PASS",
+    "development_tests": "PASS",
+    "independent_oracle": "PASS",
+    "architecture": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "failure_reason": null,
+  "logs_path": "runs/corpus-generation/F001/V2/861f2f25-ca49-455e-bf9d-5a2397d01133/attempts/01-google-a1"
+}

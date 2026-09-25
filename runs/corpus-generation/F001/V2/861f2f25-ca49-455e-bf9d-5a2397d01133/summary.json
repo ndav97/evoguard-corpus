@@ -1,0 +1,27 @@
+{
+  "artifact_type": "corpus_generation",
+  "mode": "experimental",
+  "experimental": true,
+  "task_id": "861f2f25-ca49-455e-bf9d-5a2397d01133",
+  "family_id": "F001",
+  "version": "V2",
+  "status": "ACCEPTED",
+  "attempts": [
+    {
+      "id": "01-google-a1",
+      "provider": "google",
+      "attempt": 1,
+      "outcome": "ACCEPTED",
+      "failure_reason": null,
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "PASS"
+      },
+      "candidate_commit": "23037d8960ecc576dc85cd8c9a141c975935da51"
+    }
+  ],
+  "accepted": "01-google-a1"
+}
