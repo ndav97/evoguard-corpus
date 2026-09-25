@@ -1,7 +1,9 @@
 import {requestJson,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
+import {createHash} from 'node:crypto';
+import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
 export const ACTION_SCHEMA={type:'object',properties:{type:{type:'string',enum:['tool','deliver','technical_failure']},argv:{type:'array',items:{type:'string'}}},required:['type','argv'],additionalProperties:false};
-const INSTRUCTION='Return exactly one JSON action matching the supplied schema. type=tool executes argv in the isolated Linux workspace; use argv ["sh","-lc","command"] when a shell is needed. type=deliver submits the work. type=technical_failure gives up. argv must be empty for non-tool actions. Do not execute tools yourself. Use only the current packet and visible history. No Internet or new dependencies.';
+export const INSTRUCTION='Return exactly one JSON action matching the supplied schema. type=tool executes argv in the isolated Linux workspace; use argv ["sh","-lc","command"] when a shell is needed. type=deliver submits the work. type=technical_failure gives up. argv must be empty for non-tool actions. Do not execute tools yourself. Use only the current packet and visible history. No Internet or new dependencies.';
 const TRANSPORT={openai:'openai',anthropic:'anthropic',google:'google',local_a:'ollama',local_b:'ollama'};
 const number=value=>Number.isFinite(value)&&value>=0?value:null;
 function parseAction(text) {
@@ -9,11 +11,16 @@ function parseAction(text) {
   if(!action||Object.keys(action).sort().join()!=='argv,type'||!['tool','deliver','technical_failure'].includes(action.type)||!Array.isArray(action.argv)||action.argv.length>128||action.argv.some(v=>typeof v!=='string'||v.includes('\0')||v.length>16384)||(action.type==='tool'?action.argv.length===0:action.argv.length!==0))throw providerError('INVALID_ACTION');
   return action.type==='tool'?action:{type:action.type};
 }
-export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{}}) {
+export const RESPONSE_CONTRACT={schema:ACTION_SCHEMA,instruction:'Return exactly one JSON object matching this schema. No Markdown, code fences, commentary or additional fields. Non-tool actions require argv: [].'};
+export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
   const connection=connectionFor(provider,config);
   if(config.transport==='ollama'&&(config.context!==8192||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
+  // Ventana limitada => contexto gestionado (config/context.json). Comerciales: contexto completo, sin cambios.
+  const managed=contextPolicy.applies_to.includes(provider);
+  if(managed!==(config.context!==null))throw providerError('CONTEXT_POLICY_MISMATCH');
+  if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');
   return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=provider.startsWith('local_')?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
     if(!Number.isInteger(timeout)||timeout<1)throw providerError('INVALID_TIMEOUT');
@@ -31,9 +38,16 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     try {
       if(config.transport!=='ollama'&&(!apiKey||typeof apiKey!=='string'))throw providerError('CREDENTIAL_MISSING');
       // Allowlist outer context: never serialize the coordinator or its private fields.
-      const input=JSON.stringify({response_contract:{schema:ACTION_SCHEMA,instruction:'Return exactly one JSON object matching this schema. No Markdown, code fences, commentary or additional fields. Non-tool actions require argv: [].'},packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle});
+      let input,trace;
+      if(managed) {
+        try {({input,trace}=buildContextInput({packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle},{policy:contextPolicy,responseContract:RESPONSE_CONTRACT,overhead:INSTRUCTION+JSON.stringify(ACTION_SCHEMA)}));}
+        catch(error) {throw providerError(/^CONTEXT_/.test(error.code??'')?error.code:'CONTEXT_POLICY_ERROR');}
+      } else {
+        input=JSON.stringify({response_contract:RESPONSE_CONTRACT,packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle});
+        trace={policy:'full_context',input_bytes:Buffer.byteLength(input),input_sha256:createHash('sha256').update(input).digest('hex')};
+      }
+      metadata.context=trace;
       if(Buffer.byteLength(input)>1048576)throw providerError('INPUT_TOO_LARGE');
-      if(config.transport==='ollama'&&Buffer.byteLength(input+INSTRUCTION+JSON.stringify(ACTION_SCHEMA))>config.context-config.max_output_tokens-512)throw providerError('CONTEXT_LIMIT');
       let raw,text;
       if(config.transport==='openai') {
         raw=await request(`${connection.base_url}/responses`,{model:config.api_model_id,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},{authorization:`Bearer ${apiKey}`});
@@ -62,6 +76,8 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
         if(raw.done!==true||raw.done_reason!=='stop')throw providerError('INCOMPLETE_RESPONSE');
         if(raw.model!==config.api_model_id)throw providerError('MODEL_MISMATCH');
+        // Control posterior: los tokens reales (incluida la plantilla) deben respetar la estimación y la ventana.
+        if(metadata.tokens.input===null||metadata.tokens.input>trace.estimated_tokens+contextPolicy.budget.template_reserve_tokens||metadata.tokens.input>config.context-config.max_output_tokens)throw providerError('CONTEXT_ESTIMATE_VIOLATION');
         await verifyLocal();text=raw.message?.content;
       }
       if(typeof metadata.observed_model!=='string'||!metadata.observed_model)throw providerError('MODEL_METADATA_MISSING');

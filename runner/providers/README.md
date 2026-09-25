@@ -62,7 +62,7 @@ OpenAI: reasoning medium. Sonnet: adaptive thinking y effort high, sin sampling 
 
 El congelamiento cubre solo inferencia. `provenance.models` sigue null, F001 sigue DRAFT y el esquema mantiene `pi0_model`, `pi0_repetitions` y `money_cutoff_usd` en null hasta evidencia del piloto.
 
-El límite local de entrada usa bytes UTF-8 conservadoramente, reservando salida y 512 tokens para plantilla. Rechaza contexto excesivo en vez de truncarlo. No sustituye una política de contexto del experimento: integrar el packet completo de F001 y el historial a 8192 requiere medir tokens y definir recuperación/compactación antes de generación.
+Contexto (2026-09-24): los modelos comerciales reciben el paquete completo y el historial íntegro, con el tope previo de 1 MiB por llamada. Los locales (8192) usan la política de `config/context.json` implementada en `runner/context/policy.mjs`: núcleo obligatorio, historial en ventana con recortes explícitos y rechazo (`CONTEXT_CORE_TOO_LARGE`, `CONTEXT_WINDOW_TOO_SMALL`) en vez de truncar. Tras cada llamada local, `prompt_eval_count` debe respetar la estimación (`CONTEXT_ESTIMATE_VIOLATION` si no). Cada llamada registra `context` (tokens estimados, pasos incluidos/omitidos, hash de la entrada).
 
 Los tags locales se contrastan con digest; no se descargan otros modelos. Los IDs comerciales pueden ser aliases/preview: registrar el modelo observado en cada llamada y confirmar acceso de cuenta; selección documental no prueba conectividad. Falta conectar la generación real, oráculo E2E, registro/exportación de referencias y política definitiva de contexto. No hay comando que genere V0 en esta entrega.
 

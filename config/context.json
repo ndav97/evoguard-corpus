@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROVISIONAL",
+  "scope": "context_limited_models",
+  "applies_to": [
+    "local_a",
+    "local_b"
+  ],
+  "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Solo los modelos con ventana limitada (locales de 8192 tokens) reciben un contexto gestionado; es una restricción propia de esos modelos y se registra por llamada.",
+  "budget": {
+    "context_tokens": 8192,
+    "output_reserve_tokens": 1024,
+    "template_reserve_tokens": 512,
+    "input_tokens": 6656
+  },
+  "estimator": {
+    "method": "utf8_bytes_per_token_lower_bound",
+    "bytes_per_token": 2.5,
+    "safety_factor": 0.8,
+    "calibration": null
+  },
+  "history": {
+    "recent_steps": 2,
+    "tool_output_recent_bytes": 3000,
+    "tool_output_old_bytes": 400,
+    "argument_recent_bytes": 3000,
+    "argument_old_bytes": 200,
+    "feedback_latest_bytes": 3000,
+    "feedback_old_bytes": 600,
+    "head_fraction": 0.4
+  },
+  "packet": {
+    "omit_from_message": [
+      "products"
+    ],
+    "workspace_references": {
+      "task": "TASK.json",
+      "products": "fixtures/products.json"
+    }
+  }
+}

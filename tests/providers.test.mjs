@@ -53,7 +53,7 @@ test('digest local distinto y contexto excesivo bloquean inferencia',async()=>{
   let calls=0;
   const adapter=createProviderAdapter({provider:'local_a',config:models.local_a,fetchImpl:async()=>{calls++;return Response.json({models:[{name:'qwen2.5-coder:7b',digest:'wrong'}]});}});
   await assert.rejects(adapter.next({...context,provider:'local_a'}),/MODEL_DIGEST/);
-  await assert.rejects(adapter.next({...context,provider:'local_a',packet:{request:'x'.repeat(20000)}}),/CONTEXT_LIMIT/);
+  await assert.rejects(adapter.next({...context,provider:'local_a',packet:{request:'x'.repeat(40000)}}),/CONTEXT_CORE_TOO_LARGE/);
   assert.equal(calls,1);
 });
 test('señal cancelada evita iniciar solicitudes',async()=>{
