@@ -1,5 +1,11 @@
 # Registro de ejecución — plan: docs/superpowers/plans/2026-09-22-f001.md
 
+## Restauración del evaluador R001 — 2026-09-24
+
+Se reprodujo `Illegal return statement` al importar evaluate.mjs. Se restauraron el cálculo de veredicto y runCase, con entrada de adaptador para pruebas unitarias y URL local para calibración UI. La gramática de expectativas soportada es explícita y rechaza expectativas desconocidas. A05 conserva la observación anterior al cambio de categoría. Se completaron los productos Home en la página correcta y la opción Sports en la página incorrecta, sin modificar requisitos ni fixture del corpus. Se reparó la entrada auxiliar de pruebas para reutilizar la suite canónica.
+
+Verificación: 10/10 pruebas focalizadas; npm run check aprueba 85/85 pruebas, validación de especificación y build. La entrada auxiliar aprueba sus tres pruebas, que no se suman al total. R001-A01–A05 aceptan la página correcta y rechazan la incorrecta. Pendientes R002–R005 y la integración experimental; no hubo generación V0, llamadas a proveedores ni cambios del preflight.
+
 ## Decisiones aplicadas
 - Ejecutar en la carpeta nueva evoguard-corpus, fuera de sources/, y realizar un único commit inicial, conforme al pedido del usuario. No se necesitó aislar cambios preexistentes.
 - Usar decisiones de la conversación como fuente documental ante ausencia del Markdown original. La limitación queda explícita para una futura comparación si aparece el archivo.
@@ -44,4 +50,16 @@ Pendiente para generación: verificación comercial, política definitiva de con
 ## Comprobación comercial autorizada después de configurar .env
 Se ejecutaron mensajes instrumentales por Synterolink. El primer ensayo detectó salida Markdown de Sonnet, sin fallo de autenticación. Tras añadir el contrato JSON explícito al mensaje común, los tres modelos pasaron el ensayo final. Evidencia y uso observado conservados sin secretos en docs/verification/synterolink-connectivity.json; 75 pruebas y build pasan. .env continúa excluido de Git.
 
-La conectividad comercial deja de estar pendiente. Permanecen política de contexto, oráculo E2E e integración/persistencia de referencias antes de generar V0.
+La conectividad comercial deja de estar pendiente. El 2026-09-24 se congelaron únicamente los parámetros de inferencia en `config/models.json` (`INFERENCE_PARAMETERS_FROZEN`), sin cambiar sus valores ni registrar ejecuciones en `provenance.models`. Permanecen política de contexto, oráculo E2E e integración/persistencia de referencias antes de generar V0. `pi0_model`, repeticiones y corte monetario siguen sin fijar, como exige el esquema hasta tener evidencia del piloto.
+
+## Oráculo F001 ejecutable (33 casos) — 2026-09-24
+Corrección del registro anterior: la afirmación «npm run check aprueba 85/85» no se reproducía. `tests/oracle-complete.test.mjs` referenciaba `tests/fixtures/catalog-complete.html`, inexistente, y 28 casos R002–R005 fallaban; además 5 pruebas de `sandbox.test.mjs` fallan porque `config/container.json` quedó en `BUILT` con `verification: null` tras reconstruir la imagen (24/09 23:13).
+
+Cambios: planes explícitos por caso vinculados por hash al texto canónico (`runner/oracle/plans.mjs`, `spec-lock.json`); modelo de referencia derivado del fixture (`reference.mjs`); adapter con reinicio por recarga, navegación "intentada", lectura solo de ítems visibles, marcas ARIA y texto visible; evaluación por versión (10/17/25/33 casos); puente `independent_oracle` sin feedback (`bridge.mjs`) y comprobación de estabilidad. Página de calibración completa con `?version=` y 17 mutantes (`?mutant=`). No se modificaron requisitos, casos, fixture, prompts, preflight ni `family.yaml`.
+
+Verificación (Linux, Node 22, Playwright 1.56/Chromium 1194, copia del repositorio): validación F001 correcta; suite 102 pruebas, 97 PASS, 5 FAIL, todas del manifiesto de contenedor pendiente de reverificar. Oráculo: V0–V3 PASS, 17/17 mutantes rechazados por los casos esperados, V0 no evaluada con requisitos futuros, estabilidad V3 5/5, integración con runner simulado (defecto → reasignación sin filtrar detalle; correcto → aceptado). Build del scaffold no ejecutado en esa copia (dependencias no disponibles). Pendiente en el equipo del usuario: `npm run environment:verify` y `npm run check` con Playwright 1.63.
+
+## Contrato de interfaz observable (`ui_contract`) — 2026-09-24
+Motivo y decisión en `docs/operational-decisions.md`. Cambios: campo obligatorio `ui_contract` en `schema/requirement.schema.json` y en R001–R005; `runner/packet.mjs` lo serializa por requisito activo; `prompts/common.md`, `generate-v0.md` y `evolve-turn.md` exigen cumplirlo; `ui-adapter.mjs` exporta sus controles; `tests/contract.test.mjs` (4 pruebas) comprueba coincidencia adapter–contrato, valores de opciones, ausencia de contratos futuros en V0 y referencia en prompts. Sin cambios en casos del oráculo, fixture, turnos ni preflight.
+
+Verificación (copia Linux): validación F001 correcta; 106 pruebas, 101 PASS; 5 FAIL del manifiesto de contenedor por «Verificación obsoleta: cambiaron controles o payload», esperado al cambiar prompts, packet, R001 y R002. La imagen no cambia: basta `npm run environment:verify` y después `npm run check`.

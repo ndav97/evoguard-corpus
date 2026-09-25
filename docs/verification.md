@@ -68,3 +68,19 @@ No se generó V0 ni se habilitó generación experimental. Los parámetros prepa
 Tras configurar el usuario .env, GPT-5.6 Sol y Gemini pasaron la primera comprobación. Sonnet respondió HTTP 200/modelo claude-sonnet-5, pero envolvió el JSON en Markdown y fue rechazado por el parser. Un diagnóstico acotado confirmó ese formato; no se registraron claves ni razonamiento interno.
 
 Se incluyó el contrato de respuesta en el mensaje visible común de los cinco adaptadores; pruebas de envío fallaron antes y pasaron después del cambio. No se relajó el parser. La comprobación final autenticada pasó para openai/anthropic/google; evidencia en [verification/synterolink-connectivity.json](verification/synterolink-connectivity.json). Suite completa: 75 PASS y build correcto. No se envió F001 ni se ejecutaron acciones propuestas por los modelos. Generación experimental todavía bloqueada.
+
+## Oráculo F001 — calibración instrumental — 2026-09-24
+- 33/33 casos con plan ejecutable y hash de especificación; caso modificado o desconocido rechazado.
+- Página de calibración correcta: V0 10/10, V1 17/17, V2 25/25, V3 33/33 PASS. Una V0 no satisface V1 (7 casos R003 FAIL).
+- Controles negativos: 17 mutantes (mayúsculas, recorte, conjunción, categoría, vacío con productos, orden descendente invertido, orden perdido al buscar, página de 9, orden que reinicia página, búsqueda/categoría sin reinicio, navegación fuera de rango, índice NaN, selección múltiple, por índice, no limpiada y restaurada) rechazados por los casos previstos.
+- Estabilidad V3: 5/5 ejecuciones con veredictos idénticos.
+- Puente con runner simulado: FAIL del oráculo → reasignación con workspace nuevo; ningún ID de caso ni observación en el contexto del constructor ni en eventos; fallo de apertura → INFRA_ERROR.
+- Suite completa: 102 pruebas, 97 PASS; 5 FAIL del manifiesto de contenedor (`BUILT`, sin verificación vigente). Build no ejecutado en esta comprobación.
+
+Esta evidencia calibra el evaluador; no valida ninguna aplicación F001 ni habilita generación.
+
+## Contrato de interfaz observable — 2026-09-24
+- `tests/contract.test.mjs`: los 5 controles con nombre del adapter coinciden en rol y nombre con el `ui_contract`, y viceversa; R002/R003/R005 fijan valores de opciones, `role="status"` y `aria-pressed`.
+- Packet por versión: V0 recibe «Buscar» y «Categoría»; V1 añade «Orden»; V2 «Anterior»/«Siguiente»; V3 la selección. Ningún texto de contrato de R003–R005 aparece en el packet V0.
+- Oráculo sin cambios de comportamiento: las pruebas de calibración siguen pasando.
+- Pendiente: reverificar el contenedor porque cambió el payload verificado.
