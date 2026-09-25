@@ -84,3 +84,7 @@ Esta evidencia calibra el evaluador; no valida ninguna aplicación F001 ni habil
 - Packet por versión: V0 recibe «Buscar» y «Categoría»; V1 añade «Orden»; V2 «Anterior»/«Siguiente»; V3 la selección. Ningún texto de contrato de R003–R005 aparece en el packet V0.
 - Oráculo sin cambios de comportamiento: las pruebas de calibración siguen pasando.
 - Pendiente: reverificar el contenedor porque cambió el payload verificado.
+
+## Política de contexto — 2026-09-24
+- 115/115 pruebas (incluye `tests/context.test.mjs`, 9). Evidencia del contenedor vigente.
+- Calibración pendiente en el equipo del usuario: `npm run context:calibrate` (informe) y `-- --write` (fija `bytes_per_token` y escribe `docs/verification/context-calibration.json`). Ensayo del script contra un Ollama simulado: flujo correcto de lectura, cálculo y escritura; sin valor probatorio sobre los tokenizadores.

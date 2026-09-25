@@ -4,6 +4,8 @@
 
 > **Contrato de interfaz (24/09/2026, más tarde).** Por decisión del usuario, cada requisito incluye un `ui_contract` (roles, nombres accesibles, valores de opciones y estado inicial) que el constructor recibe por requisito activo y que usa el adaptador del oráculo. V0 solo recibe el contrato de R001–R002. Cambiaron el esquema de requisitos, los prompts y el packet, así que la evidencia del contenedor debe reverificarse (`npm run environment:verify`; la imagen no cambia). Suite en copia Linux: 106 pruebas, 101 PASS, 5 FAIL solo por esa reverificación pendiente. Detalle en `docs/operational-decisions.md`.
 
+> **Paso 4 — política de contexto (24/09/2026, noche).** Los comerciales conservan su contexto normal. Los locales (8192) reciben un contexto gestionado: núcleo obligatorio con requisitos y `ui_contract`, historial en ventana con recortes explícitos, rechazo antes que truncado silencioso y control posterior con los tokens reales. Implementado y probado (115/115). Falta la calibración con los tokenizadores reales: `npm run context:calibrate -- --write` en el equipo con Ollama; hasta entonces el preflight bloquea. Detalle y riesgos residuales en `docs/operational-decisions.md`.
+
 Fecha de corte: **24 de septiembre de 2026**. Último commit observado: `759ba0d`. Este informe incluye también cambios locales sin commit; por tanto, el estado descrito no se reproduce únicamente recuperando ese commit.
 
 ## 1. Estado general
@@ -21,7 +23,7 @@ La planificación metodológica general está definida, pero todavía faltan com
 | Runner | Simulación implementada | Ejercita intentos y reasignaciones; todavía no constituye la cadena experimental completa. |
 | Cinco modelos | Seleccionados y conectividad comprobada | Tres comerciales mediante Synterolink y dos locales mediante Ollama. |
 | Parámetros de inferencia | Congelados en configuración | `INFERENCE_PARAMETERS_FROZEN`, con alcance limitado a inferencia. |
-| Política de contexto | Pendiente | Especialmente relevante para los locales de 8192 tokens. |
+| Política de contexto | Implementada, calibración pendiente | Solo locales; comerciales con contexto completo. Falta medir con Ollama. |
 | Adaptador UI | Parcial, con dos pruebas que pasan | Interactúa con controles y lee resultados del DOM. |
 | Evaluador del oráculo | Restaurado y ampliado | 33 casos ejecutables, evaluación por versión y puente al runner. |
 | Oráculo E2E completo | Calibrado con páginas de prueba | 33 casos verificados en navegador, 17 mutantes rechazados, 5/5 estable; falta ejecutarlo contra un candidato aislado. |

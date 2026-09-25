@@ -63,3 +63,10 @@ Verificación (Linux, Node 22, Playwright 1.56/Chromium 1194, copia del reposito
 Motivo y decisión en `docs/operational-decisions.md`. Cambios: campo obligatorio `ui_contract` en `schema/requirement.schema.json` y en R001–R005; `runner/packet.mjs` lo serializa por requisito activo; `prompts/common.md`, `generate-v0.md` y `evolve-turn.md` exigen cumplirlo; `ui-adapter.mjs` exporta sus controles; `tests/contract.test.mjs` (4 pruebas) comprueba coincidencia adapter–contrato, valores de opciones, ausencia de contratos futuros en V0 y referencia en prompts. Sin cambios en casos del oráculo, fixture, turnos ni preflight.
 
 Verificación (copia Linux): validación F001 correcta; 106 pruebas, 101 PASS; 5 FAIL del manifiesto de contenedor por «Verificación obsoleta: cambiaron controles o payload», esperado al cambiar prompts, packet, R001 y R002. La imagen no cambia: basta `npm run environment:verify` y después `npm run check`.
+
+## Política de contexto (Paso 4) — 2026-09-24
+Implementada según `docs/operational-decisions.md`: `config/context.json`, `runner/context/policy.mjs`, integración en `runner/providers/adapter.mjs` (solo locales; comerciales sin cambios), calibración `runner/context/calibrate.mjs` (`npm run context:calibrate`), bloqueo en preflight hasta `CALIBRATED`. `tests/context.test.mjs` (9 pruebas): alcance exacto, núcleo V0–V3 íntegro, ventana con feedback y último paso, determinismo, ausencia de campos privados, rechazos explícitos, recorte con aviso, contexto completo de los comerciales, traza por llamada y violación de estimación.
+
+Medición provisional (estimador 2,5 × 0,8): núcleo V0 3110, V1 3891, V2 4881 y V3 5722 tokens estimados de 6656. Con ~3,2 B/token (ensayo del script contra un Ollama simulado), V3 ocupa ~4440 y deja ~2200 para historial. Ninguna cifra es medición real de los tokenizadores: falta ejecutar la calibración en el equipo con Ollama.
+
+Verificación (copia Linux con la evidencia de contenedor reverificada por el usuario): 115/115 pruebas, validación F001 correcta; no se modificaron archivos del payload verificado.
