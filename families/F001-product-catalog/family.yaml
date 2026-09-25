@@ -4,7 +4,7 @@
   "family_id": "F001",
   "slug": "product-catalog",
   "name": "Product Catalog",
-  "status": "DRAFT",
+  "status": "GENERATED",
   "origin": {
     "type": "synthetic",
     "construction": "multimodel"
@@ -65,7 +65,7 @@
     "stability_runs_required": 5
   },
   "reference_versions": {
-    "V0": null,
+    "V0": "7657525f81cc6b20c2b964bb98d0ce9bec351885",
     "V1": null,
     "V2": null,
     "V3": null

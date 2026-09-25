@@ -1,0 +1,108 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index f714917..209be41 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,3 +1,55 @@
++import { useState } from 'react';
++import productsData from '../fixtures/products.json';
++import { filterProducts, Product } from './utils';
++
++const products = productsData as Product[];
++
+ export default function App() {
+-  return <main><h1>Scaffold base</h1><p>Aplicación pendiente de generación.</p></main>;
++  const [search, setSearch] = useState("");
++  const [category, setCategory] = useState("All");
++
++  const filteredProducts = filterProducts(products, search, category);
++
++  return (
++    <main>
++      <h1>Catálogo de Productos</h1>
++      
++      <div>
++        <label htmlFor="search">Buscar</label>
++        <input 
++          id="search"
++          type="search" 
++          value={search} 
++          onChange={(e) => setSearch(e.target.value)} 
++        />
++      </div>
++
++      <div>
++        <label htmlFor="category">Categoría</label>
++        <select 
++          id="category"
++          value={category}
++          onChange={(e) => setCategory(e.target.value)}
++        >
++          <option value="All">All</option>
++          <option value="Electronics">Electronics</option>
++          <option value="Home">Home</option>
++          <option value="Sports">Sports</option>
++          <option value="Books">Books</option>
++        </select>
++      </div>
++
++      <div>
++        {filteredProducts.length === 0 ? (
++          <p>No hay resultados</p>
++        ) : (
++          <ul>
++            {filteredProducts.map(p => (
++              <li key={p.id}>{p.id} {p.name}</li>
++            ))}
++          </ul>
++        )}
++      </div>
++    </main>
++  );
+ }
+diff --git a/src/utils.test.ts b/src/utils.test.ts
+new file mode 100644
+index 0000000..cd1d75b
+--- /dev/null
++++ b/src/utils.test.ts
+@@ -0,0 +1,20 @@
++import { describe, it, expect } from 'vitest';
++import { filterProducts } from './utils';
++
++describe('filterProducts', () => {
++  const products = [
++    { id: 'P001', name: 'Wireless Mouse', category: 'Electronics', price: 24.99 },
++    { id: 'P010', name: 'Desk Lamp', category: 'Home', price: 34.5 },
++    { id: 'P018', name: 'Running Shoes', category: 'Sports', price: 79.99 },
++  ];
++
++  it('filters by category', () => {
++    expect(filterProducts(products, '', 'Home')).toHaveLength(1);
++    expect(filterProducts(products, '', 'Home')[0].id).toBe('P010');
++  });
++
++  it('filters by name', () => {
++    expect(filterProducts(products, 'mouse', 'All')).toHaveLength(1);
++    expect(filterProducts(products, '  MoUsE  ', 'All')).toHaveLength(1);
++  });
++});
+diff --git a/src/utils.ts b/src/utils.ts
+new file mode 100644
+index 0000000..709770e
+--- /dev/null
++++ b/src/utils.ts
+@@ -0,0 +1,15 @@
++export interface Product {
++  id: string;
++  name: string;
++  category: string;
++  price: number;
++}
++
++export function filterProducts(products: Product[], search: string, category: string): Product[] {
++  const searchClean = search.trim().toLowerCase();
++  return products.filter(product => {
++    const categoryMatch = category === "All" || product.category === category;
++    const searchMatch = searchClean === "" || product.name.toLowerCase().includes(searchClean);
++    return categoryMatch && searchMatch;
++  });
++}

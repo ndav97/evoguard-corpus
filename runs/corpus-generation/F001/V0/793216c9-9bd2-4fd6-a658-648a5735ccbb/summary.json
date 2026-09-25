@@ -1,0 +1,57 @@
+{
+  "artifact_type": "corpus_generation",
+  "mode": "experimental",
+  "experimental": true,
+  "task_id": "793216c9-9bd2-4fd6-a658-648a5735ccbb",
+  "family_id": "F001",
+  "version": "V0",
+  "status": "ACCEPTED",
+  "attempts": [
+    {
+      "id": "01-openai-a1",
+      "provider": "openai",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "failure_reason": "independent_oracle",
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "FAIL",
+        "architecture": "NOT_RUN"
+      },
+      "candidate_commit": null
+    },
+    {
+      "id": "02-anthropic-a1",
+      "provider": "anthropic",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "failure_reason": "CYCLE_LIMIT",
+      "validation": {
+        "build": "NOT_RUN",
+        "typecheck": "NOT_RUN",
+        "development_tests": "NOT_RUN",
+        "independent_oracle": "NOT_RUN",
+        "architecture": "NOT_RUN"
+      },
+      "candidate_commit": null
+    },
+    {
+      "id": "03-google-a1",
+      "provider": "google",
+      "attempt": 1,
+      "outcome": "ACCEPTED",
+      "failure_reason": null,
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "PASS"
+      },
+      "candidate_commit": "7657525f81cc6b20c2b964bb98d0ce9bec351885"
+    }
+  ],
+  "accepted": "03-google-a1"
+}

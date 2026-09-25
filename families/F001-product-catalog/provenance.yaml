@@ -8,10 +8,10 @@
     "original_markdown_retrieved": false,
     "transcription_path": "docs/reference-conversation.md"
   },
-  "artifact_scope": "specification_and_neutral_scaffold_only",
+  "artifact_scope": "specification_scaffold_and_references",
   "authorship": {
     "specification_materializer": "Codex",
-    "reference_application_generator": null,
+    "reference_application_generator": "multimodel_pipeline",
     "human_functional_corrections": false
   },
   "fixture": {
@@ -22,7 +22,7 @@
   "models": {
     "openai": null,
     "anthropic": null,
-    "google": null,
+    "google": "gemini-3.1-pro-preview",
     "local_a": null,
     "local_b": null
   },
@@ -46,7 +46,7 @@
     ]
   },
   "references": {
-    "V0": null,
+    "V0": "7657525f81cc6b20c2b964bb98d0ce9bec351885",
     "V1": null,
     "V2": null,
     "V3": null
