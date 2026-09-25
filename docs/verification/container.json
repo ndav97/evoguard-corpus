@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "status": "PASS",
-  "image_id": "sha256:2cd750482467e446191d7e1fcb6b841f375baf5fd20caaafa08572ba0cf3eff5",
-  "archive_sha256": "134e1ce725ed7a2a830fbb230dc13064c915d84970a025e8158f46668f4de3be",
+  "image_id": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
+  "archive_sha256": "cd5e83df96ab5db3d915ca34e7843c75c92e8db4bbd9a9919779e6bc24a17aaa",
   "verification_inputs": {
     "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
     "docker/Dockerfile": "33d55f7e40666fb95c7c990acc09b6a2a917ac0ccc7e1930052660527f77cd27",
@@ -22,13 +22,13 @@
     "runner/sandbox/probe.mjs": "982ada4464ab006d0341562125307d0ca6bebc2fd04fbadb278dc2a8e7c09e6f",
     "runner/sandbox/cli.mjs": "ff10056c92bccdeb5c80ea4f96b6560cf46aef81c4c9057d90fad8dab15ae8ae",
     "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
-    "runner/packet.mjs": "f737ef7c73ceea65873f43dad258b0d159e58cf984a3618d679fcf338e815a32",
+    "runner/packet.mjs": "f7cd0124331254ec63a0c12a781f40dca4dbcb500bf783d3487cba477d52a8bc",
     "runner/validation/corpus.mjs": "9d2a8d6ef33a072096fc456c77e41e722f71cffa64f39e9a2d61af1cd42104db",
-    "prompts/common.md": "927047ae76eae5a131119180908fd0470c28a41de738ca94dcef210f5def70ce",
-    "prompts/generate-v0.md": "2459c30e54bf87c97ebe9951f0045f760a05eb9a9d3f2f4342b105387a05fd56",
+    "prompts/common.md": "4c2eb6bc0150b4b3a1a075e09d100008de5f4b0ba331becc7d5201bb942ab1c0",
+    "prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",
     "families/F001-product-catalog/fixtures/products.json": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
-    "families/F001-product-catalog/requirements/R001.yaml": "bd55b91c3efd5c70ec22c6365ea2c23eac9233a2adf0389e56611a9050a356e2",
-    "families/F001-product-catalog/requirements/R002.yaml": "3c25c1d694be66380e1fa0fbe66c6bcebf3ca6f8139e3f0f535b77ac32d31e2e"
+    "families/F001-product-catalog/requirements/R001.yaml": "29d620c6add0021c4ac6a3c95609e0c127595a88a9f75bae210ad72ace8109cb",
+    "families/F001-product-catalog/requirements/R002.yaml": "1b6e1b4cf287fb4b160b91adc3d8a0e81bbdf7711f22d17170e5dbf1e182b377"
   },
   "cleanup": {
     "timeout": true,
@@ -37,9 +37,9 @@
   "clean_runs": [
     {
       "initialization": {
-        "baseline_commit": "3960b96ec678fc7b4f24971be8bab20ed727f194",
+        "baseline_commit": "f12bfa060b222c3985fcf81f57ce4b4f3b901d2b",
         "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
-        "packet_sha256": "65558737d7996deb6c337bcfa7c4aefc39a0ccad25b1d46a74cbb26d61138232",
+        "packet_sha256": "9821819c9bc1731c0f13118e85bc84a991fdbcdf5def918be10c95cecdf3293f",
         "file_count": 10
       },
       "status": "PASS",
@@ -63,7 +63,7 @@
         "git_scaffold_only": true,
         "external_network_and_host_denied": true,
         "npm_ci_offline": "added 51 packages in 2s",
-        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 139ms",
+        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 126ms",
         "browser_localhost": true,
         "chromium_version": "153.0.8010.12",
         "inputs_unchanged": true
@@ -71,9 +71,9 @@
     },
     {
       "initialization": {
-        "baseline_commit": "3960b96ec678fc7b4f24971be8bab20ed727f194",
+        "baseline_commit": "f12bfa060b222c3985fcf81f57ce4b4f3b901d2b",
         "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
-        "packet_sha256": "65558737d7996deb6c337bcfa7c4aefc39a0ccad25b1d46a74cbb26d61138232",
+        "packet_sha256": "9821819c9bc1731c0f13118e85bc84a991fdbcdf5def918be10c95cecdf3293f",
         "file_count": 10
       },
       "status": "PASS",
@@ -96,8 +96,8 @@
         "no_future_in_packet": true,
         "git_scaffold_only": true,
         "external_network_and_host_denied": true,
-        "npm_ci_offline": "added 51 packages in 2s",
-        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 161ms",
+        "npm_ci_offline": "added 51 packages in 1s",
+        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 108ms",
         "browser_localhost": true,
         "chromium_version": "153.0.8010.12",
         "inputs_unchanged": true

@@ -26,7 +26,7 @@
   },
   "experimental": {
     "os": "linux",
-    "image_digest": "sha256:2cd750482467e446191d7e1fcb6b841f375baf5fd20caaafa08572ba0cf3eff5",
+    "image_digest": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
     "node": "26.7.0",
     "npm": "11.19.0",
     "browser": "Chromium headless 153.0.8010.12 / Playwright 1.63.0"
