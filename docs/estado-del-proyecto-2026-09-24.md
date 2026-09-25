@@ -6,6 +6,8 @@
 
 > **Paso 4 — política de contexto (24/09/2026, noche).** Los comerciales conservan su contexto normal. Los locales (8192) reciben un contexto gestionado: núcleo obligatorio con requisitos y `ui_contract`, historial en ventana con recortes explícitos, rechazo antes que truncado silencioso y control posterior con los tokens reales. Implementado, probado (115/115) y **calibrado** con Ollama: 3,31 B/token (Granite, peor caso) × 0,8. En V3 quedan ~2400 tokens estimados para historial (el núcleo real mide 3101 tokens). El preflight ya no bloquea por contexto. Detalle y riesgos residuales en `docs/operational-decisions.md`.
 
+> **Pasos 5–8 (24/09/2026, noche).** Implementados y ensayados de punta a punta en el entorno Linux de Claude con la misma imagen del usuario: pipeline real (evaluación en sandbox, oráculo en contenedor aislado, arquitectura, persistencia, historia evolutiva auditada), preflight comprobable (despejado), `corpus:generate` y `corpus:audit`. Ensayo completo con constructores guionados en copia desechable: V0→V3 aceptadas, auditoría PASS (5/5 por versión) y FROZEN. **Falta solo la ejecución real con modelos**, posible únicamente en el equipo del usuario (Docker, claves de Synterolink y Ollama): doble clic en `scripts\run-f001.cmd`. Hace verificación nativa, ensayo, generación V0–V3, auditoría y congelamiento, con commits por etapa y log en `.artifacts\run-f001-*.log`. Después: `docs/paso-9-preparacion-familias.md`.
+
 Fecha de corte: **24 de septiembre de 2026**. Último commit observado: `759ba0d`. Este informe incluye también cambios locales sin commit; por tanto, el estado descrito no se reproduce únicamente recuperando ese commit.
 
 ## 1. Estado general
