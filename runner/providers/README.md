@@ -54,9 +54,13 @@ La comprobación autenticada de los tres modelos pasó usando las claves locales
 
 onCall recibe modelo solicitado/observado, parámetros, fecha/duración, tokens disponibles, resultado y código de fallo. Se conserva uso incluso en respuestas incompletas. Costo desconocido permanece null; no se estima precio ni se equiparan los contadores de razonamiento de diferentes APIs. Los cuerpos completos y headers no se registran. Los informes de smoke se guardan en .artifacts/providers y se marcan experimental=false.
 
-## Parámetros preparatorios y límites
+## Parámetros de inferencia congelados — 2026-09-24
 
-OpenAI: reasoning medium. Sonnet: adaptive thinking y effort high, sin sampling personalizado. Gemini: thinking high. Salida comercial máxima 4096 tokens; locales 1024, temperatura 0 y seed 42. Estos valores se documentan como preparación y requieren evaluación antes de congelar el piloto; no implican equivalencia de esfuerzo entre modelos.
+`config/models.json` declara `INFERENCE_PARAMETERS_FROZEN`. Los valores no cambiaron respecto al smoke autenticado:
+
+OpenAI: reasoning medium. Sonnet: adaptive thinking y effort high, sin sampling personalizado. Gemini: thinking high. Salida comercial máxima 4096 tokens; locales 1024, temperatura 0 y seed 42. Temperatura y semilla comerciales permanecen null. Estos valores no implican equivalencia de esfuerzo entre modelos.
+
+El congelamiento cubre solo inferencia. `provenance.models` sigue null, F001 sigue DRAFT y el esquema mantiene `pi0_model`, `pi0_repetitions` y `money_cutoff_usd` en null hasta evidencia del piloto.
 
 El límite local de entrada usa bytes UTF-8 conservadoramente, reservando salida y 512 tokens para plantilla. Rechaza contexto excesivo en vez de truncarlo. No sustituye una política de contexto del experimento: integrar el packet completo de F001 y el historial a 8192 requiere medir tokens y definir recuperación/compactación antes de generación.
 
