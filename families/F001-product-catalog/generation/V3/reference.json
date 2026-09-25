@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F001",
+  "version": "V3",
+  "base_commit": "cf2896b70707da0425c8e40b45872e6bde2faa8b",
+  "candidate_commit": "96eee0b47a285ccceb72c4cdf9b2474f89030f7d",
+  "patch_sha256": "32f8dfca7824c943fd0691f099caeececd3c2a30fb0933d8585635128ffa363d",
+  "task_packet_sha256": "76699f53e6dc5a26bb28c1b480ebcdd305f6cd309419c52e7cef50794f4805c9",
+  "attempt": "03-openai-a1",
+  "generator": {
+    "provider": "openai",
+    "model": "gpt-5.6-sol",
+    "temperature": null,
+    "seed": null
+  },
+  "logs_path": "runs/corpus-generation/F001/V3/9b207cd8-37d7-4b3a-a417-79c88ca60db5",
+  "accepted_at": "2026-09-25T05:25:16.108Z"
+}

@@ -22,6 +22,6 @@
     "R005"
   ],
   "provider": "local_a",
-  "reference_commit": null,
-  "patch_path": null
+  "reference_commit": "96eee0b47a285ccceb72c4cdf9b2474f89030f7d",
+  "patch_path": "generation/V3/reference.patch"
 }

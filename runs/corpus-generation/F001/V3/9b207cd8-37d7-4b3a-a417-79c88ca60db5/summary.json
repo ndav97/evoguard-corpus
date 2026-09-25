@@ -1,0 +1,57 @@
+{
+  "artifact_type": "corpus_generation",
+  "mode": "experimental",
+  "experimental": true,
+  "task_id": "9b207cd8-37d7-4b3a-a417-79c88ca60db5",
+  "family_id": "F001",
+  "version": "V3",
+  "status": "ACCEPTED",
+  "attempts": [
+    {
+      "id": "01-local_a-a1",
+      "provider": "local_a",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "failure_reason": "TECHNICAL_FAILURE",
+      "validation": {
+        "build": "NOT_RUN",
+        "typecheck": "NOT_RUN",
+        "development_tests": "NOT_RUN",
+        "independent_oracle": "NOT_RUN",
+        "architecture": "NOT_RUN"
+      },
+      "candidate_commit": null
+    },
+    {
+      "id": "02-local_b-a1",
+      "provider": "local_b",
+      "attempt": 1,
+      "outcome": "REASSIGN",
+      "failure_reason": "independent_oracle",
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "FAIL",
+        "architecture": "NOT_RUN"
+      },
+      "candidate_commit": null
+    },
+    {
+      "id": "03-openai-a1",
+      "provider": "openai",
+      "attempt": 1,
+      "outcome": "ACCEPTED",
+      "failure_reason": null,
+      "validation": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "development_tests": "PASS",
+        "independent_oracle": "PASS",
+        "architecture": "PASS"
+      },
+      "candidate_commit": "96eee0b47a285ccceb72c4cdf9b2474f89030f7d"
+    }
+  ],
+  "accepted": "03-openai-a1"
+}

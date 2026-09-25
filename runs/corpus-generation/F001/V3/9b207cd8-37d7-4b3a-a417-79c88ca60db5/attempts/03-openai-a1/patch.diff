@@ -1,0 +1,74 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index dba1d65..431b4c1 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -9,14 +9,23 @@ export default function App() {
+   const [category, setCategory] = useState("All");
+   const [sortOrder, setSortOrder] = useState("");
+   const [page, setPage] = useState(1);
++  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+ 
+   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     setSearch(e.target.value);
++    const newFiltered = filterProducts(products, e.target.value, category);
++    if (selectedProductId && !newFiltered.some(p => p.id === selectedProductId)) {
++      setSelectedProductId(null);
++    }
+     setPage(1);
+   };
+ 
+   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+     setCategory(e.target.value);
++    const newFiltered = filterProducts(products, search, e.target.value);
++    if (selectedProductId && !newFiltered.some(p => p.id === selectedProductId)) {
++      setSelectedProductId(null);
++    }
+     setPage(1);
+   };
+ 
+@@ -35,6 +44,10 @@ export default function App() {
+   const startIndex = (currentPage - 1) * itemsPerPage;
+   const paginatedProducts = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+ 
++  const selectedName = selectedProductId 
++    ? products.find(p => p.id === selectedProductId)?.name 
++    : undefined;
++
+   return (
+     <main>
+       <h1>Catálogo de Productos</h1>
+@@ -79,15 +92,31 @@ export default function App() {
+         </select>
+       </div>
+ 
++      <div role="status">
++        {selectedProductId 
++          ? `Seleccionado: ${selectedProductId} ${selectedName}` 
++          : ''}
++      </div>
++
+       <div>
+         {sortedProducts.length === 0 ? (
+           <p>No hay resultados</p>
+         ) : (
+           <>
+             <ul>
+-              {paginatedProducts.map(p => (
+-                <li key={p.id}>{p.id} {p.name}</li>
+-              ))}
++              {paginatedProducts.map(p => {
++                const isSelected = p.id === selectedProductId;
++                return (
++                  <li 
++                    key={p.id}
++                    aria-pressed={isSelected ? "true" : undefined}
++                  >
++                    <button onClick={() => setSelectedProductId(p.id)}>
++                      {p.id} {p.name}
++                    </button>
++                  </li>
++                );
++              })}
+             </ul>
+             <div>
+               <button 

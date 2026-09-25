@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F001",
+  "version": "V3",
+  "artifact_type": "reference_candidate",
+  "generator": {
+    "provider": "local_a",
+    "model": "qwen2.5-coder:7b",
+    "temperature": 0,
+    "seed": 42
+  },
+  "attempt": 1,
+  "repair_count": 0,
+  "base_commit": "cf2896b70707da0425c8e40b45872e6bde2faa8b",
+  "candidate_commit": null,
+  "prompt_sha256": "182dbd788f0ba3dc785e51ebd4cf5c2bb936e89773fc0dfe6b7c53bf6e44f52c",
+  "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
+  "stack_sha256": "be0b62e406cf8b0ff96cbcd6f068d297a7510c0f672574eb330c4cadf1dcb47c",
+  "started_at": "2026-09-25T05:03:16.206Z",
+  "finished_at": "2026-09-25T05:09:10.778Z",
+  "tokens": {
+    "input": 76839,
+    "output": 696
+  },
+  "cost_usd": null,
+  "cycles": 23,
+  "duration_seconds": 354.572,
+  "validation": {
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "development_tests": "NOT_RUN",
+    "independent_oracle": "NOT_RUN",
+    "architecture": "NOT_RUN"
+  },
+  "outcome": "REASSIGN",
+  "failure_reason": "TECHNICAL_FAILURE",
+  "logs_path": "runs/corpus-generation/F001/V3/9b207cd8-37d7-4b3a-a417-79c88ca60db5/attempts/01-local_a-a1"
+}

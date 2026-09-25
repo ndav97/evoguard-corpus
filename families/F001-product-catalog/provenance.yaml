@@ -20,7 +20,7 @@
     "origin": "created_from_approved_specification"
   },
   "models": {
-    "openai": null,
+    "openai": "gpt-5.6-sol",
     "anthropic": null,
     "google": "gemini-3.1-pro-preview",
     "local_a": null,
@@ -49,6 +49,6 @@
     "V0": "7657525f81cc6b20c2b964bb98d0ce9bec351885",
     "V1": "92ae6f6aacf92132a06c3a929dbd1a79434b5cc1",
     "V2": "23037d8960ecc576dc85cd8c9a141c975935da51",
-    "V3": null
+    "V3": "96eee0b47a285ccceb72c4cdf9b2474f89030f7d"
   }
 }
