@@ -4,7 +4,7 @@
   "family_id": "F001",
   "slug": "product-catalog",
   "name": "Product Catalog",
-  "status": "VALIDATED",
+  "status": "FROZEN",
   "origin": {
     "type": "synthetic",
     "construction": "multimodel"

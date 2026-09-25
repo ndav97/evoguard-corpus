@@ -1,0 +1,221 @@
+{
+  "artifact_type": "corpus_audit",
+  "family_id": "F001",
+  "image_id": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
+  "started_at": "2026-09-25T05:25:20.781Z",
+  "stability_runs": 5,
+  "versions": {
+    "V0": {
+      "reference": "7657525f81cc6b20c2b964bb98d0ce9bec351885",
+      "attempts": 3,
+      "history_reproducible": true,
+      "visible_checks": {
+        "typecheck": "PASS",
+        "build": "PASS",
+        "development_tests": "PASS"
+      },
+      "architecture": {
+        "status": "PASS",
+        "violations": [],
+        "metrics": {
+          "source_files": 3,
+          "components_estimate": 1,
+          "component_guideline": "5–20 (auditoría)"
+        }
+      },
+      "oracle_runs": [
+        {
+          "status": "PASS",
+          "passed": 10,
+          "total": 10,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 10,
+          "total": 10,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 10,
+          "total": 10,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 10,
+          "total": 10,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 10,
+          "total": 10,
+          "failing": []
+        }
+      ],
+      "oracle_stable": true
+    },
+    "V1": {
+      "reference": "92ae6f6aacf92132a06c3a929dbd1a79434b5cc1",
+      "attempts": 2,
+      "history_reproducible": true,
+      "visible_checks": {
+        "typecheck": "PASS",
+        "build": "PASS",
+        "development_tests": "PASS"
+      },
+      "architecture": {
+        "status": "PASS",
+        "violations": [],
+        "metrics": {
+          "source_files": 3,
+          "components_estimate": 1,
+          "component_guideline": "5–20 (auditoría)"
+        }
+      },
+      "oracle_runs": [
+        {
+          "status": "PASS",
+          "passed": 17,
+          "total": 17,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 17,
+          "total": 17,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 17,
+          "total": 17,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 17,
+          "total": 17,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 17,
+          "total": 17,
+          "failing": []
+        }
+      ],
+      "oracle_stable": true
+    },
+    "V2": {
+      "reference": "23037d8960ecc576dc85cd8c9a141c975935da51",
+      "attempts": 1,
+      "history_reproducible": true,
+      "visible_checks": {
+        "typecheck": "PASS",
+        "build": "PASS",
+        "development_tests": "PASS"
+      },
+      "architecture": {
+        "status": "PASS",
+        "violations": [],
+        "metrics": {
+          "source_files": 3,
+          "components_estimate": 1,
+          "component_guideline": "5–20 (auditoría)"
+        }
+      },
+      "oracle_runs": [
+        {
+          "status": "PASS",
+          "passed": 25,
+          "total": 25,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 25,
+          "total": 25,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 25,
+          "total": 25,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 25,
+          "total": 25,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 25,
+          "total": 25,
+          "failing": []
+        }
+      ],
+      "oracle_stable": true
+    },
+    "V3": {
+      "reference": "96eee0b47a285ccceb72c4cdf9b2474f89030f7d",
+      "attempts": 3,
+      "history_reproducible": true,
+      "visible_checks": {
+        "typecheck": "PASS",
+        "build": "PASS",
+        "development_tests": "PASS"
+      },
+      "architecture": {
+        "status": "PASS",
+        "violations": [],
+        "metrics": {
+          "source_files": 3,
+          "components_estimate": 1,
+          "component_guideline": "5–20 (auditoría)"
+        }
+      },
+      "oracle_runs": [
+        {
+          "status": "PASS",
+          "passed": 33,
+          "total": 33,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 33,
+          "total": 33,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 33,
+          "total": 33,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 33,
+          "total": 33,
+          "failing": []
+        },
+        {
+          "status": "PASS",
+          "passed": 33,
+          "total": 33,
+          "failing": []
+        }
+      ],
+      "oracle_stable": true
+    }
+  },
+  "findings": [],
+  "turns_complete": true,
+  "status": "PASS",
+  "finished_at": "2026-09-25T05:27:33.819Z"
+}

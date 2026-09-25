@@ -17,7 +17,7 @@
   },
   "verification": {
     "path": "docs/verification/container.json",
-    "sha256": "88c8cbeab0d58ac11dd3d7133d730c66f0ca6799d6b62ec7d3b9527631632e3b"
+    "sha256": "693ffd4837fe36601ca110ffaab51ebb34b1ce56573b005e6c1d8e43f90cb22a"
   },
   "verification_inputs": {
     "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",

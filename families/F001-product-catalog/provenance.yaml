@@ -32,12 +32,15 @@
     "functional_code": false
   },
   "audit": {
-    "status": "NOT_STARTED",
-    "reviewer": null,
-    "evidence": []
+    "status": "PASSED",
+    "reviewer": "Claude — auditoría automatizada del pipeline (npm run corpus:audit)",
+    "evidence": [
+      "docs/verification/f001-audit.json",
+      "sha256:dc32f3ee2aba7c65927e95276ca32347fca8349da345550459152ec9bb714545"
+    ]
   },
   "similarity_review": {
-    "status": "NOT_STARTED",
+    "status": "NOT_APPLICABLE_SINGLE_FAMILY",
     "exclude": [
       "templates/**",
       "**/package*.json",
