@@ -28,7 +28,10 @@ test('rechaza requisito futuro incorporado a V0', () => reject(d => d.family.pil
 test('rechaza requisito introducido en turno equivocado', () => reject(d => d.requirements[4].introduced_at = 'T001', /introduced_at/));
 test('rechaza criterio sin caso de oráculo', () => reject(d => d.oracleCases[0].cases.pop(), /cobertura/));
 test('rechaza falsa procedencia', () => reject(d => d.provenance.references.V0 = 'a'.repeat(40), /referencias|procedencia/));
-test('rechaza FROZEN sin referencias y evidencia', () => reject(d => d.family.status = 'FROZEN', /DRAFT|congel|referencias/));
+const clearReferences = d => { for (const v of ['V0','V1','V2','V3']) { d.family.reference_versions[v] = null; d.provenance.references[v] = null; } };
+test('rechaza FROZEN sin referencias y evidencia', () => reject(d => { d.family.status = 'FROZEN'; clearReferences(d); }, /FROZEN incompatible con 0 referencias/));
+test('rechaza DRAFT con referencias registradas', () => reject(d => { d.family.status = 'DRAFT'; }, /DRAFT incompatible con 4 referencias/));
+test('rechaza AUDITED/FROZEN sin auditoría aprobada', () => reject(d => { d.provenance.audit.status = 'NOT_STARTED'; }, /auditoría/));
 test('rechaza cambios silenciosos a la política de intentos', () => reject(d => d.policy.max_attempts = 4, /policy/));
 test('V0 contiene solo los dos requisitos vigentes', () => {
   const d = load(); const p = makePacket(d, 'V0');

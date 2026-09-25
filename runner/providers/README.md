@@ -72,3 +72,7 @@ Los tags locales se contrastan con digest; no se descargan otros modelos. Los ID
 - [Sonnet 5](https://platform.claude.com/docs/en/models/sonnet-5/overview) y [JSON outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs).
 - [Gemini 3.1 Pro](https://ai.google.dev/gemini-api/docs/generate-content/gemini-3) y [salidas estructuradas](https://ai.google.dev/gemini-api/docs/structured-output).
 - [Ollama chat](https://docs.ollama.com/api/chat) y [metadatos de modelos](https://docs.ollama.com/api/tags).
+
+## Diagnóstico de protocolo — 2026-09-25
+
+`npm run providers:diagnose` (opcional: proveedores y `--rounds=N`, por defecto los tres comerciales y 5 rondas) envía el paquete V0 real en dos escenarios (inicio con vista del workspace y tras un `run_checks` fallido) con el protocolo 1.1, sin ejecutar ninguna acción. Informa por proveedor la tasa de acciones válidas (`HEALTHY` ≥ 90 %, `DEGRADED` ≥ 50 %, `FAILING`), los códigos de error, cuántas respuestas necesitaron normalización de bloque Markdown y un ejemplo del texto rechazado. Informe completo en `.artifacts/providers/diagnose-*.json` (fuera de Git). Ejecutarlo cuando Synterolink confirme la solución y antes de cualquier generación.

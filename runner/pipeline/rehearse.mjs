@@ -32,6 +32,8 @@ const PLAN = {
 };
 const WRITE = "const fs=require('node:fs'),p=require('node:path');const [f,d]=process.argv.slice(1);if(!/^src\\/[A-Za-z.-]+$/.test(f))throw Error('ruta');fs.mkdirSync(p.dirname(f),{recursive:true});fs.writeFileSync(f,Buffer.from(d,'base64'));console.log('escrito '+f);";
 
+// Guion con las acciones del protocolo 1.1: list_files y read_file al inicio, write_file por archivo (el primer
+// archivo con tool en google para cubrir también el shell), edit_file en anthropic, run_checks antes de entregar.
 function scriptedAdapter(store, seen) {
   return {
     async next(context) {
@@ -39,13 +41,14 @@ function scriptedAdapter(store, seen) {
       seen.push(JSON.stringify(context));
       const plan = PLAN[`${context.provider}:${context.attempt}`];
       if (!plan) return { type: 'technical_failure' };
-      const writes = Object.entries(plan);
-      if (context.cycle <= writes.length) {
-        const [path, source] = writes[context.cycle - 1];
-        return { type: 'tool', argv: ['node', '-e', WRITE, path, Buffer.from(fixture(source)).toString('base64')] };
+      const steps = [{ type: 'list_files', path: '' }, { type: 'read_file', path: 'src/App.tsx' }];
+      for (const [index, [path, source]] of Object.entries(plan).entries()) {
+        if (context.provider === 'google' && index === 0) steps.push({ type: 'tool', argv: ['node', '-e', WRITE, path, Buffer.from(fixture(source)).toString('base64')] });
+        else steps.push({ type: 'write_file', path, content: fixture(source) });
       }
-      if (context.cycle === writes.length + 1) return { type: 'tool', argv: ['node', 'node_modules/vitest/vitest.mjs', 'run'] };
-      return { type: 'deliver' };
+      if (context.provider === 'anthropic') steps.push({ type: 'edit_file', path: 'src/catalog.ts', find: 'export const CATEGORIES', replace: '// Categorías del fixture\nexport const CATEGORIES' });
+      steps.push({ type: 'run_checks' }, { type: 'deliver' });
+      return steps[Math.min(context.cycle, steps.length) - 1];
     }
   };
 }
@@ -79,6 +82,14 @@ async function main() {
   assert.equal(opened.length, 3);
   assert.deepEqual([...closed].sort(), [...opened].sort());
   assert.equal(docker(['container', 'ls', '--all', '--filter', 'label=org.evoguard.role', '--format', '{{.Names}}']), '', 'contenedores remanentes');
+  // Protocolo 1.1: la primera llamada de cada asignación ve la vista del workspace con el contenido de src/.
+  const first = JSON.parse(seen[0]);
+  assert.equal(first.messages[0].content.source, 'workspace');
+  assert.match(first.messages[0].content.overview.contents['src/App.tsx'], /Scaffold base/);
+  const visibleAll = seen.join('\n');
+  assert.match(visibleAll, /== typecheck: FAIL/, 'run_checks muestra el fallo de tipos');
+  assert.match(visibleAll, /editado src\/catalog\.ts/, 'edit_file se ejecutó en el contenedor');
+  assert.match(visibleAll, /escrito src\/App\.tsx/, 'write_file se ejecutó en el contenedor');
   // El constructor ve el feedback de typecheck, pero nunca detalles del oráculo ni de arquitectura.
   const visible = seen.join('\n');
   assert.match(visible, /TS2322|not assignable/);

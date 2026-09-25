@@ -186,3 +186,18 @@ test('motor: salida inválida del modelo consume un ciclo con aviso visible; ven
   assert.equal(stopped.status, 'INFRA_ERROR');
   assert.equal(stopped.attempts[0].error_code, 'HTTP_401');
 });
+
+test('protocolo 1.1: vista inicial del workspace y aviso visible al repetir la misma acción', async () => {
+  const seen = [];
+  const overview = { status: 'PASS', output: JSON.stringify({ status: 'PASS', output: JSON.stringify({ files: [{ path: 'src/App.tsx', bytes: 10 }], contents: { 'src/App.tsx': 'app' } }) }) };
+  const looping = harness('rehearsal', {
+    adapter: { async next(ctx) { seen.push(ctx.messages); return ctx.cycle <= 4 ? { type: 'tool', argv: ['echo', 'x'] } : { type: 'deliver' }; } },
+    workspaces: { async open() { return { initialization: { baseline_commit: 'a'.repeat(40) }, async exec(argv) { return argv[3] === 'overview' ? overview : { status: 'PASS', output: 'x' }; }, async snapshot() { return ''; }, async commit() { return 'd'.repeat(40); }, async close() {} }; } }
+  });
+  const result = await runTask(looping);
+  assert.equal(result.status, 'ACCEPTED');
+  assert.equal(seen[0][0].content.source, 'workspace');
+  assert.equal(seen[0][0].content.overview.contents['src/App.tsx'], 'app');
+  assert.ok(result.events.some(e => e.type === 'loop_detected'));
+  assert.match(JSON.stringify(seen.at(-1)), /Has repetido la misma acción 3 veces/);
+});

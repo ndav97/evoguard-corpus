@@ -2,16 +2,10 @@ import {requestJson,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
 import {createHash} from 'node:crypto';
 import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
-export const ACTION_SCHEMA={type:'object',properties:{type:{type:'string',enum:['tool','deliver','technical_failure']},argv:{type:'array',items:{type:'string'}}},required:['type','argv'],additionalProperties:false};
-export const INSTRUCTION='Return exactly one JSON action matching the supplied schema. type=tool executes argv in the isolated Linux workspace; use argv ["sh","-lc","command"] when a shell is needed. type=deliver submits the work. type=technical_failure gives up. argv must be empty for non-tool actions. Do not execute tools yourself. Use only the current packet and visible history. No Internet or new dependencies.';
+import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
+export {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION};
 const TRANSPORT={openai:'openai',anthropic:'anthropic',google:'google',local_a:'ollama',local_b:'ollama'};
 const number=value=>Number.isFinite(value)&&value>=0?value:null;
-function parseAction(text) {
-  let action;try {action=JSON.parse(text);}catch {throw providerError('INVALID_ACTION_JSON');}
-  if(!action||Object.keys(action).sort().join()!=='argv,type'||!['tool','deliver','technical_failure'].includes(action.type)||!Array.isArray(action.argv)||action.argv.length>128||action.argv.some(v=>typeof v!=='string'||v.includes('\0')||v.length>16384)||(action.type==='tool'?action.argv.length===0:action.argv.length!==0))throw providerError('INVALID_ACTION');
-  return action.type==='tool'?action:{type:action.type};
-}
-export const RESPONSE_CONTRACT={schema:ACTION_SCHEMA,instruction:'Return exactly one JSON object matching this schema. No Markdown, code fences, commentary or additional fields. Non-tool actions require argv: [].'};
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
@@ -29,7 +23,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const timer=setTimeout(()=>controller.abort(),timeout);
     const combined=signal?AbortSignal.any([signal,controller.signal]):controller.signal;
     const started=Date.now();
-    const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null};
+    const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
       const tags=await request('http://127.0.0.1:11434/api/tags');
@@ -71,7 +65,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');
       } else {
         await verifyLocal();
-        raw=await request('http://127.0.0.1:11434/api/chat',{model:config.api_model_id,stream:false,keep_alive:0,format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
+        raw=await request('http://127.0.0.1:11434/api/chat',{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
         if(raw.done!==true||raw.done_reason!=='stop')throw providerError('INCOMPLETE_RESPONSE');
@@ -81,7 +75,11 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         await verifyLocal();text=raw.message?.content;
       }
       if(typeof metadata.observed_model!=='string'||!metadata.observed_model)throw providerError('MODEL_METADATA_MISSING');
-      const action=parseAction(text);metadata.status='PASS';return action;
+      let parsed;
+      try {parsed=parseAction(text);}
+      catch(error) {metadata.rejected_output=rejectedSample(text);throw error;}
+      metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;
+      metadata.status='PASS';return parsed.action;
     } catch(error) {
       metadata.error_code=combined.aborted?'REQUEST_ABORTED':(/^[A-Z_0-9]+$/.test(error.code??'')?error.code:'INVALID_RESPONSE');
       throw providerError(metadata.error_code);

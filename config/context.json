@@ -32,7 +32,8 @@
     "argument_old_bytes": 200,
     "feedback_latest_bytes": 3000,
     "feedback_old_bytes": 600,
-    "head_fraction": 0.4
+    "head_fraction": 0.4,
+    "workspace_bytes": 6000
   },
   "packet": {
     "omit_from_message": [

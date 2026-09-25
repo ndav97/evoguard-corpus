@@ -147,3 +147,17 @@ test('tokens reales por encima de la estimación se rechazan como violación de 
   const adapter = createProviderAdapter({ provider: 'local_a', config, fetchImpl: fakeFetch(config, 7100, []) });
   await assert.rejects(adapter.next({ provider: 'local_a', attempt: 1, cycle: 1, packet: { request: 'breve' }, messages: [] }), /CONTEXT_ESTIMATE_VIOLATION/);
 });
+
+test('protocolo 1.1: la vista del workspace se conserva o se reduce al árbol, nunca se pierde', () => {
+  const overview = { note: 'Vista', files: ['src/App.tsx (40000 B)'], contents: { 'src/App.tsx': 'x'.repeat(40000), 'src/b.ts': 'b' } };
+  const messages = [{ role: 'user', content: { source: 'workspace', overview } }];
+  const { input } = build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 1 }, calibrated);
+  const visible = JSON.parse(input).history.messages[0].content.overview;
+  assert.deepEqual(visible.files, overview.files);
+  assert.equal(visible.contents['src/b.ts'], 'b', 'los archivos pequeños caben');
+  assert.equal(visible.contents['src/App.tsx'], undefined, 'los grandes se omiten y se leen con read_file');
+  const write = [{ role: 'assistant', content: { type: 'write_file', path: 'src/App.tsx', content: 'y'.repeat(20000) } }, { role: 'tool', content: { status: 'PASS', output: 'escrito' } }];
+  for (let i = 0; i < 4; i++) messages.push(...structuredClone(write));
+  const trimmed = JSON.parse(build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 9 }, calibrated).input);
+  assert.ok(trimmed.history.messages.filter(m => m.role === 'assistant').every(m => m.content.content.length < 20000), 'el contenido de write_file se recorta en el historial');
+});

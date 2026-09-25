@@ -8,12 +8,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { runOracleInContainer } from '../oracle/container.mjs';
 import { checkArchitecture } from './architecture.mjs';
+import { PROTOCOL_CONFIG } from '../protocol/execute.mjs';
 
-export const VISIBLE_COMMANDS = {
-  typecheck: ['node', 'node_modules/typescript/bin/tsc', '--noEmit'],
-  build: ['node', 'node_modules/vite/bin/vite.js', 'build'],
-  development_tests: ['node', 'node_modules/vitest/vitest.mjs', 'run']
-};
+// Mismos comandos que la acción run_checks del protocolo (config/protocol.json): una sola fuente de verdad.
+export const VISIBLE_COMMANDS = PROTOCOL_CONFIG.check_commands;
 
 export function architectureBaseline(root) {
   const family = JSON.parse(readFileSync(join(root, 'families/F001-product-catalog/family.yaml'), 'utf8'));

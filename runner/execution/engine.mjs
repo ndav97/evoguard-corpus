@@ -1,4 +1,6 @@
 import { isDeepStrictEqual } from 'node:util';
+import { ACTION_TYPES, actionKey } from '../protocol/actions.mjs';
+import { performAction, workspaceOverview, PROTOCOL_CONFIG } from '../protocol/execute.mjs';
 const RING=['openai','anthropic','google','local_a','local_b'];
 const STAGES=['typecheck','build','development_tests','independent_oracle','architecture'];
 const VISIBLE=new Set(STAGES.slice(0,3));
@@ -46,6 +48,11 @@ export async function runTask(options) {
       workspace=await workspaces.open();
       record('assignment',{provider,assignment:assignment+1});
       const messages=[];
+      // Protocolo 1.1: vista inicial del workspace como primer mensaje visible (no en simulación guionada).
+      if(options.mode!=='simulation') {
+        const overview=await workspaceOverview(workspace,{timeout:60000}).catch(()=>null);
+        if(overview) {messages.push({role:'user',content:{source:'workspace',overview}});record('workspace_overview',{provider,files:overview.files.length,contents:Object.keys(overview.contents).length});}
+      }
       for(let attempt=1;attempt<=3;attempt++) {
         const started=Date.now();
         const limit=options.simulationTimeoutMs??1000*policy.timeout_seconds[provider.startsWith('local_')?'local':'api'];
@@ -69,6 +76,7 @@ export async function runTask(options) {
         record('attempt_started',{provider,attempt,packet,messages});
         try {
           let delivered=false;
+          const recent=[];
           for(let cycle=1;cycle<=25;cycle++) {
             row.cycles=cycle;
             let response;
@@ -77,23 +85,30 @@ export async function runTask(options) {
               // Salida inválida del modelo: consume el ciclo y se informa visiblemente; no es infraestructura.
               if(MODEL_OUTPUT_ERRORS.has(error.code)) {
                 record('model_output_error',{provider,attempt,cycle,code:error.code});
-                messages.push({role:'user',content:{source:'runner',feedback:`Respuesta inválida (${error.code}). Devuelve exactamente un objeto JSON {"type":...,"argv":[...]} según el contrato de respuesta.`,attempt}});
+                messages.push({role:'user',content:{source:'runner',feedback:`Respuesta inválida (${error.code}). Devuelve exactamente un objeto JSON con las claves type, path, content, find, replace y argv según el contrato de respuesta (campos no usados: "" o []).`,attempt}});
                 continue;
               }
               throw error;
             }
-            if(!response || !['tool','deliver','technical_failure'].includes(response.type) || JSON.stringify(response).length>262144) throw new Error('Respuesta de adaptador inválida');
+            if(!response || !ACTION_TYPES.includes(response.type) || JSON.stringify(response).length>400000) throw new Error('Respuesta de adaptador inválida');
             record('response',{provider,attempt,cycle,response});
             messages.push({role:'assistant',content:clone(response)});
             if(response.type==='deliver') {delivered=true;break;}
             if(response.type==='technical_failure') {row.reason='TECHNICAL_FAILURE';break;}
-            if(!Array.isArray(response.argv)||!response.argv.length||response.argv.length>128||response.argv.some(a=>typeof a!=='string'||a.includes('\0')||a.length>16384)) throw new Error('Tool argv inválido');
-            const output=await bounded(opts=>workspace.exec(response.argv,opts));
+            if(response.type==='tool'&&(!Array.isArray(response.argv)||!response.argv.length||response.argv.length>128||response.argv.some(a=>typeof a!=='string'||a.includes('\0')||a.length>16384))) throw new Error('Tool argv inválido');
+            const output=await bounded(opts=>performAction(workspace,response,opts));
             if(output?.status==='TIMEOUT') {controller.abort();throw timeoutError();}
             if(!output||!['PASS','FAIL','INFRA_ERROR'].includes(output.status)||typeof output.output!=='string') throw new Error('Resultado de herramienta inválido');
             if(output.status==='INFRA_ERROR') throw new Error('Infraestructura de herramienta');
             const visible={status:output.status,output:output.output.slice(0,65536)};
             messages.push({role:'tool',content:visible});record('tool_result',{provider,attempt,cycle,...visible});
+            // Detección de bucles: la misma acción repetida loop_threshold veces seguidas recibe un aviso visible.
+            recent.push(actionKey(response));
+            if(recent.length>=PROTOCOL_CONFIG.loop_threshold&&recent.slice(-PROTOCOL_CONFIG.loop_threshold).every(k=>k===recent.at(-1))) {
+              record('loop_detected',{provider,attempt,cycle,action_type:response.type});
+              messages.push({role:'user',content:{source:'runner',feedback:`Has repetido la misma acción ${PROTOCOL_CONFIG.loop_threshold} veces sin progreso. Revisa el historial, inspecciona los archivos (read_file/list_files) y cambia de estrategia: modifica el código y ejecuta run_checks.`,attempt}});
+              recent.length=0;
+            }
           }
           if(delivered) {
             for(const stage of STAGES) {

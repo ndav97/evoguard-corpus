@@ -26,7 +26,7 @@
     "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
     "runner/packet.mjs": "f7cd0124331254ec63a0c12a781f40dca4dbcb500bf783d3487cba477d52a8bc",
     "runner/validation/corpus.mjs": "ac49a4fb5cd7582540d21b80f5f7433f0e6f8a1ee275a87ba091418df4622fdd",
-    "prompts/common.md": "24107c85f10d7b8bd491f0ce44b857bfd602b93abcd3d84c438d118a73745057",
+    "prompts/common.md": "eb49600b9a86b52d156f3fb1f142b33b1b225afc8c7c0871a18d2aeb230c2683",
     "prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",
     "families/F001-product-catalog/fixtures/products.json": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
     "families/F001-product-catalog/requirements/R001.yaml": "29d620c6add0021c4ac6a3c95609e0c127595a88a9f75bae210ad72ace8109cb",
@@ -39,16 +39,16 @@
   "clean_runs": [
     {
       "initialization": {
-        "baseline_commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e",
-        "root_commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e",
+        "baseline_commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44",
+        "root_commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44",
         "history": [
           {
             "message": "scaffold: isolated baseline (not V0)",
-            "commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e"
+            "commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44"
           }
         ],
         "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
-        "packet_sha256": "d1e15edda16a2f661e7ded084fdcd6530121dc0b2fb746647eb77588d7679e72",
+        "packet_sha256": "36f212150f021862b2d6e7dc521c1f8b36abaf7ffb053875375ec81d8a7977cd",
         "version": "V0",
         "file_count": 10
       },
@@ -73,7 +73,7 @@
         "git_scaffold_only": true,
         "external_network_and_host_denied": true,
         "npm_ci_offline": "added 51 packages in 2s",
-        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 137ms",
+        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 181ms",
         "browser_localhost": true,
         "chromium_version": "153.0.8010.12",
         "inputs_unchanged": true
@@ -81,16 +81,16 @@
     },
     {
       "initialization": {
-        "baseline_commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e",
-        "root_commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e",
+        "baseline_commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44",
+        "root_commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44",
         "history": [
           {
             "message": "scaffold: isolated baseline (not V0)",
-            "commit": "06d9c95f930346f35cc47880a43fe5dd0525cb6e"
+            "commit": "4f2b09e45e081b05f3c4ddf87848fd5ab388ff44"
           }
         ],
         "fixture_sha256": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
-        "packet_sha256": "d1e15edda16a2f661e7ded084fdcd6530121dc0b2fb746647eb77588d7679e72",
+        "packet_sha256": "36f212150f021862b2d6e7dc521c1f8b36abaf7ffb053875375ec81d8a7977cd",
         "version": "V0",
         "file_count": 10
       },
@@ -114,8 +114,8 @@
         "no_future_in_packet": true,
         "git_scaffold_only": true,
         "external_network_and_host_denied": true,
-        "npm_ci_offline": "added 51 packages in 1s",
-        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 119ms",
+        "npm_ci_offline": "added 51 packages in 2s",
+        "build": "> evoguard-neutral-scaffold@0.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.3.0 building client environment for production...\ntransforming...\n✓ 15 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.30 kB │ gzip:  0.23 kB\ndist/assets/index-Cxv0RrxE.js  219.73 kB │ gzip: 68.65 kB\n\n✓ built in 170ms",
         "browser_localhost": true,
         "chromium_version": "153.0.8010.12",
         "inputs_unchanged": true

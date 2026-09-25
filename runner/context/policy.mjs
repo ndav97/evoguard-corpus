@@ -61,7 +61,8 @@ function slimPacket(packet, policy) {
 function steps(messages) {
   const result = [];
   for (const [index, message] of messages.entries()) {
-    if (message.role === 'user') result.push({ kind: 'feedback', index, message });
+    if (message.role === 'user' && message.content?.source === 'workspace') result.push({ kind: 'workspace', index, message });
+    else if (message.role === 'user') result.push({ kind: 'feedback', index, message });
     else if (message.role === 'assistant') result.push({ kind: 'step', index, action: message, tool: null });
     else if (message.role === 'tool') {
       const last = result.at(-1);
@@ -80,6 +81,10 @@ function compressStep(step, level, h) {
   if (step.action) {
     const content = structuredClone(step.action.content);
     if (Array.isArray(content?.argv)) content.argv = content.argv.map(arg => { const c = clip(arg, argLimit, h.head_fraction); if (c !== arg) clipped++; return c; });
+    // Protocolo 1.1: el contenido de write_file/edit_file se recorta como los argumentos.
+    for (const field of ['content', 'find', 'replace']) {
+      if (typeof content?.[field] === 'string') { const c = clip(content[field], argLimit, h.head_fraction); if (c !== content[field]) clipped++; content[field] = c; }
+    }
     out.push({ role: 'assistant', content });
   }
   if (step.tool) {
@@ -104,6 +109,20 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   const budget = policy.budget.input_tokens;
   const all = steps(context.messages ?? []);
   const feedback = all.filter(item => item.kind === 'feedback');
+  // Vista del workspace (protocolo 1.1): completa hasta workspace_bytes o solo el árbol de archivos.
+  const workspaceItems = all.filter(item => item.kind === 'workspace');
+  const workspaceLevel = level => workspaceItems.map(item => {
+    const overview = item.message.content.overview ?? {};
+    if (level === 'tree') return { index: item.index, messages: [{ role: 'user', content: { source: 'workspace', overview: { note: overview.note, files: overview.files, contents: {}, omitted: 'contenidos omitidos por la política de contexto; usa read_file' } } }] };
+    let used = 0;
+    const contents = {};
+    for (const [path, text] of Object.entries(overview.contents ?? {})) {
+      const size = Buffer.byteLength(text);
+      if (used + size > (h.workspace_bytes ?? 6000)) continue;
+      contents[path] = text; used += size;
+    }
+    return { index: item.index, messages: [{ role: 'user', content: { source: 'workspace', overview: { note: overview.note, files: overview.files, contents } } }] };
+  });
   const history = all.filter(item => item.kind === 'step');
   const latestFeedback = feedback.at(-1);
 
@@ -121,9 +140,12 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   const fits = text => estimateTokens(overhead + text, policy) <= budget;
 
   // Núcleo: paquete + feedback. Nivel 1: último feedback amplio; nivel 2: todo el feedback comprimido.
+  const latest = feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, item === latestFeedback ? h.feedback_latest_bytes : h.feedback_old_bytes, h)] }));
+  const compressed = feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, h.feedback_old_bytes, h)] }));
   const feedbackLevels = [
-    feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, item === latestFeedback ? h.feedback_latest_bytes : h.feedback_old_bytes, h)] })),
-    feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, h.feedback_old_bytes, h)] }))
+    [...workspaceLevel('full'), ...latest],
+    [...workspaceLevel('full'), ...compressed],
+    [...workspaceLevel('tree'), ...compressed]
   ];
   // Ventana: del paso más reciente al más antiguo; recientes con límites amplios, luego comprimidos.
   const windowFor = feedbackItems => {
