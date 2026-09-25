@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F001 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <label>Buscar <input type="search"></label>
+    <label>Categoría
+      <select id="category"><option>All</option><option>Electronics</option><option>Home</option><option>Sports</option><option>Books</option></select>
+    </label>
+    <label id="sort-label" hidden>Orden
+      <select id="sort"><option value="">Original</option><option value="name-asc">Nombre A–Z</option><option value="name-desc">Nombre Z–A</option><option value="price-asc">Precio menor</option><option value="price-desc">Precio mayor</option></select>
+    </label>
+    <ul id="results"></ul>
+    <p id="empty" hidden>Sin resultados</p>
+    <nav id="pager" hidden>
+      <button type="button" id="prev">Anterior</button>
+      <span id="page-info"></span>
+      <button type="button" id="next">Siguiente</button>
+    </nav>
+    <p id="selection" role="status" hidden></p>
+  </main>
+  <script>
+    const PRODUCTS = [
+      {"id":"P001","name":"Wireless Mouse","category":"Electronics","price":24.99},
+      {"id":"P002","name":"Mechanical Keyboard","category":"Electronics","price":89.5},
+      {"id":"P003","name":"USB Hub","category":"Electronics","price":19.99},
+      {"id":"P004","name":"Portable Monitor","category":"Electronics","price":179},
+      {"id":"P005","name":"Noise Canceling Headphones","category":"Electronics","price":129.99},
+      {"id":"P006","name":"Web Camera","category":"Electronics","price":49.9},
+      {"id":"P007","name":"Bluetooth Speaker","category":"Electronics","price":39.95},
+      {"id":"P008","name":"Laptop Stand","category":"Electronics","price":24.99},
+      {"id":"P009","name":"Tablet Charger","category":"Electronics","price":18.5},
+      {"id":"P010","name":"Desk Lamp","category":"Home","price":34.5},
+      {"id":"P011","name":"Coffee Grinder","category":"Home","price":59.99},
+      {"id":"P012","name":"Cotton Towel","category":"Home","price":12},
+      {"id":"P013","name":"Glass Bottle","category":"Home","price":15.5},
+      {"id":"P014","name":"Kitchen Scale","category":"Home","price":22.75},
+      {"id":"P015","name":"Storage Basket","category":"Home","price":18.5},
+      {"id":"P016","name":"Wall Clock","category":"Home","price":29.9},
+      {"id":"P017","name":"Travel Mug","category":"Home","price":15.5},
+      {"id":"P018","name":"Running Shoes","category":"Sports","price":79.99},
+      {"id":"P019","name":"Yoga Mat","category":"Sports","price":24.99},
+      {"id":"P020","name":"Tennis Balls","category":"Sports","price":8.5},
+      {"id":"P021","name":"Cycling Helmet","category":"Sports","price":45},
+      {"id":"P022","name":"Sports Bottle","category":"Sports","price":15.5},
+      {"id":"P023","name":"Jump Rope","category":"Sports","price":9.99},
+      {"id":"P024","name":"Training Gloves","category":"Sports","price":19.95},
+      {"id":"P025","name":"Clean Code","category":"Books","price":42},
+      {"id":"P026","name":"Design Patterns","category":"Books","price":54.5},
+      {"id":"P027","name":"Practical TypeScript","category":"Books","price":35.99},
+      {"id":"P028","name":"Modern React","category":"Books","price":32.5},
+      {"id":"P029","name":"Data Structures","category":"Books","price":47},
+      {"id":"P030","name":"Testing Software","category":"Books","price":29.9}
+    ];
+    const params = new URLSearchParams(location.search);
+    const level = ['V0', 'V1', 'V2', 'V3'].indexOf(params.get('version') ?? 'V3');
+    const mutant = params.get('mutant') ?? '';
+    const has = { sort: level >= 1, pages: level >= 2, select: level >= 3 };
+    const size = mutant === 'page9' ? 9 : 10;
+    const state = { query: '', category: 'All', sort: '', page: 0, selected: null, selectedIndex: null, hidden: null, marked: [] };
+    const $ = id => document.getElementById(id);
+    const search = document.querySelector('input[type=search]');
+    document.getElementById('sort-label').hidden = !has.sort;
+
+    function matches(product) {
+      let query = mutant === 'notrim' ? state.query : state.query.trim();
+      let name = product.name;
+      if (mutant !== 'case') { query = query.toLowerCase(); name = name.toLowerCase(); }
+      const byQuery = query === '' || name.includes(query);
+      let byCategory = state.category === 'All' || product.category === state.category;
+      if (mutant === 'category' && state.category === 'Home' && product.category === 'Sports') byCategory = true;
+      if (mutant === 'or' && query !== '') return byQuery;
+      return byQuery && byCategory;
+    }
+    function ordered(list) {
+      const mode = state.sort;
+      if (!mode) return list;
+      const key = mode.startsWith('name') ? p => p.name.toLowerCase() : p => p.price;
+      const asc = [...list].sort((a, b) => { const x = key(a), y = key(b); return x < y ? -1 : x > y ? 1 : 0; });
+      if (mode.endsWith('asc')) return asc;
+      if (mutant === 'reverse') return asc.reverse();
+      return [...list].sort((a, b) => { const x = key(a), y = key(b); return x > y ? -1 : x < y ? 1 : 0; });
+    }
+    function results() {
+      let list = ordered(PRODUCTS.filter(matches));
+      if (mutant === 'leak' && list.length === 0) list = PRODUCTS;
+      return list;
+    }
+    function pageCount(list) { return Math.ceil(list.length / size); }
+    function visible(list) { return has.pages ? list.slice(state.page * size, state.page * size + size) : list; }
+
+    function reconcileSelection() {
+      if (!has.select) return;
+      const included = new Set(PRODUCTS.filter(matches).map(p => p.id));
+      if (mutant === 'restore') {
+        if (state.selected && !included.has(state.selected)) { state.hidden = state.selected; state.selected = null; }
+        else if (!state.selected && state.hidden && included.has(state.hidden)) { state.selected = state.hidden; state.hidden = null; }
+        return;
+      }
+      if (mutant === 'keep') return;
+      if (state.selected && !included.has(state.selected)) state.selected = null;
+      state.marked = state.marked.filter(id => included.has(id));
+    }
+    function selectedId(list) {
+      if (mutant === 'index') return state.selectedIndex === null ? null : visible(list)[state.selectedIndex]?.id ?? null;
+      return state.selected;
+    }
+
+    function render() {
+      const list = results();
+      const total = pageCount(list);
+      if (state.page > Math.max(total - 1, 0) && !['overflow', 'nopagereset-category'].includes(mutant)) state.page = Math.max(total - 1, 0);
+      const current = selectedId(list);
+      const marked = mutant === 'multi' ? state.marked : [current];
+      $('results').replaceChildren(...visible(list).map((product, index) => {
+        const item = document.createElement('li');
+        const label = `${product.id} ${product.name} — ${product.price}`;
+        if (has.select) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = label;
+          button.setAttribute('aria-pressed', String(marked.includes(product.id)));
+          button.addEventListener('click', () => {
+            state.selected = product.id; state.selectedIndex = index; state.hidden = null;
+            state.marked = mutant === 'multi' ? [...new Set([...state.marked, product.id])] : [product.id];
+            if (mutant === 'multi') state.selected = state.marked[0];
+            render();
+          });
+          item.append(button);
+        } else {
+          item.textContent = label;
+        }
+        return item;
+      }));
+      $('empty').hidden = list.length !== 0 && visible(list).length !== 0;
+      if (has.pages) {
+        $('pager').hidden = false;
+        $('prev').disabled = state.page <= 0;
+        $('next').disabled = mutant === 'overflow' ? list.length === 0 : state.page >= total - 1;
+        $('page-info').textContent = list.length === 0 ? (mutant === 'nan' ? `Página ${NaN}` : '') : `Página ${state.page + 1} de ${total}`;
+      }
+      if (has.select) {
+        const product = PRODUCTS.find(p => p.id === current);
+        $('selection').hidden = false;
+        $('selection').textContent = product ? `Seleccionado: ${product.id} ${product.name}` : 'Sin selección';
+      }
+    }
+
+    search.addEventListener('input', () => {
+      state.query = search.value;
+      if (mutant !== 'nopagereset-search') state.page = 0;
+      if (mutant === 'sort-reset') { state.sort = ''; $('sort').value = ''; }
+      reconcileSelection(); render();
+    });
+    $('category').addEventListener('change', event => {
+      state.category = event.target.value;
+      if (mutant !== 'nopagereset-category') state.page = 0;
+      reconcileSelection(); render();
+    });
+    $('sort').addEventListener('change', event => {
+      state.sort = event.target.value;
+      if (mutant === 'sortpage') state.page = 0;
+      render();
+    });
+    $('prev').addEventListener('click', () => { state.page -= 1; render(); });
+    $('next').addEventListener('click', () => { state.page += 1; render(); });
+    render();
+  </script>
+</body>
+</html>

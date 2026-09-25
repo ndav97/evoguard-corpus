@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<body>
+  <main>
+    <label>Buscar <input type="search" /></label>
+    <label>Categoría
+      <select><option>All</option><option>Electronics</option><option>Home</option><option>Sports</option><option>Books</option></select>
+    </label>
+    <ul id="results"></ul>
+  </main>
+  <script>
+    const products = [
+      ['P001', 'Wireless Mouse', 'Electronics'],
+      ['P010', 'Desk Lamp', 'Home'],
+      ['P011', 'Coffee Grinder', 'Home'],
+      ['P012', 'Cotton Towel', 'Home'],
+      ['P013', 'Glass Bottle', 'Home'],
+      ['P014', 'Kitchen Scale', 'Home'],
+      ['P015', 'Storage Basket', 'Home'],
+      ['P016', 'Wall Clock', 'Home'],
+      ['P017', 'Travel Mug', 'Home'],
+      ['P022', 'Sports Bottle', 'Sports']
+    ];
+    const search = document.querySelector('input');
+    const category = document.querySelector('select');
+    const render = () => {
+      const query = search.value.trim().toLowerCase();
+      const selected = category.value;
+      document.querySelector('#results').replaceChildren(...products
+        .filter(([, name, group]) => (query === '' || name.toLowerCase().includes(query)) && (selected === 'All' || group === selected))
+        .map(([id, name]) => {
+          const item = document.createElement('li');
+          item.textContent = `${id} ${name}`;
+          return item;
+        }));
+    };
+    search.addEventListener('input', render);
+    category.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
