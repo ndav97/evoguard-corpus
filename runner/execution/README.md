@@ -1,6 +1,6 @@
-# Motor de intentos: modo simulado
+# Motor de intentos
 
-`runTask(options)` implementa el ciclo de agentes con dependencias inyectadas. Solo admite `mode: 'simulation'` y packet V0; los proveedores de la rotación son etiquetas del ensayo, no servicios conectados. No crea commits ni referencias funcionales, no modifica manifiestos del corpus ni habilita generación.
+`runTask(options)` implementa el ciclo de agentes con dependencias inyectadas. Modos: `simulation` (guionado, solo V0, estados `SIMULATED_*`), `rehearsal` (contenedores y evaluación reales con adaptador instrumental; ver `runner/pipeline/README.md`) y `experimental` (generación real; exige `preflightBlockers: []`). Solo el modo experimental puede producir referencias del corpus. Al aceptar fuera de simulación, el motor crea un commit determinista del pipeline (`reference: Vn`) y lo registra como `candidate_commit`.
 
 ## Interfaces ejecutables
 

@@ -3,24 +3,34 @@ const RING=['openai','anthropic','google','local_a','local_b'];
 const STAGES=['typecheck','build','development_tests','independent_oracle','architecture'];
 const VISIBLE=new Set(STAGES.slice(0,3));
 const clone=value=>structuredClone(value);
+const MODES={
+  simulation:{artifact:'runner_simulation',accepted:'SIMULATED_ACCEPTED',blocked:'SIMULATED_BLOCKED'},
+  rehearsal:{artifact:'pipeline_rehearsal',accepted:'ACCEPTED',blocked:'BLOCKED'},
+  experimental:{artifact:'corpus_generation',accepted:'ACCEPTED',blocked:'BLOCKED'}
+};
 const timeoutError=()=>Object.assign(new Error('Límite temporal del intento'),{code:'ATTEMPT_TIMEOUT'});
 
 function validate(options) {
   const p=options.policy;
-  if(options.mode!=='simulation') throw new Error('Solo simulaciones; generación real deshabilitada');
+  // simulation: ensayo guionado del motor. rehearsal: contenedores y evaluación reales con adaptador instrumental.
+  // experimental: generación real; exige preflight sin bloqueos, calculado por quien invoca (runner/preflight.mjs).
+  if(!MODES[options.mode]) throw new Error('Modo desconocido');
+  if(options.mode==='experimental'&&(!Array.isArray(options.preflightBlockers)||options.preflightBlockers.length)) throw new Error('Generación experimental bloqueada por preflight');
   if(!p || p.max_attempts!==3 || p.max_agent_cycles!==25 || p.max_provider_assignments!==5 || !isDeepStrictEqual(p.provider_ring,RING) || p.timeout_seconds?.api!==1800 || p.timeout_seconds?.local!==3600 || p.oracle_visible!==false || p.oracle_failure!=='immediate_reassignment_no_feedback' || p.repair_base!=='own_previous_attempt' || p.reassignment_base!=='previous_validated_reference_or_scaffold') throw new Error('Política incompatible');
-  if(!RING.includes(options.initialProvider) || options.packet?.version!=='V0') throw new Error('Proveedor o versión no disponible');
+  if(!RING.includes(options.initialProvider) || !(options.mode==='simulation'?['V0']:['V0','V1','V2','V3']).includes(options.packet?.version)) throw new Error('Proveedor o versión no disponible');
+  if(options.simulationTimeoutMs!==undefined && options.mode!=='simulation') throw new Error('Timeout reducido solo en simulación');
   if(options.simulationTimeoutMs!==undefined && (!Number.isInteger(options.simulationTimeoutMs)||options.simulationTimeoutMs<1||options.simulationTimeoutMs>1800000)) throw new Error('Timeout simulado inválido');
   for(const [object,method] of [[options.adapter,'next'],[options.workspaces,'open'],[options.evaluator,'check']]) if(typeof object?.[method]!=='function') throw new Error(`Falta interfaz ${method}`);
 }
 
 // Coordinador de confianza: adaptadores y evaluador nunca se ejecutan dentro del modelo.
-// El único modo expuesto es simulation; esto no autoriza ni crea referencias del corpus.
+// Solo el modo experimental puede producir referencias del corpus, y únicamente con preflight despejado.
 export async function runTask(options) {
   validate(options);
   const {adapter,workspaces,evaluator,emit=()=>{}}=options;
   const packet=clone(options.packet), policy=clone(options.policy);
-  const result={artifact_type:'runner_simulation',status:'SIMULATED_BLOCKED',attempts:[],events:[]};
+  const mode=MODES[options.mode];
+  const result={artifact_type:mode.artifact,mode:options.mode,version:packet.version,status:mode.blocked,attempts:[],events:[]};
   const record=(type,data={})=>{
     const event={sequence:result.events.length+1,type,...clone(data)};
     emit(clone(event));result.events.push(event);
@@ -52,7 +62,7 @@ export async function runTask(options) {
             return value;
           } finally {clearTimeout(timer);}
         };
-        const row={provider,assignment:assignment+1,attempt,cycles:0,outcome:'REASSIGN',reason:null,validation:{},snapshot:null};
+        const row={provider,assignment:assignment+1,attempt,cycles:0,outcome:'REASSIGN',reason:null,validation:{},snapshot:null,base_commit:workspace.initialization?.baseline_commit??workspace.base_commit??null,candidate_commit:null,started_at:new Date().toISOString()};
         result.attempts.push(row);
         record('attempt_started',{provider,attempt,packet,messages});
         try {
@@ -91,18 +101,22 @@ export async function runTask(options) {
                 break;
               }
             }
-            if(STAGES.every(s=>row.validation[s]==='PASS')) row.outcome='SIMULATED_ACCEPTED';
+            if(STAGES.every(s=>row.validation[s]==='PASS')) row.outcome=mode.accepted;
           } else {row.reason??='CYCLE_LIMIT';}
           // Captura fuera del contexto del agente; preserva también los fallos.
           row.snapshot=await bounded(opts=>workspace.snapshot(opts));
           if(typeof row.snapshot!=='string') throw new Error('Snapshot inválido');
-          if(row.outcome==='SIMULATED_ACCEPTED') {result.status='SIMULATED_ACCEPTED';stop=true;}
+          // Referencia aceptada: commit determinista del pipeline dentro del workspace, antes de cerrarlo.
+          if(row.outcome===mode.accepted&&options.mode!=='simulation'&&typeof workspace.commit==='function') {
+            row.candidate_commit=await bounded(opts=>workspace.commit(`reference: ${packet.version}`,opts));
+          }
+          if(row.outcome===mode.accepted) {result.status=mode.accepted;stop=true;}
         } catch(error) {
           row.reason=error.code==='ATTEMPT_TIMEOUT'?'TIMEOUT':'INFRA_ERROR';
           row.outcome=error.code==='ATTEMPT_TIMEOUT'?'REASSIGN':'INFRA_ERROR';
           if(row.outcome==='INFRA_ERROR') {result.status='INFRA_ERROR';stop=true;}
         } finally {
-          controller.abort();row.duration_ms=Date.now()-started;
+          controller.abort();row.duration_ms=Date.now()-started;row.finished_at=new Date().toISOString();
           record('attempt_finished',row);
         }
         if(row.outcome!=='REPAIR') break;

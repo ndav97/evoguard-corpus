@@ -120,34 +120,43 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   };
   const fits = text => estimateTokens(overhead + text, policy) <= budget;
 
-  // Núcleo: paquete + feedback (el último completo hasta su límite, los anteriores comprimidos).
-  let feedbackItems = feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, item === latestFeedback ? h.feedback_latest_bytes : h.feedback_old_bytes, h)] }));
-  if (!fits(render(feedbackItems, [], history.length))) {
-    feedbackItems = feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, h.feedback_old_bytes, h)] }));
-    if (!fits(render(feedbackItems, [], history.length))) throw Object.assign(new Error('CONTEXT_CORE_TOO_LARGE'), { code: 'CONTEXT_CORE_TOO_LARGE' });
-  }
-
+  // Núcleo: paquete + feedback. Nivel 1: último feedback amplio; nivel 2: todo el feedback comprimido.
+  const feedbackLevels = [
+    feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, item === latestFeedback ? h.feedback_latest_bytes : h.feedback_old_bytes, h)] })),
+    feedback.map(item => ({ index: item.index, messages: [compressFeedback(item.message, h.feedback_old_bytes, h)] }))
+  ];
   // Ventana: del paso más reciente al más antiguo; recientes con límites amplios, luego comprimidos.
-  const included = [];
-  let clipped = 0;
-  let stop = false;
-  for (let position = history.length - 1; position >= 0 && !stop; position--) {
-    const step = history[position];
-    const levels = history.length - 1 - position < h.recent_steps ? ['recent', 'old'] : ['old'];
-    let added = false;
-    for (const level of levels) {
-      const candidate = compressStep(step, level, h);
-      const trial = [...included, { index: step.index, messages: candidate.messages }];
-      if (fits(render(feedbackItems, trial, position))) {
-        included.push({ index: step.index, messages: candidate.messages });
-        clipped += candidate.clipped;
-        added = true;
-        break;
+  const windowFor = feedbackItems => {
+    const included = [];
+    let clipped = 0;
+    for (let position = history.length - 1; position >= 0; position--) {
+      const step = history[position];
+      const levels = history.length - 1 - position < h.recent_steps ? ['recent', 'old'] : ['old'];
+      let added = false;
+      for (const level of levels) {
+        const candidate = compressStep(step, level, h);
+        const trial = [...included, { index: step.index, messages: candidate.messages }];
+        if (fits(render(feedbackItems, trial, position))) {
+          included.push({ index: step.index, messages: candidate.messages });
+          clipped += candidate.clipped;
+          added = true;
+          break;
+        }
       }
+      if (!added) break; // se omite este paso y todos los anteriores, para conservar la continuidad reciente
     }
-    if (!added) stop = true; // se omite este paso y todos los anteriores, para conservar la continuidad reciente
+    return { included, clipped };
+  };
+  let feedbackItems = null, included = [], clipped = 0, coreFits = false;
+  for (const level of feedbackLevels) {
+    if (!fits(render(level, [], history.length))) continue;
+    coreFits = true;
+    const window = windowFor(level);
+    feedbackItems = level; included = window.included; clipped = window.clipped;
+    // Sin el paso más reciente el modelo trabajaría a ciegas: se intenta el siguiente nivel de compresión.
+    if (!history.length || included.some(item => item.index === history.at(-1).index)) break;
   }
-  // Sin al menos el paso más reciente el modelo trabajaría a ciegas: se rechaza como límite de infraestructura.
+  if (!coreFits) throw Object.assign(new Error('CONTEXT_CORE_TOO_LARGE'), { code: 'CONTEXT_CORE_TOO_LARGE' });
   if (history.length && !included.some(item => item.index === history.at(-1).index)) throw Object.assign(new Error('CONTEXT_WINDOW_TOO_SMALL'), { code: 'CONTEXT_WINDOW_TOO_SMALL' });
   const omitted = history.length - included.length;
   const input = render(feedbackItems, included, omitted);

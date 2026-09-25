@@ -6,7 +6,7 @@ import { makePacket } from '../packet.mjs';
 export const SCAFFOLD_FILES = ['package.json','package-lock.json','tsconfig.json','vite.config.ts','index.html','src/App.tsx','src/main.tsx'];
 export const IMAGE_FILES = ['docker/base.json','docker/Dockerfile','docker/init.mjs','templates/react-vite/package.json','templates/react-vite/package-lock.json'];
 export const VERIFICATION_FILES = [...new Set([...IMAGE_FILES,...SCAFFOLD_FILES.map(p=>`templates/react-vite/${p}`),
-  'runner/sandbox/policy.mjs','runner/sandbox/docker.mjs','runner/sandbox/lock.mjs','runner/sandbox/build.mjs','runner/sandbox/verify.mjs','runner/sandbox/probe.mjs','runner/sandbox/cli.mjs','runner/sandbox/sessions.mjs','runner/packet.mjs','runner/validation/corpus.mjs',
+  'runner/sandbox/policy.mjs','runner/sandbox/docker.mjs','runner/sandbox/seed-init.mjs','runner/sandbox/lineage.mjs','runner/sandbox/lock.mjs','runner/sandbox/build.mjs','runner/sandbox/verify.mjs','runner/sandbox/probe.mjs','runner/sandbox/cli.mjs','runner/sandbox/sessions.mjs','runner/packet.mjs','runner/validation/corpus.mjs',
   'prompts/common.md','prompts/generate-v0.md','families/F001-product-catalog/fixtures/products.json','families/F001-product-catalog/requirements/R001.yaml','families/F001-product-catalog/requirements/R002.yaml'])];
 export function assertRelativePath(path) {
   if (typeof path !== 'string' || !path || /[\\:\x00-\x1f]/.test(path) || path.split('/').some(s=>!s || s==='.' || s==='..')) throw new Error('Ruta relativa inválida');
@@ -32,13 +32,17 @@ export function seedFiles(root,version='V0') {
   files['.gitignore']='node_modules/\ndist/\ncoverage/\n';
   return files;
 }
-export function assertManagedName(name) {
-  if(!/^evoguard-sandbox-[a-f0-9]{32}$/.test(name)) throw new Error('Nombre de contenedor no administrado por EvoGuard');
+// Roles: agent-sandbox (workspace del constructor) y oracle-evaluator (contenedor nuevo del oráculo, sin código del agente salvo su build estático).
+export const ROLES={'agent-sandbox':'evoguard-sandbox-','oracle-evaluator':'evoguard-oracle-'};
+export function assertManagedName(name,role) {
+  const prefixes=role?[ROLES[role]]:Object.values(ROLES);
+  if(!prefixes.some(prefix=>prefix&&new RegExp(`^${prefix}[a-f0-9]{32}$`).test(name))) throw new Error('Nombre de contenedor no administrado por EvoGuard');
 }
-export function runArgs(image,name) {
+export function runArgs(image,name,role='agent-sandbox') {
   if(!/^sha256:[a-f0-9]{64}$/.test(image)) throw new Error('La imagen debe ser un digest local inmutable');
-  assertManagedName(name);
-  return ['create',`--name=${name}`,'--label=org.evoguard.role=agent-sandbox','--pull=never','--platform=linux/amd64',
+  if(!ROLES[role]) throw new Error('Rol de contenedor desconocido');
+  assertManagedName(name,role);
+  return ['create',`--name=${name}`,`--label=org.evoguard.role=${role}`,'--pull=never','--platform=linux/amd64',
     '--network=none','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--user=1000:1000','--init',
     '--pids-limit=256','--memory=4g','--memory-swap=4g','--cpus=2','--shm-size=512m',
     '--tmpfs=/workspace:rw,exec,nosuid,nodev,size=1536m,uid=1000,gid=1000,mode=0700',

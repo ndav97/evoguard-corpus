@@ -17,7 +17,8 @@
     "sandbox": "node runner/sandbox/cli.mjs",
     "runner:simulate": "node runner/simulation/cli.mjs",
     "providers": "node runner/providers/cli.mjs",
-    "context:calibrate": "node runner/context/calibrate.mjs"
+    "context:calibrate": "node runner/context/calibrate.mjs",
+    "pipeline:rehearse": "node runner/pipeline/rehearse.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",

@@ -42,3 +42,7 @@ La sesión abre un scaffold neutro con insumos iniciales R001/R002; no implement
 La API de proveedores futura se ejecutará en el coordinador externo; no está implementada. Docker utiliza el kernel de la VM WSL2. La prueba del navegador cubre únicamente el scaffold local; no constituye un oráculo E2E de F001.
 
 Fuentes: [Node oficial](https://hub.docker.com/_/node), [Playwright: navegadores](https://playwright.dev/docs/browsers), [Docker: ejecución](https://docs.docker.com/engine/containers/run/).
+
+## Inicialización desde el host (2026-09-24)
+
+`runner/sandbox/seed-init.mjs` sustituye en ejecución a `/opt/evoguard/init.mjs` de la imagen: el host lo envía en cada apertura (como la sonda de verificación) para admitir el seed evolutivo sin reconstruir la imagen. Produce el mismo commit base V0 (`f12bfa0…`). Está incluido en las entradas de verificación, igual que `runner/sandbox/lineage.mjs`. El contenedor de evaluación del oráculo usa la misma imagen y aislamiento con el rol `oracle-evaluator`.

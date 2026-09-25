@@ -93,3 +93,9 @@ Esta evidencia calibra el evaluador; no valida ninguna aplicación F001 ni habil
 - Evidencia: `docs/verification/context-calibration.json` (Ollama 0.32.15, 16 mediciones). Mínimo 3,3149 B/token (granite3.3:8b, JSON); qwen2.5-coder:7b 3,6418.
 - Estimador: 3,31 B/token × 0,8. Margen real frente al núcleo V3 de Granite: 4261 estimados contra 3101 medidos.
 - Se mantiene el factor 0,8 porque contenidos no medidos (hashes, lockfiles, código minificado) pueden tener proporciones menores; el control posterior `CONTEXT_ESTIMATE_VIOLATION` detecta subestimaciones.
+
+## Pipeline real (Paso 5) — 2026-09-24
+- Entorno: Linux de Claude con Docker y la imagen archivada del usuario (hash del archivo verificado). `environment:verify` PASS con los nuevos archivos verificados.
+- Oráculo en contenedor aislado: página de calibración V3 33/33 PASS (~8,5 s); mutante de conjunción V0 7/10 FAIL; sin contenedores remanentes.
+- Ensayo integral `npm run pipeline:rehearse` (43769398-211a-4adb-9c26-2d7a65536e8a): reparación, rechazo del oráculo, rechazo de arquitectura, aceptación con commit, registros `generation.json` válidos contra el esquema, canal privado separado y reconstrucción de V1 con hashes reproducibles.
+- `tests/pipeline.test.mjs` (10) sin Docker: arquitectura, evaluador, linaje y auditoría, modos del motor y persistencia.

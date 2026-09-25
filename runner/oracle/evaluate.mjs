@@ -69,15 +69,9 @@ export async function evaluateCase(spec, adapter) {
   return { id: spec.id, status: record.checks.every(check => check.pass) ? 'PASS' : 'FAIL', checks: record.checks };
 }
 
-// Sirve una página de calibración local (file:) y abre un navegador; openAdapter() crea una página nueva por caso.
-export async function openCalibrationSession(target, { timeout = 3000 } = {}) {
-  if (!(target instanceof URL) || target.protocol !== 'file:') throw new Error('Se requiere una URL file: de calibración');
-  const file = new URL(target); file.search = ''; file.hash = '';
-  const html = readFileSync(file, 'utf8');
-  const server = createServer((_request, response) => {
-    response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
-    response.end(html);
-  });
+// Sesión de navegador sobre un servidor HTTP local (127.0.0.1); openAdapter() crea una página nueva por caso.
+async function openBrowserSession(handler, { timeout = 3000, search = '' } = {}) {
+  const server = createServer(handler);
   await new Promise((resolve, reject) => {
     server.once('error', reject);
     server.listen(0, '127.0.0.1', resolve);
@@ -91,10 +85,13 @@ export async function openCalibrationSession(target, { timeout = 3000 } = {}) {
     throw error;
   }
   const context = await browser.newContext();
-  const address = `http://127.0.0.1:${server.address().port}/${target.search}`;
+  const address = `http://127.0.0.1:${server.address().port}/${search}`;
+  let current = null;
   return {
     async openAdapter() {
-      const page = await context.newPage();
+      // Una página viva por vez: cada caso empieza en una página nueva y la anterior se libera.
+      if (current) await current.close().catch(() => {});
+      const page = current = await context.newPage();
       page.setDefaultTimeout(timeout);
       await page.goto(address, { waitUntil: 'load' });
       return connectCatalog(page);
@@ -103,6 +100,35 @@ export async function openCalibrationSession(target, { timeout = 3000 } = {}) {
       try { await browser.close(); } finally { await closeServer(); }
     }
   };
+}
+
+// Página de calibración local (file:), un único HTML autocontenido.
+export async function openCalibrationSession(target, options = {}) {
+  if (!(target instanceof URL) || target.protocol !== 'file:') throw new Error('Se requiere una URL file: de calibración');
+  const file = new URL(target); file.search = ''; file.hash = '';
+  const html = readFileSync(file, 'utf8');
+  return openBrowserSession((_request, response) => {
+    response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    response.end(html);
+  }, { ...options, search: target.search });
+}
+
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8' };
+
+// Build estático del candidato (dist de Vite) desde memoria: { ruta: Buffer }. Solo sirve esos archivos;
+// rutas desconocidas sin extensión reciben index.html (SPA). No hay acceso al sistema de archivos.
+export async function openSiteSession(files, options = {}) {
+  if (!files || !Buffer.isBuffer(files['index.html'])) throw new Error('Build sin index.html');
+  return openBrowserSession((request, response) => {
+    let path;
+    try { path = decodeURIComponent(new URL(request.url, 'http://x').pathname).replace(/^\/+/, ''); } catch { path = ''; }
+    if (path === '' || (!files[path] && !/\.[A-Za-z0-9]+$/.test(path))) path = 'index.html';
+    const body = files[path];
+    if (!body) { response.writeHead(404); response.end(); return; }
+    const extension = path.slice(path.lastIndexOf('.'));
+    response.writeHead(200, { 'content-type': TYPES[extension] ?? 'application/octet-stream' });
+    response.end(body);
+  }, options);
 }
 
 export async function withCalibrationPage(target, run, options) {
@@ -130,6 +156,11 @@ export async function runSuite(version, openAdapter, { cases = loadCases() } = {
   const results = [];
   for (const spec of selected) results.push(await evaluateCase(spec, await openAdapter()));
   return { version, status: results.every(result => result.status === 'PASS') ? 'PASS' : 'FAIL', total: results.length, passed: results.filter(r => r.status === 'PASS').length, results };
+}
+
+export async function runSuiteOnSite(version, files, options) {
+  const session = await openSiteSession(files, options);
+  try { return await runSuite(version, () => session.openAdapter()); } finally { await session.close(); }
 }
 
 export function runSuiteOnPage(version, target, options) {
