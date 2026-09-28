@@ -1,0 +1,300 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://evoguard.invalid/schema/real-family.schema.json",
+  "title": "real-family",
+  "description": "Manifiesto de una familia semi-real (families-real/Sxxx-slug/family.yaml): base V0 real fijada por commit y tres cambios T001–T003 redactados por el equipo.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^S[0-9]{3}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "stratum": {
+      "const": "semi-real"
+    },
+    "repo": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "v0": {
+      "type": "object",
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "verified": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "commit",
+        "date",
+        "verified"
+      ],
+      "additionalProperties": false
+    },
+    "package_path": {
+      "type": "string",
+      "pattern": "^(\\.|[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)*)$"
+    },
+    "package_manager": {
+      "enum": [
+        "npm",
+        "pnpm",
+        "yarn"
+      ]
+    },
+    "runner": {
+      "enum": [
+        "vitest",
+        "jest"
+      ]
+    },
+    "node": {
+      "type": "string",
+      "pattern": "^[0-9]{2}$"
+    },
+    "workspace": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+$"
+    },
+    "hidden_tests_dir": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)*$"
+    },
+    "known_failures": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "focus": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.@-]+(/[A-Za-z0-9_.@-]+)*$"
+    },
+    "turns": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "enum": [
+              "T001",
+              "T002",
+              "T003"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "request": {
+            "type": "string",
+            "pattern": "^turns/T00[1-3]\\.md$"
+          },
+          "hidden_tests": {
+            "type": "string",
+            "pattern": "^oracle/T00[1-3]\\.test\\.(jsx?|tsx?)$"
+          },
+          "reference_patch": {
+            "type": "string",
+            "pattern": "^reference/T00[1-3]\\.patch$"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "request",
+          "hidden_tests",
+          "reference_patch"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "authored_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authored_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "CALIBRATED"
+          ]
+        },
+        "calibrated_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "authored_by",
+        "authored_at",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "DRAFT",
+            "GENERATED",
+            "VALIDATED",
+            "AUDITED",
+            "FROZEN"
+          ]
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "V1": {
+              "enum": [
+                "openai",
+                "anthropic",
+                "google",
+                "local_a",
+                "local_b"
+              ]
+            },
+            "V2": {
+              "enum": [
+                "openai",
+                "anthropic",
+                "google",
+                "local_a",
+                "local_b"
+              ]
+            },
+            "V3": {
+              "enum": [
+                "openai",
+                "anthropic",
+                "google",
+                "local_a",
+                "local_b"
+              ]
+            }
+          },
+          "required": [
+            "V1",
+            "V2",
+            "V3"
+          ],
+          "additionalProperties": false
+        },
+        "references": {
+          "type": "object",
+          "properties": {
+            "V1": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "V2": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "V3": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "required": [
+            "V1",
+            "V2",
+            "V3"
+          ],
+          "additionalProperties": false
+        },
+        "audit": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "status",
+        "plan",
+        "references"
+      ],
+      "additionalProperties": false
+    },
+    "checks": {
+      "type": "object",
+      "description": "Comprobaciones visibles adicionales (argv en el paquete de la app).",
+      "properties": {
+        "typecheck": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "slug",
+    "stratum",
+    "repo",
+    "url",
+    "license",
+    "domain",
+    "v0",
+    "package_path",
+    "package_manager",
+    "runner",
+    "node",
+    "workspace",
+    "hidden_tests_dir",
+    "known_failures",
+    "focus",
+    "turns",
+    "provenance",
+    "generation"
+  ],
+  "additionalProperties": false
+}

@@ -39,3 +39,15 @@ provenance:
   authored_at: 2026-09-27
   status: CALIBRATED
   calibrated_at: "2026-09-27 (T001 4/5, T002 3/5, T003 4/4 fail-to-pass; suite 540 tests sin regresiones; estable 2/2)"
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: openai
+    V2: anthropic
+    V3: google
+  references:
+    V1: null
+    V2: null
+    V3: null

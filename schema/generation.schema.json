@@ -9,7 +9,7 @@
     },
     "family_id": {
       "type": "string",
-      "pattern": "^F[0-9]{3}$"
+      "pattern": "^[FS][0-9]{3}$"
     },
     "version": {
       "enum": [
