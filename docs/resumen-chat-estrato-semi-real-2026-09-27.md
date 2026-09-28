@@ -1,5 +1,7 @@
 # Resumen del chat «estrato semi-real» (25–27/09/2026) — para continuar en el hilo principal
 
+> **Actualización 2026-09-27 (hilo principal):** el hallazgo de la sección 5 quedó resuelto. F002–F010, `oracle/F00x`, `runner/oracle/families/`, `tests/calibration/` y la generalización multi-familia se sincronizaron al PC en el commit `5115eab`. El estrato semi-real (`families-real/`, `scripts/mine/`, `scripts/real/` y estos documentos) quedó versionado en `7648db2`. Estado vigente: `docs/estado-del-proyecto-2026-09-27.md`.
+
 ## 1. Punto de partida y decisión
 - **Problema:** el docente indicó que el corpus EvoGuard no puede basarse solo en datos sintéticos (familias F001–F010).
 - **Decisión:** se agrega un **estrato semi-real**:
