@@ -1,6 +1,6 @@
 # Diseño: integración del estrato semi-real (S001–S010) en el runner
 
-Estado: propuesta del 2026-09-27. Parte de lo que ya existe (`families-real/`, `scripts/real/calibrar.mjs` y la caché de bases del volumen `evoguard-bases`) y del pipeline sintético (motor, protocolo 1.1, proveedores, registros y auditoría). El objetivo es que un modelo genere V1–V3 de cada familia semi-real con **las mismas garantías** que en el estrato sintético:
+Estado: aprobado e implementado el 2026-09-27 (fases R1–R5; commits `787f88f`, `263f3a3`, `44db59b`, `3a331dd` y documentación). Guía de uso: `docs/estrato-semi-real.md`. Parte de lo que ya existe (`families-real/`, `scripts/real/calibrar.mjs` y la caché de bases del volumen `evoguard-bases`) y del pipeline sintético (motor, protocolo 1.1, proveedores, registros y auditoría). El objetivo es que un modelo genere V1–V3 de cada familia semi-real con **las mismas garantías** que en el estrato sintético:
 - aislamiento;
 - oráculo oculto;
 - reparación solo con feedback visible;
