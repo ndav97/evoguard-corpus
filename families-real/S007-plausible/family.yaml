@@ -1,0 +1,41 @@
+# Familia semi-real S007 — base real + cambios T001–T003 redactados por el equipo (Claude).
+id: S007
+slug: plausible
+stratum: semi-real
+repo: plausible/analytics
+url: https://github.com/plausible/analytics
+license: AGPL-3.0
+domain: Analítica web (panel de estadísticas)
+v0:
+  commit: 37e352c73dc586314a43985a81371df895ed6c14
+  date: 2026-09-24
+  verified: 2026-09-27 GREEN (521 tests, 2 ejecuciones idénticas, sin red)
+package_path: assets
+package_manager: npm
+runner: jest
+node: "24"
+workspace: github__plausible__analytics
+hidden_tests_dir: js/evoguard
+known_failures: []
+focus: assets/js/dashboard/components/search-input.tsx
+turns:
+  - id: T001
+    title: Botón para vaciar la búsqueda
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Anunciar el número de resultados
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Escape vacía antes de salir del campo
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-09-27
+  status: CALIBRATED
+  calibrated_at: "2026-09-27 (T001 4/4, T002 4/4, T003 2/3 fail-to-pass; suite 532 tests sin regresiones; estable 2/2)"

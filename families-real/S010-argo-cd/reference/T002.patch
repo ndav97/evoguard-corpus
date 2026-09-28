@@ -1,0 +1,109 @@
+diff --git a/src/app/applications/components/applications-list/applications-list.scss b/src/app/applications/components/applications-list/applications-list.scss
+index e8fc8de..7009f1e 100644
+--- a/src/app/applications/components/applications-list/applications-list.scss
++++ b/src/app/applications/components/applications-list/applications-list.scss
+@@ -182,6 +182,23 @@
+     .chart {
+         justify-content: space-evenly;
+     }
++
++    &__summary-legend-button {
++        background: none;
++        border: none;
++        padding: 0;
++        color: inherit;
++        cursor: pointer;
++
++        &:hover:not(:disabled) {
++            text-decoration: underline;
++        }
++
++        &:disabled {
++            cursor: default;
++            opacity: 0.6;
++        }
++    }
+ }
+ i.menu_icon {
+     vertical-align: middle;
+diff --git a/src/app/applications/components/applications-list/applications-list.tsx b/src/app/applications/components/applications-list/applications-list.tsx
+index a6d47e2..f355cf0 100644
+--- a/src/app/applications/components/applications-list/applications-list.tsx
++++ b/src/app/applications/components/applications-list/applications-list.tsx
+@@ -518,7 +518,14 @@ export const ApplicationsList = (props: RouteComponentProps<any>) => {
+                                                                     sidebarTarget?.current
+                                                                 )}
+ 
+-                                                                {(pref.view === 'summary' && <ApplicationsSummary applications={filteredApps} />) || (
++                                                                {(pref.view === 'summary' && (
++                                                                    <ApplicationsSummary
++                                                                        applications={filteredApps}
++                                                                        onFilter={(type, status) =>
++                                                                            onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})
++                                                                        }
++                                                                    />
++                                                                )) || (
+                                                                     <Paginate
+                                                                         header={filteredApps.length > 1 && <AppsStatusBar applications={filteredApps} />}
+                                                                         showHeader={healthBarPrefs.showHealthStatusBar}
+diff --git a/src/app/applications/components/applications-list/applications-summary.tsx b/src/app/applications/components/applications-list/applications-summary.tsx
+index f93bf72..30d6464 100644
+--- a/src/app/applications/components/applications-list/applications-summary.tsx
++++ b/src/app/applications/components/applications-list/applications-summary.tsx
+@@ -29,7 +29,16 @@ hydratorColors.set('None', COLORS.sync.unknown);
+ // "N (P%)" respecto al total de aplicaciones; sin aplicaciones solo "0".
+ export const withPercentage = (count: number, total: number) => (total > 0 ? `${count} (${Math.round((count * 100) / total)}%)` : `${count}`);
+ 
+-export const ApplicationsSummary = ({applications}: {applications: models.Application[]}) => {
++export type SummaryFilterType = 'sync' | 'health';
++
++export const ApplicationsSummary = ({
++    applications,
++    onFilter
++}: {
++    applications: models.Application[];
++    // Si se indica, las entradas de las leyendas de Sync y Health son botones que filtran la lista.
++    onFilter?: (type: SummaryFilterType, status: string) => void;
++}) => {
+     const sync = new Map<string, number>();
+     applications.forEach(app => sync.set(app.status.sync.status, (sync.get(app.status.sync.status) || 0) + 1));
+     const health = new Map<string, number>();
+@@ -77,16 +86,19 @@ export const ApplicationsSummary = ({applications}: {applications: models.Applic
+     const charts = [
+         {
+             title: 'Sync',
++            filterType: 'sync' as SummaryFilterType,
+             data: Array.from(sync.keys()).map(key => ({title: key, value: sync.get(key), color: syncColors.get(key as models.SyncStatusCode)})),
+             legend: syncColors as Map<string, string>
+         },
+         {
+             title: 'Health',
++            filterType: 'health' as SummaryFilterType,
+             data: Array.from(health.keys()).map(key => ({title: key, value: health.get(key), color: healthColors.get(key as models.HealthStatusCode)})),
+             legend: healthColors as Map<string, string>
+         },
+         {
+             title: 'Hydrator',
++            filterType: null as SummaryFilterType | null,
+             data: Array.from(hydrator.keys()).map(key => ({title: key, value: hydrator.get(key), color: hydratorColors.get(key)})),
+             legend: hydratorColors as Map<string, string>
+         }
+@@ -144,7 +156,17 @@ export const ApplicationsSummary = ({applications}: {applications: models.Applic
+                                                             {chart.title === 'Hydrator' && key === 'None' && (
+                                                                 <i className='fa fa-minus-circle' style={{color: hydratorColors.get(key)}} />
+                                                             )}
+-                                                            {` ${key} (${getLegendValue(key)})`}
++                                                            {onFilter && chart.filterType ? (
++                                                                <button
++                                                                    type='button'
++                                                                    className='applications-list__summary-legend-button'
++                                                                    disabled={getLegendValue(key) === 0}
++                                                                    onClick={() => onFilter(chart.filterType as SummaryFilterType, key)}>
++                                                                    {` ${key} (${getLegendValue(key)})`}
++                                                                </button>
++                                                            ) : (
++                                                                ` ${key} (${getLegendValue(key)})`
++                                                            )}
+                                                         </li>
+                                                     ))}
+                                                 </ul>

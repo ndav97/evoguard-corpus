@@ -1,0 +1,51 @@
+diff --git a/src/components/forms/TimeOffsetForm.tsx b/src/components/forms/TimeOffsetForm.tsx
+index 0b7d1964..2ff955b7 100644
+--- a/src/components/forms/TimeOffsetForm.tsx
++++ b/src/components/forms/TimeOffsetForm.tsx
+@@ -75,6 +75,27 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+     },
+   });
+ 
++  const setTotal = (total: number) =>
++    form.setValues((f) => ({
++      ...f,
++      hour: Math.floor(total / 3600000),
++      min: Math.floor((total % 3600000) / 60000),
++      sec: Math.floor((total % 60000) / 1000),
++      ms: total % 1000,
++    }));
++
++  const currentTotal = () =>
++    num(form.values.hour) * 3600000 +
++    num(form.values.min) * 60000 +
++    num(form.values.sec) * 1000 +
++    num(form.values.ms);
++
++  const presets: [string, number][] = [
++    ["+100 ms", 100],
++    ["+1 s", 1000],
++    ["+1 min", 60000],
++  ];
++
+   const enabled =
+     form.values.hour > 0 ||
+     form.values.min > 0 ||
+@@ -140,6 +161,18 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+             {...form.getInputProps("ms")}
+           ></NumberInput>
+         </Group>
++        <Group gap="xs">
++          {presets.map(([label, amount]) => (
++            <Button
++              key={label}
++              size="xs"
++              variant="light"
++              onClick={() => setTotal(currentTotal() + amount)}
++            >
++              {label}
++            </Button>
++          ))}
++        </Group>
+         {enabled && (
+           <Text size="sm">
+             {`Offset: ${formatOffset(

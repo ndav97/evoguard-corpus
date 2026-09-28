@@ -1,0 +1,29 @@
+diff --git a/public/locales/en/common.json b/public/locales/en/common.json
+index 4363427..cbdea21 100644
+--- a/public/locales/en/common.json
++++ b/public/locales/en/common.json
+@@ -1063,7 +1063,9 @@
+         "loading": "Loading",
+         "open": "Open - US Market",
+         "closed": "Closed - US Market",
+-        "invalidConfiguration": "Invalid Configuration"
++        "invalidConfiguration": "Invalid Configuration",
++        "show_percent_change": "Show percent change",
++        "show_price": "Show price"
+     },
+     "frigate": {
+         "cameras": "Cameras",
+diff --git a/src/components/widgets/stocks/stocks.jsx b/src/components/widgets/stocks/stocks.jsx
+index 5ee9eb4..1659aa3 100644
+--- a/src/components/widgets/stocks/stocks.jsx
++++ b/src/components/widgets/stocks/stocks.jsx
+@@ -40,6 +40,9 @@ export default function Widget({ options }) {
+           <button
+             type="button"
+             onClick={() => setViewingPercentChange(!viewingPercentChange)}
++            aria-pressed={viewingPercentChange}
++            aria-label={viewingPercentChange ? t("stocks.show_price") : t("stocks.show_percent_change")}
++            title={viewingPercentChange ? t("stocks.show_price") : t("stocks.show_percent_change")}
+             className="flex items-center w-full h-full hover:outline-hidden focus:outline-hidden"
+           >
+             <FaChartLine className="flex-none w-5 h-5 text-theme-800 dark:text-theme-200 mr-2" />

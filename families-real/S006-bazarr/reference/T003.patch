@@ -1,0 +1,68 @@
+diff --git a/src/components/forms/TimeOffsetForm.tsx b/src/components/forms/TimeOffsetForm.tsx
+index 2ff955b7..6b8c37ef 100644
+--- a/src/components/forms/TimeOffsetForm.tsx
++++ b/src/components/forms/TimeOffsetForm.tsx
+@@ -90,6 +90,17 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+     num(form.values.sec) * 1000 +
+     num(form.values.ms);
+ 
++  const withNormalizeOnBlur = (field: "hour" | "min" | "sec" | "ms") => {
++    const props = form.getInputProps(field);
++    return {
++      ...props,
++      onBlur: (event: React.FocusEvent<HTMLInputElement>) => {
++        props.onBlur?.(event);
++        setTotal(currentTotal());
++      },
++    };
++  };
++
+   const presets: [string, number][] = [
+     ["+100 ms", 100],
+     ["+1 s", 1000],
+@@ -104,7 +115,17 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+ 
+   return (
+     <form
+-      onSubmit={form.onSubmit(({ positive, hour, min, sec, ms }) => {
++      onSubmit={form.onSubmit((values) => {
++        const total =
++          num(values.hour) * 3600000 +
++          num(values.min) * 60000 +
++          num(values.sec) * 1000 +
++          num(values.ms);
++        const { positive } = values;
++        const hour = Math.floor(total / 3600000);
++        const min = Math.floor((total % 3600000) / 60000);
++        const sec = Math.floor((total % 60000) / 1000);
++        const ms = total % 1000;
+         const action = positive
+           ? convertToAction(hour, min, sec, ms)
+           : convertToAction(-hour, -min, -sec, -ms);
+@@ -143,22 +164,22 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+           <NumberInput
+             min={0}
+             label="hour"
+-            {...form.getInputProps("hour")}
++            {...withNormalizeOnBlur("hour")}
+           ></NumberInput>
+           <NumberInput
+             min={0}
+             label="min"
+-            {...form.getInputProps("min")}
++            {...withNormalizeOnBlur("min")}
+           ></NumberInput>
+           <NumberInput
+             min={0}
+             label="sec"
+-            {...form.getInputProps("sec")}
++            {...withNormalizeOnBlur("sec")}
+           ></NumberInput>
+           <NumberInput
+             min={0}
+             label="ms"
+-            {...form.getInputProps("ms")}
++            {...withNormalizeOnBlur("ms")}
+           ></NumberInput>
+         </Group>
+         <Group gap="xs">

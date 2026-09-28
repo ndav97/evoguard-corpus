@@ -1,0 +1,30 @@
+diff --git a/src/app/applications/components/applications-list/applications-summary.tsx b/src/app/applications/components/applications-list/applications-summary.tsx
+index d50c2da..f93bf72 100644
+--- a/src/app/applications/components/applications-list/applications-summary.tsx
++++ b/src/app/applications/components/applications-list/applications-summary.tsx
+@@ -26,6 +26,9 @@ hydratorColors.set('Hydrated', COLORS.operation.success);
+ hydratorColors.set('Failed', COLORS.operation.failed);
+ hydratorColors.set('None', COLORS.sync.unknown);
+ 
++// "N (P%)" respecto al total de aplicaciones; sin aplicaciones solo "0".
++export const withPercentage = (count: number, total: number) => (total > 0 ? `${count} (${Math.round((count * 100) / total)}%)` : `${count}`);
++
+ export const ApplicationsSummary = ({applications}: {applications: models.Application[]}) => {
+     const sync = new Map<string, number>();
+     applications.forEach(app => sync.set(app.status.sync.status, (sync.get(app.status.sync.status) || 0) + 1));
+@@ -53,9 +56,12 @@ export const ApplicationsSummary = ({applications}: {applications: models.Applic
+ 
+     const attributes = [
+         {title: 'APPLICATIONS', value: applications.length},
+-        {title: 'SYNCED', value: applications.filter(app => app.status.sync.status === 'Synced').length},
+-        {title: 'HEALTHY', value: applications.filter(app => app.status.health.status === 'Healthy').length},
+-        {title: 'HYDRATED', value: applications.filter(app => app.status.sourceHydrator?.currentOperation?.phase === 'Hydrated').length},
++        {title: 'SYNCED', value: withPercentage(applications.filter(app => app.status.sync.status === 'Synced').length, applications.length)},
++        {title: 'HEALTHY', value: withPercentage(applications.filter(app => app.status.health.status === 'Healthy').length, applications.length)},
++        {
++            title: 'HYDRATED',
++            value: withPercentage(applications.filter(app => app.status.sourceHydrator?.currentOperation?.phase === 'Hydrated').length, applications.length)
++        },
+         {
+             title: 'CLUSTERS',
+             value: new Set(

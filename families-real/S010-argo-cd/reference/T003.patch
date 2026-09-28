@@ -1,0 +1,76 @@
+diff --git a/src/app/applications/components/applications-list/applications-list.scss b/src/app/applications/components/applications-list/applications-list.scss
+index 7009f1e..e3a3903 100644
+--- a/src/app/applications/components/applications-list/applications-list.scss
++++ b/src/app/applications/components/applications-list/applications-list.scss
+@@ -183,6 +183,11 @@
+         justify-content: space-evenly;
+     }
+ 
++    .white-box__details-row--attention {
++        color: $argo-failed-color;
++        font-weight: 600;
++    }
++
+     &__summary-legend-button {
+         background: none;
+         border: none;
+diff --git a/src/app/applications/components/applications-list/applications-summary.tsx b/src/app/applications/components/applications-list/applications-summary.tsx
+index 30d6464..e86735f 100644
+--- a/src/app/applications/components/applications-list/applications-summary.tsx
++++ b/src/app/applications/components/applications-list/applications-summary.tsx
+@@ -29,6 +29,17 @@ hydratorColors.set('None', COLORS.sync.unknown);
+ // "N (P%)" respecto al total de aplicaciones; sin aplicaciones solo "0".
+ export const withPercentage = (count: number, total: number) => (total > 0 ? `${count} (${Math.round((count * 100) / total)}%)` : `${count}`);
+ 
++// Una aplicación necesita atención si está OutOfSync o su salud es Degraded o Missing (se cuenta una vez).
++export const needsAttention = (app: models.Application) =>
++    app.status.sync.status === 'OutOfSync' || app.status.health.status === 'Degraded' || app.status.health.status === 'Missing';
++
++// Nombres ordenados alfabéticamente, como máximo 5, y "+K more" si hay más.
++export const attentionTooltip = (apps: models.Application[]) => {
++    const names = apps.map(app => app.metadata?.name ?? '').sort((a, b) => a.localeCompare(b));
++    const shown = names.slice(0, 5).join(', ');
++    return names.length > 5 ? `${shown}, +${names.length - 5} more` : shown;
++};
++
+ export type SummaryFilterType = 'sync' | 'health';
+ 
+ export const ApplicationsSummary = ({
+@@ -63,7 +74,9 @@ export const ApplicationsSummary = ({
+             .flat()
+     );
+ 
+-    const attributes = [
++    const attentionApps = applications.filter(needsAttention);
++
++    const attributes: {title: string; value: number | string; tooltip?: string; attention?: boolean}[] = [
+         {title: 'APPLICATIONS', value: applications.length},
+         {title: 'SYNCED', value: withPercentage(applications.filter(app => app.status.sync.status === 'Synced').length, applications.length)},
+         {title: 'HEALTHY', value: withPercentage(applications.filter(app => app.status.health.status === 'Healthy').length, applications.length)},
+@@ -80,7 +93,13 @@ export const ApplicationsSummary = ({
+                 })
+             ).size
+         },
+-        {title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size}
++        {title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size},
++        {
++            title: 'NEEDS ATTENTION',
++            value: attentionApps.length,
++            tooltip: attentionApps.length > 0 ? attentionTooltip(attentionApps) : undefined,
++            attention: attentionApps.length > 0
++        }
+     ];
+ 
+     const charts = [
+@@ -111,9 +130,9 @@ export const ApplicationsSummary = ({
+                     <div className='white-box__details'>
+                         <p className='row'>SUMMARY</p>
+                         {attributes.map(attr => (
+-                            <div className='row white-box__details-row' key={attr.title}>
++                            <div className={`row white-box__details-row${attr.attention ? ' white-box__details-row--attention' : ''}`} key={attr.title}>
+                                 <div className='columns small-8'>{attr.title}</div>
+-                                <div style={{textAlign: 'right'}} className='columns small-4'>
++                                <div style={{textAlign: 'right'}} className='columns small-4' title={attr.tooltip}>
+                                     {attr.value}
+                                 </div>
+                             </div>

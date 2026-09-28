@@ -1,0 +1,28 @@
+diff --git a/src/pages/Tasks.jsx b/src/pages/Tasks.jsx
+index 70dcc10..5a64343 100644
+--- a/src/pages/Tasks.jsx
++++ b/src/pages/Tasks.jsx
+@@ -131,6 +131,7 @@ export class Tasks extends Component {
+     ];
+ 
+     const filteredItems = this.filterItems(items);
++    const summary = `Showing ${filteredItems.length} of ${items.length} ${items.length === 1 ? "task" : "tasks"}`;
+ 
+     return (
+       <>
+@@ -187,7 +188,14 @@ export class Tasks extends Component {
+                   snapshots, restore, run maintenance, etc.
+                 </Alert>
+               ) : (
+-                <KopiaTable data={filteredItems} columns={columns} />
++                <>
++                  <p className="tasks-summary">{summary}</p>
++                  {filteredItems.length ? (
++                    <KopiaTable data={filteredItems} columns={columns} />
++                  ) : (
++                    <p>No tasks match the current filters.</p>
++                  )}
++                </>
+               )}
+             </Col>
+           </Row>

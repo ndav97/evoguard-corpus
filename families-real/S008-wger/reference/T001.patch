@@ -1,0 +1,43 @@
+diff --git a/public/locales/en/translation.json b/public/locales/en/translation.json
+index 5950a55..cc79e35 100644
+--- a/public/locales/en/translation.json
++++ b/public/locales/en/translation.json
+@@ -23,6 +23,7 @@
+     "deleteConfirmation": "Are you sure you want to delete \"{{name}}\"?",
+     "add": "Add",
+     "close": "Close",
++    "closeDialog": "Close dialog",
+     "difference": "Difference",
+     "useMarkdownHint": "You can use basic Markdown to format the text: *italic*, **bold**, - list",
+     "days": "Days",
+diff --git a/src/core/ui/Modals/DeleteConfirmationModal.tsx b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+index 4af00e7..1e6c0a9 100644
+--- a/src/core/ui/Modals/DeleteConfirmationModal.tsx
++++ b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+@@ -1,5 +1,5 @@
+ import CloseIcon from '@mui/icons-material/Close';
+-import { Button, Card, CardActions, CardContent, CardHeader, Modal, Typography } from "@mui/material";
++import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Modal, Typography } from "@mui/material";
+ import { FunctionComponent } from 'react';
+ import { useTranslation } from "react-i18next";
+ 
+@@ -51,12 +51,16 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+             <Card sx={style}>
+                 <CardHeader
+                     title={title}
+-                    titleTypographyProps={{ variant: 'h6' }}
++                    slotProps={{ title: { variant: 'h6', id: 'modal-modal-title' } }}
+                     subheader={subtitle}
+-                    action={<CloseIcon onClick={closeFn} />}
++                    action={
++                        <IconButton aria-label={t('closeDialog')} onClick={closeFn}>
++                            <CloseIcon />
++                        </IconButton>
++                    }
+                 />
+                 <CardContent>
+-                    <Typography variant="body1">
++                    <Typography variant="body1" id="modal-modal-description">
+                         {message}
+                     </Typography>
+                 </CardContent>

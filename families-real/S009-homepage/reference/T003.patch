@@ -1,0 +1,67 @@
+diff --git a/src/components/widgets/stocks/stocks.jsx b/src/components/widgets/stocks/stocks.jsx
+index 5b001d8..2ae2892 100644
+--- a/src/components/widgets/stocks/stocks.jsx
++++ b/src/components/widgets/stocks/stocks.jsx
+@@ -1,5 +1,5 @@
+ import { useTranslation } from "next-i18next/pages";
+-import { useState } from "react";
++import { useEffect, useState } from "react";
+ import { FaChartLine } from "react-icons/fa6";
+ import useSWR from "swr";
+ 
+@@ -9,6 +9,28 @@ import PrimaryText from "../widget/primary_text";
+ import Raw from "../widget/raw";
+ import WidgetIcon from "../widget/widget_icon";
+ 
++// La vista se recuerda por watchlist: cada widget configurado tiene su propia clave.
++// Sin watchlist no hay identidad estable y no se guarda nada.
++export const viewStorageKey = (watchlist) => `homepage-stocks-view:${watchlist}`;
++
++function readStoredView(watchlist) {
++  if (!watchlist) return null;
++  try {
++    return typeof window !== "undefined" ? window.localStorage.getItem(viewStorageKey(watchlist)) : null;
++  } catch {
++    return null;
++  }
++}
++
++function storeView(watchlist, view) {
++  if (!watchlist) return;
++  try {
++    window.localStorage.setItem(viewStorageKey(watchlist), view);
++  } catch {
++    // Almacenamiento no disponible (modo privado, cuota…): la vista simplemente no se recuerda.
++  }
++}
++
+ const displayTicker = (stock) => stock.ticker.split(":").pop();
+ 
+ // Ordena una copia de las cotizaciones según options.sort ("ticker" o "change").
+@@ -36,6 +58,17 @@ export default function Widget({ options }) {
+ 
+   const [viewingPercentChange, setViewingPercentChange] = useState(false);
+ 
++  // Se lee tras el montaje para que el HTML del servidor y el primer render coincidan.
++  useEffect(() => {
++    setViewingPercentChange(readStoredView(options.watchlist) === "percent");
++  }, [options.watchlist]);
++
++  const toggleView = () => {
++    const next = !viewingPercentChange;
++    setViewingPercentChange(next);
++    storeView(options.watchlist, next ? "percent" : "price");
++  };
++
+   const { color } = options;
+ 
+   const { data, error } = useSWR(
+@@ -61,7 +94,7 @@ export default function Widget({ options }) {
+         <Raw>
+           <button
+             type="button"
+-            onClick={() => setViewingPercentChange(!viewingPercentChange)}
++            onClick={toggleView}
+             aria-pressed={viewingPercentChange}
+             aria-label={viewingPercentChange ? t("stocks.show_price") : t("stocks.show_percent_change")}
+             title={viewingPercentChange ? t("stocks.show_price") : t("stocks.show_percent_change")}

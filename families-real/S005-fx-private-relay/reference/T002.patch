@@ -1,0 +1,55 @@
+diff --git a/src/components/dashboard/aliases/LabelEditor.tsx b/src/components/dashboard/aliases/LabelEditor.tsx
+index 61edb5c..a19cba0 100644
+--- a/src/components/dashboard/aliases/LabelEditor.tsx
++++ b/src/components/dashboard/aliases/LabelEditor.tsx
+@@ -1,6 +1,7 @@
+ import {
+   FocusEventHandler,
+   FormEventHandler,
++  KeyboardEventHandler,
+   startTransition,
+   useEffect,
+   useRef,
+@@ -23,6 +24,7 @@ export const LabelEditor = (props: Props) => {
+   const [inputValue, setInputValue] = useState(props.label);
+   const formRef = useRef<HTMLFormElement>(null);
+   const inputRef = useRef<HTMLInputElement>(null);
++  const cancelledRef = useRef(false);
+   // `justSetLabel` gets updated whenever props.label changes.
+   //   `justSaved` is true if that is the case, and this isn't the first render.
+   const [labelJustUpdated, setLabelJustUpdated] = useState(false);
+@@ -41,6 +43,11 @@ export const LabelEditor = (props: Props) => {
+   const onSubmit: FormEventHandler = (event) => {
+     event.preventDefault();
+ 
++    if (cancelledRef.current) {
++      cancelledRef.current = false;
++      return;
++    }
++
+     const isValid = formRef.current?.reportValidity();
+     if (isValid && inputValue.trim() !== props.label) {
+       setHasSaved(true);
+@@ -48,6 +55,14 @@ export const LabelEditor = (props: Props) => {
+       inputRef.current?.blur();
+     }
+   };
++  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
++    if (event.key === "Escape") {
++      event.preventDefault();
++      cancelledRef.current = true;
++      setInputValue(props.label);
++      inputRef.current?.blur();
++    }
++  };
+   const onBlur: FocusEventHandler<HTMLInputElement> = (_event) => {
+     formRef.current?.dispatchEvent(
+       new Event("submit", { bubbles: true, cancelable: true }),
+@@ -60,6 +75,7 @@ export const LabelEditor = (props: Props) => {
+         value={inputValue}
+         onChange={(e) => setInputValue(e.target.value)}
+         onBlur={onBlur}
++        onKeyDown={onKeyDown}
+         aria-label={l10n.getString("profile-label-edit-2")}
+         ref={inputRef}
+         className={styles["label-input"]}

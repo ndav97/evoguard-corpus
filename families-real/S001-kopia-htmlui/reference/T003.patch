@@ -1,0 +1,80 @@
+diff --git a/src/pages/Tasks.jsx b/src/pages/Tasks.jsx
+index a209c13..4241638 100644
+--- a/src/pages/Tasks.jsx
++++ b/src/pages/Tasks.jsx
+@@ -26,11 +26,15 @@ export class Tasks extends Component {
+       showStatus: "All",
+       uniqueKinds: [],
+       searchDescription: "",
++      cancelling: false,
++      cancelMessage: null,
++      cancelError: null,
+     };
+ 
+     this.handleChange = handleChange.bind(this);
+     this.fetchTasks = this.fetchTasks.bind(this);
+     this.clearFilters = this.clearFilters.bind(this);
++    this.cancelAllRunning = this.cancelAllRunning.bind(this);
+     this.interval = window.setInterval(this.fetchTasks, 3000);
+   }
+ 
+@@ -100,6 +104,28 @@ export class Tasks extends Component {
+     this.setState({ showStatus: "All", showKind: "All", searchDescription: "" });
+   }
+ 
++  cancelAllRunning(visibleItems) {
++    const running = visibleItems.filter((t) => t.status === "RUNNING");
++    if (!running.length) {
++      return;
++    }
++
++    this.setState({ cancelling: true, cancelMessage: null, cancelError: null });
++
++    const requests = running.map((t) => axios.post("/api/v1/tasks/" + t.id + "/cancel", {}));
++    Promise.allSettled(requests).then((results) => {
++      const total = running.length;
++      const failed = results.filter((r) => r.status === "rejected").length;
++      const noun = total === 1 ? "task" : "tasks";
++      this.setState({
++        cancelling: false,
++        cancelMessage: failed ? null : `Requested cancellation of ${total} ${noun}.`,
++        cancelError: failed ? `Could not cancel ${failed} of ${total} ${noun}.` : null,
++      });
++      this.fetchTasks();
++    });
++  }
++
+   filterItems(items) {
+     return items.filter((c) => this.taskMatches(c));
+   }
+@@ -141,6 +167,7 @@ export class Tasks extends Component {
+     ];
+ 
+     const filteredItems = this.filterItems(items);
++    const hasRunning = filteredItems.some((t) => t.status === "RUNNING");
+     const summary = `Showing ${filteredItems.length} of ${items.length} ${items.length === 1 ? "task" : "tasks"}`;
+ 
+     return (
+@@ -197,8 +224,22 @@ export class Tasks extends Component {
+                   </Button>
+                 </Col>
+               )}
++              {hasRunning && (
++                <Col xs="auto">
++                  <Button
++                    size="sm"
++                    variant="danger"
++                    disabled={this.state.cancelling}
++                    onClick={() => this.cancelAllRunning(filteredItems)}
++                  >
++                    Cancel all running tasks
++                  </Button>
++                </Col>
++              )}
+             </Row>
+           </div>
++          {this.state.cancelError && <Alert variant="danger">{this.state.cancelError}</Alert>}
++          {this.state.cancelMessage && <p>{this.state.cancelMessage}</p>}
+           <Row>
+             <Col>
+               {!items.length ? (

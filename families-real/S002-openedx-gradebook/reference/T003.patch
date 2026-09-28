@@ -1,0 +1,35 @@
+diff --git a/src/components/BulkManagementHistoryView/HistoryTable.jsx b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+index 53e1161..d2b9404 100644
+--- a/src/components/BulkManagementHistoryView/HistoryTable.jsx
++++ b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+@@ -13,10 +13,19 @@ export const mapHistoryRows = ({
+   originalFilename,
+   user,
+   ...rest
+-}) => ({
++}, onUserClick) => ({
+   resultsSummary: (<ResultsSummary {...resultsSummary} />),
+   filename: (<span className="wrap-text-in-cell">{originalFilename}</span>),
+-  user: (<span className="wrap-text-in-cell">{user}</span>),
++  user: typeof onUserClick === 'function' ? (
++    <button
++      type="button"
++      className="btn btn-link p-0 wrap-text-in-cell"
++      aria-label={`Show uploads by ${user}`}
++      onClick={() => onUserClick(user)}
++    >
++      {user}
++    </button>
++  ) : (<span className="wrap-text-in-cell">{user}</span>),
+   ...rest,
+ });
+ 
+@@ -58,7 +67,7 @@ export const HistoryTable = ({
+         <p>No uploads match your search.</p>
+       ) : (
+         <DataTable
+-          data={visible.map(mapHistoryRows)}
++          data={visible.map((entry) => mapHistoryRows(entry, setUploader))}
+           hasFixedColumnWidths
+           columns={bulkManagementColumns}
+           className="table-striped"

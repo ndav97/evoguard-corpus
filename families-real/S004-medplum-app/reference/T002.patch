@@ -1,0 +1,76 @@
+diff --git a/src/admin/db/ArrayColumnPadding.tsx b/src/admin/db/ArrayColumnPadding.tsx
+index eb7f493..db87970 100644
+--- a/src/admin/db/ArrayColumnPadding.tsx
++++ b/src/admin/db/ArrayColumnPadding.tsx
+@@ -78,7 +78,30 @@ export function ArrayColumnPadding(): JSX.Element {
+     setSelectivityOverride(DEFAULTS.selectivityOverride);
+   }
+ 
++  const errors = {
++    statisticsTarget:
++      typeof statisticsTarget === 'number' && (statisticsTarget < 100 || statisticsTarget > 10000)
++        ? 'Must be between 100 and 10000'
++        : undefined,
++    elemsPerRow:
++      typeof elemsPerRow === 'number' && (elemsPerRow < 1 || elemsPerRow > 1000)
++        ? 'Must be between 1 and 1000'
++        : undefined,
++    confidence:
++      typeof confidence === 'number' && (confidence <= 0 || confidence >= 1)
++        ? 'Must be greater than 0 and less than 1'
++        : undefined,
++    selectivityOverride:
++      typeof selectivityOverride === 'number' && (selectivityOverride <= 0 || selectivityOverride > 1)
++        ? 'Must be greater than 0 and at most 1'
++        : undefined,
++  };
++  const hasErrors = Object.values(errors).some((e) => e !== undefined);
++
+   const results = useMemo(() => {
++    if (hasErrors) {
++      return undefined;
++    }
+     const stats = typeof statisticsTarget === 'number' ? statisticsTarget : undefined;
+     const elems = typeof elemsPerRow === 'number' ? elemsPerRow : undefined;
+     const conf = typeof confidence === 'number' ? confidence : undefined;
+@@ -89,7 +112,7 @@ export function ArrayColumnPadding(): JSX.Element {
+     }
+ 
+     return calculate(stats, elems, conf, override);
+-  }, [statisticsTarget, elemsPerRow, confidence, selectivityOverride]);
++  }, [statisticsTarget, elemsPerRow, confidence, selectivityOverride, hasErrors]);
+ 
+   return (
+     <Stack gap="lg">
+@@ -106,6 +129,7 @@ export function ArrayColumnPadding(): JSX.Element {
+               label="Statistics Target"
+               value={statisticsTarget}
+               onChange={setStatisticsTarget}
++              error={errors.statisticsTarget}
+               min={100}
+               max={10000}
+               step={100}
+@@ -116,6 +140,7 @@ export function ArrayColumnPadding(): JSX.Element {
+               label="Elements Per Row"
+               value={elemsPerRow}
+               onChange={setElemsPerRow}
++              error={errors.elemsPerRow}
+               min={1}
+               max={1000}
+               step={1}
+@@ -126,6 +151,7 @@ export function ArrayColumnPadding(): JSX.Element {
+               label="Confidence"
+               value={confidence}
+               onChange={setConfidence}
++              error={errors.confidence}
+               min={0}
+               max={1}
+               step={0.000001}
+@@ -138,6 +164,7 @@ export function ArrayColumnPadding(): JSX.Element {
+               description="Overrides minimum selectivity"
+               value={selectivityOverride}
+               onChange={setSelectivityOverride}
++              error={errors.selectivityOverride}
+               min={0}
+               max={1}
+               step={0.00001}

@@ -1,0 +1,50 @@
+diff --git a/src/components/PasswordMeter.tsx b/src/components/PasswordMeter.tsx
+index 6582df7..455de62 100644
+--- a/src/components/PasswordMeter.tsx
++++ b/src/components/PasswordMeter.tsx
+@@ -2,7 +2,7 @@
+ //
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-import { useMemo } from "react";
++import { useEffect, useMemo } from "react";
+ 
+ import { useTranslation } from "react-i18next";
+ import zxcvbn from "zxcvbn";
+@@ -13,6 +13,7 @@ import { PasswordPolicyConfiguration, PasswordPolicyMode } from "@models/Passwor
+ export interface Props {
+     value: string;
+     policy?: PasswordPolicyConfiguration;
++    onValidityChange?: (_valid: boolean) => void;
+ }
+ 
+ const getStandardPasswordInfo = (
+@@ -162,6 +163,14 @@ const PasswordMeter = function (props: Props) {
+     const levels = isZXCVBN ? zxcvbnLevels : standardLevels;
+     const requirements =
+         props.policy && mode === PasswordPolicyMode.Standard ? getRequirements(props.value, props.policy) : [];
++    const minScore = props.policy?.min_score ?? 0;
++    const belowMinScore = isZXCVBN && passwordScore < minScore;
++    const valid = mode === PasswordPolicyMode.Standard ? requirements.every((r) => r.met) : !belowMinScore;
++    const { onValidityChange } = props;
++
++    useEffect(() => {
++        onValidityChange?.(valid);
++    }, [valid, onValidityChange]);
+ 
+     const progressColor = isZXCVBN
+         ? ["#D32F2F", "#FF5722", "#FFEB3B", "#AFB42B", "#62D32F"]
+@@ -187,6 +196,13 @@ const PasswordMeter = function (props: Props) {
+                     {`${translate("Strength")}: ${translate(levels[passwordScore])}`}
+                 </p>
+             )}
++            {isZXCVBN && props.value !== "" && belowMinScore && (
++                <p className="text-[0.7rem] text-left">
++                    {`${translate("Minimum strength required")}: ${translate(
++                        zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length - 1)],
++                    )}`}
++                </p>
++            )}
+             {requirements.length > 0 && (
+                 <ul aria-label={translate("Password requirements")} className="text-[0.7rem] text-left">
+                     {requirements.map((r) => (

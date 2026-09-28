@@ -1,0 +1,82 @@
+diff --git a/public/locales/en/translation.json b/public/locales/en/translation.json
+index 52e312b..de4dacc 100644
+--- a/public/locales/en/translation.json
++++ b/public/locales/en/translation.json
+@@ -25,6 +25,8 @@
+     "close": "Close",
+     "closeDialog": "Close dialog",
+     "deleteConfirmationPrompt": "Type {{text}} to confirm",
++    "deleteFailed": "Could not delete. Please try again.",
++    "deleting": "Deleting…",
+     "difference": "Difference",
+     "useMarkdownHint": "You can use basic Markdown to format the text: *italic*, **bold**, - list",
+     "days": "Days",
+diff --git a/src/core/ui/Modals/DeleteConfirmationModal.tsx b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+index 015be79..a58cbd6 100644
+--- a/src/core/ui/Modals/DeleteConfirmationModal.tsx
++++ b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+@@ -9,7 +9,7 @@ export interface DeleteConfirmationModalProps {
+     message?: string,
+     isOpen: boolean,
+     closeFn: () => void,
+-    deleteFn: () => void
++    deleteFn: () => void | Promise<unknown>
+     confirmationText?: string
+ }
+ 
+@@ -26,10 +26,14 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+ 
+     const [t] = useTranslation();
+     const [typed, setTyped] = useState('');
++    const [pending, setPending] = useState(false);
++    const [failed, setFailed] = useState(false);
+ 
+     useEffect(() => {
+         if (!isOpen) {
+             setTyped('');
++            setPending(false);
++            setFailed(false);
+         }
+     }, [isOpen]);
+ 
+@@ -48,7 +52,21 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+     };
+ 
+     const handleDelete = () => {
+-        deleteFn();
++        const result = deleteFn();
++        if (result instanceof Promise) {
++            setPending(true);
++            setFailed(false);
++            result
++                .then(() => {
++                    setPending(false);
++                    closeFn();
++                })
++                .catch(() => {
++                    setPending(false);
++                    setFailed(true);
++                });
++            return;
++        }
+         closeFn();
+     };
+ 
+@@ -84,10 +102,15 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+                             onChange={(event) => setTyped(event.target.value)}
+                         />
+                     )}
++                    {failed && (
++                        <Typography role="alert" color="error">
++                            {t('deleteFailed')}
++                        </Typography>
++                    )}
+                 </CardContent>
+                 <CardActions>
+-                    <Button color="error" variant="contained" onClick={handleDelete} disabled={!confirmed}>
+-                        {t('delete')}
++                    <Button color="error" variant="contained" onClick={handleDelete} disabled={!confirmed || pending}>
++                        {pending ? t('deleting') : t('delete')}
+                     </Button>
+                     <Button color="primary" onClick={closeFn}>
+                         {t('close')}

@@ -1,0 +1,76 @@
+diff --git a/public/locales/en/translation.json b/public/locales/en/translation.json
+index cc79e35..52e312b 100644
+--- a/public/locales/en/translation.json
++++ b/public/locales/en/translation.json
+@@ -24,6 +24,7 @@
+     "add": "Add",
+     "close": "Close",
+     "closeDialog": "Close dialog",
++    "deleteConfirmationPrompt": "Type {{text}} to confirm",
+     "difference": "Difference",
+     "useMarkdownHint": "You can use basic Markdown to format the text: *italic*, **bold**, - list",
+     "days": "Days",
+diff --git a/src/core/ui/Modals/DeleteConfirmationModal.tsx b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+index 1e6c0a9..015be79 100644
+--- a/src/core/ui/Modals/DeleteConfirmationModal.tsx
++++ b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+@@ -1,6 +1,6 @@
+ import CloseIcon from '@mui/icons-material/Close';
+-import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Modal, Typography } from "@mui/material";
+-import { FunctionComponent } from 'react';
++import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Modal, TextField, Typography } from "@mui/material";
++import { FunctionComponent, useEffect, useState } from 'react';
+ import { useTranslation } from "react-i18next";
+ 
+ export interface DeleteConfirmationModalProps {
+@@ -10,6 +10,7 @@ export interface DeleteConfirmationModalProps {
+     isOpen: boolean,
+     closeFn: () => void,
+     deleteFn: () => void
++    confirmationText?: string
+ }
+ 
+ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> = (
+@@ -19,10 +20,20 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+         isOpen,
+         message,
+         deleteFn,
+-        closeFn
++        closeFn,
++        confirmationText
+     }) => {
+ 
+     const [t] = useTranslation();
++    const [typed, setTyped] = useState('');
++
++    useEffect(() => {
++        if (!isOpen) {
++            setTyped('');
++        }
++    }, [isOpen]);
++
++    const confirmed = confirmationText === undefined || typed.trim() === confirmationText;
+ 
+     const style = {
+         position: 'absolute',
+@@ -63,9 +74,19 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+                     <Typography variant="body1" id="modal-modal-description">
+                         {message}
+                     </Typography>
++                    {confirmationText !== undefined && (
++                        <TextField
++                            fullWidth
++                            margin="normal"
++                            variant="standard"
++                            label={t('deleteConfirmationPrompt', { text: confirmationText })}
++                            value={typed}
++                            onChange={(event) => setTyped(event.target.value)}
++                        />
++                    )}
+                 </CardContent>
+                 <CardActions>
+-                    <Button color="error" variant="contained" onClick={handleDelete}>
++                    <Button color="error" variant="contained" onClick={handleDelete} disabled={!confirmed}>
+                         {t('delete')}
+                     </Button>
+                     <Button color="primary" onClick={closeFn}>

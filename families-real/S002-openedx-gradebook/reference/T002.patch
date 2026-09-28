@@ -1,0 +1,35 @@
+diff --git a/src/components/BulkManagementHistoryView/HistoryTable.jsx b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+index 99ca9b8..53e1161 100644
+--- a/src/components/BulkManagementHistoryView/HistoryTable.jsx
++++ b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+@@ -29,10 +29,13 @@ export const HistoryTable = ({
+   bulkManagementHistory,
+ }) => {
+   const [search, setSearch] = useState('');
++  const [uploader, setUploader] = useState('');
+   const term = search.trim().toLowerCase();
+-  const visible = bulkManagementHistory.filter((entry) => !term
+-    || entry.originalFilename.toLowerCase().includes(term)
+-    || entry.user.toLowerCase().includes(term));
++  const users = [...new Set(bulkManagementHistory.map((entry) => entry.user))].sort((a, b) => a.localeCompare(b));
++  const visible = bulkManagementHistory.filter((entry) => (!uploader || entry.user === uploader)
++    && (!term
++      || entry.originalFilename.toLowerCase().includes(term)
++      || entry.user.toLowerCase().includes(term)));
+   const total = bulkManagementHistory.length;
+ 
+   return (
+@@ -41,6 +44,13 @@ export const HistoryTable = ({
+         <Form.Label>Search uploads</Form.Label>
+         <Form.Control value={search} onChange={(e) => setSearch(e.target.value)} />
+       </Form.Group>
++      <Form.Group controlId="bulk-history-uploader">
++        <Form.Label>Uploaded by</Form.Label>
++        <Form.Control as="select" value={uploader} onChange={(e) => setUploader(e.target.value)}>
++          <option value="">All users</option>
++          {users.map((u) => <option key={u} value={u}>{u}</option>)}
++        </Form.Control>
++      </Form.Group>
+       {total > 0 && (
+         <p className="bulk-history-summary">{`Showing ${visible.length} of ${total} ${total === 1 ? 'upload' : 'uploads'}`}</p>
+       )}

@@ -1,0 +1,41 @@
+# Familia semi-real S008 — base real + cambios T001–T003 redactados por el equipo (Claude).
+id: S008
+slug: wger
+stratum: semi-real
+repo: wger-project/react
+url: https://github.com/wger-project/react
+license: AGPL-3.0
+domain: Entrenamiento y nutrición
+v0:
+  commit: 48179fe670b6862e047ac06c973c76ef03da6d00
+  date: 2026-09-19
+  verified: 2026-09-27 GREEN (1120 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__wger-project__react
+hidden_tests_dir: src/evoguard
+known_failures: []
+focus: src/core/ui/Modals/DeleteConfirmationModal.tsx
+turns:
+  - id: T001
+    title: Botón de cierre accesible en el diálogo de borrado
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Confirmar el borrado escribiendo un texto
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Borrado asíncrono con espera y reintento
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-09-27
+  status: CALIBRATED
+  calibrated_at: "2026-09-27 (T001 3/3, T002 4/5, T003 3/5 fail-to-pass; suite 1133 tests sin regresiones; estable 2/2)"

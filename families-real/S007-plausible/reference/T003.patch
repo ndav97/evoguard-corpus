@@ -1,0 +1,18 @@
+diff --git a/js/dashboard/components/search-input.tsx b/js/dashboard/components/search-input.tsx
+index adc2328..84bb528 100644
+--- a/js/dashboard/components/search-input.tsx
++++ b/js/dashboard/components/search-input.tsx
+@@ -53,8 +53,12 @@ export const SearchInput = ({
+   }, [searchRef, onSearch])
+ 
+   const blurSearchBox = useCallback(() => {
++    if (searchRef.current?.value) {
++      clearSearch()
++      return
++    }
+     searchRef.current?.blur()
+-  }, [searchRef])
++  }, [searchRef, clearSearch])
+ 
+   const focusSearchBox = useCallback(
+     (event: KeyboardEvent) => {

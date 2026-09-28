@@ -1,0 +1,39 @@
+diff --git a/src/admin/db/ArrayColumnPadding.tsx b/src/admin/db/ArrayColumnPadding.tsx
+index db87970..654c552 100644
+--- a/src/admin/db/ArrayColumnPadding.tsx
++++ b/src/admin/db/ArrayColumnPadding.tsx
+@@ -71,6 +71,8 @@ export function ArrayColumnPadding(): JSX.Element {
+     confidence === DEFAULTS.confidence &&
+     selectivityOverride === DEFAULTS.selectivityOverride;
+ 
++  const [copied, setCopied] = useState(false);
++
+   function resetToDefaults(): void {
+     setStatisticsTarget(DEFAULTS.statisticsTarget);
+     setElemsPerRow(DEFAULTS.elemsPerRow);
+@@ -201,6 +203,25 @@ export function ArrayColumnPadding(): JSX.Element {
+             </Grid>
+           </Paper>
+ 
++          <Paper withBorder p="md">
++            <Group justify="space-between">
++              <Text fw={700}>{`Recommended M: ${Math.ceil(results.targetM)}`}</Text>
++              <Button
++                size="xs"
++                variant="default"
++                onClick={() => {
++                  navigator.clipboard
++                    .writeText(String(Math.ceil(results.targetM)))
++                    .then(() => setCopied(true))
++                    .catch(() => setCopied(false));
++                }}
++              >
++                Copy recommended M
++              </Button>
++            </Group>
++            {copied && <Text size="sm">Copied to clipboard</Text>}
++          </Paper>
++
+           <Grid>
+             {results.results.map(({ name, result }) => (
+               <Grid.Col span={{ base: 12, md: 6 }} key={name}>

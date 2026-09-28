@@ -1,0 +1,49 @@
+diff --git a/src/components/PasswordMeter.tsx b/src/components/PasswordMeter.tsx
+index 6b19423..6582df7 100644
+--- a/src/components/PasswordMeter.tsx
++++ b/src/components/PasswordMeter.tsx
+@@ -101,6 +101,21 @@ const getZXCVBNPasswordInfo = (password: string) => {
+     };
+ };
+ 
++const getRequirements = (password: string, policy: PasswordPolicyConfiguration) => {
++    const items: { label: string; met: boolean; options?: Record<string, number> }[] = [];
++    if (policy.min_length > 0) {
++        items.push({ label: "At least {{len}} characters", met: password.length >= policy.min_length, options: { len: policy.min_length } });
++    }
++    if (policy.max_length > 0) {
++        items.push({ label: "At most {{len}} characters", met: password.length <= policy.max_length, options: { len: policy.max_length } });
++    }
++    if (policy.require_lowercase) items.push({ label: "One lowercase letter", met: /[a-z]/.test(password) });
++    if (policy.require_uppercase) items.push({ label: "One uppercase letter", met: /[A-Z]/.test(password) });
++    if (policy.require_number) items.push({ label: "One number", met: /\d/.test(password) });
++    if (policy.require_special) items.push({ label: "One special character", met: /[^a-z0-9]/i.test(password) });
++    return items;
++};
++
+ const standardLevels = ["Very weak", "Weak", "Fair", "Strong"];
+ const zxcvbnLevels = ["Very weak", "Weak", "Fair", "Good", "Strong"];
+ 
+@@ -145,6 +160,8 @@ const PasswordMeter = function (props: Props) {
+     const mode = props.policy?.mode;
+     const showLevel = props.value !== "" && (mode === PasswordPolicyMode.Standard || mode === PasswordPolicyMode.ZXCVBN);
+     const levels = isZXCVBN ? zxcvbnLevels : standardLevels;
++    const requirements =
++        props.policy && mode === PasswordPolicyMode.Standard ? getRequirements(props.value, props.policy) : [];
+ 
+     const progressColor = isZXCVBN
+         ? ["#D32F2F", "#FF5722", "#FFEB3B", "#AFB42B", "#62D32F"]
+@@ -170,6 +187,13 @@ const PasswordMeter = function (props: Props) {
+                     {`${translate("Strength")}: ${translate(levels[passwordScore])}`}
+                 </p>
+             )}
++            {requirements.length > 0 && (
++                <ul aria-label={translate("Password requirements")} className="text-[0.7rem] text-left">
++                    {requirements.map((r) => (
++                        <li key={r.label}>{`${r.met ? "✓" : "✗"} ${translate(r.label, r.options)}`}</li>
++                    ))}
++                </ul>
++            )}
+             {(feedbackTitle !== "" || feedback !== "") && (
+                 <Alert variant="default">
+                     {feedbackTitle !== "" && (

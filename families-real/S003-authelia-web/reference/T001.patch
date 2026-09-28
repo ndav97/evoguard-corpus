@@ -1,0 +1,49 @@
+diff --git a/src/components/PasswordMeter.tsx b/src/components/PasswordMeter.tsx
+index a0c82a0..6b19423 100644
+--- a/src/components/PasswordMeter.tsx
++++ b/src/components/PasswordMeter.tsx
+@@ -101,6 +101,9 @@ const getZXCVBNPasswordInfo = (password: string) => {
+     };
+ };
+ 
++const standardLevels = ["Very weak", "Weak", "Fair", "Strong"];
++const zxcvbnLevels = ["Very weak", "Weak", "Fair", "Good", "Strong"];
++
+ const PasswordMeter = function (props: Props) {
+     const { t: translate } = useTranslation();
+ 
+@@ -139,6 +142,10 @@ const PasswordMeter = function (props: Props) {
+         };
+     }, [props, translate]);
+ 
++    const mode = props.policy?.mode;
++    const showLevel = props.value !== "" && (mode === PasswordPolicyMode.Standard || mode === PasswordPolicyMode.ZXCVBN);
++    const levels = isZXCVBN ? zxcvbnLevels : standardLevels;
++
+     const progressColor = isZXCVBN
+         ? ["#D32F2F", "#FF5722", "#FFEB3B", "#AFB42B", "#62D32F"]
+         : ["#D32F2F", "#FF5722", "#FFEB3B", "#62D32F"];
+@@ -146,6 +153,11 @@ const PasswordMeter = function (props: Props) {
+     return (
+         <div className="w-full">
+             <div
++                role="progressbar"
++                aria-label={translate("Password strength")}
++                aria-valuemin={0}
++                aria-valuemax={maxScore}
++                aria-valuenow={passwordScore}
+                 className="mt-0.5 transition-[width] duration-500 ease-linear"
+                 style={{
+                     backgroundColor: progressColor[passwordScore],
+@@ -153,6 +165,11 @@ const PasswordMeter = function (props: Props) {
+                     width: `${passwordScore * (100 / maxScore)}%`,
+                 }}
+             />
++            {showLevel && (
++                <p className="text-[0.7rem] text-left">
++                    {`${translate("Strength")}: ${translate(levels[passwordScore])}`}
++                </p>
++            )}
+             {(feedbackTitle !== "" || feedback !== "") && (
+                 <Alert variant="default">
+                     {feedbackTitle !== "" && (

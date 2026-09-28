@@ -1,0 +1,35 @@
+diff --git a/js/dashboard/components/search-input.tsx b/js/dashboard/components/search-input.tsx
+index 5fb5498..adc2328 100644
+--- a/js/dashboard/components/search-input.tsx
++++ b/js/dashboard/components/search-input.tsx
+@@ -13,13 +13,15 @@ export const SearchInput = ({
+   onSearch,
+   className,
+   placeholderFocusedOrMobile = 'Search',
+-  placeholderUnfocusedOnlyDesktop = 'Press / to search'
++  placeholderUnfocusedOnlyDesktop = 'Press / to search',
++  resultCount
+ }: {
+   searchRef: RefObject<HTMLInputElement>
+   onSearch: (value: string) => void
+   className?: string
+   placeholderFocusedOrMobile?: string
+   placeholderUnfocusedOnlyDesktop?: string
++  resultCount?: number
+ }) => {
+   const [isFocused, setIsFocused] = useState(false)
+   const [hasValue, setHasValue] = useState(false)
+@@ -99,6 +101,13 @@ export const SearchInput = ({
+             ×
+           </button>
+         )}
++        {hasValue && resultCount !== undefined && (
++          <span role="status" className="sr-only">
++            {resultCount === 0
++              ? 'No results'
++              : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
++          </span>
++        )}
+         {!hasValue && (
+           <>
+             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-400 md:peer-[:not(:focus)]:hidden">

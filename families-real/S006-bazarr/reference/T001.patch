@@ -1,0 +1,69 @@
+diff --git a/src/components/forms/TimeOffsetForm.tsx b/src/components/forms/TimeOffsetForm.tsx
+index 638b9497..0b7d1964 100644
+--- a/src/components/forms/TimeOffsetForm.tsx
++++ b/src/components/forms/TimeOffsetForm.tsx
+@@ -1,5 +1,12 @@
+ import { FunctionComponent } from "react";
+-import { Button, Divider, Group, NumberInput, Stack } from "@mantine/core";
++import {
++  Button,
++  Divider,
++  Group,
++  NumberInput,
++  Stack,
++  Text,
++} from "@mantine/core";
+ import { useForm } from "@mantine/form";
+ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+@@ -13,6 +20,24 @@ const TaskName = "Changing Time";
+ const convertToAction = (h: number, m: number, s: number, ms: number) =>
+   `shift_offset(h=${h},m=${m},s=${s},ms=${ms})`;
+ 
++const num = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
++const pad = (n: number, width = 2) => String(n).padStart(width, "0");
++
++export const formatOffset = (
++  positive: boolean,
++  hour: number,
++  min: number,
++  sec: number,
++  ms: number,
++) => {
++  const total = hour * 3600000 + min * 60000 + sec * 1000 + ms;
++  const h = Math.floor(total / 3600000);
++  const m = Math.floor((total % 3600000) / 60000);
++  const s = Math.floor((total % 60000) / 1000);
++  const r = total % 1000;
++  return `${positive ? "+" : "-"}${pad(h)}:${pad(m)}:${pad(s)}.${pad(r, 3)}`;
++};
++
+ interface Props {
+   selections: FormType.ModifySubtitle[];
+   onSubmit?: VoidFunction;
+@@ -85,6 +110,7 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+             color="secondary"
+             variant="filled"
+             style={{ overflow: "visible" }}
++            aria-label={form.values.positive ? "Shift later" : "Shift earlier"}
+             onClick={() =>
+               form.setValues((f) => ({ ...f, positive: !f.positive }))
+             }
+@@ -114,6 +140,17 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+             {...form.getInputProps("ms")}
+           ></NumberInput>
+         </Group>
++        {enabled && (
++          <Text size="sm">
++            {`Offset: ${formatOffset(
++              form.values.positive,
++              num(form.values.hour),
++              num(form.values.min),
++              num(form.values.sec),
++              num(form.values.ms),
++            )}`}
++          </Text>
++        )}
+         <Divider></Divider>
+         <Button disabled={!enabled} type="submit">
+           Start

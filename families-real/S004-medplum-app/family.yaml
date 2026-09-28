@@ -1,0 +1,41 @@
+# Familia semi-real S004 — base real + cambios T001–T003 redactados por el equipo (Claude).
+id: S004
+slug: medplum-app
+stratum: semi-real
+repo: medplum/medplum
+url: https://github.com/medplum/medplum
+license: Apache-2.0
+domain: Salud (plataforma FHIR, herramientas de administración)
+v0:
+  commit: 2a810b6f7eaf149c290915f885c3f8423cd5d0ee
+  date: 2026-09-25
+  verified: 2026-09-27 GREEN (469 tests, 2 ejecuciones idénticas, sin red)
+package_path: packages/app
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__medplum__medplum
+hidden_tests_dir: src/evoguard
+known_failures: []
+focus: packages/app/src/admin/db/ArrayColumnPadding.tsx
+turns:
+  - id: T001
+    title: Restablecer los valores por defecto de la calculadora
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Validación de rangos en la calculadora
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: M recomendado y botón para copiarlo
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-09-27
+  status: CALIBRATED
+  calibrated_at: "2026-09-27 (calibrador: los tres turnos OK; suite sin regresiones; estable 2/2)"

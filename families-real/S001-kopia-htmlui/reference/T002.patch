@@ -1,0 +1,58 @@
+diff --git a/src/pages/Tasks.jsx b/src/pages/Tasks.jsx
+index 5a64343..a209c13 100644
+--- a/src/pages/Tasks.jsx
++++ b/src/pages/Tasks.jsx
+@@ -4,6 +4,7 @@ import axios from "axios";
+ import moment from "moment";
+ import React, { Component } from "react";
+ import Alert from "react-bootstrap/Alert";
++import Button from "react-bootstrap/Button";
+ import Col from "react-bootstrap/Col";
+ import Dropdown from "react-bootstrap/Dropdown";
+ import Form from "react-bootstrap/Form";
+@@ -29,6 +30,7 @@ export class Tasks extends Component {
+ 
+     this.handleChange = handleChange.bind(this);
+     this.fetchTasks = this.fetchTasks.bind(this);
++    this.clearFilters = this.clearFilters.bind(this);
+     this.interval = window.setInterval(this.fetchTasks, 3000);
+   }
+ 
+@@ -90,6 +92,14 @@ export class Tasks extends Component {
+     return true;
+   }
+ 
++  filtersActive() {
++    return this.state.showStatus !== "All" || this.state.showKind !== "All" || this.state.searchDescription !== "";
++  }
++
++  clearFilters() {
++    this.setState({ showStatus: "All", showKind: "All", searchDescription: "" });
++  }
++
+   filterItems(items) {
+     return items.filter((c) => this.taskMatches(c));
+   }
+@@ -148,6 +158,8 @@ export class Tasks extends Component {
+                     <Dropdown.Divider />
+                     <Dropdown.Item onClick={() => this.setState({ showStatus: "Running" })}>Running</Dropdown.Item>
+                     <Dropdown.Item onClick={() => this.setState({ showStatus: "Failed" })}>Failed</Dropdown.Item>
++                    <Dropdown.Item onClick={() => this.setState({ showStatus: "Success" })}>Success</Dropdown.Item>
++                    <Dropdown.Item onClick={() => this.setState({ showStatus: "Canceled" })}>Canceled</Dropdown.Item>
+                   </Dropdown.Menu>
+                 </Dropdown>
+               </Col>
+@@ -178,6 +190,13 @@ export class Tasks extends Component {
+                   autoFocus={true}
+                 />
+               </Col>
++              {this.filtersActive() && (
++                <Col xs="auto">
++                  <Button size="sm" variant="secondary" onClick={this.clearFilters}>
++                    Clear filters
++                  </Button>
++                </Col>
++              )}
+             </Row>
+           </div>
+           <Row>

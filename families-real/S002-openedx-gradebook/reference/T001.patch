@@ -1,0 +1,60 @@
+diff --git a/src/components/BulkManagementHistoryView/HistoryTable.jsx b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+index 3bd1526..99ca9b8 100644
+--- a/src/components/BulkManagementHistoryView/HistoryTable.jsx
++++ b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+@@ -1,6 +1,7 @@
++import { useState } from 'react';
+ import PropTypes from 'prop-types';
+ 
+-import { DataTable } from '@openedx/paragon';
++import { DataTable, Form } from '@openedx/paragon';
+ 
+ import { bulkManagementColumns } from '@src/data/constants/app';
+ import { useBulkManagementHistoryEntries } from './data/apiHook';
+@@ -26,15 +27,37 @@ export const mapHistoryRows = ({
+  */
+ export const HistoryTable = ({
+   bulkManagementHistory,
+-}) => (
+-  <DataTable
+-    data={bulkManagementHistory.map(mapHistoryRows)}
+-    hasFixedColumnWidths
+-    columns={bulkManagementColumns}
+-    className="table-striped"
+-    itemCount={bulkManagementHistory.length}
+-  />
+-);
++}) => {
++  const [search, setSearch] = useState('');
++  const term = search.trim().toLowerCase();
++  const visible = bulkManagementHistory.filter((entry) => !term
++    || entry.originalFilename.toLowerCase().includes(term)
++    || entry.user.toLowerCase().includes(term));
++  const total = bulkManagementHistory.length;
++
++  return (
++    <>
++      <Form.Group controlId="bulk-history-search">
++        <Form.Label>Search uploads</Form.Label>
++        <Form.Control value={search} onChange={(e) => setSearch(e.target.value)} />
++      </Form.Group>
++      {total > 0 && (
++        <p className="bulk-history-summary">{`Showing ${visible.length} of ${total} ${total === 1 ? 'upload' : 'uploads'}`}</p>
++      )}
++      {total > 0 && visible.length === 0 ? (
++        <p>No uploads match your search.</p>
++      ) : (
++        <DataTable
++          data={visible.map(mapHistoryRows)}
++          hasFixedColumnWidths
++          columns={bulkManagementColumns}
++          className="table-striped"
++          itemCount={visible.length}
++        />
++      )}
++    </>
++  );
++};
+ HistoryTable.defaultProps = {
+   bulkManagementHistory: [],
+ };
