@@ -1,0 +1,147 @@
+{
+  "artifact_type": "real_pipeline_rehearsal",
+  "family_id": "S004",
+  "image_id": "sha256:0d9c1a9ec1ce8e5ed3bc67164d5b7111cf0a72f8c0ebff7e62a3a09cfb0a15d5",
+  "experimental": false,
+  "started_at": "2026-09-28T21:01:38.990Z",
+  "versions": {
+    "V1": {
+      "task_id": "b47a4891-c41d-4dc6-9d0c-a9b641665730",
+      "outcomes": [
+        {
+          "provider": "local_b",
+          "attempt": 1,
+          "outcome": "REASSIGN",
+          "reason": "architecture",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "FAIL"
+          }
+        },
+        {
+          "provider": "openai",
+          "attempt": 1,
+          "outcome": "REASSIGN",
+          "reason": "independent_oracle",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "FAIL",
+            "architecture": "NOT_RUN"
+          }
+        },
+        {
+          "provider": "anthropic",
+          "attempt": 1,
+          "outcome": "REPAIR",
+          "reason": "development_tests",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "FAIL",
+            "independent_oracle": "NOT_RUN",
+            "architecture": "NOT_RUN"
+          }
+        },
+        {
+          "provider": "anthropic",
+          "attempt": 2,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "531b8d6f30771f49e6b10a7918adbe786ae50eed"
+    },
+    "V2": {
+      "task_id": "14eda93a-db57-4e36-89c4-63f8e0938962",
+      "outcomes": [
+        {
+          "provider": "openai",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "38e2ed9b09812284e067dbef734375abe117c445"
+    },
+    "V3": {
+      "task_id": "5f62666b-40db-4676-910e-da3887230be0",
+      "outcomes": [
+        {
+          "provider": "anthropic",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "50c53b2e737dbc21ba1947ed5f15d019f2d084e0"
+    }
+  },
+  "v3_oracle_stability": {
+    "status": "PASS",
+    "stable": true,
+    "runs": [
+      {
+        "status": "PASS",
+        "total": 482,
+        "seconds": 130
+      },
+      {
+        "status": "PASS",
+        "total": 482,
+        "seconds": 131
+      }
+    ]
+  },
+  "status": "PASS",
+  "finished_at": "2026-09-28T21:36:28.348Z",
+  "sources_sha256": {
+    "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
+    "runner/protocol/actions.mjs": "595ed0f0d5763d738a218607447706a3acd0ceafd99c6d598d7bbf82ad002603",
+    "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
+    "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
+    "runner/context/policy.mjs": "5b1316beca21a60ef91c681af0d06f77e43981c3e1f74678499fb4d023c7d492",
+    "runner/providers/adapter.mjs": "f6c7616e98909eaeeaf1f9a51f34ba8b236b004dea1b1d0c88e800b845cdcf21",
+    "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
+    "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
+    "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
+    "runner/real/families.mjs": "c845a58814f3c490eaf739f8a35d2181bccad723461a96324a355562ff467c4c",
+    "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
+    "runner/real/suite.mjs": "da8ea3efcfb8441c2416ec5f3aad461bbe816830765a4619acfd9a5fac6e01c5",
+    "runner/real/prepare.mjs": "500eac8e05201f6a7cb1255384083efd1c1823b96cdd90c946358056df2cc0d6",
+    "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
+    "runner/real/pipeline.mjs": "012494ef31a683e6fc19593497b71933ca6cea09dcaa49a1cce928d3d3c09092",
+    "runner/real/rehearse.mjs": "ba56e92f9a12dcec5bdaa8e053bbd76a086323b9b94bbf7cd3dc407fa4cd6804",
+    "runner/real/generate.mjs": "0342d7dd45005327583b704a9198426fb5163d6a6f8f0837b11d632a8b4bba59",
+    "runner/real/audit.mjs": "f2fdf120d3bc3f7771e7e0a58a44f444e9673abbe3e1609f6145c0ed6c1fe7cb",
+    "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
+    "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
+    "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",
+    "schema/real-family.schema.json": "e9821c5f738febb5a1f851dc3b3fc61441cbdecd67e8ec391c7e102936585de1"
+  }
+}

@@ -1,0 +1,596 @@
+{
+  "schema_version": "1.0.0",
+  "note": "Imágenes por familia semi-real (npm run real:prepare). Una entrada solo es válida con status VERIFIED.",
+  "bases": {
+    "S001": {
+      "status": "VERIFIED",
+      "image_id": "sha256:15f30254fcfcf3dfcece5ce7c57eb534622206b689a6a96ff387bdb6e2a1b215",
+      "tag": "evoguard-real-s001:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "kopia/htmlui",
+      "v0_commit": "047971b3a2e80839ba6ff93bfce63c2430a7157f",
+      "v0_repo_commit": "6f6def73efadaf1fc1ffa529a094565c4bc63014",
+      "package_path": ".",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "b5acd56c9fa6293a3000ab39a684ca7047ff1d891f356b924d5bf0061374e6b0",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:18:32.495Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 58,
+          "total": 495,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 53,
+          "total": 495,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S002": {
+      "status": "VERIFIED",
+      "image_id": "sha256:1f5723cd18c02ded5e5cc1a117ce6c827dc0d416ea8376679d4e2bf7caa38a7e",
+      "tag": "evoguard-real-s002:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "openedx/frontend-app-gradebook",
+      "v0_commit": "0793239862a7d584aebf884a07186a455e730307",
+      "v0_repo_commit": "282f65ef2cbc23ba1bf849f71a9c2d08723164c4",
+      "package_path": ".",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "9d48ba4f86eafbd57d05e693289909cab0400215d8e23043e812503ad5c44ccb",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:22:12.083Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 61,
+          "total": 411,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 55,
+          "total": 411,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S003": {
+      "status": "VERIFIED",
+      "image_id": "sha256:b761a51d4fb4ee6d3fa01cb9b20a19370b2a0d5f45eb1e4c17875594be4a0b2e",
+      "tag": "evoguard-real-s003:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "authelia/authelia",
+      "v0_commit": "efd4558de68a2ec87071486c00430a03fccdf0ca",
+      "v0_repo_commit": "9bc41aa2a37116c01a2ed6cf6de0b70852da1e0d",
+      "package_path": "web",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": "web",
+        "lockfile": "pnpm-lock.yaml",
+        "lockfile_sha256": "3478160ddb109607f4d89a3e5a6d8c237968f0007d5de19811cc41fcfde5a627",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:26:52.367Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 108,
+          "total": 1564,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 99,
+          "total": 1564,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S004": {
+      "status": "VERIFIED",
+      "image_id": "sha256:0d9c1a9ec1ce8e5ed3bc67164d5b7111cf0a72f8c0ebff7e62a3a09cfb0a15d5",
+      "tag": "evoguard-real-s004:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "medplum/medplum",
+      "v0_commit": "2a810b6f7eaf149c290915f885c3f8423cd5d0ee",
+      "v0_repo_commit": "67c15e43e3891c4ae7864b5bf8bade67287ae71e",
+      "package_path": "packages/app",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "85f886684f55e320cbeb0d7d8241287b075fcaf10932d68a750764cf0bc5ebf3",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:36:47.733Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 152,
+          "total": 469,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 146,
+          "total": 469,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S005": {
+      "status": "VERIFIED",
+      "image_id": "sha256:102f38a0132b91010bfcce0617fdab23e401eca9c261c96c29efd60a85aeb4e0",
+      "tag": "evoguard-real-s005:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "mozilla/fx-private-relay",
+      "v0_commit": "8c18bed5018c4a167725db245855f0df87cfe912",
+      "v0_repo_commit": "bf952b923c839edea42b193f59c973540f24da8b",
+      "package_path": "frontend",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "921f5d69d6607a1974fbe52cd479cb545428c77d6fe8f7bbbd2924b0143dc56f",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:39:09.898Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 27,
+          "total": 526,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 23,
+          "total": 526,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S006": {
+      "status": "VERIFIED",
+      "image_id": "sha256:a2dd14d8f14b0c5afa305ee779bac41927058f4ea1b634de41ce19a479564c6f",
+      "tag": "evoguard-real-s006:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "morpheus65535/bazarr",
+      "v0_commit": "5dedccf28966f91ed69a75f09cd54584b038d673",
+      "v0_repo_commit": "998fc09d65ec9db64666b775de9328eff3fa6aa2",
+      "package_path": "frontend",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": "frontend",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "8930910be3f12f84e721761a135e6fd455b74c7c43e859a14575c190e1db04e2",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:44:32.104Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 117,
+          "total": 625,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 120,
+          "total": 625,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S007": {
+      "status": "VERIFIED",
+      "image_id": "sha256:266b6c29fc0a366620ed405ebccaaa8e10d18fb9055f60bb1dacab471bc4c09b",
+      "tag": "evoguard-real-s007:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "plausible/analytics",
+      "v0_commit": "37e352c73dc586314a43985a81371df895ed6c14",
+      "v0_repo_commit": "c3e88fa6744965f3e0dc9ff6f77312120f51ac88",
+      "package_path": "assets",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": "assets",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "2b3ddf1eb4870ac08ef3cfffc60f17e6e93fb228ffdc5d62588d349faf857f46",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:46:25.613Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 31,
+          "total": 521,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 25,
+          "total": 521,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S008": {
+      "status": "VERIFIED",
+      "image_id": "sha256:58fcea9bfe9452e4be00de0466789f1229f9fb54f46e5120efc636dd22d56427",
+      "tag": "evoguard-real-s008:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "wger-project/react",
+      "v0_commit": "48179fe670b6862e047ac06c973c76ef03da6d00",
+      "v0_repo_commit": "4461691b7d7d1b7697adfdd4ac9a9236708554b1",
+      "package_path": ".",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "package-lock.json",
+        "lockfile_sha256": "c1f4013b35d8462c1bf61cd9c41303f649799c16614db7687aeb947a76eafb80",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T03:54:00.886Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 192,
+          "total": 1120,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 190,
+          "total": 1120,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S009": {
+      "status": "VERIFIED",
+      "image_id": "sha256:89f4e0423ea070e47c4d7c29f2faf8b3aef572e58243a109c36f80ba32c8f6df",
+      "tag": "evoguard-real-s009:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "gethomepage/homepage",
+      "v0_commit": "d001910e86f2c9f74b42ee7c8f2cab6232f44c83",
+      "v0_repo_commit": "c792064f9f11f65139ddba6809d92a076cd44735",
+      "package_path": ".",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "pnpm-lock.yaml",
+        "lockfile_sha256": "cd167c997954d2c0853a357d7f28dc5ff79b64464c618e7a2a5f55a6beed4318",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T04:04:34.940Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 267,
+          "total": 1755,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 267,
+          "total": 1755,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S010": {
+      "status": "VERIFIED",
+      "image_id": "sha256:f2af9c6c3f803392ee9ce44da410f01a9c135f58e0cdf169f39276f1ba6631fd",
+      "tag": "evoguard-real-s010:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4",
+      "repo": "argoproj/argo-cd",
+      "v0_commit": "bba10dd8861c881057e2ea8b82d455b0573ac75f",
+      "v0_repo_commit": "20c66c36b49cf6ee9ba023d1207823557bf6760e",
+      "package_path": "ui",
+      "node": "v24.21.0",
+      "install": {
+        "lock_dir": "ui",
+        "lockfile": "pnpm-lock.yaml",
+        "lockfile_sha256": "607b6458334228715195f595e350dfecafd48f052a860a77cfb9a8e484db5f60",
+        "node": "v24.21.0"
+      },
+      "prepared_at": "2026-09-28T04:06:50.006Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 13,
+          "total": 384,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 12,
+          "total": 384,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    }
+  }
+}
