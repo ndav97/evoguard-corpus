@@ -55,14 +55,16 @@ export async function performAction(workspace, action, options = {}) {
     case 'list_files':
       return run(['list', action.path, '', '', String(CONFIG.list_max_entries)]);
     case 'write_file':
-      if (PROTECTED.test(action.path)) return { status: 'FAIL', output: `ruta protegida: ${action.path} no se puede escribir` };
+      if (PROTECTED.test(action.path) || workspace.protectedPath?.(action.path)) return { status: 'FAIL', output: `ruta protegida: ${action.path} no se puede escribir` };
       if (Buffer.byteLength(action.content) > CONFIG.write_max_bytes) return { status: 'FAIL', output: `contenido demasiado grande (máximo ${CONFIG.write_max_bytes} B); divide el código en varios archivos` };
       return run(['write', action.path, b64(action.content), '', '0']);
     case 'edit_file':
-      if (PROTECTED.test(action.path)) return { status: 'FAIL', output: `ruta protegida: ${action.path} no se puede editar` };
+      if (PROTECTED.test(action.path) || workspace.protectedPath?.(action.path)) return { status: 'FAIL', output: `ruta protegida: ${action.path} no se puede editar` };
       if (Buffer.byteLength(action.find) + Buffer.byteLength(action.replace) > CONFIG.write_max_bytes) return { status: 'FAIL', output: 'edición demasiado grande; usa write_file o varias ediciones' };
       return run(['edit', action.path, b64(action.find), b64(action.replace), '0']);
     case 'run_checks': {
+      // Workspaces con comprobaciones propias (estrato semi-real: la suite del repositorio).
+      if (typeof workspace.runChecks === 'function') return workspace.runChecks(options);
       const parts = [];
       let status = 'PASS';
       for (const [name, argv] of Object.entries(CONFIG.check_commands)) {
@@ -81,6 +83,7 @@ export async function performAction(workspace, action, options = {}) {
 
 // Vista inicial del workspace para el constructor: árbol de archivos y contenido de src/ hasta el presupuesto.
 export async function workspaceOverview(workspace, options = {}) {
+  if (typeof workspace.overview === 'function') return workspace.overview(options);
   const result = await workspace.exec(['node', '-e', SCRIPT, 'overview', '', '', '', String(CONFIG.overview_content_bytes)], options);
   if (result?.status !== 'PASS') return null;
   try {

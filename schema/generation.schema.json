@@ -154,7 +154,8 @@
             "NOT_RUN",
             "PASS",
             "FAIL",
-            "INFRA_ERROR"
+            "INFRA_ERROR",
+            "NOT_APPLICABLE"
           ]
         },
         "typecheck": {
@@ -162,7 +163,8 @@
             "NOT_RUN",
             "PASS",
             "FAIL",
-            "INFRA_ERROR"
+            "INFRA_ERROR",
+            "NOT_APPLICABLE"
           ]
         },
         "development_tests": {
@@ -170,7 +172,8 @@
             "NOT_RUN",
             "PASS",
             "FAIL",
-            "INFRA_ERROR"
+            "INFRA_ERROR",
+            "NOT_APPLICABLE"
           ]
         },
         "independent_oracle": {
@@ -178,7 +181,8 @@
             "NOT_RUN",
             "PASS",
             "FAIL",
-            "INFRA_ERROR"
+            "INFRA_ERROR",
+            "NOT_APPLICABLE"
           ]
         },
         "architecture": {
@@ -186,7 +190,8 @@
             "NOT_RUN",
             "PASS",
             "FAIL",
-            "INFRA_ERROR"
+            "INFRA_ERROR",
+            "NOT_APPLICABLE"
           ]
         }
       },

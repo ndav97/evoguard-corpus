@@ -17,7 +17,7 @@
   },
   "verification": {
     "path": "docs/verification/container.json",
-    "sha256": "1bb9071acc8af8f7e4bf534852e340f894cb910c50a4aeccd1f139e1c0bed30d"
+    "sha256": "74a57e82091778cc1668d8be118752fc0ae55428e1be6d69e0b4a1b4d3069298"
   },
   "verification_inputs": {
     "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
@@ -41,7 +41,7 @@
     "runner/sandbox/cli.mjs": "ff10056c92bccdeb5c80ea4f96b6560cf46aef81c4c9057d90fad8dab15ae8ae",
     "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
     "runner/packet.mjs": "4b2e31001bb10ca02159f82f57a8f64ff4a49575fa7632a261e7e9593aa48204",
-    "runner/validation/corpus.mjs": "df98bd7b53ae45af49113a2e9d9cf004a3687728176d11983026ebb2ed3cfc74",
+    "runner/validation/corpus.mjs": "2dfa5210a84441a5d6ec90c68bae12c181fb67e6fb99a09e3622bfc1263894b9",
     "prompts/common.md": "002a5e56035e88e4c985f7c0d91dcdbdbd2728fdd16393f34f71a539bed52e1e",
     "families/F001-product-catalog/prompts/architecture.md": "6167d21661440f5ca79b8c5fa0b9cdbcb6dc8313fa3b5d25ff5abd9d49633019",
     "families/F001-product-catalog/prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",

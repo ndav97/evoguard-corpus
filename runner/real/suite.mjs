@@ -47,6 +47,8 @@ export async function runSuiteIn(session, manifest, { files = [], timeout = 30 *
   const started = Date.now();
   const outcome = runReal(session, ['sh', '-c', `rm -f ${REPORT}; ${suiteCommand(manifest, files)} > /tmp/evoguard-suite.log 2>&1; tail -c 4000 /tmp/evoguard-suite.log`], { timeout, cwd: pkg });
   const ms = Date.now() - started;
+  // El informe JSON es instrumentación del pipeline: su ruta no se muestra al constructor.
+  outcome.output = (outcome.output ?? '').replace(/^.*evoguard-report.*$\n?/gm, '');
   if (outcome.status === 'TIMEOUT' || outcome.status === 'INFRA_ERROR') return { run: null, error: outcome.status, ms, tail: outcome.output };
   let report;
   try { report = execReal(session, ['node', '-e', COMPACT, REPORT], { timeout: 120000, cwd: pkg, raw: true }); }

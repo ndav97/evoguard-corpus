@@ -67,7 +67,7 @@ export function validateRecord(record, kind, validators) {
   if (!validate(record)) return [`${kind}: ${JSON.stringify(validate.errors)}`];
   if (kind === 'generation') {
     if (record.repair_count !== record.attempt - 1) errors.push('generation: repair_count no corresponde al intento');
-    if (record.outcome === 'ACCEPTED' && (Object.values(record.validation).some(x => x !== 'PASS') || !record.candidate_commit || !record.finished_at)) errors.push('generation: ACCEPTED requiere comprobaciones PASS, commit y finalización');
+    if (record.outcome === 'ACCEPTED' && (Object.values(record.validation).some(x => !['PASS', 'NOT_APPLICABLE'].includes(x)) || record.validation.independent_oracle !== 'PASS' || !record.candidate_commit || !record.finished_at)) errors.push('generation: ACCEPTED requiere comprobaciones PASS, commit y finalización');
     if (record.validation.independent_oracle === 'FAIL' && record.outcome !== 'REASSIGN') errors.push('generation: fallo de oráculo exige REASSIGN');
     if (record.outcome === 'REPAIR' && (record.attempt === 3 || record.validation.independent_oracle !== 'NOT_RUN')) errors.push('generation: reparación inválida');
   }

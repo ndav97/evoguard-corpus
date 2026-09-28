@@ -117,7 +117,7 @@ export async function runTask(options) {
             for(const stage of STAGES) {
               const check=await bounded(opts=>evaluator.check(stage,workspace,opts));
               if(check?.status==='TIMEOUT') {controller.abort();throw timeoutError();}
-              if(!check||!['PASS','FAIL','INFRA_ERROR'].includes(check.status)) throw new Error('Evaluación inválida');
+              if(!check||!['PASS','FAIL','INFRA_ERROR','NOT_APPLICABLE'].includes(check.status)) throw new Error('Evaluación inválida');
               row.validation[stage]=check.status;
               record('evaluation',{provider,attempt,stage,status:check.status});
               if(check.status==='INFRA_ERROR') throw new Error('Infraestructura del evaluador');
@@ -131,7 +131,8 @@ export async function runTask(options) {
                 break;
               }
             }
-            if(STAGES.every(s=>row.validation[s]==='PASS')) row.outcome=mode.accepted;
+            // NOT_APPLICABLE: etapa sin comprobación definida para la familia (p. ej. build en el estrato semi-real).
+            if(STAGES.every(s=>['PASS','NOT_APPLICABLE'].includes(row.validation[s]))&&STAGES.some(s=>row.validation[s]==='PASS')) row.outcome=mode.accepted;
           } else {row.reason??='CYCLE_LIMIT';}
           // Captura fuera del contexto del agente; preserva también los fallos.
           row.snapshot=await bounded(opts=>workspace.snapshot(opts));

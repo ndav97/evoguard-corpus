@@ -8,9 +8,13 @@ const argv=JSON.parse(process.argv[1]);
 const r=spawnSync(argv[0],argv.slice(1),{encoding:'utf8',timeout:Number(process.argv[2]),maxBuffer:4*1024*1024,shell:false,killSignal:'SIGKILL'});
 console.log(JSON.stringify({status:r.error?.code==='ETIMEDOUT'?'TIMEOUT':r.error?(r.error.code==='ENOENT'?'FAIL':'INFRA_ERROR'):r.status===0?'PASS':'FAIL',output:((r.stdout??'')+(r.stderr??'')+(r.error?.code==='ENOENT'?'command not found: '+argv[0]:'')).slice(0,65536)}));`;
 
-const SNAPSHOT = `const {execFileSync}=require('node:child_process');
-execFileSync('git',['add','--all']);
-process.stdout.write(execFileSync('git',['diff','--cached','--binary','--no-ext-diff','HEAD'],{maxBuffer:16*1024*1024}));`;
+// Diff del árbol de trabajo respecto de HEAD (incluye archivos nuevos) con un índice temporal: no altera el índice
+// del constructor, así que sus comandos git (checkout, diff, stash) siguen viendo su propio estado.
+const SNAPSHOT = `const {execFileSync}=require('node:child_process'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
+const idx=path.join(os.tmpdir(),'evoguard-index-'+process.pid);const own=execFileSync('git',['rev-parse','--git-path','index'],{encoding:'utf8'}).trim();
+if(fs.existsSync(own))fs.copyFileSync(own,idx);const env={...process.env,GIT_INDEX_FILE:idx};
+try{execFileSync('git',['add','--all'],{env});process.stdout.write(execFileSync('git',['diff','--cached','--binary','--no-ext-diff','HEAD'],{env,maxBuffer:16*1024*1024}));}
+finally{fs.rmSync(idx,{force:true});}`;
 
 // Exporta archivos regulares bajo un directorio (sin enlaces), en base64, con límites.
 const EXPORT = `const fs=require('node:fs'),path=require('node:path');
