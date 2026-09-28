@@ -9,7 +9,7 @@ El piloto tiene **20 familias en dos estratos**:
 | Estrato | Familias | Base V0 | Oráculo | Estado |
 |---|---|---|---|---|
 | Sintético | F001–F010 | Scaffold neutro React+TS+Vite y fixture determinista | Casos E2E en Playwright dentro de un contenedor aislado, con planes vinculados por hash | F001 **FROZEN** (generada y auditada). F002–F010 en **DRAFT** con oráculo `E2E_CALIBRATED`: listas para generar |
-| Semi-real | S001–S010 | Commit real fijado de un repositorio público React/TS (10 organizaciones y dominios; 6 con vitest y 4 con jest) | Tests ocultos por turno (fail-to-pass), preservación de turnos previos, suite original (pass-to-pass) y 2 ejecuciones estables | 30/30 turnos **CALIBRATED**; integrado al runner (imágenes por familia en preparación en el PC) |
+| Semi-real | S001–S010 | Commit real fijado de un repositorio público React/TS (10 organizaciones y dominios; 6 con vitest y 4 con jest) | Tests ocultos por turno (fail-to-pass), preservación de turnos previos, suite original (pass-to-pass) y 2 ejecuciones estables | 30/30 turnos **CALIBRATED**; integrado al runner, 10 imágenes verificadas y ensayo del pipeline en PASS: listo para generar |
 
 Commits en el PC (`evoguard-corpus`):
 - `892950c`: F001 auditada y congelada.
@@ -67,7 +67,7 @@ Commits en el PC (`evoguard-corpus`):
 ## 4. Pendientes
 
 ### Sin modelos (Claude)
-1. **Estrato semi-real integrado al runner** (hecho el 2026-09-27, fases R1–R5): imagen por familia, workspace aislado, oráculo de tests ocultos + suite, control de alcance, linaje por hash, generación, auditoría y preflight (`docs/estrato-semi-real.md`). Ensayo completo con la familia de prueba S900 en PASS. **Pendiente en el PC:** terminar `preparar-imagenes.cmd` (S001–S005 ya VERIFIED) y ejecutar `ensayar-familias.cmd`.
+1. **Estrato semi-real listo para generar** (2026-09-28): integrado al runner (fases R1–R5, `docs/estrato-semi-real.md`); las 10 imágenes VERIFIED (`config/real-bases.json`) y el ensayo del pipeline con cada repositorio real en PASS con el código actual (`docs/verification/real-rehearsal-s0xx.json`, commit `1f9fdd3`). Correcciones surgidas de los ensayos: hooks de git de los repos (lefthook), selección del test a borrar en el escenario, contenedores de ejecuciones interrumpidas y falsos positivos del filtro de secretos. Solo faltan los modelos (preflight: modelos congelados y contexto).
 2. **Estrato sintético:**
    - completar la corrida conjunta de la calibración;
    - revisión independiente de la equidad del oráculo (comprobaciones que no se deducen del texto visible);
