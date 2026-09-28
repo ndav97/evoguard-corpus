@@ -1,0 +1,50 @@
+# Familia semi-real de PRUEBA (no forma parte del corpus): repositorio mínimo para ensayar el pipeline semi-real.
+id: S900
+slug: mini-cart
+stratum: semi-real
+repo: evoguard/mini-cart
+url: https://example.invalid/evoguard/mini-cart
+license: MIT
+domain: Carrito mínimo de prueba
+v0:
+  commit: "0000000000000000000000000000000000000000"
+  date: 2026-09-27
+  verified: fixture de pruebas
+package_path: app
+package_manager: npm
+runner: vitest
+node: "26"
+workspace: mini-cart
+hidden_tests_dir: src/evoguard
+known_failures: []
+focus: app/src/cart.js
+turns:
+  - id: T001
+    title: Total formateado
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.js
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Cupones de descuento
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.js
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Total con cupón
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.js
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (fixture de pruebas del pipeline)
+  authored_at: 2026-09-27
+  status: CALIBRATED
+generation:
+  status: DRAFT
+  plan:
+    V1: openai
+    V2: anthropic
+    V3: google
+  references:
+    V1: null
+    V2: null
+    V3: null

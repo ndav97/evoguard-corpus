@@ -1,0 +1,12 @@
+diff --git a/src/cart.js b/src/cart.js
+index b3a023b..7e186cd 100644
+--- a/src/cart.js
++++ b/src/cart.js
+@@ -6,3 +6,7 @@ export function subtotal(items) {
+ export function count(items) {
+   return items.reduce((n, item) => n + item.quantity, 0);
+ }
++
++export function formatTotal(items) {
++  return `Total: ${subtotal(items).toFixed(2)}`;
++}

@@ -1,0 +1,15 @@
+diff --git a/src/cart.js b/src/cart.js
+index 59895bb..f4da689 100644
+--- a/src/cart.js
++++ b/src/cart.js
+@@ -7,8 +7,8 @@ export function count(items) {
+   return items.reduce((n, item) => n + item.quantity, 0);
+ }
+ 
+-export function formatTotal(items) {
+-  return `Total: ${subtotal(items).toFixed(2)}`;
++export function formatTotal(items, code) {
++  return `Total: ${applyCoupon(items, code).toFixed(2)}`;
+ }
+ 
+ export function applyCoupon(items, code) {

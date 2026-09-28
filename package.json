@@ -25,7 +25,8 @@
     "bench:local": "node runner/bench/local.mjs",
     "bench:selftest": "node runner/bench/selftest.mjs V0,V1,V2,V3",
     "oracle:lock": "node runner/oracle/lock.mjs",
-    "test:calibration": "node --test tests/calibration/*.test.mjs"
+    "test:calibration": "node --test tests/calibration/*.test.mjs",
+    "real:prepare": "node runner/real/prepare.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
