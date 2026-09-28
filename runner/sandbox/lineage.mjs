@@ -12,7 +12,7 @@ import { makePacket } from '../packet.mjs';
 
 export const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
 const sha = text => createHash('sha256').update(text).digest('hex');
-const SECRET = /(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY|SYNTEROLINK_[A-Z_]*KEY|ANTHROPIC_API_KEY|OPENAI_API_KEY)/;
+const SECRET = /((?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|(?<![A-Za-z0-9_-])AIza[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY|SYNTEROLINK_[A-Z_]*KEY|ANTHROPIC_API_KEY|OPENAI_API_KEY)/;
 const FORBIDDEN_PATH = /^(TASK\.json|fixtures\/|node_modules\/|dist\/|coverage\/|\.git\/|\.env)|(^|\/)\.\.(\/|$)/;
 
 // Rechaza parches que tocan archivos del pipeline, rutas peligrosas, secretos o tamaños excesivos.

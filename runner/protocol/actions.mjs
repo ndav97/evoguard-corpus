@@ -87,7 +87,7 @@ export function parseAction(text) {
 }
 
 // Resumen seguro del texto rechazado para diagnóstico: recorte, hash y redacción de posibles secretos.
-const SECRET = /(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----|(?:x-api-key|authorization)\s*[:=]\s*\S+|[A-Z_]*API_KEY\s*=\s*\S+)/gi;
+const SECRET = /((?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|(?<![A-Za-z0-9_-])AIza[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----|(?:x-api-key|authorization)\s*[:=]\s*\S+|[A-Z_]*API_KEY\s*=\s*\S+)/gi;
 export function rejectedSample(text, limit = 2000) {
   if (typeof text !== 'string') return { length: null, sha256: null, head: null, tail: null };
   const redacted = text.replace(SECRET, '[REDACTED]').replace(/x-api-key|SYNTEROLINK_[A-Z_]*KEY/gi, '[REDACTED]');

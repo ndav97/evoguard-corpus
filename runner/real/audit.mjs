@@ -20,7 +20,7 @@ import { runRealOracle, scopeCheck, TEST_FILE } from './pipeline.mjs';
 import { runSuiteIn, failing } from './suite.mjs';
 import { realReferencesDir, hiddenTestsOf } from './generate.mjs';
 
-const LEAK = /(evoguard|oracle|hidden[_ -]?tests?|reference\.patch|calibra|evaluator\/runs|PRIVATE_|sk-[A-Za-z0-9_-]{16,}|SYNTEROLINK|openai|anthropic|gemini|qwen|granite|local_a|local_b)/i;
+const LEAK = /(evoguard|oracle|hidden[_ -]?tests?|reference\.patch|calibra|evaluator\/runs|PRIVATE_|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|SYNTEROLINK|openai|anthropic|gemini|qwen|granite|local_a|local_b)/i;
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
 
 export async function auditReal(root, familyId, { freeze = false, runs } = {}) {

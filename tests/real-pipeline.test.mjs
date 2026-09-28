@@ -63,3 +63,18 @@ test('imagen y contenedores: V0 determinista, instalación con lockfile y aislam
   assert.throws(() => realRunArgs('node:24', `evoguard-realbox-${'b'.repeat(32)}`, 'real-sandbox'), /digest/);
   assert.throws(() => realRunArgs(`sha256:${'a'.repeat(64)}`, 'otro', 'real-sandbox'), /administrado/);
 });
+
+test('registros: credenciales reales del entorno detienen la tarea; los patrones se redactan', async () => {
+  const { createTaskStore } = await import('../runner/pipeline/store.mjs');
+  const { rmSync } = await import('node:fs');
+  const { fileURLToPath } = await import('node:url');
+  const root = fileURLToPath(new URL('../', import.meta.url));
+  process.env.EVOGUARD_PROBE_API_KEY = 'probe-credential-value-0123456789';
+  try {
+    const store = createTaskStore(root, { mode: 'rehearsal', familyId: 'S900', version: 'V1', taskId: `test-env-${process.pid}-${Date.now()}` });
+    try {
+      assert.throws(() => store.event({ output: 'token probe-credential-value-0123456789 leaked' }), /credencial del entorno/);
+      store.event({ output: 'const header = "Authorization: Bearer abc"' });
+    } finally { rmSync(store.dir, { recursive: true, force: true }); }
+  } finally { delete process.env.EVOGUARD_PROBE_API_KEY; }
+});

@@ -23,7 +23,7 @@ import { runOracleInContainer } from '../oracle/container.mjs';
 import { CORPUS_REFERENCES } from './store.mjs';
 
 const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
-const LEAK = /(spec-lock|plans\.mjs|runner\/oracle|oracle\/F\d{3}|evaluator\/runs|PRIVATE_|"observed"|"checks"|sk-[A-Za-z0-9_-]{16,}|SYNTEROLINK|openai|anthropic|gemini|qwen|granite|local_a|local_b)/i;
+const LEAK = /(spec-lock|plans\.mjs|runner\/oracle|oracle\/F\d{3}|evaluator\/runs|PRIVATE_|"observed"|"checks"|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|SYNTEROLINK|openai|anthropic|gemini|qwen|granite|local_a|local_b)/i;
 const FUTURE = { V0: /R00[345]|T00[123]/, V1: /R00[45]|T00[23]/, V2: /R005|T003/, V3: null };
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
 

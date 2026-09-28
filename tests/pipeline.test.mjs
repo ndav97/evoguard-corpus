@@ -150,7 +150,12 @@ test('persistencia: registros por intento válidos, sin sobrescritura y con cana
       assert.ok(existsSync(join(store.dir, 'attempts', records[0].id, 'generation.json')));
       assert.doesNotMatch(readFileSync(join(store.dir, 'summary.json'), 'utf8'), /R001-A05/);
       assert.match(readFileSync(join(store.privateDir, 'evaluator.jsonl'), 'utf8'), /R001-A05/);
-      assert.throws(() => store.event({ leaked: 'sk-abcdefghijklmnopqrstuvwxyz' }), /secreto/);
+      // Patrones con forma de secreto: se redactan (el código real puede contenerlos); «mask-card-…» no es un secreto.
+      store.event({ leaked: 'sk-abcdefghijklmnopqrstuvwxyz', testid: 'mask-card-block-level-label' });
+      const logged = readFileSync(join(store.dir, 'events.jsonl'), 'utf8');
+      assert.match(logged, /\[REDACTED\]/);
+      assert.doesNotMatch(logged, /sk-abcdefghijklmnopqrstuvwxyz/);
+      assert.match(logged, /mask-card-block-level-label/);
     } finally { rmSync(store.dir, { recursive: true, force: true }); }
   }
 });

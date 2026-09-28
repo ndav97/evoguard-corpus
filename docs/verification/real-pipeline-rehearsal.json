@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:f04dee44805ddc33cbc0b4e131a5ce14530551a41d0cb11af6839c55f0315dd4",
+  "image_id": "sha256:86d2d2adab3eb6c7801ff8f982ca28d01821b7e201ebdfb791a93e7a752485f0",
   "experimental": false,
-  "started_at": "2026-09-28T14:38:35.090Z",
+  "started_at": "2026-09-28T16:26:37.601Z",
   "versions": {
     "V1": {
-      "task_id": "0547693f-03f7-4e8a-892a-a33eb72ee376",
+      "task_id": "e2d88272-9699-45ec-bb73-b26cf1c95c99",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "879ff2e9eaf3bb9d7a389534c383df0a03418cd5"
     },
     "V2": {
-      "task_id": "cb95626e-9460-409b-97dc-76f1f044e57b",
+      "task_id": "d4f8dc9d-f60b-4c45-b5aa-9f57acb674fa",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "4b23cf8991cf4273e07f32dc2ca90f996ab1f985"
     },
     "V3": {
-      "task_id": "122282fc-5612-4d45-962a-7ac051a910d6",
+      "task_id": "0e177bcb-4147-4bb0-8eaa-77565baa00ab",
       "outcomes": [
         {
           "provider": "google",
@@ -114,12 +114,12 @@
       {
         "status": "PASS",
         "total": 14,
-        "seconds": 2
+        "seconds": 1
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-09-28T14:39:16.349Z",
+  "finished_at": "2026-09-28T16:27:17.742Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {
@@ -134,14 +134,14 @@
   },
   "sources_sha256": {
     "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
-    "runner/protocol/actions.mjs": "5b405d3d0f4d298bf74610cac89054c5e22a95f7eeffa279bd21410e95489edc",
+    "runner/protocol/actions.mjs": "595ed0f0d5763d738a218607447706a3acd0ceafd99c6d598d7bbf82ad002603",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/context/policy.mjs": "5b1316beca21a60ef91c681af0d06f77e43981c3e1f74678499fb4d023c7d492",
     "runner/providers/adapter.mjs": "f6c7616e98909eaeeaf1f9a51f34ba8b236b004dea1b1d0c88e800b845cdcf21",
     "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
-    "runner/pipeline/store.mjs": "39186d4b69549a81c1ebfb823427d0586151270aab764fc48adfcbfc04fd1bed",
-    "runner/sandbox/lineage.mjs": "ac0d04cd54a1c04f16f7f9a6da852d1c1a99744e737d9f93e449494f38335878",
+    "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
+    "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
     "runner/real/families.mjs": "c845a58814f3c490eaf739f8a35d2181bccad723461a96324a355562ff467c4c",
     "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
     "runner/real/suite.mjs": "da8ea3efcfb8441c2416ec5f3aad461bbe816830765a4619acfd9a5fac6e01c5",
@@ -150,7 +150,7 @@
     "runner/real/pipeline.mjs": "012494ef31a683e6fc19593497b71933ca6cea09dcaa49a1cce928d3d3c09092",
     "runner/real/rehearse.mjs": "ba56e92f9a12dcec5bdaa8e053bbd76a086323b9b94bbf7cd3dc407fa4cd6804",
     "runner/real/generate.mjs": "0342d7dd45005327583b704a9198426fb5163d6a6f8f0837b11d632a8b4bba59",
-    "runner/real/audit.mjs": "86be3b77c7d5d2a1d16450dd573054588df768a7e7b132904106694ae27fe252",
+    "runner/real/audit.mjs": "f2fdf120d3bc3f7771e7e0a58a44f444e9673abbe3e1609f6145c0ed6c1fe7cb",
     "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
     "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
     "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",

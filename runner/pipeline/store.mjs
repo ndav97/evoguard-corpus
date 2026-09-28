@@ -11,7 +11,7 @@ import { schemaValidators, validateRecord } from '../validation/corpus.mjs';
 import { familyDir } from '../families.mjs';
 
 const sha = text => createHash('sha256').update(text).digest('hex');
-const SECRET = /(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|x-api-key|authorization:\s*bearer|SYNTEROLINK_[A-Z_]*KEY\s*=)/i;
+const SECRET = /((?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|(?<![A-Za-z0-9_-])AIza[0-9A-Za-z_-]{20,}|x-api-key|authorization:\s*bearer|SYNTEROLINK_[A-Z_]*KEY\s*=)/i;
 
 export function createTaskStore(root, { mode, familyId = 'F001', version, taskId = randomUUID() }) {
   // bench: banco de prueba de modelos locales (.artifacts/bench, fuera de Git; nunca referencia del corpus).
@@ -21,7 +21,17 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
   if (existsSync(dir)) throw new Error('La tarea ya existe; no se sobrescriben registros');
   mkdirSync(dir, { recursive: true });
   mkdirSync(privateDir, { recursive: true });
-  const guard = text => { if (SECRET.test(text)) throw new Error('Registro con posible secreto; se detiene la tarea'); return text; };
+  // Credenciales reales del entorno (claves de proveedores): si aparecieran en un registro, la tarea se detiene.
+  const envSecrets = Object.entries(process.env).filter(([key, value]) => /(KEY|TOKEN|SECRET|PASSWORD)$/i.test(key) && typeof value === 'string' && value.length >= 12).map(([, value]) => value);
+  const leak = text => envSecrets.some(value => text.includes(value));
+  // Registros (eventos, llamadas, evaluador): los patrones con forma de secreto se redactan en lugar de detener la
+  // tarea, porque el código de repositorios reales puede contenerlos (cabeceras, claves de ejemplo en tests).
+  const guard = text => {
+    if (leak(text)) throw new Error('Registro con una credencial del entorno; se detiene la tarea');
+    return text.replace(new RegExp(SECRET.source, 'gi'), '[REDACTED]');
+  };
+  // Parches: se conservan exactos (reproducibilidad); solo se rechazan si contienen una credencial del entorno.
+  const guardPatch = text => { if (leak(text)) throw new Error('Parche con una credencial del entorno; se detiene la tarea'); return text; };
   const append = (path, value) => appendFileSync(path, guard(JSON.stringify(value)) + '\n');
   let current = { provider: null, attempt: null, cycle: null };
   const calls = [];
@@ -44,7 +54,7 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
         const id = `${String(index + 1).padStart(2, '0')}-${row.provider}-a${row.attempt}`;
         const attemptDir = join(dir, 'attempts', id);
         mkdirSync(attemptDir, { recursive: true });
-        if (typeof row.snapshot === 'string') writeFileSync(join(attemptDir, 'patch.diff'), guard(row.snapshot));
+        if (typeof row.snapshot === 'string') writeFileSync(join(attemptDir, 'patch.diff'), guardPatch(row.snapshot));
         const own = calls.filter(call => call.provider === row.provider && call.attempt === row.attempt);
         const sum = key => own.length && own.every(call => Number.isFinite(call.tokens?.[key])) ? own.reduce((total, call) => total + call.tokens[key], 0) : null;
         const config = models?.[row.provider];
