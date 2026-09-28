@@ -34,9 +34,10 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const sha = text => createHash('sha256').update(text).digest('hex');
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
 
-// Borra un test existente «normal» del paquete: un archivo de test bajo src/ que no sea configuración ni tenga
-// instantáneas (borrar una instantánea o la configuración de tests rompería la suite y no probaría el alcance).
-const DELETE_TEST = m => `f=$(git ls-files ${m.package_path === '.' ? '' : `'${m.package_path}/'`} | grep -E '(^|/)src/.*\\.(test|spec)\\.[cm]?[jt]sx?$' | grep -vi config | while read t; do b=$(basename "$t"); git ls-files | grep -q "__snapshots__/$b.snap" && continue; echo "$t"; break; done); test -n "$f" && git rm -q "$f" && echo "borrado $f"`;
+// Borra un test existente «normal» del paquete (preferentemente bajo src/, si no, en tests/): un archivo de test
+// que no sea configuración ni preparación de la suite y no tenga instantáneas (borrar esos rompería toda la suite y
+// no probaría el control de alcance).
+const DELETE_TEST = m => `list=$(git ls-files ${m.package_path === '.' ? '' : `'${m.package_path}/'`} | grep -E '\\.(test|spec)\\.[cm]?[jt]sx?$' | grep -viE '(config|setup)[^/]*$'); f=$( { printf '%s\\n' "$list" | grep -E '(^|/)src/'; printf '%s\\n' "$list" | grep -vE '(^|/)src/'; } | while read t; do [ -n "$t" ] || continue; b=$(basename "$t"); git ls-files | grep -q "__snapshots__/$b.snap" && continue; echo "$t"; break; done); test -n "$f" && git rm -q "$f" && echo "borrado $f"`;
 
 function scriptedAdapter(data, version, store, seen) {
   const m = data.manifest;
