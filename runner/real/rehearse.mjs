@@ -101,7 +101,14 @@ async function rehearseVersion({ root, data, base, version, referencesDir, steps
   return { store, records, seen, reference, summary };
 }
 
+// Contenedores semi-reales existentes (ensayo, generación o auditoría).
+const realContainers = () => docker(['container', 'ls', '--all', '--filter', 'label=org.evoguard.role', '--format', '{{.Names}}']).split('\n').filter(name => /^evoguard-real(box|ora|ver)-[a-f0-9]{32}$/.test(name));
+
 export async function rehearseReal(root, familyId, { base: baseOverride } = {}) {
+  // Restos de una ejecución interrumpida (p. ej. ventana cerrada a mitad): solo corre un pipeline a la vez, así que
+  // se eliminan antes de empezar para que no se confundan con fugas de este ensayo.
+  const orphans = realContainers();
+  if (orphans.length) { log(`Eliminando ${orphans.length} contenedores semi-reales de una ejecución anterior interrumpida`); docker(['rm', '--force', ...orphans]); }
   const data = loadRealFamily(root, familyId);
   assert.deepEqual(validateRealFamily(data, root), []);
   const base = baseOverride ?? readBases(root).bases[familyId];
@@ -140,7 +147,7 @@ export async function rehearseReal(root, familyId, { base: baseOverride } = {}) 
   const final = await runRealOracle({ image: base.image_id, manifest: data.manifest, steps: realSteps('V3', referencesDir, { through: true }), v0Commit: base.v0_repo_commit, patch: '', hiddenTests, version: 'V3', runs: 2 });
   assert.equal(final.status, 'PASS', JSON.stringify(final));
   report.v3_oracle_stability = { status: final.status, stable: final.stable, runs: final.runs.map(r => ({ status: r.status, total: r.total, seconds: r.seconds })) };
-  assert.equal(docker(['container', 'ls', '--all', '--filter', 'label=org.evoguard.role', '--format', '{{.Names}}']), '', 'contenedores remanentes');
+  assert.deepEqual(realContainers(), [], 'contenedores remanentes del ensayo');
   report.status = 'PASS';
   report.finished_at = new Date().toISOString();
   rmSync(referencesDir, { recursive: true, force: true });

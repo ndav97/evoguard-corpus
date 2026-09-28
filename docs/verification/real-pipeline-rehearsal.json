@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:1dba73e2b3f631926a4a242256f2b342cf232a3e4d98cc96e0b532945e062d21",
+  "image_id": "sha256:f04dee44805ddc33cbc0b4e131a5ce14530551a41d0cb11af6839c55f0315dd4",
   "experimental": false,
-  "started_at": "2026-09-28T13:55:14.655Z",
+  "started_at": "2026-09-28T14:38:35.090Z",
   "versions": {
     "V1": {
-      "task_id": "aa6dd01f-6cfb-44c7-8534-47792b04f40b",
+      "task_id": "0547693f-03f7-4e8a-892a-a33eb72ee376",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "879ff2e9eaf3bb9d7a389534c383df0a03418cd5"
     },
     "V2": {
-      "task_id": "3c8432ba-e7ac-4b25-917d-16925a64d9d4",
+      "task_id": "cb95626e-9460-409b-97dc-76f1f044e57b",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "4b23cf8991cf4273e07f32dc2ca90f996ab1f985"
     },
     "V3": {
-      "task_id": "737ee603-e2f8-4192-9c86-1c32ec0805af",
+      "task_id": "122282fc-5612-4d45-962a-7ac051a910d6",
       "outcomes": [
         {
           "provider": "google",
@@ -114,12 +114,12 @@
       {
         "status": "PASS",
         "total": 14,
-        "seconds": 1
+        "seconds": 2
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-09-28T13:55:56.072Z",
+  "finished_at": "2026-09-28T14:39:16.349Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {
@@ -148,7 +148,7 @@
     "runner/real/prepare.mjs": "500eac8e05201f6a7cb1255384083efd1c1823b96cdd90c946358056df2cc0d6",
     "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
     "runner/real/pipeline.mjs": "012494ef31a683e6fc19593497b71933ca6cea09dcaa49a1cce928d3d3c09092",
-    "runner/real/rehearse.mjs": "6cbedd06d3acb0bc0c38095e5c8ab88fd7c9d51412cd465e9f6596d081c0b48a",
+    "runner/real/rehearse.mjs": "ba56e92f9a12dcec5bdaa8e053bbd76a086323b9b94bbf7cd3dc407fa4cd6804",
     "runner/real/generate.mjs": "0342d7dd45005327583b704a9198426fb5163d6a6f8f0837b11d632a8b4bba59",
     "runner/real/audit.mjs": "86be3b77c7d5d2a1d16450dd573054588df768a7e7b132904106694ae27fe252",
     "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
