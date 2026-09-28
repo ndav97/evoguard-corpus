@@ -117,6 +117,11 @@ export async function auditCorpus(root, { familyId = 'F001', freeze = false, run
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const root = fileURLToPath(new URL('../../', import.meta.url));
   const args = process.argv.slice(2);
+  if (/^S\d{3}$/.test(args[0] ?? '')) {
+    // Estrato semi-real: runner/real/audit.mjs con los mismos argumentos.
+    try { execFileSync(process.execPath, [fileURLToPath(new URL('../real/audit.mjs', import.meta.url)), ...args], { stdio: 'inherit' }); process.exit(0); }
+    catch { process.exit(1); }
+  }
   const familyId = /^F\d{3}$/.test(args[0] ?? '') ? args.shift() : 'F001';
   if (args.some(flag => flag !== '--freeze')) { console.error('Uso: npm run corpus:audit -- [Fxxx] [--freeze]'); process.exit(1); }
   auditCorpus(root, { familyId, freeze: args.includes('--freeze') }).then(report => {

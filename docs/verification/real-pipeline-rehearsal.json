@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:9abcaa92b537bd79fe932f9512c75a368622c412bb647a729bb7c0c216458a76",
+  "image_id": "sha256:1bc4d5c22f23c6e73347e122f2a7dbb64bcf0c67cf807747e5289f6fd073d278",
   "experimental": false,
-  "started_at": "2026-09-28T03:22:06.601Z",
+  "started_at": "2026-09-28T03:37:00.591Z",
   "versions": {
     "V1": {
-      "task_id": "cb4d05ba-1577-4913-bfde-d2a84c5639d8",
+      "task_id": "756ed91f-204c-4d8b-9818-62119e4a6953",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "879ff2e9eaf3bb9d7a389534c383df0a03418cd5"
     },
     "V2": {
-      "task_id": "0243bcd5-aef3-4554-865c-001866db91e2",
+      "task_id": "d6d405fc-fde9-4f33-866d-72b3c1b84442",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "4b23cf8991cf4273e07f32dc2ca90f996ab1f985"
     },
     "V3": {
-      "task_id": "ab894347-3de3-49e3-8201-d92c462c2be0",
+      "task_id": "b2f1b5b3-af3b-4417-8f97-ae9be5f20309",
       "outcomes": [
         {
           "provider": "google",
@@ -119,7 +119,19 @@
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-09-28T03:22:43.837Z",
+  "finished_at": "2026-09-28T03:37:37.452Z",
+  "generation_and_audit": {
+    "status": "PASS",
+    "references": {
+      "V1": "879ff2e9eaf3bb9d7a389534c383df0a03418cd5",
+      "V2": "4b23cf8991cf4273e07f32dc2ca90f996ab1f985",
+      "V3": "82597e6ce0eb509adb9b5e7d3d86cd87cd799e2b"
+    },
+    "audit": {
+      "status": "PASS",
+      "stability_runs": 2
+    }
+  },
   "sources_sha256": {
     "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
     "runner/protocol/actions.mjs": "5b405d3d0f4d298bf74610cac89054c5e22a95f7eeffa279bd21410e95489edc",
@@ -136,9 +148,12 @@
     "runner/real/prepare.mjs": "500eac8e05201f6a7cb1255384083efd1c1823b96cdd90c946358056df2cc0d6",
     "runner/real/lineage.mjs": "f7102da045a575927d50ef01c281419226afaacfff1b9f7a5379172c589bf88d",
     "runner/real/pipeline.mjs": "012494ef31a683e6fc19593497b71933ca6cea09dcaa49a1cce928d3d3c09092",
-    "runner/real/rehearse.mjs": "a5925a2cb3afb37afc0c5e3cdb5b7f941868b6fbaa0465c8db625b31f49142f1",
+    "runner/real/rehearse.mjs": "89c6789146c93bfc7473d5fffc129f5ab2bdb6e9e728614a9c0f24a89f717aae",
+    "runner/real/generate.mjs": "0342d7dd45005327583b704a9198426fb5163d6a6f8f0837b11d632a8b4bba59",
+    "runner/real/audit.mjs": "86be3b77c7d5d2a1d16450dd573054588df768a7e7b132904106694ae27fe252",
+    "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
     "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
     "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",
-    "schema/real-family.schema.json": "7176c9166a606ca74eff8bb0ac844796da826537c5dbc1b1fbfe4b4283b0c2bb"
+    "schema/real-family.schema.json": "e9821c5f738febb5a1f851dc3b3fc61441cbdecd67e8ec391c7e102936585de1"
   }
 }

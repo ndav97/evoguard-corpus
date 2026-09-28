@@ -5,10 +5,10 @@ import { join } from 'node:path';
 import { readFileSync, existsSync } from 'node:fs';
 import { loadCorpus, validateCorpus } from './validation/corpus.mjs';
 import { readContainerLock } from './sandbox/lock.mjs';
-import { loadContextPolicy } from './context/policy.mjs';
 import { pipelineFingerprint } from './pipeline/sources.mjs';
 
-const FROZEN_KEYS = ['display_name', 'api_model_id', 'transport', 'context', 'max_output_tokens', 'reasoning', 'temperature', 'seed', 'digest'];
+import { modelBlockers } from './preflight-models.mjs';
+export { modelBlockers };
 
 export function generationBlockers(root, familyId = 'F001') {
   const data = loadCorpus(root, familyId);
@@ -18,19 +18,7 @@ export function generationBlockers(root, familyId = 'F001') {
     lock = readContainerLock(root);
     if (data.stack.experimental.image_digest !== lock.image_id) blockers.push('Linux/Docker: stack e imagen verificada no coinciden.');
   } catch (error) { blockers.push(`Linux/Docker: ${error.message}`); }
-  try {
-    const models = JSON.parse(readFileSync(join(root, 'config/models.json'), 'utf8'));
-    if (models.status !== 'INFERENCE_PARAMETERS_FROZEN') blockers.push('Modelos: parámetros de inferencia no congelados.');
-    const ring = data.policy.provider_ring;
-    for (const provider of ring) {
-      const config = models.models?.[provider];
-      if (!config || !FROZEN_KEYS.every(key => key in config) || !config.api_model_id) blockers.push(`Modelos: configuración incompleta de ${provider}.`);
-      else if (config.transport === 'ollama' && (!/^[a-f0-9]{64}$/.test(config.digest ?? '') || config.context !== 8192)) blockers.push(`Modelos: ${provider} sin digest o contexto fijado.`);
-    }
-  } catch (error) { blockers.push(`Modelos: ${error.message}`); }
-  try {
-    if (loadContextPolicy(pathToFileURL(join(root, '/'))).status !== 'CALIBRATED') blockers.push('Política de contexto de modelos locales sin calibrar: ejecutar npm run context:calibrate -- --write.');
-  } catch (error) { blockers.push(`Política de contexto: ${error.message}`); }
+  blockers.push(...modelBlockers(root, data.policy.provider_ring));
   if (data.family.oracle.status !== 'E2E_CALIBRATED') blockers.push('Oráculo E2E sin calibrar (family.yaml oracle.status).');
   const evidencePath = join(root, 'docs/verification/pipeline-rehearsal.json');
   if (!existsSync(evidencePath)) blockers.push('Pipeline: falta ensayo integral; ejecutar npm run pipeline:rehearse.');
@@ -49,7 +37,8 @@ export function generationBlockers(root, familyId = 'F001') {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const familyId = process.argv[2] ?? 'F001';
-    const blockers = generationBlockers(fileURLToPath(new URL('../', import.meta.url)), familyId);
+    const root = fileURLToPath(new URL('../', import.meta.url));
+    const blockers = /^S\d{3}$/.test(familyId) ? (await import('./real/preflight.mjs')).realBlockers(root, familyId) : generationBlockers(root, familyId);
     if (blockers.length) { console.error(`${familyId}: generación no autorizada por preflight:\n` + blockers.map(b => `- ${b}`).join('\n')); process.exitCode = 1; }
     else console.log(`${familyId}: preflight despejado; la generación experimental puede ejecutarse.`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }

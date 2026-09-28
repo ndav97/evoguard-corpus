@@ -250,6 +250,23 @@
         },
         "audit": {
           "type": "object"
+        },
+        "models": {
+          "type": "object",
+          "description": "Modelos observados por proveedor en las referencias aceptadas.",
+          "propertyNames": {
+            "enum": [
+              "openai",
+              "anthropic",
+              "google",
+              "local_a",
+              "local_b"
+            ]
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "required": [

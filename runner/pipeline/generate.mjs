@@ -118,6 +118,20 @@ export async function generate(version, { familyId = 'F001', commit = true, repo
 
 async function main() {
   const args = process.argv.slice(2);
+  if (/^S\d{3}$/.test(args[0] ?? '')) {
+    // Estrato semi-real: V1–V3 sobre la imagen de la familia (runner/real/generate.mjs).
+    const { generateReal } = await import('../real/generate.mjs');
+    const { loadRealFamily, REAL_VERSIONS } = await import('../real/families.mjs');
+    const [familyId, target, ...flags] = args;
+    if (!['all', ...REAL_VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- Sxxx V1|V2|V3|all [--no-commit]');
+    const references = loadRealFamily(root, familyId).manifest.generation.references;
+    for (const version of target === 'all' ? REAL_VERSIONS.filter(v => !references[v]) : [target]) {
+      const status = await generateReal(root, familyId, version, { commit: !flags.includes('--no-commit') });
+      if (status !== 'ACCEPTED') { log(`Detenido en ${familyId} ${version} (${status}).`); process.exitCode = 2; return; }
+    }
+    log(`Generación de ${familyId} completa.`);
+    return;
+  }
   const familyId = /^F\d{3}$/.test(args[0] ?? '') ? args.shift() : 'F001';
   const [target, ...flags] = args;
   const commit = !flags.includes('--no-commit');
