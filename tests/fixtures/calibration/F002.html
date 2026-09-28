@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F002 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F002. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <label>Estado
+      <select id="status"><option value="todas">Todas</option><option value="pendiente">Pendientes</option><option value="en_curso">En curso</option><option value="hecha">Hechas</option></select>
+    </label>
+    <form id="create" hidden>
+      <label>Título <input type="text" id="title"></label>
+      <label>Horas <input type="number" id="hours" value="1"></label>
+      <button type="submit">Añadir</button>
+    </form>
+    <p id="error" role="alert" hidden></p>
+    <p id="summary" role="status" aria-label="Resumen" hidden></p>
+    <button type="button" id="undo" hidden>Deshacer</button>
+    <ul id="tasks" aria-label="Tareas"></ul>
+  </main>
+  <script>
+    const FIXTURE = [
+      {"id":"K001","title":"Revisar contrato de alquiler","priority":"alta","status":"pendiente","estimate":2},
+      {"id":"K002","title":"Preparar presupuesto anual","priority":"alta","status":"en_curso","estimate":5},
+      {"id":"K003","title":"Actualizar inventario","priority":"media","status":"hecha","estimate":3},
+      {"id":"K004","title":"Llamar al proveedor de papel","priority":"baja","status":"pendiente","estimate":1},
+      {"id":"K005","title":"Diseñar cartel de la feria","priority":"media","status":"en_curso","estimate":4},
+      {"id":"K006","title":"Enviar facturas de marzo","priority":"alta","status":"hecha","estimate":2},
+      {"id":"K007","title":"Reservar sala de reuniones","priority":"baja","status":"pendiente","estimate":1},
+      {"id":"K008","title":"Redactar boletín mensual","priority":"media","status":"pendiente","estimate":3},
+      {"id":"K009","title":"Configurar impresora","priority":"baja","status":"hecha","estimate":1},
+      {"id":"K010","title":"Planificar formación interna","priority":"alta","status":"pendiente","estimate":6},
+      {"id":"K011","title":"Archivar expedientes antiguos","priority":"baja","status":"en_curso","estimate":4},
+      {"id":"K012","title":"Revisar nóminas","priority":"alta","status":"en_curso","estimate":3},
+      {"id":"K013","title":"Comprar material de oficina","priority":"media","status":"hecha","estimate":2},
+      {"id":"K014","title":"Organizar cena de equipo","priority":"baja","status":"pendiente","estimate":2},
+      {"id":"K015","title":"Traducir manual de usuario","priority":"media","status":"en_curso","estimate":8},
+      {"id":"K016","title":"Renovar dominio web","priority":"alta","status":"hecha","estimate":1},
+      {"id":"K017","title":"Limpiar base de clientes","priority":"media","status":"pendiente","estimate":5},
+      {"id":"K018","title":"Preparar informe trimestral","priority":"alta","status":"pendiente","estimate":7},
+      {"id":"K019","title":"Pintar sala de descanso","priority":"baja","status":"hecha","estimate":6},
+      {"id":"K020","title":"Revisar extintores","priority":"media","status":"pendiente","estimate":1},
+      {"id":"K021","title":"Negociar tarifa de transporte","priority":"alta","status":"en_curso","estimate":3},
+      {"id":"K022","title":"Actualizar web corporativa","priority":"media","status":"hecha","estimate":4},
+      {"id":"K023","title":"Digitalizar recibos","priority":"baja","status":"en_curso","estimate":2},
+      {"id":"K024","title":"Cerrar ejercicio contable","priority":"alta","status":"pendiente","estimate":8}
+    ];
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const NEXT = { pendiente: 'en_curso', en_curso: 'hecha' };
+    // Estado: tareas + historial de estados anteriores (deshacer). El filtro no forma parte del historial.
+    let tasks = FIXTURE.map(t => ({ ...t }));
+    let history = [];
+    let filter = 'todas';
+    let shown = null; // mutante stale-view: vista congelada hasta cambiar el filtro
+    const $ = id => document.getElementById(id);
+    const record = () => { history.push(tasks.map(t => ({ ...t }))); if (mutant === 'undo-one') history = history.slice(-1); };
+
+    function nextId() {
+      const max = Math.max(...tasks.map(t => Number(t.id.slice(1))), mutant === 'undo-id' ? highest : 0);
+      return 'K' + String(max + 1).padStart(3, '0');
+    }
+    let highest = 24;
+
+    function visible() {
+      if (filter === 'todas') return tasks;
+      if (mutant === 'filter-or' && filter === 'en_curso') return tasks.filter(t => t.status === 'en_curso' || t.status === 'pendiente');
+      return tasks.filter(t => t.status === filter);
+    }
+
+    function render() {
+      if (mutant !== 'stale-view' || shown === null) shown = visible().map(t => t.id);
+      const list = $('tasks');
+      list.replaceChildren();
+      for (const id of shown) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) continue;
+        const li = document.createElement('li');
+        li.append(`${task.id} ${task.title} `);
+        if (task.status !== 'hecha' || mutant === 'done-advance') {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'Avanzar';
+          button.onclick = () => advance(task.id);
+          li.append(button);
+        }
+        list.append(li);
+      }
+      const source = mutant === 'count-filtered' ? visible() : tasks;
+      const n = s => source.filter(t => t.status === s).length;
+      const hours = source.filter(t => mutant === 'hours-all' || t.status !== 'hecha').reduce((sum, t) => sum + t.estimate, 0);
+      $('summary').textContent = `Pendientes: ${n('pendiente')} · En curso: ${n('en_curso')} · Hechas: ${n('hecha')} · Horas restantes: ${hours}`;
+      $('undo').disabled = mutant === 'undo-enabled' ? false : history.length === 0;
+    }
+
+    function advance(id) {
+      record();
+      const index = tasks.findIndex(t => t.id === id);
+      const task = tasks[index];
+      if (task.status === 'hecha') task.status = 'pendiente';
+      else task.status = mutant === 'skip' ? 'hecha' : NEXT[task.status];
+      if (mutant === 'reorder') { tasks.splice(index, 1); tasks.push(task); }
+      if (mutant === 'wrong-other' && tasks[index + 1] && tasks[index + 1].status !== 'hecha') tasks[index + 1].status = NEXT[tasks[index + 1].status];
+      render();
+    }
+
+    function showError(message) { $('error').textContent = message; $('error').hidden = false; }
+
+    $('create').onsubmit = event => {
+      event.preventDefault();
+      $('error').hidden = true;
+      if (mutant === 'reject-records') record();
+      const title = mutant === 'notrim' ? $('title').value : $('title').value.trim();
+      const raw = $('hours').value;
+      const hours = Number(raw);
+      if (!title) return showError('El título es obligatorio');
+      if (mutant !== 'hours-any' && (!/^\d+$/.test(raw) || hours < 1 || hours > 8)) return showError('Las horas deben ser un número entero entre 1 y 8');
+      if (mutant !== 'reject-records') record();
+      const id = nextId();
+      highest = Math.max(highest, Number(id.slice(1)));
+      const task = { id, title, priority: 'media', status: 'pendiente', estimate: Math.round(hours) || 1 };
+      if (mutant === 'prepend') tasks.unshift(task); else tasks.push(task);
+      if (mutant !== 'keep-fields') { $('title').value = ''; $('hours').value = '1'; }
+      render();
+    };
+
+    $('status').onchange = () => {
+      if (mutant === 'undo-filter') record();
+      filter = $('status').value;
+      shown = null;
+      render();
+    };
+
+    $('undo').onclick = () => {
+      if (!history.length) return;
+      tasks = history.pop();
+      if (mutant === 'undo-resets-filter') { filter = 'todas'; $('status').value = 'todas'; }
+      shown = null;
+      render();
+    };
+
+    // Funcionalidades por versión.
+    $('create').hidden = level < 1;
+    $('summary').hidden = level < 2;
+    $('undo').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

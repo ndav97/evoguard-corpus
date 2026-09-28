@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "note_tags",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Etiquetar notas y filtrar por etiqueta. Al crear una nota se pueden indicar etiquetas en el campo «Etiquetas», separadas por comas: cada una se recorta, se pasa a minúsculas, se descartan las vacías y las repetidas (se conserva la primera aparición); el campo empieza vacío, una nota sin etiquetas es válida y el campo queda vacío tras guardar. El texto de cada nota de la lista muestra sus etiquetas en su orden, cada una como «#etiqueta». El selector «Filtrar etiqueta» ofrece la opción «todas» y una opción por cada etiqueta presente en las notas existentes, en orden alfabético; con una etiqueta seleccionada solo se ven las notas que la tienen. El filtro se combina con la búsqueda: se muestran las notas que cumplen ambos. El orden de la lista no cambia. Las etiquetas se guardan con las notas y se conservan al recargar.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Cada nota muestra sus etiquetas como «#etiqueta»."
+    },
+    {
+      "id": "R003-A02",
+      "description": "El filtro ofrece «todas» y las etiquetas existentes en orden alfabético."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Filtrar por una etiqueta muestra solo las notas que la tienen, en el orden de las notas."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Filtro de etiqueta y búsqueda se combinan: solo se muestran las notas que cumplen ambos."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Las etiquetas de una nota nueva se recortan, pasan a minúsculas y se descartan vacías y repetidas; la etiqueta nueva aparece en el filtro y el campo queda vacío."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Las etiquetas de las notas creadas se conservan al recargar."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el campo Etiquetas está vacío y el filtro de etiqueta es «todas».",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Etiquetas",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Etiquetas» en el formulario de creación, vacío por defecto."
+      },
+      {
+        "role": "combobox",
+        "name": "Filtrar etiqueta",
+        "rule": "Un <select> con nombre accesible «Filtrar etiqueta». La primera opción tiene valor todas; después, una opción por etiqueta existente cuyo valor es la etiqueta, en orden alfabético. Los resultados se actualizan al cambiar la opción."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "El texto de cada nota de la lista incluye, por cada una de sus etiquetas y en su orden, «#etiqueta» separada del resto del texto por espacios. El carácter # no aparece en ningún otro lugar del texto de la nota."
+      }
+    ]
+  }
+}

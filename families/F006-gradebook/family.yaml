@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F006",
+  "slug": "gradebook",
+  "name": "Gradebook",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "useState",
+    "topology": "centralized",
+    "derived_state": true,
+    "reducer": false,
+    "effects": false,
+    "persistence": false,
+    "memoization": true,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye el libro de calificaciones cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "openai",
+    "V1": "anthropic",
+    "V2": "google",
+    "V3": "local_a"
+  },
+  "fixture": {
+    "path": "fixtures/gradebook.json",
+    "sha256": "4e795e432cca75dd4faa7d8feeb91a5998728cc8ae28a4e6961bbe4af89b0383",
+    "count": 20,
+    "summary": {
+      "students": 20,
+      "assignments": 5,
+      "weights": {
+        "tareas": 30,
+        "examenes": 50,
+        "proyecto": 20
+      },
+      "max_points": {
+        "tareas": 30,
+        "examenes": 100,
+        "proyecto": 25
+      },
+      "missing_scores": 5,
+      "letter_counts": {
+        "A": 3,
+        "B": 4,
+        "C": 4,
+        "D": 5,
+        "F": 4
+      },
+      "at_risk": 6
+    }
+  },
+  "oracle": {
+    "path": "oracle/F006",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

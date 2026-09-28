@@ -11,8 +11,11 @@ import { createHash } from 'node:crypto';
 const SEED = '/tmp/evoguard-seed.json';
 const { files, steps = [] } = JSON.parse(readFileSync(SEED, 'utf8'));
 unlinkSync(SEED);
-const expected = ['package.json', 'package-lock.json', 'tsconfig.json', 'vite.config.ts', 'index.html', 'src/App.tsx', 'src/main.tsx', 'fixtures/products.json', 'TASK.json', '.gitignore'];
-if (!files || Object.keys(files).sort().join() !== expected.sort().join()) throw new Error('Payload fuera de allowlist');
+// Allowlist: scaffold, TASK.json, .gitignore y exactamente un fixture JSON de la familia en fixtures/.
+const expected = ['package.json', 'package-lock.json', 'tsconfig.json', 'vite.config.ts', 'index.html', 'src/App.tsx', 'src/main.tsx', 'TASK.json', '.gitignore'];
+const fixtures = Object.keys(files ?? {}).filter(path => /^fixtures\/[a-z0-9-]+\.json$/.test(path));
+if (!files || fixtures.length !== 1 || Object.keys(files).sort().join() !== [...expected, ...fixtures].sort().join()) throw new Error('Payload fuera de allowlist');
+const fixturePath = fixtures[0];
 if (existsSync('/workspace/app')) throw new Error('Workspace ya inicializado');
 const baselinePacket = JSON.parse(files['TASK.json']);
 if (baselinePacket.version !== 'V0' || baselinePacket.requirements.map(r => r.id).join() !== 'R001,R002') throw new Error('La base debe ser el scaffold V0');
@@ -48,4 +51,4 @@ for (const [index, step] of steps.entries()) {
 }
 const hash = s => createHash('sha256').update(s).digest('hex');
 const task = readFileSync('/workspace/app/TASK.json', 'utf8');
-console.log(JSON.stringify({ baseline_commit: git(['rev-parse', 'HEAD']), root_commit: root, history, fixture_sha256: hash(files['fixtures/products.json']), packet_sha256: hash(task), version: JSON.parse(task).version, file_count: Object.keys(files).length }));
+console.log(JSON.stringify({ baseline_commit: git(['rev-parse', 'HEAD']), root_commit: root, history, fixture_sha256: hash(files[fixturePath]), packet_sha256: hash(task), version: JSON.parse(task).version, file_count: Object.keys(files).length }));

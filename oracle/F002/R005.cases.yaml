@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Avanzar K001; Deshacer.",
+        "Estado = pendiente."
+      ],
+      "expected": "pendiente vuelve a ser la del fixture (K001 incluida); en_curso sin K001."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Crear «Tarea temporal»; Deshacer.",
+        "Crear «Tarea definitiva»."
+      ],
+      "expected": "Tras deshacer: 24 tareas; tras crear otra vez: última «K025 Tarea definitiva»."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Avanzar K001; avanzar K001; crear «Nota»; Deshacer tres veces."
+      ],
+      "expected": "Tras 1: sin K025; tras 2: K001 en_curso; tras 3: K001 pendiente; lista igual al fixture."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Al cargar, consultar Deshacer.",
+        "Título = «»; Añadir; consultar.",
+        "Avanzar K004; consultar.",
+        "Deshacer; consultar."
+      ],
+      "expected": "Deshabilitado, deshabilitado, habilitado, deshabilitado."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Avanzar K002; crear «Informe extra» con 2 horas; Deshacer; Deshacer."
+      ],
+      "expected": "Tras el primer Deshacer: 10/6/8 y 60 h; tras el segundo: 10/7/7 y 65 h."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Estado = pendiente; avanzar K001; Estado = hecha; Deshacer."
+      ],
+      "expected": "El filtro sigue en hecha y muestra el fixture; con pendiente, K001 aparece de nuevo."
+    }
+  ]
+}

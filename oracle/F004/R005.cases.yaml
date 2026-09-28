@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Correo = «rosa@gmail.com»; Contraseña = «clave123»; Siguiente.",
+        "Nombre = «Rosa Vidal»; Edad = 35; País = MX; Siguiente; marcar Equipo; Empresa = «Estudio Rosa»; Enviar."
+      ],
+      "expected": "Aviso con «El plan Equipo requiere un correo de empresa»; sin Confirmación; Paso contiene «Resumen»."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Correo = «rosa@estudiorosa.es»; Contraseña = «clave123»; Siguiente.",
+        "Nombre = «Rosa Vidal»; Edad = 35; País = MX; Siguiente; marcar Equipo; Empresa = «Estudio Rosa»; Enviar."
+      ],
+      "expected": "Confirmación contiene «rosa@estudiorosa.es» y «Plan: Equipo»."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Correo = «rosa@GMAIL.com»; Contraseña = «clave123»; Siguiente.",
+        "Nombre = «Rosa Vidal»; Edad = 35; País = MX; Siguiente; marcar Equipo; Empresa = «Estudio Rosa»; Enviar.",
+        "Marcar Básico; Enviar."
+      ],
+      "expected": "Con Equipo: aviso con «El plan Equipo requiere un correo de empresa» y sin Confirmación; con Básico: Confirmación con «rosa@GMAIL.com» y «Plan: Básico»."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 25; País = FR; Siguiente; marcar Pro.",
+        "Atrás; Edad = 16; Siguiente."
+      ],
+      "expected": "Básico marcado; Pro sin marcar y deshabilitado; Resumen incluye «Plan: Básico» y Precio mensual 4.99."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Correo = «marta.gil@empresa.es»; Contraseña = «Marta.Gil2024»; Siguiente.",
+        "Contraseña = «clave2024»; Siguiente."
+      ],
+      "expected": "Primero: Paso contiene «Cuenta» y aviso con «La contraseña no puede contener el usuario del correo»; después: Paso contiene «Perfil»."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Correo = «rosa@gmail.com»; Contraseña = «clave123»; Siguiente.",
+        "Nombre = «Rosa Vidal»; Edad = 35; País = MX; Siguiente; marcar Pro; Enviar."
+      ],
+      "expected": "Confirmación contiene «rosa@gmail.com» y «Plan: Pro»."
+    }
+  ]
+}

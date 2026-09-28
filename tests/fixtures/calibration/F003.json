@@ -1,0 +1,23 @@
+{
+  "mutants": {
+    "add-duplicate": ["R001-A03"],
+    "add-prepend": ["R001-A04"],
+    "subtotal-format": ["R001-A05"],
+    "qty-zero-keeps": ["R002-A02"],
+    "readd-restores": ["R002-A04"],
+    "add-resets": ["R002-A05"],
+    "discount-trunc": ["R003-A01"],
+    "coupon-case": ["R003-A02"],
+    "invalid-keeps": ["R003-A03"],
+    "coupon-stack": ["R003-A04"],
+    "books-all": ["R003-A05"],
+    "min-strict": ["R003-A06"],
+    "tax-trunc": ["R004-A02"],
+    "tax-gross": ["R004-A03"],
+    "region-fixed-rate": ["R004-A04"],
+    "ship-empty": ["R005-A01"],
+    "total-no-tax": ["R005-A02"],
+    "ship-strict": ["R005-A03"],
+    "ship-gross": ["R005-A04"]
+  }
+}

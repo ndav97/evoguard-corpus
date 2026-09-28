@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "add_expense",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Añadir gastos con descripción, categoría, importe, divisa y fecha. Validación, en este orden: la descripción no puede quedar vacía tras recortar espacios; el importe debe ser un número mayor que 0 escrito con punto decimal y como máximo dos decimales (p. ej. «20», «15.5», «3.20»); la fecha es obligatoria y debe pertenecer a uno de los meses disponibles (2026-01, 2026-02 o 2026-03). Si algo no es válido se muestra el aviso correspondiente, no se añade nada y los campos conservan sus valores. Cada gasto nuevo recibe el siguiente ID (G031, G032, …); aparece en la lista, en su posición por fecha e ID, solo si su fecha pertenece al mes seleccionado (el mes no cambia al añadir), y cuenta en el total de su mes. Tras añadir, la descripción y el importe quedan vacíos; la categoría, la divisa y la fecha conservan su valor.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Añadir un gasto válido del mes seleccionado lo muestra con el ID G031 en su posición y actualiza el total del mes."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Una descripción vacía o solo con espacios no añade el gasto y muestra un aviso."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Un importe no positivo, no numérico o con más de dos decimales no añade el gasto y muestra un aviso."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Una fecha vacía o fuera de los meses disponibles no añade el gasto y muestra un aviso."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Un gasto de otro mes no aparece en el mes seleccionado, sí en el suyo, convertido a EUR en su total."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Dos altas consecutivas reciben G031 y G032, se ordenan por fecha e ID y dejan vacíos la descripción y el importe."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, descripción, importe y fecha están vacíos, la categoría es comida y la divisa EUR.",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Descripción",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Descripción»."
+      },
+      {
+        "role": "combobox",
+        "name": "Categoría",
+        "rule": "Un <select> con nombre accesible «Categoría» y opciones de valor comida, transporte, ocio, hogar y salud; valor inicial comida."
+      },
+      {
+        "role": "textbox",
+        "name": "Importe",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Importe»."
+      },
+      {
+        "role": "combobox",
+        "name": "Divisa",
+        "rule": "Un <select> con nombre accesible «Divisa» y opciones de valor EUR, USD y GBP; valor inicial EUR."
+      },
+      {
+        "role": "field",
+        "name": "Fecha",
+        "rule": "Un <input type=\"date\"> con <label> «Fecha» (valor en formato AAAA-MM-DD), vacío al cargar."
+      },
+      {
+        "role": "button",
+        "name": "Añadir gasto",
+        "rule": "Un botón «Añadir gasto» que intenta añadir el gasto con los datos de los campos."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si la descripción está vacía tras recortar, aparece un elemento con role=\"alert\" cuyo texto contiene «La descripción es obligatoria». Si el importe no es válido, su texto contiene «El importe debe ser mayor que 0 con como máximo dos decimales». Si la fecha está vacía o fuera de los meses disponibles, su texto contiene «La fecha debe pertenecer a uno de los meses disponibles». En todos los casos no se añade el gasto."
+      }
+    ]
+  }
+}

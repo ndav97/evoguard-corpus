@@ -1,0 +1,156 @@
+{
+  "rooms": [
+    {
+      "id": "norte",
+      "name": "Sala Norte",
+      "capacity": 4
+    },
+    {
+      "id": "sur",
+      "name": "Sala Sur",
+      "capacity": 8
+    },
+    {
+      "id": "auditorio",
+      "name": "Auditorio",
+      "capacity": 20
+    }
+  ],
+  "days": [
+    "2026-03-02",
+    "2026-03-03",
+    "2026-03-04",
+    "2026-03-05",
+    "2026-03-06"
+  ],
+  "opening": "08:00",
+  "closing": "19:00",
+  "bookings": [
+    {
+      "id": "B001",
+      "room": "norte",
+      "date": "2026-03-02",
+      "start": "11:00",
+      "end": "12:00",
+      "title": "Llamada con proveedor",
+      "attendees": 1
+    },
+    {
+      "id": "B002",
+      "room": "sur",
+      "date": "2026-03-02",
+      "start": "09:00",
+      "end": "10:00",
+      "title": "Reunión de ventas",
+      "attendees": 6
+    },
+    {
+      "id": "B003",
+      "room": "norte",
+      "date": "2026-03-02",
+      "start": "09:00",
+      "end": "10:30",
+      "title": "Revisión de presupuesto",
+      "attendees": 3
+    },
+    {
+      "id": "B004",
+      "room": "norte",
+      "date": "2026-03-03",
+      "start": "16:00",
+      "end": "17:30",
+      "title": "Formación de seguridad",
+      "attendees": 4
+    },
+    {
+      "id": "B005",
+      "room": "auditorio",
+      "date": "2026-03-04",
+      "start": "10:00",
+      "end": "12:00",
+      "title": "Presentación trimestral",
+      "attendees": 18
+    },
+    {
+      "id": "B006",
+      "room": "norte",
+      "date": "2026-03-02",
+      "start": "10:30",
+      "end": "11:00",
+      "title": "Café con clientes",
+      "attendees": 2
+    },
+    {
+      "id": "B007",
+      "room": "sur",
+      "date": "2026-03-03",
+      "start": "12:00",
+      "end": "13:00",
+      "title": "Comité de calidad",
+      "attendees": 5
+    },
+    {
+      "id": "B008",
+      "room": "norte",
+      "date": "2026-03-05",
+      "start": "08:00",
+      "end": "09:00",
+      "title": "Planificación semanal",
+      "attendees": 4
+    },
+    {
+      "id": "B009",
+      "room": "norte",
+      "date": "2026-03-02",
+      "start": "15:00",
+      "end": "16:30",
+      "title": "Entrevista de candidatos",
+      "attendees": 3
+    },
+    {
+      "id": "B010",
+      "room": "sur",
+      "date": "2026-03-02",
+      "start": "13:00",
+      "end": "14:30",
+      "title": "Taller de diseño",
+      "attendees": 8
+    },
+    {
+      "id": "B011",
+      "room": "norte",
+      "date": "2026-03-04",
+      "start": "12:30",
+      "end": "14:00",
+      "title": "Comité de compras",
+      "attendees": 3
+    },
+    {
+      "id": "B012",
+      "room": "auditorio",
+      "date": "2026-03-02",
+      "start": "17:00",
+      "end": "19:00",
+      "title": "Charla abierta",
+      "attendees": 15
+    },
+    {
+      "id": "B013",
+      "room": "norte",
+      "date": "2026-03-06",
+      "start": "17:30",
+      "end": "19:00",
+      "title": "Cierre de semana",
+      "attendees": 2
+    },
+    {
+      "id": "B014",
+      "room": "sur",
+      "date": "2026-03-06",
+      "start": "09:30",
+      "end": "11:00",
+      "title": "Demostración de producto",
+      "attendees": 7
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin datos guardados."
+      ],
+      "expected": "Catálogo: L001–L015 en orden, con Disponibles igual a los ejemplares del fixture; Préstamos vacía."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Prestar L003."
+      ],
+      "expected": "L003 con «Disponibles: 0» y Prestar deshabilitado; Préstamos: solo L003, que empieza por «L003 La isla de los relojes» e incluye «vence día 15»."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Prestar L001.",
+        "Prestar L001 otra vez."
+      ],
+      "expected": "Tras el primero: L001 «Disponibles: 1» y Prestar habilitado; tras el segundo: «Disponibles: 0», Prestar deshabilitado; Préstamos: L001, L001."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Prestar L005; prestar L002; prestar L009."
+      ],
+      "expected": "Préstamos: L005, L002, L009 en ese orden; Disponibles: L002 0, L005 0, L009 1 y el resto igual al fixture."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Prestar L012; prestar L004; prestar L012."
+      ],
+      "expected": "Préstamos: L012, L004, L012, todos con «vence día 15»; el primero empieza por «L012 El vuelo de la garza»."
+    }
+  ]
+}

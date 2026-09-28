@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F010",
+  "slug": "library-loans",
+  "name": "Library Loans",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "custom_hooks",
+    "topology": "centralized",
+    "derived_state": true,
+    "reducer": false,
+    "effects": "allowed",
+    "persistence": "localStorage",
+    "custom_hooks": true,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye la aplicación de préstamos de la biblioteca cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "local_b",
+    "V1": "openai",
+    "V2": "anthropic",
+    "V3": "google"
+  },
+  "fixture": {
+    "path": "fixtures/library.json",
+    "sha256": "4fad5bd548704441761aeedf32dd47a6de0cd38e9ea16dfb4c678a2a104af350",
+    "count": 15,
+    "summary": {
+      "total_copies": 21,
+      "books_by_copies": {
+        "1": 9,
+        "2": 6
+      },
+      "loan_days": 14,
+      "renew_days": 7,
+      "start_day": 1
+    }
+  },
+  "oracle": {
+    "path": "oracle/F010",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Título = «Plan de viaje»; Contenido = «Comprar billetes de tren»; Guardar nota."
+      ],
+      "expected": "Última nota de la lista: «N013 Plan de viaje»; 13 notas."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Título = «   »; Contenido = «Texto suelto»; Guardar nota.",
+        "Título = «»; Guardar nota."
+      ],
+      "expected": "Siguen N001–N012; aviso con «El título es obligatorio»."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Crear «Llamar al fontanero».",
+        "Crear «Pagar el gas»."
+      ],
+      "expected": "Las dos últimas notas: N013 «Llamar al fontanero», N014 «Pagar el gas»."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Título = «Ordenar el trastero»; Contenido = «Cajas y estanterías»; Guardar nota."
+      ],
+      "expected": "Título y Contenido vacíos tras guardar."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Crear «Regar las plantas»; recargar.",
+        "Crear «Sacar la basura»; recargar."
+      ],
+      "expected": "Tras la primera recarga: N001–N013 con N013 «Regar las plantas»; tras la segunda: N001–N014 con N014 «Sacar la basura»."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Crear «Tarea del jardín» con contenido «Podar el limonero».",
+        "Buscar notas = «LIMONERO»."
+      ],
+      "expected": "Solo N013."
+    }
+  ]
+}

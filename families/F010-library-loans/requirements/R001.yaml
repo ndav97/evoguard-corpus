@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "lend_books",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar el catálogo con los 15 libros del fixture en su orden, indicando los ejemplares disponibles (ejemplares del fixture menos los prestados). «Prestar» en un libro con ejemplares disponibles crea un préstamo: resta un ejemplar disponible y añade el préstamo al final de la lista «Préstamos» (orden en que se prestaron). Cada préstamo vence el día actual + loan_days (14); el día actual empieza en start_day (1) y prestar no lo cambia. Un libro sin ejemplares disponibles tiene «Prestar» deshabilitado. Un libro con 2 ejemplares puede tener 2 préstamos a la vez.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar el catálogo muestra L001–L015 en orden con sus ejemplares disponibles y no hay préstamos."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Prestar un libro de un ejemplar deja 0 disponibles, deshabilita su Prestar y añade el préstamo con vencimiento el día 15."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Un libro de 2 ejemplares se puede prestar dos veces; después queda con 0 disponibles y Prestar deshabilitado."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Los préstamos se listan en el orden en que se hicieron y solo cambian los disponibles de los libros prestados."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Todos los préstamos hechos el mismo día vencen ese día + 14 y muestran título y vencimiento."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados, todos los ejemplares están disponibles y la lista de préstamos está vacía.",
+    "elements": [
+      {
+        "role": "list",
+        "name": "Catálogo",
+        "rule": "Los libros se muestran en una lista (<ul> u <ol>) con nombre accesible «Catálogo» (aria-label), en el orden del fixture."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada libro del catálogo es un <li> cuyo texto comienza con el ID seguido del título, p. ej. «L001 El faro del norte — Marta Ibarra · Disponibles: 2», e incluye «Disponibles: n». Ningún otro elemento de la lista comienza con un ID de libro."
+      },
+      {
+        "role": "button",
+        "name": "Prestar",
+        "rule": "Cada libro del catálogo contiene dentro de su <li> un botón «Prestar», deshabilitado (atributo disabled) cuando no quedan ejemplares disponibles."
+      },
+      {
+        "role": "list",
+        "name": "Préstamos",
+        "rule": "Los préstamos activos se muestran en una lista con nombre accesible «Préstamos», en el orden en que se hicieron."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada préstamo es un <li> de «Préstamos» cuyo texto comienza con el ID del libro seguido del título e incluye «vence día n», p. ej. «L003 La isla de los relojes — vence día 15»."
+      }
+    ]
+  }
+}

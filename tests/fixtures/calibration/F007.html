@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F007 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F007. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <label>Sala <select id="room"></select></label>
+    <label>Día <select id="day"></select></label>
+    <label id="view-wrap">Vista <select id="view"><option value="dia">Día</option><option value="semana">Semana</option></select></label>
+    <form id="create" novalidate>
+      <label>Título <input type="text" id="title"></label>
+      <label id="attendees-wrap">Asistentes <input type="number" id="attendees" value="1"></label>
+      <label>Inicio <select id="start"></select></label>
+      <label>Duración <select id="duration"><option value="30">30 min</option><option value="60" selected>60 min</option><option value="90">90 min</option><option value="120">120 min</option></select></label>
+      <button type="submit">Reservar</button>
+    </form>
+    <p id="error" role="alert" hidden></p>
+    <p id="hours" role="status" aria-label="Horas reservadas"></p>
+    <ul id="bookings" aria-label="Reservas"></ul>
+  </main>
+  <script>
+    const FIXTURE = {"rooms":[{"id":"norte","name":"Sala Norte","capacity":4},{"id":"sur","name":"Sala Sur","capacity":8},{"id":"auditorio","name":"Auditorio","capacity":20}],"days":["2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06"],"opening":"08:00","closing":"19:00","bookings":[{"id":"B001","room":"norte","date":"2026-03-02","start":"11:00","end":"12:00","title":"Llamada con proveedor","attendees":1},{"id":"B002","room":"sur","date":"2026-03-02","start":"09:00","end":"10:00","title":"Reunión de ventas","attendees":6},{"id":"B003","room":"norte","date":"2026-03-02","start":"09:00","end":"10:30","title":"Revisión de presupuesto","attendees":3},{"id":"B004","room":"norte","date":"2026-03-03","start":"16:00","end":"17:30","title":"Formación de seguridad","attendees":4},{"id":"B005","room":"auditorio","date":"2026-03-04","start":"10:00","end":"12:00","title":"Presentación trimestral","attendees":18},{"id":"B006","room":"norte","date":"2026-03-02","start":"10:30","end":"11:00","title":"Café con clientes","attendees":2},{"id":"B007","room":"sur","date":"2026-03-03","start":"12:00","end":"13:00","title":"Comité de calidad","attendees":5},{"id":"B008","room":"norte","date":"2026-03-05","start":"08:00","end":"09:00","title":"Planificación semanal","attendees":4},{"id":"B009","room":"norte","date":"2026-03-02","start":"15:00","end":"16:30","title":"Entrevista de candidatos","attendees":3},{"id":"B010","room":"sur","date":"2026-03-02","start":"13:00","end":"14:30","title":"Taller de diseño","attendees":8},{"id":"B011","room":"norte","date":"2026-03-04","start":"12:30","end":"14:00","title":"Comité de compras","attendees":3},{"id":"B012","room":"auditorio","date":"2026-03-02","start":"17:00","end":"19:00","title":"Charla abierta","attendees":15},{"id":"B013","room":"norte","date":"2026-03-06","start":"17:30","end":"19:00","title":"Cierre de semana","attendees":2},{"id":"B014","room":"sur","date":"2026-03-06","start":"09:30","end":"11:00","title":"Demostración de producto","attendees":7}]};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    const min = t => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
+    const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+    const capacity = Object.fromEntries(FIXTURE.rooms.map(r => [r.id, r.capacity]));
+
+    let bookings = FIXTURE.bookings.map(b => ({ ...b, active: true }));
+    let highest = 14;
+
+    for (const r of FIXTURE.rooms) $('room').add(new Option(r.name, r.id));
+    for (const d of FIXTURE.days) $('day').add(new Option(d, d));
+    for (let m = min(FIXTURE.opening); m < min(FIXTURE.closing); m += 30) $('start').add(new Option(hhmm(m), hhmm(m)));
+
+    const live = () => bookings.filter(b => b.active === true);
+    function shown() {
+      const room = $('room').value, day = $('day').value;
+      const week = level >= 2 && $('view').value === 'semana';
+      let list = live().filter(b => week ? b.room === room
+        : mutant === 'room-or' ? (b.room === room || b.date === day) : (b.room === room && b.date === day));
+      const byStart = (a, b) => min(a.start) - min(b.start);
+      if (mutant === 'sort-id') list.sort((a, b) => a.id.localeCompare(b.id));
+      else if (week && mutant !== 'week-sort-start') list.sort((a, b) => a.date.localeCompare(b.date) || byStart(a, b));
+      else list.sort(byStart);
+      return { list, week };
+    }
+
+    function render() {
+      const { list, week } = shown();
+      const ul = $('bookings');
+      ul.replaceChildren();
+      for (const b of list) {
+        const li = document.createElement('li');
+        let text = `${b.id} ${week ? b.date + ' ' : ''}${b.start}–${b.end} ${b.title}`;
+        if (level >= 3) text += ` · ${b.attendees} ${b.attendees === 1 ? 'persona' : 'personas'}`;
+        li.append(text + ' ');
+        if (level >= 1) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'Cancelar';
+          button.onclick = () => { b.active = mutant === 'cancel-blocks' ? 'hidden' : false; render(); };
+          li.append(button);
+        }
+        ul.append(li);
+      }
+      const room = $('room').value, day = $('day').value;
+      const hours = live().filter(b => (mutant === 'hours-all-rooms' || b.room === room) && (mutant !== 'hours-day' || b.date === day))
+        .reduce((n, b) => n + min(b.end) - min(b.start), 0) / 60;
+      $('hours').textContent = `Horas reservadas: ${hours.toFixed(2)}`;
+    }
+    // Reservas que ocupan su hueco (el mutante cancel-blocks deja ocupado el hueco de las canceladas).
+    const occupying = () => bookings.filter(b => b.active === true || (mutant === 'cancel-blocks' && b.active === 'hidden'));
+
+    function fail(message) { $('error').textContent = message; $('error').hidden = false; }
+
+    $('create').onsubmit = event => {
+      event.preventDefault();
+      $('error').hidden = true;
+      const room = $('room').value, date = $('day').value;
+      const title = mutant === 'notrim' ? $('title').value : $('title').value.trim();
+      if (!title) return fail('El título es obligatorio');
+      let attendees = 1;
+      if (level >= 3) {
+        const raw = $('attendees').value;
+        attendees = Number(raw);
+        const valid = mutant === 'attendees-float' ? attendees >= 1 : /^\d+$/.test(raw) && attendees >= 1;
+        if (!valid) return fail('Los asistentes deben ser un número entero mayor o igual que 1');
+        const cap = mutant === 'cap-max' ? 20 : capacity[room];
+        if (mutant === 'cap-ge' ? attendees >= cap : attendees > cap) return fail(`Se supera la capacidad de la sala (${cap})`);
+      }
+      const s = min($('start').value), e = s + Number($('duration').value);
+      if (mutant === 'close-ge' ? e >= min(FIXTURE.closing) : e > min(FIXTURE.closing)) return fail('La reserva termina después del cierre (19:00)');
+      const conflicts = occupying().filter(b => (mutant === 'any-room-conflict' || b.room === room) && b.date === date).filter(b => {
+        const [bs, be] = [min(b.start), min(b.end)];
+        if (mutant === 'touch-conflict') return s <= be && bs <= e;
+        if (mutant === 'no-contain') return (s >= bs && s < be) || (e > bs && e < be);
+        return s < be && bs < e;
+      }).sort((a, b) => min(a.start) - min(b.start));
+      if (conflicts.length) return fail(`La reserva se solapa con ${conflicts[0].id}`);
+      const n = mutant === 'reuse-id' ? Math.max(...live().map(b => Number(b.id.slice(1)))) + 1 : highest + 1;
+      highest = Math.max(highest, n);
+      bookings.push({ id: 'B' + String(n).padStart(3, '0'), room, date, start: hhmm(s), end: hhmm(e), title, attendees, active: true });
+      $('title').value = '';
+      if (mutant !== 'attendees-keep') $('attendees').value = '1';
+      render();
+    };
+
+    for (const id of ['room', 'day', 'view']) $(id).onchange = render;
+    $('view-wrap').hidden = level < 2;
+    $('hours').hidden = level < 2;
+    $('attendees-wrap').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "create_and_persist_notes",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Crear notas con título y contenido. El título es obligatorio: si queda vacío tras recortar espacios se muestra un aviso y no se crea la nota; el contenido es opcional. Título y contenido se guardan recortados. La nota nueva recibe como ID el mayor número de ID existente más uno (N013, N014, …) y se añade al final de la lista. Tras guardarla, los campos quedan vacíos. Todas las notas (las del fixture y las creadas, con todos sus datos) se guardan en el almacenamiento local del navegador y se restauran al recargar la página, de modo que la numeración continúa. Si no hay datos guardados se parte del fixture.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Guardar una nota la añade al final de la lista con el ID N013 y su título."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Un título vacío o solo con espacios no crea la nota y muestra un aviso, aunque haya contenido."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Dos notas consecutivas reciben N013 y N014, en ese orden."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Tras guardar, el título y el contenido quedan vacíos."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Las notas creadas se conservan al recargar la página y la numeración continúa."
+    },
+    {
+      "id": "R002-A06",
+      "description": "El contenido de una nota creada se guarda y la búsqueda lo encuentra."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el título y el contenido están vacíos.",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Título",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Título»."
+      },
+      {
+        "role": "textbox",
+        "name": "Contenido",
+        "rule": "Un <textarea> con nombre accesible «Contenido»."
+      },
+      {
+        "role": "button",
+        "name": "Guardar nota",
+        "rule": "Un botón «Guardar nota» que intenta crear la nota con los datos de los campos."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si el título está vacío tras recortar, aparece un elemento con role=\"alert\" cuyo texto contiene «El título es obligatorio» y no se crea la nota."
+      }
+    ]
+  }
+}

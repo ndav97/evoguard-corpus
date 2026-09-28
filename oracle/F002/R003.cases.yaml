@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Título = «Comprar sobres»; Horas = 2; Añadir."
+      ],
+      "expected": "Última tarea de la lista: «K025 Comprar sobres»; 25 tareas."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Título = «   »; Añadir.",
+        "Título = «»; Añadir."
+      ],
+      "expected": "Siguen 24 tareas; aviso con «El título es obligatorio»."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Crear «Llamar al banco».",
+        "Crear «Pagar seguro»."
+      ],
+      "expected": "Las dos últimas tareas: K025 «Llamar al banco», K026 «Pagar seguro»."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Crear «Revisar caldera».",
+        "Estado = pendiente.",
+        "Avanzar K025; Estado = en_curso."
+      ],
+      "expected": "pendiente termina en K025; tras avanzar, en_curso termina en K025 y pendiente ya no la incluye."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Título = «Ordenar archivo»; Horas = 4; Añadir."
+      ],
+      "expected": "Título vacío y Horas = 1 tras crear."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Título = «Tarea larga»; Horas = 9; Añadir.",
+        "Horas = 0; Añadir.",
+        "Horas = 2.5; Añadir."
+      ],
+      "expected": "Siguen 24 tareas; aviso con «Las horas deben ser un número entero entre 1 y 8»."
+    }
+  ]
+}

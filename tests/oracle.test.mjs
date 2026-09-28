@@ -7,7 +7,7 @@ import { PLANS } from '../runner/oracle/plans.mjs';
 import { loadProducts, sortProducts, filterProducts, ids } from '../runner/oracle/reference.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../families/F001-product-catalog/fixtures/products.json', import.meta.url)));
-const lock = JSON.parse(readFileSync(new URL('../runner/oracle/spec-lock.json', import.meta.url)));
+const lock = JSON.parse(readFileSync(new URL('../runner/oracle/families/F001/spec-lock.json', import.meta.url)));
 const cases = loadCases();
 const r001 = cases.filter(spec => spec.requirement === 'R001');
 

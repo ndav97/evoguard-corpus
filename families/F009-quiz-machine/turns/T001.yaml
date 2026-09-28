@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Cuando termine el cuestionario, quiero un botón «Revisar» que muestre una lista con todas las preguntas en el orden en que salieron: para cada una, si la acerté o no («Correcta» o «Incorrecta»), qué opción elegí («Elegida: …») y cuál era la correcta («Respuesta correcta: …»). La lista no debe verse hasta pulsar el botón, y al reiniciar debe desaparecer.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Quiero poder aplicar un cupón de descuento: un campo «Cupón» y un botón «Aplicar». Los cupones válidos son los del fixture (AHORRO10: 10 % del subtotal; MENOS5: 5.00 euros si el subtotal es de al menos 30.00; LIBROS20: 20 % solo de los productos de Libros). No distingas mayúsculas y recorta espacios. Solo puede haber un cupón activo: si aplico otro, reemplaza al anterior. Si el código no existe, muestra un aviso «Cupón no válido» y quita el descuento. Muestra el descuento redondeado al céntimo (0,5 hacia arriba) y recalcúlalo cuando cambie el carrito: si deja de cumplirse la condición, el descuento pasa a 0.00.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "local_a",
+  "reference_commit": null,
+  "patch_path": null
+}

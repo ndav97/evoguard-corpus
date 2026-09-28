@@ -53,6 +53,11 @@ function slimPacket(packet, policy) {
       [policy.packet.workspace_references.task]: 'Paquete completo de la tarea (solicitud, requisitos y ui_contract).',
       [policy.packet.workspace_references.products]: `Fixture de ${packet.products.length} productos; úsalo sin modificarlo.`
     };
+  } else if (packet?.fixture !== undefined && typeof packet.fixture_path === 'string') {
+    slim.workspace_files = {
+      [policy.packet.workspace_references.task]: 'Paquete completo de la tarea (solicitud, requisitos y ui_contract).',
+      [packet.fixture_path]: 'Fixture de la familia; impórtalo y úsalo sin modificarlo.'
+    };
   }
   return slim;
 }

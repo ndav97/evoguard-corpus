@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "monthly_total_eur",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar el total del mes seleccionado en EUR. Cada gasto se convierte a EUR multiplicando su importe por la tasa de su moneda y se redondea al céntimo (0,5 hacia arriba) antes de sumar; el total es la suma de esos importes redondeados, con dos decimales, punto decimal y el código «EUR». Se actualiza al cambiar de mes.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Al cargar el total de 2026-01 es 433.84 EUR (gastos en USD y GBP convertidos a EUR)."
+    },
+    {
+      "id": "R002-A02",
+      "description": "El total de 2026-02 es 499.81 EUR."
+    },
+    {
+      "id": "R002-A03",
+      "description": "El total de 2026-03 redondea cada gasto al céntimo antes de sumar: 481.48 EUR."
+    },
+    {
+      "id": "R002-A04",
+      "description": "El total sigue al mes seleccionado al cambiarlo varias veces."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el total corresponde a 2026-01.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Total del mes",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Total del mes» (aria-label) cuyo texto incluye «Total del mes: N EUR», con N con dos decimales y punto decimal (p. ej. «Total del mes: 433.84 EUR»), y ningún otro importe con dos decimales."
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+# Fixture fijo
+Catálogo sintético de una tienda: 16 productos (S001–S016) con nombre, categoría (Papelería, Libros, Hogar, Electrónica; 4 de cada) y precio en euros con dos decimales; además, códigos promocionales (`coupons`), regiones de entrega con tasa de impuesto y coste de envío (`regions`) y un umbral de importe (`free_shipping_threshold`). Precios elegidos para que las sumas y porcentajes de prueba no produzcan empates de redondeo.
+Archivo canónico UTF-8/LF; SHA-256 en family.yaml y provenance.yaml. No regenerar al ejecutar modelos. Cambios requieren revisión y actualización explícita de procedencia.

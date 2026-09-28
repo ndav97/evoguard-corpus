@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "delete_and_undo",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Eliminar notas con posibilidad de deshacer la última eliminación. Cada nota tiene un botón «Eliminar» que la quita de inmediato; la eliminación se guarda y se conserva al recargar. El botón «Deshacer eliminación» restaura solo la nota eliminada en último lugar, en la misma posición que ocupaba en el orden de las notas y con todos sus datos, incluido su estado de fijado; tras deshacer ya no hay nada que deshacer (no se pueden recuperar eliminaciones anteriores). Crear una nota o recargar la página descarta la posibilidad de deshacer. «Deshacer eliminación» está deshabilitado cuando no hay nada que deshacer. Las etiquetas del filtro reflejan siempre las notas existentes. La numeración de las notas nuevas sigue la regla de creación (mayor ID existente más uno).",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Eliminar una nota la quita de la lista y la eliminación se conserva al recargar."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Deshacer eliminación restaura la nota en su posición original."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Solo se deshace la última eliminación; después el botón queda deshabilitado."
+    },
+    {
+      "id": "R005-A04",
+      "description": "Deshacer eliminación está deshabilitado al cargar, se habilita al eliminar y se deshabilita al crear una nota o al recargar."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Deshacer restaura también el estado de fijado de la nota."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Tras eliminar una nota, la siguiente nota creada recibe el mayor ID existente más uno."
+    },
+    {
+      "id": "R005-A07",
+      "description": "El filtro de etiqueta refleja las eliminaciones y las restauraciones."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no hay ninguna eliminación que deshacer.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Eliminar",
+        "rule": "Cada nota contiene dentro de su <li> un botón «Eliminar» que la elimina."
+      },
+      {
+        "role": "button",
+        "name": "Deshacer eliminación",
+        "rule": "Un botón «Deshacer eliminación», fuera de la lista, que restaura la última nota eliminada; está deshabilitado (atributo disabled) cuando no hay nada que deshacer."
+      }
+    ]
+  }
+}

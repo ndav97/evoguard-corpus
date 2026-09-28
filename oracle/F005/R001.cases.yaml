@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin datos guardados."
+      ],
+      "expected": "Lista Notas: N001–N012 en ese orden."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Buscar notas = «RECETA»."
+      ],
+      "expected": "N002, N004, N009."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Buscar notas = «  huerta  »."
+      ],
+      "expected": "N002, N008."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Buscar notas = «trabajo».",
+        "Buscar notas = «»."
+      ],
+      "expected": "Tras «trabajo»: lista vacía; tras vaciar: N001–N012."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Buscar notas = «presupuesto».",
+        "Buscar notas = «equipo»."
+      ],
+      "expected": "Tras «presupuesto»: N003, N007, N012; tras «equipo»: N003, N012."
+    }
+  ]
+}

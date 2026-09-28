@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "edit_scores",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Editar las puntuaciones de un estudiante. El botón «Editar» de cada estudiante abre un editor (solo uno a la vez: abrir otro lo sustituye y descarta lo no guardado) con un campo numérico por tarea, rotulado con el nombre de la tarea y rellenado con la puntuación actual (vacío si no está entregada). Cada valor debe ser un entero entre 0 y la puntuación máxima de la tarea, ambos incluidos, o quedar vacío (= no entregada). Al pulsar «Guardar», si algún valor no es válido se muestra un aviso, no se guarda ningún cambio y el editor sigue abierto; si todos son válidos se guardan todos, el editor se cierra y la nota final del estudiante se recalcula. Los demás estudiantes no cambian.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Guardar una puntuación nueva recalcula la nota final del estudiante."
+    },
+    {
+      "id": "R002-A02",
+      "description": "El editor muestra las puntuaciones actuales y deja vacías las no entregadas."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Vaciar una puntuación la marca como no entregada: cuenta 0 y al reabrir el editor aparece vacía."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Un valor mayor que el máximo, negativo o no entero muestra un aviso y no guarda ningún cambio."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Los valores 0 y el máximo de la tarea son válidos."
+    },
+    {
+      "id": "R002-A06",
+      "description": "Abrir el editor de otro estudiante descarta lo no guardado y muestra sus puntuaciones; guardar no altera a los demás."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no hay ningún editor abierto.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Editar",
+        "rule": "Cada estudiante contiene dentro de su <li> un botón «Editar» que abre el editor de ese estudiante."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Tarea 1",
+        "rule": "Campo <input type=\"number\"> del editor con nombre accesible «Tarea 1» (el nombre de la tarea A1)."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Tarea 2",
+        "rule": "Campo <input type=\"number\"> del editor con nombre accesible «Tarea 2» (tarea A2)."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Parcial",
+        "rule": "Campo <input type=\"number\"> del editor con nombre accesible «Parcial» (tarea A3)."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Examen final",
+        "rule": "Campo <input type=\"number\"> del editor con nombre accesible «Examen final» (tarea A4)."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Proyecto final",
+        "rule": "Campo <input type=\"number\"> del editor con nombre accesible «Proyecto final» (tarea A5)."
+      },
+      {
+        "role": "button",
+        "name": "Guardar",
+        "rule": "Un botón «Guardar» en el editor que intenta guardar todas sus puntuaciones."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si algún valor del editor no es válido, aparece un elemento con role=\"alert\" cuyo texto contiene «La puntuación debe ser un número entero entre 0 y el máximo de la tarea» y no se guarda ningún cambio."
+      }
+    ]
+  }
+}

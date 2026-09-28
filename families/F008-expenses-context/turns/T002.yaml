@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade una lista «Presupuestos» con una línea por categoría: lo gastado en el mes (en EUR, calculado como el total) frente al presupuesto mensual, p. ej. «Comida: 145.90 / 250.00 EUR», y la marca «Excedido» cuando lo gastado supere el presupuesto (igualarlo no cuenta como exceso).",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

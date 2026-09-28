@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Leer los tres pesos.",
+        "Peso de tareas = 40; Peso de exámenes = 40 (sin aplicar)."
+      ],
+      "expected": "Pesos 30, 50, 20; tras cambiarlos sin aplicar, E001 sigue en 84.30 y E005 en 90.00."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Pesos 40, 40, 20; Aplicar pesos.",
+        "Leer las notas de todos los estudiantes."
+      ],
+      "expected": "E001 84.13, E002 97.20, E003 40.00, E004 64.00, E005 89.33, E006 90.53, E007 80.00, E008 78.53, E009 69.07, E010 60.00, E011 58.53, E012 80.67, E013 66.80, E014 95.87, E015 44.67, E016 48.80, E017 77.07, E018 70.00, E019 67.33, E020 86.93."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Pesos 30, 50, 30; Aplicar pesos.",
+        "Pesos -10, 90, 20; Aplicar pesos.",
+        "Pesos 30.5, 49.5, 20; Aplicar pesos."
+      ],
+      "expected": "Tras cada intento: aviso con «Los pesos deben ser números enteros entre 0 y 100 que sumen 100» y las 20 notas siguen como al cargar."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Pesos 40, 40, 20; Aplicar pesos."
+      ],
+      "expected": "E006 A, E009 D, E012 B, E018 C; Distribución A: 3, B: 5, C: 3, D: 5, F: 4."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Pesos 26, 51, 23; Aplicar pesos."
+      ],
+      "expected": "E008 80.00 con letra B; E011 60.00 con letra D; E006 89.80 con letra B."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Pesos 0, 70, 30; Aplicar pesos.",
+        "Editar E018; Proyecto final = 20; Guardar."
+      ],
+      "expected": "Tras aplicar: E018 59.50; tras editar: E018 83.50."
+    }
+  ]
+}

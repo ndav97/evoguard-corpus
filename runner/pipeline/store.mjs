@@ -2,12 +2,13 @@
 // Público (constructor-agnóstico):  <dir>/events.jsonl, calls.jsonl, attempts/<id>/{generation.json,patch.diff}, summary.json
 // Privado del evaluador:           <private>/evaluator.jsonl (informes de oráculo y arquitectura)
 // - rehearsal:     .artifacts/rehearsals/<task>/ (fuera de Git; nunca referencia del corpus)
-// - experimental:  runs/corpus-generation/F001/<V>/<task>/ y evaluator/runs/F001/<V>/<task>/
+// - experimental:  runs/corpus-generation/<Fxxx>/<V>/<task>/ y evaluator/runs/<Fxxx>/<V>/<task>/
 // Nunca se escriben variables de entorno, claves ni cabeceras. null = no observado, nunca cero.
 import { mkdirSync, appendFileSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { schemaValidators, validateRecord } from '../validation/corpus.mjs';
+import { familyDir } from '../families.mjs';
 
 const sha = text => createHash('sha256').update(text).digest('hex');
 const SECRET = /(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|x-api-key|authorization:\s*bearer|SYNTEROLINK_[A-Z_]*KEY\s*=)/i;
@@ -49,7 +50,7 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
         const config = models?.[row.provider];
         const observed = [...new Set(own.map(call => call.observed_model).filter(Boolean))];
         const generation = {
-          schema_version: '1.0.0', family_id: 'F001', version: packet.version, artifact_type: 'reference_candidate',
+          schema_version: '1.0.0', family_id: familyId, version: packet.version, artifact_type: 'reference_candidate',
           generator: { provider: row.provider, model: observed.length ? observed.join('; ') : (models ? 'no-observado' : 'instrumental-script'), temperature: config?.temperature ?? null, seed: config?.seed ?? null },
           attempt: row.attempt, repair_count: row.attempt - 1,
           base_commit: row.base_commit, candidate_commit: row.candidate_commit ?? null,
@@ -69,7 +70,7 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
       }
       const summary = {
         artifact_type: result.artifact_type, mode: result.mode, experimental: mode === 'experimental', task_id: taskId,
-        family_id: 'F001', version: packet.version, status: result.status,
+        family_id: familyId, version: packet.version, status: result.status,
         attempts: records.map(r => ({ id: r.id, provider: r.generator.provider, attempt: r.attempt, outcome: r.outcome, failure_reason: r.failure_reason, validation: r.validation, candidate_commit: r.candidate_commit })),
         accepted: records.find(r => r.outcome === 'ACCEPTED')?.id ?? null
       };
@@ -80,11 +81,11 @@ export function createTaskStore(root, { mode, familyId = 'F001', version, taskId
 }
 
 // Referencia validada tras ACCEPTED: parche respecto del commit base, TASK.json recibido y hashes.
-// Corpus (experimental): families/F001-product-catalog/generation/<V>/. Ensayo: <tarea>/references/<V>/.
+// Corpus (experimental): families/<Fxxx-slug>/generation/<V>/. Ensayo: <tarea>/references/<V>/.
 // El seed de la versión siguiente se reconstruye desde aquí (runner/sandbox/lineage.mjs).
-export const CORPUS_REFERENCES = root => join(root, 'families/F001-product-catalog/generation');
+export const CORPUS_REFERENCES = (root, familyId = 'F001') => join(root, familyDir(root, familyId), 'generation');
 
-export function saveReference(root, referencesDir, { version, record, patch, taskText, taskDir }) {
+export function saveReference(root, referencesDir, { version, record, patch, taskText, taskDir, familyId = 'F001' }) {
   if (record.outcome !== 'ACCEPTED' || !record.candidate_commit) throw new Error('Solo se guarda una referencia aceptada con commit');
   const dir = join(referencesDir, version);
   const target = join(dir, 'reference.json');
@@ -93,7 +94,7 @@ export function saveReference(root, referencesDir, { version, record, patch, tas
   writeFileSync(join(dir, 'reference.patch'), patch, { flag: 'wx' });
   writeFileSync(join(dir, 'task.json'), taskText, { flag: 'wx' });
   const reference = {
-    schema_version: '1.0.0', family_id: 'F001', version,
+    schema_version: '1.0.0', family_id: familyId, version,
     base_commit: record.base_commit, candidate_commit: record.candidate_commit,
     patch_sha256: sha(patch), task_packet_sha256: sha(taskText),
     attempt: record.id, generator: record.generator, logs_path: relative(root, taskDir).split('\\').join('/'),

@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "region_tax",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Elegir la región de entrega en un selector con las regiones del fixture, en su orden (la primera, Península, seleccionada al cargar). El impuesto se calcula como (subtotal − descuento) × `tax_rate` de la región elegida, redondeado al céntimo (0,5 hacia arriba), y se actualiza con cada cambio del carrito, del cupón o de la región. Cambiar la región no modifica el subtotal ni el descuento. Con el carrito vacío el impuesto es 0.00.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Al cargar la región es Península, el selector ofrece las tres regiones en orden y el impuesto es 0.00."
+    },
+    {
+      "id": "R004-A02",
+      "description": "El impuesto es el 21 % del importe en Península, redondeado al céntimo."
+    },
+    {
+      "id": "R004-A03",
+      "description": "El impuesto se calcula sobre el subtotal menos el descuento."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Cambiar la región recalcula el impuesto con su tasa."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Cambiar cantidades recalcula el impuesto en la región elegida."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Cambiar la región no modifica el subtotal ni el descuento."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la región seleccionada es peninsula y el impuesto es 0.00.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Región",
+        "rule": "Un <select> con nombre accesible «Región» y opciones de valor peninsula, baleares y canarias, en ese orden (etiquetas visibles libres); valor inicial peninsula."
+      },
+      {
+        "role": "status",
+        "name": "Impuesto",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Impuesto» (aria-label) cuyo texto incluye «Impuesto: N» con dos decimales (p. ej. «Impuesto: 2.71»)."
+      }
+    ]
+  }
+}

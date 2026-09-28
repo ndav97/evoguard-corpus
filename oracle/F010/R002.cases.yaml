@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Prestar L003; Devolver L003."
+      ],
+      "expected": "Préstamos vacía; L003 «Disponibles: 1» y Prestar habilitado."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Prestar L001 dos veces; Devolver el primer préstamo de L001."
+      ],
+      "expected": "Préstamos: un único L001; L001 «Disponibles: 1»."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Prestar L002; prestar L006; prestar L011; Devolver L006."
+      ],
+      "expected": "Préstamos: L002, L011; L006 «Disponibles: 2»."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Prestar L003; prestar L009; recargar."
+      ],
+      "expected": "Préstamos: L003, L009 con «vence día 15»; L003 «Disponibles: 0»; L009 «Disponibles: 1»."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Prestar L003; prestar L004; Devolver L003; recargar."
+      ],
+      "expected": "Préstamos: solo L004; L003 «Disponibles: 1»; L004 «Disponibles: 1»."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Prestar L007; recargar; Devolver L007; recargar."
+      ],
+      "expected": "Préstamos vacía; L007 «Disponibles: 1»."
+    }
+  ]
+}

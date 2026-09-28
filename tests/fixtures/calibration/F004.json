@@ -1,0 +1,24 @@
+{
+  "mutants": {
+    "email-no-tld": ["R001-A03"],
+    "pwd-or": ["R001-A04"],
+    "pwd-7": ["R001-A04"],
+    "single-alert": ["R001-A05"],
+    "name-notrim": ["R002-A02"],
+    "age-float": ["R002-A03"],
+    "country-optional": ["R002-A04"],
+    "back-resets": ["R002-A05"],
+    "province-optional": ["R003-A02"],
+    "province-stale": ["R003-A04"],
+    "province-no-reset": ["R003-A05"],
+    "default-none": ["R004-A01"],
+    "pro-age-17": ["R004-A02"],
+    "company-notrim": ["R004-A04"],
+    "plan-reset-on-back": ["R004-A06"],
+    "confirm-no-plan": ["R005-A02"],
+    "domain-case": ["R005-A03"],
+    "pro-keeps": ["R005-A04"],
+    "pwd-local-case": ["R005-A05"],
+    "domain-any-plan": ["R005-A06"]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "profile_and_summary",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "En el paso Perfil se piden el nombre, la edad y el país. El nombre es válido si no queda vacío tras recortar espacios; la edad, si es un número entero de 13 a 120; el país es obligatorio: el selector empieza en una opción vacía (valor \"\") seguida de los países del fixture en su orden. «Siguiente» avanza a Resumen solo si todo es válido; si no, se muestra un aviso por cada campo inválido y el paso no cambia. «Atrás» vuelve al paso anterior conservando todos los valores introducidos (en Cuenta también la contraseña). El paso Resumen muestra el correo, el nombre recortado, la edad y el nombre del país (no su código). «Enviar» completa el registro y muestra una confirmación que incluye el correo.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Con perfil válido, Siguiente lleva al Resumen, que muestra correo, nombre, edad y nombre del país."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Un nombre vacío o solo con espacios no permite avanzar y muestra su aviso."
+    },
+    {
+      "id": "R002-A03",
+      "description": "La edad debe ser un entero de 13 a 120: 12, 121 o 13.5 no permiten avanzar; 120 sí."
+    },
+    {
+      "id": "R002-A04",
+      "description": "El país es obligatorio: sin país no se avanza; al elegirlo el Resumen muestra su nombre."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Atrás conserva los valores de Perfil y de Cuenta, y volver a avanzar muestra el mismo Resumen."
+    },
+    {
+      "id": "R002-A06",
+      "description": "Enviar muestra la confirmación con el correo."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al llegar a Perfil por primera vez, Nombre y Edad están vacíos y País tiene la opción vacía (valor \"\").",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Nombre",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Nombre», visible en el paso Perfil."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Edad",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Edad», visible en el paso Perfil."
+      },
+      {
+        "role": "combobox",
+        "name": "País",
+        "rule": "Un <select> con nombre accesible «País», visible en el paso Perfil, con opciones de valor \"\" (vacía, inicial), ES, MX, AR, CL, PT y FR (códigos del fixture; etiquetas visibles con el nombre del país)."
+      },
+      {
+        "role": "button",
+        "name": "Atrás",
+        "rule": "Un botón «Atrás», visible en los pasos Perfil y Resumen, que vuelve al paso anterior sin validar y sin borrar valores."
+      },
+      {
+        "role": "status",
+        "name": "Resumen",
+        "rule": "En el paso Resumen, un elemento con role=\"status\" y nombre accesible «Resumen» (aria-label) cuyo texto incluye el correo, el nombre recortado, «Edad: N» y el nombre del país (p. ej. «Correo: ana@empresa.es · Nombre: Ana Pérez · Edad: 30 · País: México»)."
+      },
+      {
+        "role": "button",
+        "name": "Enviar",
+        "rule": "Un botón «Enviar», visible en el paso Resumen, que completa el registro."
+      },
+      {
+        "role": "status",
+        "name": "Confirmación",
+        "rule": "Tras enviar, un elemento con role=\"status\" y nombre accesible «Confirmación» (aria-label) cuyo texto contiene «Registro completado» y el correo (p. ej. «Registro completado: ana@empresa.es»). Antes de enviar no existe o no es visible."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Avisos (role=\"alert\") por campo inválido de Perfil: nombre → «El nombre es obligatorio»; edad → «La edad debe ser un número entero entre 13 y 120»; país → «Selecciona un país»."
+      }
+    ]
+  }
+}

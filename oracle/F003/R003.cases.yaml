@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Añadir S004; añadir S013; Cupón = «AHORRO10»; Aplicar."
+      ],
+      "expected": "Descuento 2.87; Subtotal sigue en 28.69."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Añadir S016; Cupón = «  ahorro10  »; Aplicar."
+      ],
+      "expected": "Descuento 2.99."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Añadir S016; Cupón = «AHORRO10»; Aplicar.",
+        "Cupón = «AHORRO15»; Aplicar."
+      ],
+      "expected": "Tras AHORRO10: Descuento 2.99; tras AHORRO15: aviso con «Cupón no válido» y Descuento 0.00."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Añadir S009; añadir S012; añadir S001; aplicar AHORRO10.",
+        "Aplicar MENOS5.",
+        "Aplicar LIBROS20."
+      ],
+      "expected": "Descuento 3.34, después 5.00 y después 3.07; Subtotal 33.40 en todo momento."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Añadir S008; aplicar LIBROS20.",
+        "Añadir S013; Cantidad de S013 = 3."
+      ],
+      "expected": "Descuento 0.00 solo con S008; 5.22 con S013 × 3 (Subtotal 32.50)."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Añadir S003, S011 y S015; Cantidad de S003 = 2; aplicar MENOS5.",
+        "Cantidad de S003 = 1.",
+        "Cantidad de S003 = 2."
+      ],
+      "expected": "Subtotal 30.00 y Descuento 5.00; con Subtotal 22.75, Descuento 0.00; de nuevo 30.00 y 5.00."
+    }
+  ]
+}

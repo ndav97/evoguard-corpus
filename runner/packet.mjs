@@ -10,13 +10,17 @@ export function makePacket(data, version) {
     // ui_contract: interfaz observable del requisito (roles, nombres accesibles, estado inicial); no contiene casos del oráculo.
     return {id:r.id,description:r.description,acceptance:r.acceptance.map(a=>({id:a.id,description:a.description})),ui_contract:{initial_state:r.ui_contract.initial_state,elements:r.ui_contract.elements.map(e=>({role:e.role,name:e.name,rule:e.rule}))}};
   });
-  return {
-    family_id: 'F001', version,
-    prompt: `${data.prompts.common}\n${data.prompts[index ? 'evolve-turn' : 'generate-v0']}`,
-    request: turn ? turn.request : 'Construye el catálogo cumpliendo R001 y R002.',
-    requirements,
-    products: data.products.map(p=>({id:p.id,name:p.name,category:p.category,price:p.price}))
+  const packet = {
+    family_id: data.family.family_id, version,
+    prompt: `${data.prompts.common}\n${data.prompts.architecture}\n${data.prompts[index ? 'evolve-turn' : 'generate-v0']}`,
+    request: turn ? turn.request : (data.family.pilot.initial_request ?? 'Construye el catálogo cumpliendo R001 y R002.'),
+    requirements
   };
+  // F001 conserva la clave histórica products (proyección del fixture); las demás familias entregan el fixture
+  // completo y su ruta en el workspace.
+  if (data.family.family_id === 'F001') packet.products = data.products.map(p=>({id:p.id,name:p.name,category:p.category,price:p.price}));
+  else { packet.fixture_path = data.family.fixture.path; packet.fixture = data.fixture; }
+  return packet;
 }
 
 export function makeRepairPrompt(data, feedback, attempt) {

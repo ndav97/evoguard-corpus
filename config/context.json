@@ -37,7 +37,8 @@
   },
   "packet": {
     "omit_from_message": [
-      "products"
+      "products",
+      "fixture"
     ],
     "workspace_references": {
       "task": "TASK.json",

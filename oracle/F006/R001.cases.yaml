@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página."
+      ],
+      "expected": "Lista Estudiantes: E001–E020 en ese orden."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Leer la nota de E001 y de E002."
+      ],
+      "expected": "E001 84.30; E002 96.70."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Leer la nota de E004."
+      ],
+      "expected": "E004 66.00."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Leer la nota de E003, E016 y E018."
+      ],
+      "expected": "E003 43.00; E016 57.00; E018 69.50."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Leer el texto de E005, E007, E009 y E010."
+      ],
+      "expected": "Sus notas se muestran como 90.00, 80.00, 70.00 y 60.00."
+    },
+    {
+      "id": "R001-A06",
+      "steps": [
+        "Leer las notas de todos los estudiantes."
+      ],
+      "expected": "E001 84.30, E002 96.70, E003 43.00, E004 66.00, E005 90.00, E006 89.90, E007 80.00, E008 79.90, E009 70.00, E010 60.00, E011 59.90, E012 76.50, E013 66.10, E014 95.90, E015 44.50, E016 57.00, E017 77.20, E018 69.50, E019 68.30, E020 87.80."
+    }
+  ]
+}

@@ -9,20 +9,24 @@ import { join } from 'node:path';
 import { runOracleInContainer } from '../oracle/container.mjs';
 import { checkArchitecture } from './architecture.mjs';
 import { PROTOCOL_CONFIG } from '../protocol/execute.mjs';
+import { familyDir } from '../families.mjs';
 
 // Mismos comandos que la acción run_checks del protocolo (config/protocol.json): una sola fuente de verdad.
 export const VISIBLE_COMMANDS = PROTOCOL_CONFIG.check_commands;
 
-export function architectureBaseline(root) {
-  const family = JSON.parse(readFileSync(join(root, 'families/F001-product-catalog/family.yaml'), 'utf8'));
+export function architectureBaseline(root, familyId = 'F001') {
+  const dir = familyDir(root, familyId);
+  const family = JSON.parse(readFileSync(join(root, dir, 'family.yaml'), 'utf8'));
   return {
     packageJson: readFileSync(join(root, 'templates/react-vite/package.json'), 'utf8'),
     packageLock: readFileSync(join(root, 'templates/react-vite/package-lock.json'), 'utf8'),
-    fixtureSha256: family.fixture.sha256
+    fixturePath: family.fixture.path,
+    fixtureSha256: family.fixture.sha256,
+    profile: family.structural_profile
   };
 }
 
-export function createPipelineEvaluator({ root, version, privateSink = () => {}, oracle = runOracleInContainer, baseline = architectureBaseline(root) }) {
+export function createPipelineEvaluator({ root, version, familyId = 'F001', privateSink = () => {}, oracle = runOracleInContainer, baseline = architectureBaseline(root, familyId) }) {
   return {
     async check(stage, workspace, { timeout = 600000 } = {}) {
       if (VISIBLE_COMMANDS[stage]) {
@@ -42,7 +46,7 @@ export function createPipelineEvaluator({ root, version, privateSink = () => {},
         // Sin build exportable el candidato no es evaluable: rechazo del candidato, no infraestructura.
         if (!dist || !dist['index.html']) { await privateSink({ stage, status: 'FAIL', reason: 'build sin dist/index.html' }); return { status: 'FAIL' }; }
         try {
-          const report = oracle(root, version, dist, { timeout });
+          const report = oracle(root, version, dist, { timeout, familyId });
           await privateSink({ stage, status: report.status, report });
           return { status: report.status };
         } catch (error) {

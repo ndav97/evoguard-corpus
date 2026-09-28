@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "apply_coupon",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Aplicar un cupón de descuento escribiendo su código y pulsando «Aplicar». El código se compara sin distinguir mayúsculas y minúsculas y tras recortar espacios. Los cupones válidos son los de la lista `coupons` del fixture: `percent` descuenta `value` % del subtotal (o, si `category` no es «todas», solo de la suma de las líneas de esa categoría); `fixed` descuenta `value` euros. El descuento solo se aplica si el subtotal es mayor o igual que `min_subtotal`; si no, vale 0.00. Solo hay un cupón activo: aplicar otro código lo reemplaza. Un código que no existe muestra un aviso y deja sin cupón activo (descuento 0.00); aplicar después un código válido retira el aviso. El descuento se recalcula con cada cambio del carrito (si deja de cumplirse la condición pasa a 0.00 y vuelve si se cumple otra vez) y se redondea al céntimo (0,5 hacia arriba). El subtotal no cambia.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "AHORRO10 descuenta el 10 % del subtotal redondeado al céntimo."
+    },
+    {
+      "id": "R003-A02",
+      "description": "El código se acepta sin distinguir mayúsculas y recortando espacios."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Un código inexistente muestra un aviso y deja el descuento en 0.00, aunque hubiera un cupón activo."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Solo hay un cupón activo: aplicar otro reemplaza al anterior sin acumular."
+    },
+    {
+      "id": "R003-A05",
+      "description": "LIBROS20 descuenta el 20 % solo de las líneas de Libros y se recalcula al cambiar el carrito."
+    },
+    {
+      "id": "R003-A06",
+      "description": "MENOS5 exige un subtotal de al menos 30.00 y el descuento se ajusta al cambiar el carrito."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no hay cupón activo, el campo «Cupón» está vacío y el descuento es 0.00.",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Cupón",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Cupón»."
+      },
+      {
+        "role": "button",
+        "name": "Aplicar",
+        "rule": "Un botón «Aplicar» que intenta activar el código escrito en «Cupón»."
+      },
+      {
+        "role": "status",
+        "name": "Descuento",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Descuento» (aria-label) cuyo texto incluye «Descuento: N» con N positivo o cero, con dos decimales y sin signo (p. ej. «Descuento: 2.99»)."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si el código no corresponde a ningún cupón, aparece un elemento con role=\"alert\" cuyo texto contiene «Cupón no válido»."
+      }
+    ]
+  }
+}

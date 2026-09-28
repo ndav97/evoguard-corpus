@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Añadir S002; Cantidad de S002 = 3."
+      ],
+      "expected": "Cantidad de S002 = 3; Subtotal 38.70."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Añadir S003; añadir S007; Cantidad de S003 = 0."
+      ],
+      "expected": "Carrito: solo S007; Subtotal 18.75."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Añadir S004; añadir S011; Quitar S004."
+      ],
+      "expected": "Carrito: solo S011 (Cantidad 1); Subtotal 9.95."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Añadir S001; añadir S002; Quitar S001; añadir S001."
+      ],
+      "expected": "Carrito: S002, S001 en ese orden; Cantidad de S001 = 1; Subtotal 16.35."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Añadir S006; Cantidad de S006 = 4; añadir S006."
+      ],
+      "expected": "Cantidad de S006 = 5; Subtotal 20.75."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Añadir S012; Cantidad de S012 = 2; Quitar S012."
+      ],
+      "expected": "Carrito sin líneas; Subtotal 0.00."
+    }
+  ]
+}

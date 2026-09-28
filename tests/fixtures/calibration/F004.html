@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F004 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F004. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <p id="step" role="status" aria-label="Paso"></p>
+    <section id="s0">
+      <label>Correo <input type="text" id="email"></label>
+      <label>Contraseña <input type="password" id="password"></label>
+    </section>
+    <section id="s1" hidden>
+      <label>Nombre <input type="text" id="name"></label>
+      <label>Edad <input type="number" id="age"></label>
+      <label>País <select id="country"><option value="">Elige un país</option></select></label>
+      <label id="province-label" hidden>Provincia <select id="province"></select></label>
+    </section>
+    <section id="s2" hidden>
+      <p id="summary" role="status" aria-label="Resumen"></p>
+      <fieldset id="plans" hidden><legend>Plan</legend></fieldset>
+      <label id="company-label" hidden>Empresa <input type="text" id="company"></label>
+    </section>
+    <div id="alerts"></div>
+    <button type="button" id="back">Atrás</button>
+    <button type="button" id="next">Siguiente</button>
+    <button type="button" id="submit">Enviar</button>
+    <p id="confirmation" role="status" aria-label="Confirmación" hidden></p>
+  </main>
+  <script>
+    const FIXTURE = {"countries":[{"code":"ES","name":"España","regions":[{"code":"madrid","name":"Madrid"},{"code":"barcelona","name":"Barcelona"},{"code":"valencia","name":"Valencia"},{"code":"sevilla","name":"Sevilla"}]},{"code":"MX","name":"México","regions":[]},{"code":"AR","name":"Argentina","regions":[{"code":"buenos-aires","name":"Buenos Aires"},{"code":"cordoba","name":"Córdoba"},{"code":"mendoza","name":"Mendoza"}]},{"code":"CL","name":"Chile","regions":[]},{"code":"PT","name":"Portugal","regions":[]},{"code":"FR","name":"Francia","regions":[]}],"plans":[{"code":"basico","name":"Básico","monthly_price":4.99,"min_age":13,"requires_company":false},{"code":"pro","name":"Pro","monthly_price":12.9,"min_age":18,"requires_company":false},{"code":"equipo","name":"Equipo","monthly_price":29.0,"min_age":13,"requires_company":true}],"free_email_domains":["gmail.com","hotmail.com","yahoo.com","outlook.com"]};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    const STEPS = ['Cuenta', 'Perfil', 'Resumen'];
+    let step = 0;
+    let province = '';
+    let plan = mutant === 'default-none' ? '' : FIXTURE.plans[0].code;
+    let errors = [];
+
+    const countryOf = code => FIXTURE.countries.find(c => c.code === code);
+    const planOf = code => FIXTURE.plans.find(p => p.code === code);
+    const regionName = code => FIXTURE.countries.flatMap(c => c.regions).find(r => r.code === code)?.name;
+    const hasRegions = () => level >= 1 && (countryOf($('country').value)?.regions.length ?? 0) > 0;
+    const ageNumber = () => Number($('age').value);
+    const minAge = p => mutant === 'pro-age-17' && p.code === 'pro' ? 17 : p.min_age;
+
+    for (const c of FIXTURE.countries) {
+      const option = document.createElement('option');
+      option.value = c.code; option.textContent = c.name;
+      $('country').append(option);
+    }
+    for (const p of FIXTURE.plans) {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio'; input.name = 'plan'; input.value = p.code; input.id = `plan-${p.code}`;
+      input.onchange = () => { plan = p.code; render(); };
+      label.append(input, ` ${p.name}`);
+      $('plans').append(label, ' ');
+    }
+
+    function fillProvinces() {
+      const select = $('province');
+      select.replaceChildren();
+      const empty = document.createElement('option');
+      empty.value = ''; empty.textContent = 'Elige una provincia';
+      select.append(empty);
+      for (const r of countryOf($('country').value)?.regions ?? []) {
+        const option = document.createElement('option');
+        option.value = r.code; option.textContent = r.name;
+        select.append(option);
+      }
+      select.value = province;
+    }
+    $('country').onchange = () => {
+      if (mutant === 'province-stale') { if (hasRegions()) province = ''; }
+      else if (mutant !== 'province-no-reset') province = '';
+      fillProvinces();
+      render();
+    };
+    $('province').onchange = () => { province = $('province').value; render(); };
+    $('age').oninput = () => render();
+    $('company').oninput = () => render();
+
+    function accountErrors() {
+      const email = $('email').value, password = $('password').value;
+      const found = [];
+      const emailOk = (mutant === 'email-no-tld' ? /^[^\s@]+@[^\s@]+$/ : /^[^\s@]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/).test(email);
+      if (!emailOk) found.push('Introduce un correo válido');
+      const long = password.length >= (mutant === 'pwd-7' ? 7 : 8), digit = /\d/.test(password);
+      if (!(mutant === 'pwd-or' ? long || digit : long && digit)) found.push('La contraseña debe tener al menos 8 caracteres y un dígito');
+      if (level >= 3 && emailOk) {
+        const local = email.split('@')[0];
+        const contains = mutant === 'pwd-local-case' ? password.includes(local) : password.toLowerCase().includes(local.toLowerCase());
+        if (local.length >= 3 && contains) found.push('La contraseña no puede contener el usuario del correo');
+      }
+      return found;
+    }
+    function profileErrors() {
+      const found = [];
+      const name = $('name').value, raw = $('age').value;
+      if (mutant === 'name-notrim' ? name === '' : !name.trim()) found.push('El nombre es obligatorio');
+      const age = Number(raw);
+      const integer = mutant === 'age-float' ? raw !== '' && !Number.isNaN(age) : /^\d+$/.test(raw);
+      if (!integer || age < 13 || age > 120) found.push('La edad debe ser un número entero entre 13 y 120');
+      if (!$('country').value && mutant !== 'country-optional') found.push('Selecciona un país');
+      if (hasRegions() && !province && mutant !== 'province-optional') found.push('Selecciona una provincia');
+      return found;
+    }
+    function submitErrors() {
+      const found = [];
+      if (level < 2) return found;
+      const company = $('company').value;
+      if (plan === 'equipo' && (mutant === 'company-notrim' ? company === '' : !company.trim())) found.push('La empresa es obligatoria');
+      if (level >= 3 && (plan === 'equipo' || mutant === 'domain-any-plan')) {
+        const domain = $('email').value.split('@')[1] ?? '';
+        const free = FIXTURE.free_email_domains.includes(mutant === 'domain-case' ? domain : domain.toLowerCase());
+        if (free) found.push('El plan Equipo requiere un correo de empresa');
+      }
+      return found;
+    }
+    const shown = list => mutant === 'single-alert' ? list.slice(0, 1) : list;
+
+    $('next').onclick = () => {
+      const found = step === 0 ? accountErrors() : profileErrors();
+      errors = shown(found);
+      if (!found.length) {
+        step += 1;
+        // Regla cruzada: plan no permitido por la edad vuelve al plan por defecto.
+        if (step === 2 && level >= 3 && mutant !== 'pro-keeps' && plan && ageNumber() < minAge(planOf(plan))) plan = FIXTURE.plans[0].code;
+      }
+      render();
+    };
+    $('back').onclick = () => {
+      errors = [];
+      if (step === 1 && mutant === 'back-resets') { $('name').value = ''; $('age').value = ''; $('country').value = ''; province = ''; fillProvinces(); }
+      if (step === 2 && mutant === 'plan-reset-on-back') plan = FIXTURE.plans[0].code;
+      step = Math.max(0, step - 1);
+      render();
+    };
+    $('submit').onclick = () => {
+      errors = shown(submitErrors());
+      if (!errors.length) {
+        const chosen = planOf(plan);
+        const withPlan = level >= 3 && mutant !== 'confirm-no-plan' && chosen ? ` · Plan: ${chosen.name}` : '';
+        $('confirmation').textContent = `Registro completado: ${$('email').value}${withPlan}`;
+        $('confirmation').hidden = false;
+      }
+      render();
+    };
+
+    function render() {
+      $('step').textContent = `Paso ${step + 1} de 3: ${STEPS[step]}`;
+      for (const i of [0, 1, 2]) $(`s${i}`).hidden = step !== i;
+      $('back').hidden = step === 0;
+      $('next').hidden = step === 2;
+      $('submit').hidden = step !== 2;
+      $('province-label').hidden = !hasRegions();
+      if ($('province').value !== province) $('province').value = province;
+      $('plans').hidden = level < 2;
+      for (const p of FIXTURE.plans) {
+        const input = $(`plan-${p.code}`);
+        input.checked = plan === p.code;
+        input.disabled = ageNumber() < minAge(p);
+      }
+      $('company-label').hidden = level < 2 || plan !== 'equipo';
+      const country = countryOf($('country').value);
+      const parts = [`Correo: ${$('email').value}`, `Nombre: ${$('name').value.trim()}`, `Edad: ${$('age').value}`, `País: ${country?.name ?? ''}`];
+      const provinceName = province && (hasRegions() || mutant === 'province-stale') ? regionName(province) : null;
+      if (provinceName) parts.push(`Provincia: ${provinceName}`);
+      if (level >= 2) {
+        const chosen = planOf(plan);
+        parts.push(`Plan: ${chosen?.name ?? ''}`, `Precio mensual: ${chosen ? chosen.monthly_price.toFixed(2) : ''}`);
+        if (plan === 'equipo') parts.push(`Empresa: ${$('company').value.trim()}`);
+      }
+      $('summary').textContent = parts.join(' · ');
+      const box = $('alerts');
+      box.replaceChildren();
+      for (const message of errors) {
+        const p = document.createElement('p');
+        p.setAttribute('role', 'alert');
+        p.textContent = message;
+        box.append(p);
+      }
+    }
+    fillProvinces();
+    render();
+  </script>
+</body>
+</html>

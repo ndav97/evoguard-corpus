@@ -1,0 +1,86 @@
+{
+  "mutants": {
+    "search-title": [
+      "R001-A02"
+    ],
+    "search-case": [
+      "R001-A02"
+    ],
+    "search-starts": [
+      "R001-A02"
+    ],
+    "search-notrim": [
+      "R001-A03"
+    ],
+    "search-tags": [
+      "R001-A04"
+    ],
+    "prepend": [
+      "R002-A01"
+    ],
+    "notrim": [
+      "R002-A02"
+    ],
+    "keep-fields": [
+      "R002-A04"
+    ],
+    "no-persist": [
+      "R002-A05"
+    ],
+    "id-reset": [
+      "R002-A05"
+    ],
+    "body-lost": [
+      "R002-A06"
+    ],
+    "tag-order": [
+      "R003-A02"
+    ],
+    "tag-or": [
+      "R003-A04"
+    ],
+    "tags-case": [
+      "R003-A05"
+    ],
+    "tags-dup": [
+      "R003-A05"
+    ],
+    "stale-options": [
+      "R003-A05",
+      "R005-A07"
+    ],
+    "tags-lost": [
+      "R003-A06"
+    ],
+    "pin-order": [
+      "R004-A03"
+    ],
+    "unpin-end": [
+      "R004-A04"
+    ],
+    "pin-search": [
+      "R004-A05"
+    ],
+    "pin-no-persist": [
+      "R004-A06"
+    ],
+    "delete-no-persist": [
+      "R005-A01"
+    ],
+    "undo-end": [
+      "R005-A02"
+    ],
+    "undo-stack": [
+      "R005-A03"
+    ],
+    "undo-create": [
+      "R005-A04"
+    ],
+    "undo-unpin": [
+      "R005-A05"
+    ],
+    "count-id": [
+      "R005-A06"
+    ]
+  }
+}

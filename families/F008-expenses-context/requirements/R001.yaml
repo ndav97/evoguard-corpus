@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "monthly_expense_list",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar los gastos de un mes. Un selector de mes ofrece 2026-01, 2026-02 y 2026-03 (valor inicial 2026-01) y la lista muestra solo los gastos cuya fecha pertenece a ese mes, ordenados por fecha ascendente y, a igual fecha, por ID ascendente (no por el orden del fichero). Cada gasto se muestra con su ID, fecha, descripción, importe con dos decimales y la moneda original, sin convertir.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar el mes es 2026-01 y se muestran sus 10 gastos ordenados por fecha y, a igual fecha, por ID."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Elegir 2026-02 muestra solo los gastos de febrero en ese orden."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Elegir 2026-03 muestra solo los gastos de marzo en ese orden."
+    },
+    {
+      "id": "R001-A04",
+      "description": "El selector ofrece los tres meses en orden y volver a un mes muestra de nuevo sus gastos."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Cada gasto muestra su importe con dos decimales y su moneda original."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página el mes seleccionado es 2026-01.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Mes",
+        "rule": "Un <select> con nombre accesible «Mes» y opciones de valor 2026-01, 2026-02 y 2026-03, en ese orden; valor inicial 2026-01. La vista se actualiza al cambiar la opción."
+      },
+      {
+        "role": "list",
+        "name": "Gastos",
+        "rule": "Los gastos del mes se muestran en una única lista (<ul> u <ol>) con nombre accesible «Gastos» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada gasto visible es un <li> dentro de la lista «Gastos». Su texto visible comienza con el ID, la fecha ISO, la descripción, el importe con dos decimales y punto decimal y el código de su moneda, separados por espacios, p. ej. «G001 2026-01-05 Supermercado 62.40 EUR». Ningún otro elemento de esa lista comienza con un ID de gasto."
+      }
+    ]
+  }
+}

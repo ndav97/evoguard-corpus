@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin interactuar."
+      ],
+      "expected": "Paso contiene «Cuenta»; Correo = «»; Contraseña = «»; sin avisos."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Correo = «ana@empresa.es»; Contraseña = «clave123»; Siguiente."
+      ],
+      "expected": "Paso contiene «Perfil»; sin avisos."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Contraseña = «clave123»; Correo = «ana.empresa.es»; Siguiente.",
+        "Correo = «ana@empresa»; Siguiente.",
+        "Correo = «ana@empresa.e»; Siguiente."
+      ],
+      "expected": "Tras cada intento: Paso contiene «Cuenta», aviso con «Introduce un correo válido» y ninguno de contraseña."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Correo = «ana@empresa.es»; Contraseña = «abcdef1»; Siguiente.",
+        "Contraseña = «abcdefgh»; Siguiente.",
+        "Contraseña = «abcdefg1»; Siguiente."
+      ],
+      "expected": "Con «abcdef1» y «abcdefgh»: Paso contiene «Cuenta» y aviso con «La contraseña debe tener al menos 8 caracteres y un dígito»; con «abcdefg1»: Paso contiene «Perfil»."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Correo = «ana»; Contraseña = «abc»; Siguiente.",
+        "Correo = «ana@empresa.es»; Siguiente."
+      ],
+      "expected": "Primero: avisos de correo y de contraseña, Paso contiene «Cuenta»; después: solo el aviso de contraseña y Paso contiene «Cuenta»."
+    }
+  ]
+}

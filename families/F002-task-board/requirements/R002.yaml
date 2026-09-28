@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "advance_task_status",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Cada tarea no terminada puede avanzar un paso de estado: pendiente → en_curso → hecha. Una tarea hecha no avanza más. El cambio se refleja de inmediato en el filtro activo y no afecta a las demás tareas.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Avanzar una tarea pendiente la pasa a en curso."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Avanzar una tarea en curso la pasa a hecha."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Una tarea hecha no tiene avance disponible y conserva su estado."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Con un filtro activo, la tarea avanzada desaparece de la vista si deja de cumplirlo y las demás conservan su orden."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Avanzar una tarea no modifica el estado de las demás ni su orden."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, cada tarea tiene el estado del fixture.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Avanzar",
+        "rule": "Cada tarea pendiente o en curso contiene dentro de su <li> un botón «Avanzar» que la pasa al estado siguiente. En una tarea hecha ese botón no existe o está deshabilitado."
+      }
+    ]
+  }
+}

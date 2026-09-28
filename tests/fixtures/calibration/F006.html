@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F006 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F006. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <section id="weights">
+      <label>Peso de tareas <input type="number" id="w-tareas"></label>
+      <label>Peso de exámenes <input type="number" id="w-examenes"></label>
+      <label>Peso del proyecto <input type="number" id="w-proyecto"></label>
+      <button type="button" id="apply">Aplicar pesos</button>
+      <p id="weights-error" role="alert" hidden></p>
+    </section>
+    <p id="distribution" role="status" aria-label="Distribución"></p>
+    <p id="risk" role="status" aria-label="En riesgo"></p>
+    <label id="risk-only-label"><input type="checkbox" id="risk-only"> Solo en riesgo</label>
+    <section id="editor" hidden>
+      <p id="editor-title"></p>
+      <div id="fields"></div>
+      <button type="button" id="save">Guardar</button>
+      <p id="score-error" role="alert" hidden></p>
+    </section>
+    <ul id="students" aria-label="Estudiantes"></ul>
+  </main>
+  <script>
+    const FIXTURE = {"categories": [{"id": "tareas", "name": "Tareas", "weight": 30}, {"id": "examenes", "name": "Exámenes", "weight": 50}, {"id": "proyecto", "name": "Proyecto", "weight": 20}], "assignments": [{"id": "A1", "name": "Tarea 1", "category": "tareas", "max": 10}, {"id": "A2", "name": "Tarea 2", "category": "tareas", "max": 20}, {"id": "A3", "name": "Parcial", "category": "examenes", "max": 40}, {"id": "A4", "name": "Examen final", "category": "examenes", "max": 60}, {"id": "A5", "name": "Proyecto final", "category": "proyecto", "max": 25}], "students": [{"id": "E001", "name": "Ana Beltrán", "scores": {"A1": 8, "A2": 17, "A3": 35, "A4": 50, "A5": 21}}, {"id": "E002", "name": "Bruno Castaño", "scores": {"A1": 10, "A2": 20, "A3": 38, "A4": 57, "A5": 24}}, {"id": "E003", "name": "Carla Duarte", "scores": {"A1": 6, "A2": null, "A3": 20, "A4": 30, "A5": 15}}, {"id": "E004", "name": "Diego Esteban", "scores": {"A1": 10, "A2": 5, "A3": 30, "A4": 40, "A5": 20}}, {"id": "E005", "name": "Elena Fuentes", "scores": {"A1": 9, "A2": 16, "A3": 36, "A4": 54, "A5": 25}}, {"id": "E006", "name": "Fabio Gallardo", "scores": {"A1": 10, "A2": 18, "A3": 35, "A4": 52, "A5": 23}}, {"id": "E007", "name": "Gloria Herrero", "scores": {"A1": 8, "A2": 16, "A3": 32, "A4": 48, "A5": 20}}, {"id": "E008", "name": "Hugo Iglesias", "scores": {"A1": 7, "A2": 15, "A3": 33, "A4": 54, "A5": 18}}, {"id": "E009", "name": "Irene Jiménez", "scores": {"A1": 6, "A2": 14, "A3": 30, "A4": 46, "A5": 15}}, {"id": "E010", "name": "Javier Lozano", "scores": {"A1": 6, "A2": 12, "A3": 24, "A4": 36, "A5": 15}}, {"id": "E011", "name": "Lucía Márquez", "scores": {"A1": 5, "A2": 11, "A3": 27, "A4": 40, "A5": 13}}, {"id": "E012", "name": "Mario Navas", "scores": {"A1": 10, "A2": 19, "A3": null, "A4": 55, "A5": 25}}, {"id": "E013", "name": "Nerea Ortega", "scores": {"A1": 7, "A2": 14, "A3": 25, "A4": 38, "A5": 17}}, {"id": "E014", "name": "Óscar Pardo", "scores": {"A1": 9, "A2": 20, "A3": 39, "A4": 58, "A5": 23}}, {"id": "E015", "name": "Paula Quintana", "scores": {"A1": 5, "A2": 9, "A3": 18, "A4": 27, "A5": 10}}, {"id": "E016", "name": "Raúl Serrano", "scores": {"A1": null, "A2": null, "A3": 33, "A4": 49, "A5": 20}}, {"id": "E017", "name": "Sara Toledo", "scores": {"A1": 8, "A2": 15, "A3": 31, "A4": 47, "A5": 19}}, {"id": "E018", "name": "Tomás Ureña", "scores": {"A1": 10, "A2": 17, "A3": 34, "A4": 51, "A5": null}}, {"id": "E019", "name": "Unai Vidal", "scores": {"A1": 6, "A2": 13, "A3": 29, "A4": 44, "A5": 16}}, {"id": "E020", "name": "Valeria Zamora", "scores": {"A1": 9, "A2": 16, "A3": 37, "A4": 55, "A5": 21}}]};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    const CATS = FIXTURE.categories.map(c => c.id);
+    const FIXTURE_WEIGHTS = Object.fromEntries(FIXTURE.categories.map(c => [c.id, c.weight]));
+    let weights = { ...FIXTURE_WEIGHTS };
+    const scores = Object.fromEntries(FIXTURE.students.map(s => [s.id, { ...s.scores }]));
+    const frozen = {}; // mutante edit-old-weights: estudiantes editados calculados con los pesos del fixture
+    let editing = null;
+
+    function raw(id, w) {
+      const sc = scores[id];
+      if (mutant === 'ignore-weights') {
+        const pts = FIXTURE.assignments.reduce((s, a) => s + (sc[a.id] ?? 0), 0);
+        const max = FIXTURE.assignments.reduce((s, a) => s + a.max, 0);
+        return 100 * pts / max;
+      }
+      let total = 0;
+      for (const cat of CATS) {
+        let tasks = FIXTURE.assignments.filter(a => a.category === cat);
+        if (mutant === 'null-skip') tasks = tasks.filter(a => sc[a.id] !== null);
+        let fraction;
+        if (mutant === 'avg-pct') fraction = tasks.reduce((s, a) => s + (sc[a.id] ?? 0) / a.max, 0) / tasks.length;
+        else fraction = tasks.reduce((s, a) => s + (sc[a.id] ?? 0), 0) / tasks.reduce((s, a) => s + a.max, 0);
+        total += w[cat] * fraction;
+      }
+      return total;
+    }
+    function rawGrade(id) { return raw(id, mutant === 'edit-old-weights' && frozen[id] ? FIXTURE_WEIGHTS : weights); }
+    function rounded(id) {
+      const x = rawGrade(id);
+      return mutant === 'trunc' ? Math.floor(x * 100 + 1e-9) / 100 : Math.round(x * 100) / 100;
+    }
+    const letterFor = g => {
+      if (mutant === 'letter-gt') return g > 90 ? 'A' : g > 80 ? 'B' : g > 70 ? 'C' : g > 60 ? 'D' : 'F';
+      return g >= 90 ? 'A' : g >= 80 ? 'B' : g >= 70 ? 'C' : g >= 60 ? 'D' : 'F';
+    };
+    function letter(id) { return letterFor(mutant === 'letter-raw' ? rawGrade(id) : rounded(id)); }
+    const initialLetters = Object.fromEntries(FIXTURE.students.map(s => [s.id, letter(s.id)]));
+    function shownLetter(id) { return mutant === 'letter-stale' ? initialLetters[id] : letter(id); }
+    function atRisk(id) {
+      const g = mutant === 'risk-raw' ? rawGrade(id) : rounded(id);
+      const low = mutant === 'risk-le60' ? g <= 60 : g < 60;
+      if (mutant === 'risk-null-ignored') return low;
+      return low || Object.values(scores[id]).includes(null);
+    }
+    const initialRisk = FIXTURE.students.filter(s => atRisk(s.id)).map(s => s.id);
+    const riskOf = id => mutant === 'risk-stale' ? initialRisk.includes(id) : atRisk(id);
+
+    function order() {
+      const ids = FIXTURE.students.map(s => s.id);
+      if (mutant === 'order-grade') ids.sort((a, b) => rounded(b) - rounded(a));
+      return ids;
+    }
+    const format = g => mutant === 'no-decimals' ? String(g) : g.toFixed(2);
+
+    function render() {
+      const onlyRisk = level >= 3 && $('risk-only').checked;
+      const visible = order().filter(id => !onlyRisk || riskOf(id));
+      const list = $('students');
+      list.replaceChildren();
+      for (const id of visible) {
+        const student = FIXTURE.students.find(s => s.id === id);
+        const li = document.createElement('li');
+        li.append(`${id} ${student.name} · Nota: ${format(rounded(id))} `);
+        if (level >= 1) li.append(`· Letra: ${shownLetter(id)} `);
+        const button = document.createElement('button');
+        button.type = 'button'; button.textContent = 'Editar';
+        button.onclick = () => openEditor(id);
+        li.append(button);
+        list.append(li);
+      }
+      const counted = mutant === 'dist-filtered' ? visible : FIXTURE.students.map(s => s.id);
+      const counts = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+      for (const id of counted) counts[mutant === 'dist-stale' ? initialLetters[id] : shownLetter(id)]++;
+      $('distribution').textContent = Object.entries(counts).map(([l, n]) => `${l}: ${n}`).join(' · ');
+      $('risk').textContent = `En riesgo: ${FIXTURE.students.filter(s => riskOf(s.id)).length}`;
+    }
+
+    // Editor de puntuaciones.
+    for (const a of FIXTURE.assignments) {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'number'; input.id = `score-${a.id}`;
+      label.append(`${a.name} `, input);
+      const hint = document.createElement('span');
+      hint.textContent = ` (máx. ${a.max}) `;
+      $('fields').append(label, hint);
+    }
+    function openEditor(id) {
+      const keep = mutant === 'stale-editor' && editing !== null;
+      editing = id;
+      $('editor-title').textContent = `Editando ${id}`;
+      if (!keep) for (const a of FIXTURE.assignments) {
+        const v = scores[id][a.id];
+        $(`score-${a.id}`).value = v === null ? '' : String(v);
+      }
+      $('score-error').hidden = true;
+      $('editor').hidden = false;
+    }
+    $('save').onclick = () => {
+      const next = {};
+      let valid = true;
+      for (const a of FIXTURE.assignments) {
+        const text = $(`score-${a.id}`).value.trim();
+        if (text === '') { next[a.id] = mutant === 'null-as-zero' ? 0 : null; continue; }
+        const pattern = mutant === 'decimal-ok' ? /^\d+(\.\d+)?$/ : /^\d+$/;
+        const value = Math.round(Number(text));
+        const ok = pattern.test(text) && (mutant === 'max-exclusive' ? Number(text) < a.max : Number(text) <= a.max);
+        if (!ok) { valid = false; if (mutant === 'partial-save') continue; else break; }
+        next[a.id] = value;
+      }
+      if (mutant === 'partial-save') Object.assign(scores[editing], next);
+      if (!valid) { $('score-error').textContent = 'La puntuación debe ser un número entero entre 0 y el máximo de la tarea'; $('score-error').hidden = false; render(); return; }
+      scores[editing] = { ...scores[editing], ...next };
+      if (mutant === 'edit-old-weights') frozen[editing] = true;
+      $('score-error').hidden = true;
+      $('editor').hidden = true;
+      editing = null;
+      render();
+    };
+
+    // Pesos.
+    for (const cat of CATS) $(`w-${cat}`).value = String(weights[cat]);
+    function readWeights() {
+      const pattern = mutant === 'negative-ok' ? /^-?\d+$/ : /^\d+$/;
+      const values = {};
+      for (const cat of CATS) {
+        const text = $(`w-${cat}`).value.trim();
+        if (!pattern.test(text) || Number(text) > 100) return null;
+        values[cat] = Number(text);
+      }
+      if (mutant !== 'no-sum-check' && CATS.reduce((s, c) => s + values[c], 0) !== 100) return null;
+      return values;
+    }
+    $('apply').onclick = () => {
+      const values = readWeights();
+      if (!values) { $('weights-error').textContent = 'Los pesos deben ser números enteros entre 0 y 100 que sumen 100'; $('weights-error').hidden = false; return; }
+      $('weights-error').hidden = true;
+      weights = values;
+      render();
+    };
+    if (mutant === 'weights-live') for (const cat of CATS) $(`w-${cat}`).oninput = () => {
+      const values = {};
+      for (const c of CATS) values[c] = Number($(`w-${c}`).value) || 0;
+      weights = values;
+      render();
+    };
+    $('risk-only').onchange = render;
+
+    // Funcionalidades por versión.
+    $('distribution').hidden = level < 1;
+    $('weights').hidden = level < 2;
+    $('risk').hidden = level < 3;
+    $('risk-only-label').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

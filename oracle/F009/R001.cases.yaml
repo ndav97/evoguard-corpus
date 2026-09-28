@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin responder."
+      ],
+      "expected": "Pregunta empieza por «Q001» y contiene «¿Cuál es la capital de Australia?»; opciones visibles Sídney, Canberra, Melbourne y Perth (4), sin marcar y habilitadas; Responder deshabilitado; sin Resultado."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Marcar «Canberra»; Responder."
+      ],
+      "expected": "Resultado empieza por «Correcto» e incluye «Respuesta correcta: Canberra»."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Marcar «Sídney»; Responder."
+      ],
+      "expected": "Resultado empieza por «Incorrecto» e incluye «Respuesta correcta: Canberra»."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Marcar «Perth»; Responder.",
+        "Intentar marcar «Canberra» (solo si está habilitada)."
+      ],
+      "expected": "Las 4 opciones deshabilitadas; «Perth» marcada y «Canberra» sin marcar; Responder no disponible; Resultado sigue empezando por «Incorrecto»."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Consultar Siguiente al cargar.",
+        "Marcar «Canberra»; Responder; Siguiente."
+      ],
+      "expected": "Siguiente no disponible al cargar; tras Siguiente la Pregunta empieza por «Q002»; opciones Oxígeno, Nitrógeno, Dióxido de carbono y Helio sin marcar y habilitadas; Responder deshabilitado; sin Resultado."
+    },
+    {
+      "id": "R001-A06",
+      "steps": [
+        "Marcar «Melbourne»; Responder; Siguiente.",
+        "Marcar «Dióxido de carbono»; Responder.",
+        "Siguiente."
+      ],
+      "expected": "Resultado de Q002 empieza por «Correcto» e incluye «Respuesta correcta: Dióxido de carbono»; tras Siguiente la Pregunta empieza por «Q003»."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "category_weights",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Modificar los pesos de las categorías. Tres campos numéricos muestran los pesos vigentes (inicialmente los del fixture: tareas 30, exámenes 50, proyecto 20). Los cambios solo se aplican al pulsar «Aplicar pesos»: cada peso debe ser un entero entre 0 y 100 y los tres deben sumar exactamente 100; si no, se muestra un aviso y se mantienen los pesos vigentes. Al aplicar pesos válidos, las notas finales, las letras y la distribución de todos los estudiantes se recalculan con la misma fórmula y redondeo (la letra, sobre la nota redondeada). Las ediciones posteriores de puntuaciones usan los pesos vigentes.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Los campos muestran los pesos iniciales y cambiarlos sin aplicar no altera las notas."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Aplicar pesos válidos recalcula todas las notas con redondeo a dos decimales."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Pesos que no suman 100, negativos o no enteros muestran un aviso y no cambian las notas."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Aplicar pesos actualiza letras y distribución."
+    },
+    {
+      "id": "R004-A05",
+      "description": "La letra se calcula sobre la nota redondeada."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Un peso 0 es válido y las ediciones posteriores usan los pesos vigentes."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar los campos de peso muestran 30, 50 y 20.",
+    "elements": [
+      {
+        "role": "spinbutton",
+        "name": "Peso de tareas",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Peso de tareas», valor inicial 30."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Peso de exámenes",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Peso de exámenes», valor inicial 50."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Peso del proyecto",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Peso del proyecto», valor inicial 20."
+      },
+      {
+        "role": "button",
+        "name": "Aplicar pesos",
+        "rule": "Un botón «Aplicar pesos» que valida y aplica los tres pesos."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si los pesos no son válidos, aparece un elemento con role=\"alert\" cuyo texto contiene «Los pesos deben ser números enteros entre 0 y 100 que sumen 100» y se mantienen los pesos vigentes."
+      }
+    ]
+  }
+}

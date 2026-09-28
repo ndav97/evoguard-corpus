@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "En el paso Perfil, si el país elegido tiene regiones (España y Argentina en el fixture), muestra un selector «Provincia» obligatorio con sus regiones y una opción vacía inicial. Si cambio de país, la provincia vuelve a vacía, y si el nuevo país no tiene regiones el selector desaparece y la provincia se descarta (no debe aparecer en el resumen). Si hay provincia, inclúyela en el resumen como «Provincia: <nombre>». Al ir atrás debe conservarse.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

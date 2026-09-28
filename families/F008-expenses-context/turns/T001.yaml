@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Quiero poder añadir gastos: descripción, categoría, importe, divisa y fecha, con un botón «Añadir gasto». La descripción no puede quedar vacía; el importe debe ser mayor que 0 con punto decimal y como máximo dos decimales; la fecha es obligatoria y debe caer en enero, febrero o marzo de 2026. Si algo falla, muestra un aviso y no añadas nada. Cada gasto nuevo recibe el siguiente ID (G031, G032, …), aparece en su sitio si es del mes que estoy viendo y cuenta en el total de su mes. Después de añadir, vacía la descripción y el importe.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "local_a",
+  "reference_commit": null,
+  "patch_path": null
+}

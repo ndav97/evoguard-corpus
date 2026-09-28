@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade un resumen con el número de tareas pendientes, en curso y hechas, y las horas restantes (suma de estimaciones de las tareas no hechas). Debe contar todas las tareas aunque haya un filtro activo y actualizarse con cada cambio.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "local_a",
+  "reference_commit": null,
+  "patch_path": null
+}

@@ -1,0 +1,3 @@
+# Fixture fijo
+Reservas sintéticas de salas para la semana laborable del 2026-03-02 (lunes) al 2026-03-06 (viernes). Tres salas con ID fijo (norte, sur, auditorio) y capacidad; horario de 08:00 a 19:00; 14 reservas (B001–B014) con sala, fecha ISO, inicio y fin HH:MM en intervalos de 30 minutos, título y asistentes. El orden del fixture no coincide con el orden por hora e incluye reservas contiguas (el fin de una es el inicio de otra) y reservas que terminan exactamente a la hora de cierre.
+Archivo canónico UTF-8/LF; SHA-256 en family.yaml y provenance.yaml. No regenerar al ejecutar modelos. Cambios requieren revisión y actualización explícita de procedencia.

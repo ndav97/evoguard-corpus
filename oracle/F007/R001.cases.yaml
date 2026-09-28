@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin tocar nada."
+      ],
+      "expected": "Sala = norte; Día = 2026-03-02; lista Reservas: «B003 09:00–10:30 Revisión de presupuesto», «B006 10:30–11:00 Café con clientes», «B001 11:00–12:00 Llamada con proveedor», «B009 15:00–16:30 Entrevista de candidatos», en ese orden."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Sala = sur."
+      ],
+      "expected": "B002, B010 en ese orden (no aparecen B007 ni B014, de otros días, ni B012, de otra sala)."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Día = 2026-03-04.",
+        "Sala = auditorio."
+      ],
+      "expected": "Tras el día: B011; tras la sala: B005."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Sala = auditorio; Día = 2026-03-03.",
+        "Sala = sur; Día = 2026-03-05."
+      ],
+      "expected": "Lista Reservas vacía en ambos casos."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Consultar las opciones de Sala y de Día."
+      ],
+      "expected": "Sala: norte, sur, auditorio; Día: 2026-03-02, 2026-03-03, 2026-03-04, 2026-03-05, 2026-03-06."
+    }
+  ]
+}

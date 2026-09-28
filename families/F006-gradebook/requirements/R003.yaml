@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "letter_grades",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Mostrar la calificación en letra de cada estudiante y la distribución de letras. La letra se calcula sobre la nota final ya redondeada a dos decimales: A si es ≥ 90, B si es ≥ 80, C si es ≥ 70, D si es ≥ 60 y F en otro caso. Un resumen «Distribución» cuenta cuántos estudiantes tienen cada letra, considerando todos los estudiantes. Letras y distribución se actualizan al cambiar las puntuaciones.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Cada estudiante muestra la letra que corresponde a su nota."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Los límites de tramo pertenecen al tramo superior (90.00 es A y 89.90 es B)."
+    },
+    {
+      "id": "R003-A03",
+      "description": "La distribución al cargar cuenta 3 A, 4 B, 4 C, 5 D y 4 F."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Editar puntuaciones actualiza la letra y la distribución."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Bajar a un estudiante por debajo de 60 lo pasa a F en la letra y en la distribución."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar las letras y la distribución corresponden a las notas del fixture.",
+    "elements": [
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "El texto de cada estudiante de la lista incluye «Letra: X», con X una de A, B, C, D o F."
+      },
+      {
+        "role": "status",
+        "name": "Distribución",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Distribución» (aria-label) cuyo texto incluye «A: n», «B: n», «C: n», «D: n» y «F: n», con n entero (p. ej. «A: 3 · B: 4 · C: 4 · D: 5 · F: 4»)."
+      }
+    ]
+  }
+}

@@ -1,8 +1,8 @@
-// Generación experimental del corpus F001 (Pasos 7–8).
-// Uso: npm run corpus:generate -- V0|V1|V2|V3|all [--no-commit]
+// Generación experimental del corpus (Pasos 7–8), una familia por invocación.
+// Uso: npm run corpus:generate -- [Fxxx] V0|V1|V2|V3|all [--no-commit]   (sin familia: F001)
 // Cada versión: preflight despejado → seed desde la referencia previa → runTask(mode: experimental) con los
 // cinco proveedores reales → registros en runs/ y evaluator/runs/ → si ACCEPTED, referencia en
-// families/F001-product-catalog/generation/<V>/ y actualización de family/provenance/turnos → commit Git.
+// families/<Fxxx-slug>/generation/<V>/ y actualización de family/provenance/turnos → commit Git.
 // Nunca corrige código de un candidato ni revela resultados del oráculo al constructor.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -20,6 +20,7 @@ import { evolutionSeed } from '../sandbox/lineage.mjs';
 import { sandboxWorkspaces } from './workspace.mjs';
 import { createPipelineEvaluator } from './evaluator.mjs';
 import { createTaskStore, saveReference, CORPUS_REFERENCES } from './store.mjs';
+import { familyDir } from '../families.mjs';
 
 let root = fileURLToPath(new URL('../../', import.meta.url));
 const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
@@ -33,9 +34,10 @@ const retrying = (pool, store) => withRetries(pool, { before: context => store.t
 function git(args) { return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim(); }
 
 // Registra la referencia aceptada en los manifiestos de la familia.
-function recordReference(version, reference, record, { instrumental = false } = {}) {
-  const familyPath = 'families/F001-product-catalog/family.yaml';
-  const provenancePath = 'families/F001-product-catalog/provenance.yaml';
+function recordReference(familyId, version, reference, record, { instrumental = false } = {}) {
+  const dir = familyDir(root, familyId);
+  const familyPath = `${dir}/family.yaml`;
+  const provenancePath = `${dir}/provenance.yaml`;
   const family = readJson(familyPath);
   const provenance = readJson(provenancePath);
   family.reference_versions[version] = reference.candidate_commit;
@@ -51,7 +53,7 @@ function recordReference(version, reference, record, { instrumental = false } = 
   writeJson(familyPath, family);
   writeJson(provenancePath, provenance);
   if (version !== 'V0') {
-    const turn = `families/F001-product-catalog/turns/T00${VERSIONS.indexOf(version)}.yaml`;
+    const turn = `${dir}/turns/T00${VERSIONS.indexOf(version)}.yaml`;
     const data = readJson(turn);
     data.reference_commit = reference.candidate_commit;
     data.patch_path = `generation/${version}/reference.patch`;
@@ -60,11 +62,11 @@ function recordReference(version, reference, record, { instrumental = false } = 
 }
 
 // options.adapterFactory y repoRoot: solo para ensayos en una copia desechable del repositorio.
-export async function generate(version, { commit = true, repoRoot, adapterFactory } = {}) {
+export async function generate(version, { familyId = 'F001', commit = true, repoRoot, adapterFactory } = {}) {
   if (repoRoot) root = repoRoot;
-  const blockers = generationBlockers(root);
+  const blockers = generationBlockers(root, familyId);
   if (blockers.length) throw new Error('Preflight bloquea la generación:\n' + blockers.map(b => `- ${b}`).join('\n'));
-  const data = loadCorpus(root);
+  const data = loadCorpus(root, familyId);
   const index = VERSIONS.indexOf(version);
   if (data.family.reference_versions[version]) throw new Error(`${version} ya tiene referencia; no se regenera`);
   if (index > 0 && !data.family.reference_versions[VERSIONS[index - 1]]) throw new Error(`${version} requiere la referencia ${VERSIONS[index - 1]}`);
@@ -74,17 +76,17 @@ export async function generate(version, { commit = true, repoRoot, adapterFactor
   if (missing.length) throw new Error(`Faltan credenciales en el entorno para: ${missing.join(', ')} (usar .env con SYNTEROLINK_API_KEY)`);
 
   const packet = makePacket(data, version);
-  const seed = evolutionSeed(root, version, CORPUS_REFERENCES(root));
-  const taskText = index === 0 ? seedFiles(root, 'V0')['TASK.json'] : seed.task;
-  const store = createTaskStore(root, { mode: 'experimental', version });
+  const seed = evolutionSeed(root, version, CORPUS_REFERENCES(root, familyId), { familyId });
+  const taskText = index === 0 ? seedFiles(root, 'V0', familyId)['TASK.json'] : seed.task;
+  const store = createTaskStore(root, { mode: 'experimental', familyId, version });
   const initialProvider = data.family.generation_plan[version];
-  log(`${version}: tarea ${store.taskId}, proveedor inicial ${initialProvider}`);
+  log(`${familyId} ${version}: tarea ${store.taskId}, proveedor inicial ${initialProvider}`);
   const pool = adapterFactory ? adapterFactory({ store, version }) : createProviderPool({ models, credentials, onCall: call => store.call(call) });
   const result = await runTask({
     mode: 'experimental', preflightBlockers: [], packet, policy: data.policy, initialProvider,
     adapter: retrying(pool, store),
     workspaces: sandboxWorkspaces(root, { seed, onOpen: () => log(`  workspace abierto`) }),
-    evaluator: createPipelineEvaluator({ root, version, privateSink: record => store.private(record) }),
+    evaluator: createPipelineEvaluator({ root, version, familyId, privateSink: record => store.private(record) }),
     emit: event => {
       store.event(event);
       if (event.type === 'evaluation') log(`  ${event.provider} a${event.attempt} ${event.stage}: ${event.status}`);
@@ -97,17 +99,17 @@ export async function generate(version, { commit = true, repoRoot, adapterFactor
   if (summary.status === 'ACCEPTED') {
     const record = records.find(r => r.outcome === 'ACCEPTED');
     const patch = readFileSync(join(store.dir, 'attempts', record.id, 'patch.diff'), 'utf8');
-    reference = saveReference(root, CORPUS_REFERENCES(root), { version, record, patch, taskText, taskDir: store.dir });
-    recordReference(version, reference, record, { instrumental: Boolean(adapterFactory) });
-    const errors = validateCorpus(loadCorpus(root), root);
+    reference = saveReference(root, CORPUS_REFERENCES(root, familyId), { version, record, patch, taskText, taskDir: store.dir, familyId });
+    recordReference(familyId, version, reference, record, { instrumental: Boolean(adapterFactory) });
+    const errors = validateCorpus(loadCorpus(root, familyId), root);
     if (errors.length) throw new Error('Corpus inconsistente tras registrar la referencia:\n' + errors.join('\n'));
-    log(`${version}: ACEPTADA (${record.generator.provider}, ${record.id}) commit ${reference.candidate_commit}`);
-  } else log(`${version}: ${summary.status} — sin referencia`);
+    log(`${familyId} ${version}: ACEPTADA (${record.generator.provider}, ${record.id}) commit ${reference.candidate_commit}`);
+  } else log(`${familyId} ${version}: ${summary.status} — sin referencia`);
   if (commit) {
-    git(['add', 'runs/corpus-generation', 'evaluator/runs', 'families/F001-product-catalog']);
+    git(['add', 'runs/corpus-generation', 'evaluator/runs', familyDir(root, familyId)]);
     const message = reference
-      ? `corpus: F001 ${version} reference generated by ${reference.generator.provider}\n\nTask ${store.taskId}; accepted attempt ${reference.attempt}; candidate ${reference.candidate_commit}.`
-      : `corpus: F001 ${version} attempt without reference (${summary.status})\n\nTask ${store.taskId}; records kept for audit.`;
+      ? `corpus: ${familyId} ${version} reference generated by ${reference.generator.provider}\n\nTask ${store.taskId}; accepted attempt ${reference.attempt}; candidate ${reference.candidate_commit}.`
+      : `corpus: ${familyId} ${version} attempt without reference (${summary.status})\n\nTask ${store.taskId}; records kept for audit.`;
     git(['commit', '-q', '-m', message]);
     log(`  commit ${git(['rev-parse', '--short', 'HEAD'])}`);
   }
@@ -115,16 +117,18 @@ export async function generate(version, { commit = true, repoRoot, adapterFactor
 }
 
 async function main() {
-  const [target, ...flags] = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const familyId = /^F\d{3}$/.test(args[0] ?? '') ? args.shift() : 'F001';
+  const [target, ...flags] = args;
   const commit = !flags.includes('--no-commit');
-  if (!['all', ...VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- V0|V1|V2|V3|all [--no-commit]');
-  const data = loadCorpus(root);
+  if (!['all', ...VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- [Fxxx] V0|V1|V2|V3|all [--no-commit]');
+  const data = loadCorpus(root, familyId);
   const pending = target === 'all' ? VERSIONS.filter(v => !data.family.reference_versions[v]) : [target];
   for (const version of pending) {
-    const status = await generate(version, { commit });
-    if (status !== 'ACCEPTED') { log(`Detenido en ${version} (${status}).`); process.exitCode = 2; return; }
+    const status = await generate(version, { familyId, commit });
+    if (status !== 'ACCEPTED') { log(`Detenido en ${familyId} ${version} (${status}).`); process.exitCode = 2; return; }
   }
-  log('Generación completa.');
+  log(`Generación de ${familyId} completa.`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {

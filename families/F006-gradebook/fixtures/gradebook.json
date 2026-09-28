@@ -1,0 +1,273 @@
+{
+  "categories": [
+    {
+      "id": "tareas",
+      "name": "Tareas",
+      "weight": 30
+    },
+    {
+      "id": "examenes",
+      "name": "Exámenes",
+      "weight": 50
+    },
+    {
+      "id": "proyecto",
+      "name": "Proyecto",
+      "weight": 20
+    }
+  ],
+  "assignments": [
+    {
+      "id": "A1",
+      "name": "Tarea 1",
+      "category": "tareas",
+      "max": 10
+    },
+    {
+      "id": "A2",
+      "name": "Tarea 2",
+      "category": "tareas",
+      "max": 20
+    },
+    {
+      "id": "A3",
+      "name": "Parcial",
+      "category": "examenes",
+      "max": 40
+    },
+    {
+      "id": "A4",
+      "name": "Examen final",
+      "category": "examenes",
+      "max": 60
+    },
+    {
+      "id": "A5",
+      "name": "Proyecto final",
+      "category": "proyecto",
+      "max": 25
+    }
+  ],
+  "students": [
+    {
+      "id": "E001",
+      "name": "Ana Beltrán",
+      "scores": {
+        "A1": 8,
+        "A2": 17,
+        "A3": 35,
+        "A4": 50,
+        "A5": 21
+      }
+    },
+    {
+      "id": "E002",
+      "name": "Bruno Castaño",
+      "scores": {
+        "A1": 10,
+        "A2": 20,
+        "A3": 38,
+        "A4": 57,
+        "A5": 24
+      }
+    },
+    {
+      "id": "E003",
+      "name": "Carla Duarte",
+      "scores": {
+        "A1": 6,
+        "A2": null,
+        "A3": 20,
+        "A4": 30,
+        "A5": 15
+      }
+    },
+    {
+      "id": "E004",
+      "name": "Diego Esteban",
+      "scores": {
+        "A1": 10,
+        "A2": 5,
+        "A3": 30,
+        "A4": 40,
+        "A5": 20
+      }
+    },
+    {
+      "id": "E005",
+      "name": "Elena Fuentes",
+      "scores": {
+        "A1": 9,
+        "A2": 16,
+        "A3": 36,
+        "A4": 54,
+        "A5": 25
+      }
+    },
+    {
+      "id": "E006",
+      "name": "Fabio Gallardo",
+      "scores": {
+        "A1": 10,
+        "A2": 18,
+        "A3": 35,
+        "A4": 52,
+        "A5": 23
+      }
+    },
+    {
+      "id": "E007",
+      "name": "Gloria Herrero",
+      "scores": {
+        "A1": 8,
+        "A2": 16,
+        "A3": 32,
+        "A4": 48,
+        "A5": 20
+      }
+    },
+    {
+      "id": "E008",
+      "name": "Hugo Iglesias",
+      "scores": {
+        "A1": 7,
+        "A2": 15,
+        "A3": 33,
+        "A4": 54,
+        "A5": 18
+      }
+    },
+    {
+      "id": "E009",
+      "name": "Irene Jiménez",
+      "scores": {
+        "A1": 6,
+        "A2": 14,
+        "A3": 30,
+        "A4": 46,
+        "A5": 15
+      }
+    },
+    {
+      "id": "E010",
+      "name": "Javier Lozano",
+      "scores": {
+        "A1": 6,
+        "A2": 12,
+        "A3": 24,
+        "A4": 36,
+        "A5": 15
+      }
+    },
+    {
+      "id": "E011",
+      "name": "Lucía Márquez",
+      "scores": {
+        "A1": 5,
+        "A2": 11,
+        "A3": 27,
+        "A4": 40,
+        "A5": 13
+      }
+    },
+    {
+      "id": "E012",
+      "name": "Mario Navas",
+      "scores": {
+        "A1": 10,
+        "A2": 19,
+        "A3": null,
+        "A4": 55,
+        "A5": 25
+      }
+    },
+    {
+      "id": "E013",
+      "name": "Nerea Ortega",
+      "scores": {
+        "A1": 7,
+        "A2": 14,
+        "A3": 25,
+        "A4": 38,
+        "A5": 17
+      }
+    },
+    {
+      "id": "E014",
+      "name": "Óscar Pardo",
+      "scores": {
+        "A1": 9,
+        "A2": 20,
+        "A3": 39,
+        "A4": 58,
+        "A5": 23
+      }
+    },
+    {
+      "id": "E015",
+      "name": "Paula Quintana",
+      "scores": {
+        "A1": 5,
+        "A2": 9,
+        "A3": 18,
+        "A4": 27,
+        "A5": 10
+      }
+    },
+    {
+      "id": "E016",
+      "name": "Raúl Serrano",
+      "scores": {
+        "A1": null,
+        "A2": null,
+        "A3": 33,
+        "A4": 49,
+        "A5": 20
+      }
+    },
+    {
+      "id": "E017",
+      "name": "Sara Toledo",
+      "scores": {
+        "A1": 8,
+        "A2": 15,
+        "A3": 31,
+        "A4": 47,
+        "A5": 19
+      }
+    },
+    {
+      "id": "E018",
+      "name": "Tomás Ureña",
+      "scores": {
+        "A1": 10,
+        "A2": 17,
+        "A3": 34,
+        "A4": 51,
+        "A5": null
+      }
+    },
+    {
+      "id": "E019",
+      "name": "Unai Vidal",
+      "scores": {
+        "A1": 6,
+        "A2": 13,
+        "A3": 29,
+        "A4": 44,
+        "A5": 16
+      }
+    },
+    {
+      "id": "E020",
+      "name": "Valeria Zamora",
+      "scores": {
+        "A1": 9,
+        "A2": 16,
+        "A3": 37,
+        "A4": 55,
+        "A5": 21
+      }
+    }
+  ]
+}

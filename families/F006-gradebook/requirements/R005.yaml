@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "students_at_risk",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Identificar a los estudiantes en riesgo: los que tienen una nota final redondeada menor que 60.00 o alguna tarea no entregada. Un resumen «En riesgo» muestra cuántos hay, contando siempre a todos los estudiantes. La casilla «Solo en riesgo» (desmarcada al cargar) limita la lista a los estudiantes en riesgo, en el orden del fixture; no afecta a los resúmenes. Todo se actualiza al editar puntuaciones y al aplicar pesos.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Al cargar el resumen indica 6 estudiantes en riesgo."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Solo en riesgo muestra únicamente a los estudiantes en riesgo, en orden, y desmarcarla muestra a todos."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Una tarea no entregada basta para estar en riesgo; una nota de 60.00 sin tareas pendientes no lo está."
+    },
+    {
+      "id": "R005-A04",
+      "description": "El filtro no cambia el resumen En riesgo ni la distribución."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Editar puntuaciones actualiza el riesgo y la lista filtrada."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Aplicar pesos actualiza el riesgo según la nota redondeada."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la casilla Solo en riesgo está desmarcada y se ven los 20 estudiantes.",
+    "elements": [
+      {
+        "role": "checkbox",
+        "name": "Solo en riesgo",
+        "rule": "Un <input type=\"checkbox\"> con nombre accesible «Solo en riesgo», desmarcado al cargar."
+      },
+      {
+        "role": "status",
+        "name": "En riesgo",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «En riesgo» (aria-label) cuyo texto incluye «En riesgo: N», con N entero."
+      }
+    ]
+  }
+}

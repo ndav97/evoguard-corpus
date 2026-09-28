@@ -1,0 +1,170 @@
+[
+  {
+    "id": "K001",
+    "title": "Revisar contrato de alquiler",
+    "priority": "alta",
+    "status": "pendiente",
+    "estimate": 2
+  },
+  {
+    "id": "K002",
+    "title": "Preparar presupuesto anual",
+    "priority": "alta",
+    "status": "en_curso",
+    "estimate": 5
+  },
+  {
+    "id": "K003",
+    "title": "Actualizar inventario",
+    "priority": "media",
+    "status": "hecha",
+    "estimate": 3
+  },
+  {
+    "id": "K004",
+    "title": "Llamar al proveedor de papel",
+    "priority": "baja",
+    "status": "pendiente",
+    "estimate": 1
+  },
+  {
+    "id": "K005",
+    "title": "Diseñar cartel de la feria",
+    "priority": "media",
+    "status": "en_curso",
+    "estimate": 4
+  },
+  {
+    "id": "K006",
+    "title": "Enviar facturas de marzo",
+    "priority": "alta",
+    "status": "hecha",
+    "estimate": 2
+  },
+  {
+    "id": "K007",
+    "title": "Reservar sala de reuniones",
+    "priority": "baja",
+    "status": "pendiente",
+    "estimate": 1
+  },
+  {
+    "id": "K008",
+    "title": "Redactar boletín mensual",
+    "priority": "media",
+    "status": "pendiente",
+    "estimate": 3
+  },
+  {
+    "id": "K009",
+    "title": "Configurar impresora",
+    "priority": "baja",
+    "status": "hecha",
+    "estimate": 1
+  },
+  {
+    "id": "K010",
+    "title": "Planificar formación interna",
+    "priority": "alta",
+    "status": "pendiente",
+    "estimate": 6
+  },
+  {
+    "id": "K011",
+    "title": "Archivar expedientes antiguos",
+    "priority": "baja",
+    "status": "en_curso",
+    "estimate": 4
+  },
+  {
+    "id": "K012",
+    "title": "Revisar nóminas",
+    "priority": "alta",
+    "status": "en_curso",
+    "estimate": 3
+  },
+  {
+    "id": "K013",
+    "title": "Comprar material de oficina",
+    "priority": "media",
+    "status": "hecha",
+    "estimate": 2
+  },
+  {
+    "id": "K014",
+    "title": "Organizar cena de equipo",
+    "priority": "baja",
+    "status": "pendiente",
+    "estimate": 2
+  },
+  {
+    "id": "K015",
+    "title": "Traducir manual de usuario",
+    "priority": "media",
+    "status": "en_curso",
+    "estimate": 8
+  },
+  {
+    "id": "K016",
+    "title": "Renovar dominio web",
+    "priority": "alta",
+    "status": "hecha",
+    "estimate": 1
+  },
+  {
+    "id": "K017",
+    "title": "Limpiar base de clientes",
+    "priority": "media",
+    "status": "pendiente",
+    "estimate": 5
+  },
+  {
+    "id": "K018",
+    "title": "Preparar informe trimestral",
+    "priority": "alta",
+    "status": "pendiente",
+    "estimate": 7
+  },
+  {
+    "id": "K019",
+    "title": "Pintar sala de descanso",
+    "priority": "baja",
+    "status": "hecha",
+    "estimate": 6
+  },
+  {
+    "id": "K020",
+    "title": "Revisar extintores",
+    "priority": "media",
+    "status": "pendiente",
+    "estimate": 1
+  },
+  {
+    "id": "K021",
+    "title": "Negociar tarifa de transporte",
+    "priority": "alta",
+    "status": "en_curso",
+    "estimate": 3
+  },
+  {
+    "id": "K022",
+    "title": "Actualizar web corporativa",
+    "priority": "media",
+    "status": "hecha",
+    "estimate": 4
+  },
+  {
+    "id": "K023",
+    "title": "Digitalizar recibos",
+    "priority": "baja",
+    "status": "en_curso",
+    "estimate": 2
+  },
+  {
+    "id": "K024",
+    "title": "Cerrar ejercicio contable",
+    "priority": "alta",
+    "status": "pendiente",
+    "estimate": 8
+  }
+]

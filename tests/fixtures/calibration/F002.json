@@ -1,0 +1,22 @@
+{
+  "mutants": {
+    "filter-or": ["R001-A03"],
+    "skip": ["R002-A01"],
+    "done-advance": ["R002-A03"],
+    "stale-view": ["R002-A04"],
+    "reorder": ["R002-A05"],
+    "wrong-other": ["R002-A05"],
+    "notrim": ["R003-A02"],
+    "prepend": ["R003-A01"],
+    "keep-fields": ["R003-A05"],
+    "hours-any": ["R003-A06"],
+    "count-filtered": ["R004-A04"],
+    "hours-all": ["R004-A01"],
+    "undo-one": ["R005-A03"],
+    "undo-id": ["R005-A02"],
+    "undo-enabled": ["R005-A04"],
+    "reject-records": ["R005-A04"],
+    "undo-filter": ["R005-A06"],
+    "undo-resets-filter": ["R005-A06"]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Leer el resumen al cargar."
+      ],
+      "expected": "Pendientes 10, En curso 7, Hechas 7, Horas restantes 65."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Avanzar K001.",
+        "Avanzar K002."
+      ],
+      "expected": "Tras K001: 9/8/7 y 65 h; tras K002 (5 h): 9/7/8 y 60 h."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Crear «Revisar alarma» con 3 horas."
+      ],
+      "expected": "Pendientes 11, En curso 7, Hechas 7, Horas restantes 68."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Estado = hecha.",
+        "Estado = pendiente."
+      ],
+      "expected": "El resumen sigue en 10/7/7 y 65 h con cada filtro."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Crear «Cambiar cerradura» con 4 horas; avanzar K025 dos veces."
+      ],
+      "expected": "Tras crear: 11/7/7 y 69 h; tras avanzar dos veces: 10/7/8 y 65 h."
+    }
+  ]
+}

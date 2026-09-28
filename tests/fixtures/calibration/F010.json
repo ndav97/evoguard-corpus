@@ -1,0 +1,22 @@
+{
+  "mutants": {
+    "no-disable": ["R001-A02"],
+    "prepend-loans": ["R001-A04"],
+    "day-per-loan": ["R001-A05"],
+    "return-all-copies": ["R002-A02"],
+    "no-persist": ["R002-A04"],
+    "return-not-saved": ["R002-A05"],
+    "overdue-lte": ["R003-A02"],
+    "due-from-start": ["R003-A03"],
+    "day-not-saved": ["R003-A05"],
+    "renew-from-day": ["R004-A01"],
+    "renew-max3": ["R004-A02"],
+    "renew-overdue": ["R004-A03"],
+    "renew-all-copies": ["R004-A06"],
+    "limit-4": ["R005-A01"],
+    "overdue-no-block": ["R005-A03"],
+    "overdue-lte-block": ["R005-A04"],
+    "history-oldest-first": ["R005-A06"],
+    "reason-priority": ["R005-A07"]
+  }
+}

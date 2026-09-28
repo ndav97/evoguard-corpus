@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin tocar el filtro."
+      ],
+      "expected": "Lista Tareas: K001–K024 en ese orden."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Estado = pendiente."
+      ],
+      "expected": "K001, K004, K007, K008, K010, K014, K017, K018, K020, K024."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Estado = en_curso."
+      ],
+      "expected": "K002, K005, K011, K012, K015, K021, K023."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Estado = hecha."
+      ],
+      "expected": "K003, K006, K009, K013, K016, K019, K022."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Estado = hecha; Estado = todas."
+      ],
+      "expected": "K001–K024 en orden del fixture."
+    }
+  ]
+}

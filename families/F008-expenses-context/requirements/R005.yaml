@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "display_currency",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Elegir la moneda en que se muestran el total y los presupuestos. Un selector de moneda de visualización ofrece EUR (valor inicial), USD y GBP. El total del mes en la moneda elegida es el total en EUR (calculado como hasta ahora) dividido por la tasa de esa moneda y redondeado al céntimo (0,5 hacia arriba), seguido del código de la moneda. En los presupuestos, lo gastado en EUR y el presupuesto en EUR se convierten igual, cada uno por separado; la marca «Excedido» se sigue decidiendo con los importes en EUR. Los gastos de la lista conservan su importe y su moneda originales. Con EUR todo se ve como antes.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Al cargar la moneda de visualización es EUR y el total se muestra como antes."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Con USD o GBP el total del mes es el total en EUR dividido por la tasa, redondeado al céntimo y con el código de la moneda."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Los presupuestos convierten lo gastado y el presupuesto a la moneda elegida."
+    },
+    {
+      "id": "R005-A04",
+      "description": "La marca «Excedido» se decide en EUR: no cambia al convertir, aunque los importes convertidos coincidan."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Los gastos de la lista conservan su importe y moneda originales."
+    },
+    {
+      "id": "R005-A06",
+      "description": "La moneda elegida se mantiene al cambiar de mes y volver a EUR restaura los importes en EUR."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, la moneda de visualización es EUR.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Moneda de visualización",
+        "rule": "Un <select> con nombre accesible «Moneda de visualización» y opciones de valor EUR, USD y GBP; valor inicial EUR."
+      },
+      {
+        "role": "status",
+        "name": "Total del mes",
+        "rule": "Con la moneda de visualización elegida, el texto incluye «Total del mes: N XXX» con XXX el código de esa moneda."
+      }
+    ]
+  }
+}

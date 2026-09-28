@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "list_final_grades",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Listar los estudiantes en el orden del fixture con su nota final. Para cada categoría se suman los puntos obtenidos en sus tareas y se dividen entre la suma de las puntuaciones máximas de esas tareas; una tarea no entregada (null) cuenta como 0 puntos y su máximo sigue contando. La nota final es la suma, para cada categoría, de su peso (en %, los pesos suman 100) por esa fracción: nota = Σ peso_c × (puntos_c / máximo_c), en escala 0–100. Se redondea a dos decimales (medio céntimo hacia arriba) y se muestra siempre con dos decimales y punto decimal, sin separador de miles (p. ej. 90.00, 84.30).",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar se listan los 20 estudiantes en el orden del fixture."
+    },
+    {
+      "id": "R001-A02",
+      "description": "La nota final de un estudiante con todas las tareas entregadas pondera cada categoría por su peso."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Dentro de una categoría se suman puntos y máximos (no se promedian porcentajes por tarea)."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Una tarea no entregada cuenta como 0 puntos y su máximo sigue contando."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Las notas enteras se muestran con dos decimales."
+    },
+    {
+      "id": "R001-A06",
+      "description": "Todas las notas finales al cargar coinciden con la fórmula."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar se ven los 20 estudiantes con las puntuaciones y pesos del fixture.",
+    "elements": [
+      {
+        "role": "list",
+        "name": "Estudiantes",
+        "rule": "Los estudiantes se muestran en una única lista (<ul> u <ol>) con nombre accesible «Estudiantes» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada estudiante es un <li> dentro de la lista «Estudiantes». Su texto visible comienza con el ID seguido del nombre, p. ej. «E001 Ana Beltrán», e incluye su nota final con dos decimales y punto decimal (p. ej. «84.30»); la nota final es el último número con dos decimales del texto del elemento. Ningún otro elemento de esa lista comienza con un ID de estudiante."
+      }
+    ]
+  }
+}

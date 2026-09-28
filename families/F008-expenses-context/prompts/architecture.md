@@ -1,0 +1,1 @@
+Arquitectura: el estado compartido de la aplicación se expone mediante la Context API de React (createContext + useContext) con un componente proveedor que guarda el estado con useState. Los componentes que muestran o modifican ese estado lo obtienen del contexto en lugar de recibirlo por props. No uses useReducer, useEffect, useLayoutEffect ni ninguna forma de persistencia.

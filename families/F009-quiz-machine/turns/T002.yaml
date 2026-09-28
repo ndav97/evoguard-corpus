@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Quiero poder cambiar el orden de las preguntas con una semilla entera de 0 a 96 (campo «Semilla», vacío al principio) y un botón «Aplicar semilla». Con semilla s de 1 a 96, ordena por la clave ((i + 1) · s) mod 97, siendo i la posición en el fichero empezando en 0, de menor a mayor, y a igual clave por posición; vacía o 0 vuelve al orden original. Aplicarla reinicia el cuestionario. Si el valor no es un entero de 0 a 96, muestra el aviso «La semilla debe ser un número entero entre 0 y 96» sin cambiar nada. Reiniciar mantiene el orden de la semilla y la revisión sigue el orden en que salieron las preguntas.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "openai",
+  "reference_commit": null,
+  "patch_path": null
+}

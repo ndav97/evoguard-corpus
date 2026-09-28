@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "week_view_and_booked_hours",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Añadir una vista semanal y el total de horas reservadas. Un selector de vista permite elegir «día» (la vista existente, valor inicial) o «semana». En la vista semanal la lista muestra todas las reservas de la sala seleccionada en los cinco días, ordenadas por fecha y después por hora de inicio, y cada elemento incluye la fecha: «B003 2026-03-02 09:00–10:30 Revisión de presupuesto». La vista de día no cambia. El selector de día sigue visible y crear una reserva sigue usando la sala y el día seleccionados. Un indicador «Horas reservadas», visible en ambas vistas, muestra la suma de las duraciones en horas de todas las reservas de la sala seleccionada en la semana, con dos decimales, y se actualiza al crear y cancelar.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "La vista semanal muestra todas las reservas de la sala en la semana ordenadas por fecha y hora de inicio, con la fecha en cada elemento."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Horas reservadas muestra las horas de la sala seleccionada en toda la semana, también en la vista de día."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Crear una reserva suma sus horas y la reserva aparece en su posición en la vista semanal."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Cancelar una reserva desde la vista semanal la quita y resta sus horas."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Volver a la vista de día muestra de nuevo solo las reservas del día seleccionado, con el formato sin fecha."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, la vista es «día» y Horas reservadas corresponde a la sala norte.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Vista",
+        "rule": "Un <select> con nombre accesible «Vista» y opciones de valor dia y semana; valor inicial dia."
+      },
+      {
+        "role": "status",
+        "name": "Horas reservadas",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Horas reservadas» (aria-label) cuyo texto incluye «Horas reservadas: N» con N en horas con dos decimales y punto decimal (p. ej. «Horas reservadas: 10.00»)."
+      }
+    ]
+  }
+}

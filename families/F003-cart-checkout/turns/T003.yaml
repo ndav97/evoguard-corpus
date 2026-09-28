@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Muestra el coste de envío y el total a pagar. El envío es el de la región elegida, pero es gratis con el carrito vacío o cuando subtotal − descuento llega a 50.00. El total a pagar es subtotal − descuento + impuesto + envío.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "openai",
+  "reference_commit": null,
+  "patch_path": null
+}

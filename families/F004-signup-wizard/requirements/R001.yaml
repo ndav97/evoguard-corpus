@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "account_step",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "El asistente tiene tres pasos en este orden: Cuenta, Perfil y Resumen; un indicador muestra el nombre del paso actual. Al cargar se está en el paso Cuenta con los campos vacíos. En Cuenta se piden el correo y la contraseña. El correo es válido si coincide con la expresión ^[^\\s@]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$ (usuario, una arroba, dominio con al menos un punto y terminación de 2 o más letras), sin recortar espacios. La contraseña es válida si tiene al menos 8 caracteres y al menos un dígito (ambas condiciones). «Siguiente» avanza a Perfil solo si ambos campos son válidos; si no, el paso no cambia y se muestra un aviso por cada campo inválido. Cada intento de avanzar sustituye los avisos anteriores: desaparecen los de los campos ya válidos, y al avanzar no queda ningún aviso.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar se está en el paso Cuenta, con Correo y Contraseña vacíos y sin avisos."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Con correo y contraseña válidos, Siguiente lleva al paso Perfil sin avisos."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Un correo sin arroba, sin dominio con punto o con terminación de una letra no permite avanzar y muestra el aviso del correo."
+    },
+    {
+      "id": "R001-A04",
+      "description": "La contraseña necesita al menos 8 caracteres y un dígito: con 7 caracteres o sin dígito no se avanza; con 8 y un dígito sí."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Con los dos campos inválidos se muestran los dos avisos, y al corregir uno solo queda el aviso del otro."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página el paso actual es Cuenta y Correo y Contraseña están vacíos.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Paso",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Paso» (aria-label) cuyo texto contiene el nombre del paso actual: «Cuenta», «Perfil» o «Resumen» (p. ej. «Paso 1 de 3: Cuenta»)."
+      },
+      {
+        "role": "textbox",
+        "name": "Correo",
+        "rule": "Un <input type=\"email\"> o <input type=\"text\"> con nombre accesible «Correo», visible en el paso Cuenta."
+      },
+      {
+        "role": "field",
+        "name": "Contraseña",
+        "rule": "Un <input type=\"password\"> asociado a un <label> con texto «Contraseña», visible en el paso Cuenta."
+      },
+      {
+        "role": "button",
+        "name": "Siguiente",
+        "rule": "Un botón «Siguiente», visible en los pasos Cuenta y Perfil, que intenta pasar al paso siguiente validando el paso actual."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Cada campo inválido produce un elemento visible con role=\"alert\" cuyo texto contiene: correo → «Introduce un correo válido»; contraseña → «La contraseña debe tener al menos 8 caracteres y un dígito»."
+      }
+    ]
+  }
+}

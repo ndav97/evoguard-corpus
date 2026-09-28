@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Pon límites: como máximo 3 préstamos a la vez y nada de prestar si hay algún préstamo vencido. En esos casos deshabilita todos los «Prestar» y explica el motivo en un aviso: «Hay préstamos vencidos» (tiene prioridad) o «Límite de 3 préstamos alcanzado». Además quiero un historial de devoluciones, de la más reciente a la más antigua, con líneas como «L003 prestado día 1, devuelto día 5», que se conserve al recargar.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}

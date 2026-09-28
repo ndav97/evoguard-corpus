@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Controla la capacidad de las salas: al reservar pide el número de asistentes (entero ≥ 1, por defecto 1, y vuelve a 1 tras reservar). Si no es válido o supera la capacidad de la sala (norte 4, sur 8, auditorio 20) muestra un aviso y no reserves; igual a la capacidad sí se permite. Comprueba esto después del título y antes del cierre y los conflictos. Muestra los asistentes de cada reserva tras su título («4 personas» o «1 persona»).",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

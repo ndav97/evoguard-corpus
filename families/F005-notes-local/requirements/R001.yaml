@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "list_and_search_notes",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar las notas en una lista y buscarlas por texto. La búsqueda compara el texto introducido, recortado de espacios al principio y al final y sin distinguir mayúsculas de minúsculas, como subcadena del título o del cuerpo de cada nota (no de otros datos). Con la búsqueda vacía se muestran todas las notas. El orden es siempre el de las notas: primero las del fixture en su orden y después las creadas, en orden de creación. Los resultados se actualizan al escribir, sin botón.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar sin datos guardados se muestran las 12 notas del fixture en su orden."
+    },
+    {
+      "id": "R001-A02",
+      "description": "La búsqueda encuentra coincidencias en el título y en el cuerpo sin distinguir mayúsculas."
+    },
+    {
+      "id": "R001-A03",
+      "description": "La búsqueda ignora los espacios al principio y al final del texto."
+    },
+    {
+      "id": "R001-A04",
+      "description": "La búsqueda solo considera título y cuerpo; sin coincidencias la lista queda vacía y al vaciar el campo vuelven todas las notas."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Cambiar el texto de búsqueda sustituye los resultados anteriores, conservando el orden de las notas."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados la búsqueda está vacía y se ven las 12 notas del fixture.",
+    "elements": [
+      {
+        "role": "searchbox",
+        "name": "Buscar notas",
+        "rule": "Un <input type=\"search\"> con nombre accesible «Buscar notas». Los resultados se actualizan al escribir, sin botón."
+      },
+      {
+        "role": "list",
+        "name": "Notas",
+        "rule": "Las notas visibles se muestran en una única lista (<ul> u <ol>) con nombre accesible «Notas» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada nota visible es un <li> dentro de la lista «Notas». Su texto visible comienza con el ID seguido del título, p. ej. «N001 Lista de la compra». Ningún otro elemento de esa lista comienza con un ID de nota."
+      }
+    ]
+  }
+}

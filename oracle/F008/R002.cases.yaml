@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Leer Total del mes al cargar."
+      ],
+      "expected": "Total del mes: 433.84 EUR."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Mes = 2026-02."
+      ],
+      "expected": "Total del mes: 499.81 EUR."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Mes = 2026-03."
+      ],
+      "expected": "Total del mes: 481.48 EUR (no 481.47, que resultaría de redondear solo la suma)."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Mes = 2026-03.",
+        "Mes = 2026-01.",
+        "Mes = 2026-02."
+      ],
+      "expected": "481.48 EUR, 433.84 EUR y 499.81 EUR."
+    }
+  ]
+}

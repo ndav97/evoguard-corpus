@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "create_task",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Crear tareas nuevas con título y horas estimadas. El título no puede quedar vacío tras recortar espacios; las horas son un entero de 1 a 8 (valor inicial 1). Si algún dato no es válido se muestra un aviso y no se crea la tarea. Cada tarea nueva recibe el siguiente ID secuencial (K025, K026, …), empieza pendiente y se añade al final de la lista. Tras crearla, el título queda vacío y las horas vuelven a 1.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Crear una tarea la añade al final de la lista con el ID K025 y su título."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Un título vacío o solo con espacios no crea la tarea y muestra un aviso."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Dos creaciones consecutivas reciben K025 y K026, en ese orden."
+    },
+    {
+      "id": "R003-A04",
+      "description": "La tarea nueva está pendiente y puede avanzar."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Tras crear, el título queda vacío y las horas vuelven a 1."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Unas horas fuera de 1–8 o no enteras no crean la tarea y muestran un aviso."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el título está vacío y las horas valen 1.",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Título",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Título»."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Horas",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Horas» y valor inicial 1."
+      },
+      {
+        "role": "button",
+        "name": "Añadir",
+        "rule": "Un botón «Añadir» que intenta crear la tarea con los datos de los campos."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si el título está vacío tras recortar, aparece un elemento con role=\"alert\" cuyo texto contiene «El título es obligatorio». Si las horas no son un entero de 1 a 8, aparece un elemento con role=\"alert\" cuyo texto contiene «Las horas deben ser un número entero entre 1 y 8». En ambos casos no se crea la tarea."
+      }
+    ]
+  }
+}

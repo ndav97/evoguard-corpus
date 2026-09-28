@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "pin_notes",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Fijar notas. Cada nota tiene un botón «Fijar» que alterna su estado de fijada; el botón expone ese estado con aria-pressed (\"true\" fijada, \"false\" no fijada). La lista muestra primero las notas fijadas y después las demás; dentro de cada grupo se conserva el orden de las notas (fixture y luego creadas), con independencia del orden en que se fijaron. Al dejar de estar fijada, una nota vuelve a su posición en ese orden. El orden por fijado se aplica también a los resultados de la búsqueda y del filtro de etiqueta. El estado de fijado se guarda con las notas y se conserva al recargar.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Al cargar ninguna nota está fijada; pulsar Fijar alterna aria-pressed entre true y false."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Una nota fijada pasa a mostrarse la primera."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Varias notas fijadas se muestran primero en el orden de las notas, no en el orden en que se fijaron."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Al dejar de fijar una nota vuelve a su posición original."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Los resultados de búsqueda y filtro muestran primero las notas fijadas."
+    },
+    {
+      "id": "R004-A06",
+      "description": "El fijado se conserva al recargar."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados ninguna nota está fijada.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Fijar",
+        "rule": "Cada nota contiene dentro de su <li> un botón «Fijar» con aria-pressed=\"true\" si está fijada y aria-pressed=\"false\" si no; pulsarlo alterna el estado. Su nombre accesible es siempre «Fijar»."
+      }
+    ]
+  }
+}

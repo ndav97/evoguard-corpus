@@ -1,0 +1,1 @@
+Arquitectura: el estado se reparte entre varios componentes, cada uno con su propio useState (al menos dos módulos con estado), y se comunica mediante props y callbacks. Los importes mostrados se derivan del estado en cada render, sin guardarlos por separado. No uses Context API (createContext/useContext), useReducer, useEffect, useLayoutEffect ni ninguna forma de persistencia.

@@ -9,7 +9,7 @@ import { runSuite, VERSIONS } from './evaluate.mjs';
 
 const POLICY = JSON.parse(readFileSync(new URL('../../config/policy.json', import.meta.url), 'utf8'));
 
-export function createOracleStage({ version, openSession, onPrivateReport = () => {} }) {
+export function createOracleStage({ version, family = 'F001', openSession, onPrivateReport = () => {} }) {
   if (!VERSIONS.includes(version)) throw new Error(`Versión desconocida: ${version}`);
   if (typeof openSession !== 'function') throw new Error('Se requiere una fábrica de sesiones del candidato');
   return async function check(workspace) {
@@ -17,7 +17,7 @@ export function createOracleStage({ version, openSession, onPrivateReport = () =
     try {
       session = await openSession(workspace);
       if (typeof session?.openAdapter !== 'function') throw new Error('Sesión de candidato inválida');
-      const report = await runSuite(version, () => session.openAdapter());
+      const report = await runSuite(version, () => session.openAdapter(), { family });
       await onPrivateReport({ version, report });
       return { status: report.status };
     } catch (error) {

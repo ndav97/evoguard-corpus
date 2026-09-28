@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "cross_field_rules",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Reglas que cruzan campos de distintos pasos. (1) El plan Equipo exige un correo de empresa: si el dominio del correo (lo que sigue a la arroba, sin distinguir mayúsculas) está en `free_email_domains`, «Enviar» no envía y muestra un aviso; con otros planes esos dominios se aceptan. (2) Si el plan elegido deja de estar permitido por la edad (p. ej. se eligió Pro, se vuelve atrás y se baja la edad por debajo de 18), el plan vuelve a Básico. (3) Si la parte del correo anterior a la arroba tiene 3 o más caracteres, la contraseña no puede contenerla (sin distinguir mayúsculas): «Siguiente» en Cuenta no avanza y muestra un aviso; la regla solo se comprueba con un correo válido. (4) La confirmación incluye además «Plan: <nombre>» del plan enviado.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Con Equipo y un correo de dominio gratuito, Enviar muestra un aviso y no confirma."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Con Equipo y un correo de empresa el registro se completa y la confirmación incluye el plan."
+    },
+    {
+      "id": "R005-A03",
+      "description": "El dominio gratuito se reconoce sin distinguir mayúsculas y la restricción solo afecta a Equipo."
+    },
+    {
+      "id": "R005-A04",
+      "description": "Si se eligió Pro y se baja la edad por debajo de 18, el plan vuelve a Básico."
+    },
+    {
+      "id": "R005-A05",
+      "description": "La contraseña no puede contener el usuario del correo, sin distinguir mayúsculas."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Con un dominio gratuito se puede enviar con Pro y la confirmación incluye el plan."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Sin cambios respecto al estado inicial de los pasos.",
+    "elements": [
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Con Equipo y un dominio gratuito, al pulsar Enviar aparece un elemento con role=\"alert\" cuyo texto contiene «El plan Equipo requiere un correo de empresa». Si la contraseña contiene el usuario del correo, al pulsar Siguiente en Cuenta aparece un elemento con role=\"alert\" cuyo texto contiene «La contraseña no puede contener el usuario del correo»."
+      }
+    ]
+  }
+}

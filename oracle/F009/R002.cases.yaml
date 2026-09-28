@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Leer Puntuación al cargar.",
+        "Marcar «Canberra»; Responder.",
+        "Siguiente; marcar «Helio»; Responder."
+      ],
+      "expected": "Puntuación 0/12; 1/12; 1/12."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Responder Q001–Q006 alternando la opción correcta (Q001, Q003, Q005) y la opción siguiente a la correcta en el orden del fixture, cíclica (Q002, Q004, Q006), con Siguiente entre ellas, leyendo Puntuación tras cada Responder."
+      ],
+      "expected": "1/12, 1/12, 2/12, 2/12, 3/12, 3/12."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Responder Q001–Q012 con la opción correcta, con Siguiente tras cada una; leer Puntuación antes del último Siguiente.",
+        "Siguiente."
+      ],
+      "expected": "Antes del último Siguiente: Pregunta Q012 y 12/12; después: Final con «Puntuación final: 12 de 12», sin Pregunta y sin opciones visibles."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Responder Q001–Q012 con Siguiente tras cada una: Q001, Q005 y Q012 con la opción correcta; el resto con la opción siguiente a la correcta en el orden del fixture, cíclica."
+      ],
+      "expected": "Final con «Puntuación final: 3 de 12»."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Responder Q001–Q012 con la opción correcta y Siguiente tras cada una.",
+        "Reiniciar."
+      ],
+      "expected": "Pregunta empieza por «Q001»; Puntuación 0/12; sin Final; sin Resultado; Responder deshabilitado."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Marcar «Canberra»; Responder; Siguiente; marcar «Dióxido de carbono»; Responder.",
+        "Reiniciar.",
+        "Marcar «Canberra»; Responder."
+      ],
+      "expected": "Tras Reiniciar: Pregunta Q001, Puntuación 0/12 y sin Resultado; tras responder: 1/12."
+    }
+  ]
+}

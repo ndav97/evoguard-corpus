@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "cancel_booking",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Cancelar reservas. Cada reserva visible tiene un botón para cancelarla: desaparece de la lista y su hueco queda libre para nuevas reservas. Cancelar no afecta a las demás reservas. Los IDs de reservas canceladas no se reutilizan: la siguiente reserva nueva recibe el ID siguiente al mayor asignado alguna vez (incluidos los del fixture y los cancelados).",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Cancelar una reserva la quita de la lista y las demás conservan su orden."
+    },
+    {
+      "id": "R003-A02",
+      "description": "El hueco de una reserva cancelada queda libre para una reserva nueva."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Una reserva nueva cancelada no libera su ID: la siguiente creación recibe el ID siguiente."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Cancelar una reserva no afecta a las reservas de otras salas ni a las demás de la misma sala."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Cancelar la reserva de mayor ID del fixture no cambia el ID de la siguiente reserva nueva."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, todas las reservas del fixture están activas.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Cancelar",
+        "rule": "Cada reserva visible contiene dentro de su <li> un botón «Cancelar» que la elimina."
+      }
+    ]
+  }
+}

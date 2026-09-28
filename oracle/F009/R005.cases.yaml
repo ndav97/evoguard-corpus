@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Leer ambas rachas al cargar.",
+        "Responder Q001, Q002 y Q003 con la opción correcta (Siguiente entre ellas), leyendo tras cada Responder."
+      ],
+      "expected": "0 y 0; después 1 y 1, 2 y 2, 3 y 3."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Responder con Siguiente entre ellas: Q001 y Q002 con la opción correcta, Q003 con «1965», Q004 con «56»."
+      ],
+      "expected": "Tras Q003: Racha actual 0 y Mejor racha 2; tras Q004: 1 y 2."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Responder con Siguiente entre ellas: Q001 y Q002 con la opción correcta, Q003 con «1965», Q004, Q005 y Q006 con la opción correcta."
+      ],
+      "expected": "Tras Q005: 2 y 2; tras Q006: 3 y 3."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Responder Q001–Q012 con Siguiente tras cada una: Q009 con «Asia» y el resto con la opción correcta."
+      ],
+      "expected": "En el final: «Puntuación final: 11 de 12», Racha actual 3 y Mejor racha 8."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Marcar «Canberra»; Responder; Siguiente; marcar «Dióxido de carbono»; Responder.",
+        "Reiniciar.",
+        "Marcar «Canberra»; Responder."
+      ],
+      "expected": "Tras Reiniciar: Racha actual 0 y Mejor racha 2; tras responder: 1 y 2."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Responder Q001, Q002 y Q003 con la opción correcta (Siguiente entre ellas).",
+        "Semilla = 20; Aplicar semilla.",
+        "Marcar «Volga»; Responder."
+      ],
+      "expected": "Tras aplicar: Racha actual 0 y Mejor racha 3; tras responder Q005: 1 y 3."
+    }
+  ]
+}

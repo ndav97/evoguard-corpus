@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Prestar L001; prestar L002; prestar L003.",
+        "Intentar prestar L004."
+      ],
+      "expected": "Prestar deshabilitado en L001 y L004; Restricción incluye «Límite de 3 préstamos alcanzado»; Préstamos: L001, L002, L003."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Prestar L001; prestar L002; prestar L003.",
+        "Devolver L002.",
+        "Prestar L004."
+      ],
+      "expected": "Con 3 préstamos: Prestar de L004 deshabilitado y Restricción con «Límite de 3 préstamos alcanzado»; tras devolver: Prestar de L004 habilitado y Restricción sin «Límite de 3 préstamos alcanzado»; tras prestar: Préstamos L001, L003, L004."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Prestar L003; avanzar día 15 veces.",
+        "Intentar prestar L001.",
+        "Devolver L003."
+      ],
+      "expected": "Día 16: Prestar de L001 deshabilitado, Restricción incluye «Hay préstamos vencidos» y Préstamos solo L003; tras devolver: Prestar de L001 habilitado y Restricción sin «Hay préstamos vencidos»."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Prestar L003; avanzar día 14 veces.",
+        "Prestar L005.",
+        "Avanzar día."
+      ],
+      "expected": "Día 15: Prestar de L005 habilitado; Préstamos: L003, L005 con L005 «vence día 29»; Día 16: Prestar de L001 deshabilitado y Restricción incluye «Hay préstamos vencidos»."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Consultar Historial al cargar.",
+        "Prestar L003; avanzar día 4 veces; Devolver L003."
+      ],
+      "expected": "Historial vacío; después: un ítem que empieza por «L003» e incluye «prestado día 1, devuelto día 5»."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Prestar L003; prestar L006; avanzar día 2 veces; Devolver L006.",
+        "Avanzar día 3 veces; Devolver L003.",
+        "Recargar."
+      ],
+      "expected": "Historial: L003 «prestado día 1, devuelto día 6» y después L006 «prestado día 1, devuelto día 3»; igual tras recargar."
+    },
+    {
+      "id": "R005-A07",
+      "steps": [
+        "Prestar L001; prestar L002; prestar L003; avanzar día 15 veces."
+      ],
+      "expected": "Restricción incluye «Hay préstamos vencidos» y no «Límite de 3 préstamos alcanzado»; Prestar de L004 deshabilitado."
+    }
+  ]
+}

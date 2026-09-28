@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Muestra también la calificación en letra de cada estudiante (A desde 90, B desde 80, C desde 70, D desde 60 y F por debajo, usando la nota ya redondeada) y un resumen «Distribución» con cuántos estudiantes tienen cada letra. Todo debe actualizarse al editar puntuaciones.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

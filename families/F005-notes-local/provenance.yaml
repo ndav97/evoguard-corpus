@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "family_id": "F005",
+  "created_at": "2026-09-25",
+  "protocol_source": {
+    "conversation_id": "6aadd8a1-1480-83e9-b6ec-da02364ae366",
+    "title": "Saludo inicial",
+    "original_markdown_retrieved": false,
+    "transcription_path": "docs/reference-conversation.md"
+  },
+  "artifact_scope": "specification_and_neutral_scaffold_only",
+  "authorship": {
+    "specification_materializer": "Claude",
+    "reference_application_generator": null,
+    "human_functional_corrections": false
+  },
+  "fixture": {
+    "path": "fixtures/notes.json",
+    "sha256": "4b72ca4402185eedd4c90e48372e587137f505db039e600acb42b9564a8da1fc",
+    "origin": "created_from_approved_specification"
+  },
+  "models": {
+    "openai": null,
+    "anthropic": null,
+    "google": null,
+    "local_a": null,
+    "local_b": null
+  },
+  "scaffold": {
+    "path": "templates/react-vite",
+    "commit": null,
+    "functional_code": false
+  },
+  "audit": {
+    "status": "NOT_STARTED",
+    "reviewer": null,
+    "evidence": []
+  },
+  "similarity_review": {
+    "status": "NOT_STARTED",
+    "exclude": [
+      "templates/**",
+      "**/package*.json",
+      "**/*config*",
+      "**/test-helpers/**"
+    ]
+  },
+  "references": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

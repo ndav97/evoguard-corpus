@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Añade la racha: «Racha actual: n» con los aciertos seguidos más recientes (un fallo la pone a 0) y «Mejor racha: n» con el máximo alcanzado en la sesión, ambas 0 al empezar, actualizadas al responder y visibles también en el final. Al reiniciar o aplicar una semilla la racha actual vuelve a 0, pero la mejor racha se conserva hasta recargar la página.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

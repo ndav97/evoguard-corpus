@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Cargar la página; leer Región, sus opciones e Impuesto."
+      ],
+      "expected": "Región = peninsula; opciones peninsula, baleares, canarias; Impuesto 0.00."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Añadir S002."
+      ],
+      "expected": "Impuesto 2.71."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Añadir S016; aplicar AHORRO10."
+      ],
+      "expected": "Descuento 2.99; Impuesto 5.65."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Añadir S002; Región = canarias.",
+        "Región = baleares."
+      ],
+      "expected": "Impuesto 0.90 en canarias y 2.71 en baleares."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Añadir S002; Cantidad de S002 = 2.",
+        "Región = canarias."
+      ],
+      "expected": "Impuesto 5.42; en canarias 1.81."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Añadir S009; añadir S001; aplicar AHORRO10; Región = canarias."
+      ],
+      "expected": "Subtotal 18.80; Descuento 1.88; Impuesto 1.18."
+    }
+  ]
+}

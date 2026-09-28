@@ -1,0 +1,78 @@
+{
+  "mutants": {
+    "order-grade": [
+      "R001-A01"
+    ],
+    "ignore-weights": [
+      "R001-A02"
+    ],
+    "avg-pct": [
+      "R001-A03"
+    ],
+    "null-skip": [
+      "R001-A04"
+    ],
+    "no-decimals": [
+      "R001-A05"
+    ],
+    "null-as-zero": [
+      "R002-A03"
+    ],
+    "partial-save": [
+      "R002-A04"
+    ],
+    "decimal-ok": [
+      "R002-A04"
+    ],
+    "max-exclusive": [
+      "R002-A05"
+    ],
+    "stale-editor": [
+      "R002-A06"
+    ],
+    "letter-gt": [
+      "R003-A02"
+    ],
+    "letter-stale": [
+      "R003-A04"
+    ],
+    "dist-stale": [
+      "R003-A04",
+      "R003-A05"
+    ],
+    "weights-live": [
+      "R004-A01"
+    ],
+    "trunc": [
+      "R004-A02"
+    ],
+    "no-sum-check": [
+      "R004-A03"
+    ],
+    "negative-ok": [
+      "R004-A03"
+    ],
+    "letter-raw": [
+      "R004-A05"
+    ],
+    "edit-old-weights": [
+      "R004-A06"
+    ],
+    "risk-null-ignored": [
+      "R005-A02",
+      "R005-A03"
+    ],
+    "risk-le60": [
+      "R005-A03"
+    ],
+    "dist-filtered": [
+      "R005-A04"
+    ],
+    "risk-stale": [
+      "R005-A05"
+    ],
+    "risk-raw": [
+      "R005-A06"
+    ]
+  }
+}

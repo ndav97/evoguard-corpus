@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Editar E004; Tarea 2 = 20; Guardar."
+      ],
+      "expected": "E004 81.00."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Editar E003; leer los campos."
+      ],
+      "expected": "Tarea 1 = 6, Tarea 2 vacío, Parcial = 20, Examen final = 30, Proyecto final = 15."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Editar E001; Examen final = «»; Guardar.",
+        "Editar E001; leer Examen final."
+      ],
+      "expected": "E001 59.30; Examen final vacío."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Editar E002; Tarea 2 = 0; Tarea 1 = 11; Guardar.",
+        "Tarea 1 = -1; Guardar.",
+        "Tarea 1 = 7.5; Guardar."
+      ],
+      "expected": "Tras cada intento: aviso con «La puntuación debe ser un número entero entre 0 y el máximo de la tarea» y E002 sigue en 96.70."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Editar E015; Tarea 1 = 10; Examen final = 60; Proyecto final = 0; Guardar."
+      ],
+      "expected": "Sin aviso; E015 58.00."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Editar E002; Tarea 1 = 1 (sin guardar).",
+        "Editar E003; leer los campos; Guardar."
+      ],
+      "expected": "Campos de E003: 6, vacío, 20, 30, 15; las 20 notas siguen como al cargar."
+    }
+  ]
+}

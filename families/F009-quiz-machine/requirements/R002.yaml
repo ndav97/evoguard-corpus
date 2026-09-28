@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "score_and_finish",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar la puntuación acumulada «Puntuación: n/12» (aciertos hasta el momento; se actualiza al responder). Tras responder la última pregunta, «Siguiente» lleva a la pantalla final, que muestra «Puntuación final: n de 12» y ya no muestra pregunta ni opciones. El botón «Reiniciar», disponible en todo momento, vuelve a la primera pregunta sin opción marcada ni resultado y con la puntuación a 0.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Al cargar la puntuación es 0/12 y cada acierto la incrementa al responder; un fallo no la cambia."
+    },
+    {
+      "id": "R002-A02",
+      "description": "La puntuación acumula exactamente los aciertos a lo largo de varias preguntas."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Tras responder la duodécima pregunta, Siguiente lleva al final con «Puntuación final: 12 de 12» y sin pregunta ni opciones."
+    },
+    {
+      "id": "R002-A04",
+      "description": "La puntuación final cuenta solo los aciertos, incluida la última pregunta."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Reiniciar desde el final vuelve a Q001 con puntuación 0/12, sin resultado y con Responder deshabilitado."
+    },
+    {
+      "id": "R002-A06",
+      "description": "Reiniciar a mitad del cuestionario vuelve a Q001 con puntuación 0 y la puntuación vuelve a contar desde 0."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la puntuación es 0/12 y no se muestra la pantalla final.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Puntuación",
+        "rule": "Mientras se muestran preguntas, un elemento con role=\"status\" y nombre accesible «Puntuación» cuyo texto incluye «Puntuación: n/12», con n el número de aciertos."
+      },
+      {
+        "role": "status",
+        "name": "Final",
+        "rule": "En la pantalla final, un elemento con role=\"status\" y nombre accesible «Final» cuyo texto incluye «Puntuación final: n de 12». Antes del final está oculto."
+      },
+      {
+        "role": "button",
+        "name": "Reiniciar",
+        "rule": "Un botón «Reiniciar», visible y habilitado en todo momento, que vuelve a la primera pregunta con la puntuación a 0."
+      }
+    ]
+  }
+}

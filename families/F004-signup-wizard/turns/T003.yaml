@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Añade reglas que cruzan pasos: el plan Equipo exige un correo de empresa (si el dominio está en los dominios gratuitos del fixture, sin distinguir mayúsculas, avisa con «El plan Equipo requiere un correo de empresa» y no envíes); si había elegido Pro y vuelvo atrás y pongo una edad menor de 18, el plan debe volver a Básico; y la contraseña no puede contener el usuario del correo (lo anterior a la arroba, si tiene 3 o más caracteres, sin distinguir mayúsculas), avisando con «La contraseña no puede contener el usuario del correo» al pulsar Siguiente. La confirmación debe incluir también «Plan: <nombre>».",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

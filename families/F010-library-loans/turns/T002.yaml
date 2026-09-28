@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade un botón «Renovar» en cada préstamo que sume 7 días a su vencimiento (no al día actual). Cada préstamo se puede renovar como mucho 2 veces y debe mostrar «Renovaciones: n»; un préstamo vencido no se puede renovar (el mismo día del vencimiento sí). Deshabilita el botón cuando no se pueda renovar y guarda las renovaciones al recargar.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "filter_tasks_by_status",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar las tareas del fixture y filtrarlas por estado. Con el filtro «Todas» se muestran todas en el orden del fixture; con un estado concreto, solo las tareas en ese estado, conservando el orden relativo del fixture.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar se muestran las 24 tareas en el orden del fixture."
+    },
+    {
+      "id": "R001-A02",
+      "description": "El filtro pendiente muestra solo las tareas pendientes, en el orden del fixture."
+    },
+    {
+      "id": "R001-A03",
+      "description": "El filtro en_curso muestra solo las tareas en curso, en el orden del fixture."
+    },
+    {
+      "id": "R001-A04",
+      "description": "El filtro hecha muestra solo las tareas hechas, en el orden del fixture."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Volver al filtro Todas muestra otra vez las 24 tareas."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página el filtro de estado es «Todas» y se ven las 24 tareas.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Estado",
+        "rule": "Un <select> con nombre accesible «Estado» y opciones de valor todas, pendiente, en_curso y hecha (etiquetas visibles libres). Los resultados se actualizan al cambiar la opción, sin botón de envío."
+      },
+      {
+        "role": "list",
+        "name": "Tareas",
+        "rule": "Las tareas visibles se muestran en una única lista (<ul> u <ol>) con nombre accesible «Tareas» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada tarea visible es un <li> dentro de la lista «Tareas». Su texto visible comienza con el ID seguido del título, p. ej. «K001 Revisar contrato de alquiler». Ningún otro elemento de esa lista comienza con un ID de tarea."
+      }
+    ]
+  }
+}

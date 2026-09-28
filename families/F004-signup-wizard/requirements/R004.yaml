@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "plan_selection",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "En el paso Resumen (sin añadir pasos nuevos) se elige el plan con un grupo de botones de opción con los planes del fixture en su orden; Básico está seleccionado por defecto. Un plan con edad mínima (`min_age`) mayor que la edad introducida está deshabilitado (Pro exige 18 años). Si se elige un plan que requiere empresa (Equipo), aparece un campo «Empresa» obligatorio (no vacío tras recortar espacios); con otro plan el campo no se muestra y la empresa no aparece en el Resumen. El Resumen incluye «Plan: <nombre>» y «Precio mensual: N» (dos decimales) y, con Equipo, «Empresa: <nombre recortado>». «Enviar» valida: con Equipo y la empresa vacía no se envía y se muestra un aviso. El plan elegido se conserva al ir Atrás y volver a Resumen.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Al llegar a Resumen, Básico está seleccionado y el Resumen muestra su plan y precio mensual."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Pro está deshabilitado con edad 17 y habilitado con edad 18."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Elegir Pro actualiza plan y precio en el Resumen y permite enviar."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Con Equipo, la empresa es obligatoria para enviar (no vale solo con espacios)."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Equipo muestra el campo Empresa y la incluye en el Resumen; volver a Básico la oculta y la quita del Resumen."
+    },
+    {
+      "id": "R004-A06",
+      "description": "El plan elegido se conserva al ir Atrás y volver a Resumen."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al llegar a Resumen por primera vez está seleccionado Básico y el campo Empresa no se muestra.",
+    "elements": [
+      {
+        "role": "radio",
+        "name": "Básico",
+        "rule": "Un <input type=\"radio\"> con nombre accesible «Básico», visible en el paso Resumen, seleccionado por defecto."
+      },
+      {
+        "role": "radio",
+        "name": "Pro",
+        "rule": "Un <input type=\"radio\"> con nombre accesible «Pro», visible en el paso Resumen; deshabilitado (atributo disabled) si la edad es menor que 18."
+      },
+      {
+        "role": "radio",
+        "name": "Equipo",
+        "rule": "Un <input type=\"radio\"> con nombre accesible «Equipo», visible en el paso Resumen."
+      },
+      {
+        "role": "textbox",
+        "name": "Empresa",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Empresa», visible en el paso Resumen solo con el plan Equipo."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si con Equipo la empresa está vacía tras recortar, al pulsar Enviar aparece un elemento con role=\"alert\" cuyo texto contiene «La empresa es obligatoria» y no se muestra la confirmación."
+      }
+    ]
+  }
+}

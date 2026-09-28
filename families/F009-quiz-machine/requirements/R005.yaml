@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "answer_streaks",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Mostrar la racha actual (aciertos consecutivos más recientes) y la mejor racha de la sesión: «Racha actual: n» y «Mejor racha: n», ambas 0 al cargar. Se actualizan al responder: un acierto suma 1 a la racha actual y un fallo la pone a 0; la mejor racha es el máximo alcanzado por la racha actual y se actualiza en cuanto se supera. Ambas siguen visibles en la pantalla final. Reiniciar (y aplicar una semilla válida, que también reinicia) pone la racha actual a 0 pero conserva la mejor racha; la mejor racha solo vuelve a 0 al recargar la página.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Al cargar ambas rachas son 0 y cada acierto consecutivo las incrementa al responder."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Un fallo pone la racha actual a 0 y conserva la mejor racha."
+    },
+    {
+      "id": "R005-A03",
+      "description": "La mejor racha se actualiza en cuanto la racha actual la supera."
+    },
+    {
+      "id": "R005-A04",
+      "description": "En el final se muestran la racha actual y la mejor racha de la partida."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Reiniciar pone la racha actual a 0 y conserva la mejor racha."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Aplicar una semilla pone la racha actual a 0 y conserva la mejor racha."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la racha actual y la mejor racha son 0.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Racha actual",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Racha actual» cuyo texto incluye «Racha actual: n», visible también en la pantalla final."
+      },
+      {
+        "role": "status",
+        "name": "Mejor racha",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Mejor racha» cuyo texto incluye «Mejor racha: n», visible también en la pantalla final."
+      }
+    ]
+  }
+}

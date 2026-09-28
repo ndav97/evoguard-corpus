@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade un selector de región de entrega con las regiones del fixture (Península por defecto) y muestra el impuesto: (subtotal − descuento) × la tasa de la región, redondeado al céntimo (0,5 hacia arriba). Debe actualizarse con cualquier cambio del carrito, del cupón o de la región.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

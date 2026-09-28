@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "room_capacity",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Controlar la capacidad de las salas. Al crear una reserva se indica el número de asistentes (entero mayor o igual que 1; valor inicial 1). Si no es un entero ≥ 1 se muestra un aviso; si supera la capacidad de la sala seleccionada (norte 4, sur 8, auditorio 20) se muestra otro aviso; en ambos casos no se crea nada. Una reserva con asistentes igual a la capacidad está permitida. Estas comprobaciones se hacen después de la del título y antes de la del cierre y la de conflicto. Cada reserva muestra en su elemento sus asistentes tras el título, «N personas» (o «1 persona»), en ambas vistas. Tras crear, los asistentes vuelven a 1; tras un intento rechazado conservan su valor.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Cada reserva muestra sus asistentes («N personas» o «1 persona»)."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Una reserva con tantos asistentes como la capacidad de la sala se crea y muestra sus asistentes."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Superar la capacidad de la sala seleccionada no crea la reserva y muestra un aviso; la misma cantidad cabe en una sala mayor."
+    },
+    {
+      "id": "R005-A04",
+      "description": "Unos asistentes que no son un entero mayor o igual que 1 no crean la reserva y muestran un aviso."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Los asistentes valen 1 al cargar y vuelven a 1 tras crear una reserva."
+    },
+    {
+      "id": "R005-A06",
+      "description": "El límite depende de la sala: en el auditorio 21 asistentes se rechazan y 20 se aceptan."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el campo de asistentes vale 1.",
+    "elements": [
+      {
+        "role": "spinbutton",
+        "name": "Asistentes",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Asistentes» y valor inicial 1."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si los asistentes no son un entero mayor o igual que 1, aparece un elemento con role=\"alert\" cuyo texto contiene «Los asistentes deben ser un número entero mayor o igual que 1». Si superan la capacidad de la sala, su texto contiene «Se supera la capacidad de la sala». En ambos casos no se crea la reserva."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "El texto de cada reserva incluye, después del título, sus asistentes en la forma «N personas» (o «1 persona» cuando N = 1)."
+      }
+    ]
+  }
+}

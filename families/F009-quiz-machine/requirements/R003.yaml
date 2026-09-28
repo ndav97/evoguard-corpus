@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "answer_review",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "En la pantalla final, un botón «Revisar» muestra la lista «Revisión» con un ítem por pregunta, en el orden en que se presentaron. Cada ítem comienza con el ID de la pregunta seguido de «Correcta» o «Incorrecta», e indica la opción elegida («Elegida: <texto>») y la correcta («Respuesta correcta: <texto>»). Antes del final no hay botón «Revisar», y en el final la lista no se muestra hasta pulsarlo. Reiniciar oculta la revisión, y la revisión de un cuestionario nuevo solo refleja sus respuestas.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "La revisión lista las 12 preguntas en el orden presentado y marca cada una como Correcta o Incorrecta según la respuesta dada."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Cada ítem indica la opción elegida y la respuesta correcta."
+    },
+    {
+      "id": "R003-A03",
+      "description": "Revisar solo está disponible en el final y la lista no se muestra hasta pulsarlo."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Reiniciar oculta la revisión y la revisión siguiente refleja solo el nuevo cuestionario."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Cada ítem corresponde a su propia pregunta aunque aciertos y fallos se alternen."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no se muestra la revisión.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Revisar",
+        "rule": "En la pantalla final, un botón «Revisar» que muestra la revisión. Antes del final está oculto o deshabilitado."
+      },
+      {
+        "role": "list",
+        "name": "Revisión",
+        "rule": "La revisión es una lista (<ul> u <ol>) con nombre accesible «Revisión» (aria-label), oculta hasta pulsar Revisar."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada ítem de «Revisión» es un <li> cuyo texto comienza con el ID de la pregunta seguido de «Correcta» o «Incorrecta» (p. ej. «Q003 Incorrecta · Elegida: 1965 · Respuesta correcta: 1969») e incluye «Elegida: <texto de la opción elegida>» y «Respuesta correcta: <texto de la opción correcta>»; separadores libres."
+      }
+    ]
+  }
+}

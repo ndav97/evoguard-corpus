@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Quiero poder etiquetar las notas. Añade al formulario un campo «Etiquetas» donde escribir etiquetas separadas por comas (recorta espacios, pásalas a minúsculas y quita las vacías y las repetidas). Muestra las etiquetas de cada nota como #etiqueta y añade un selector para filtrar por etiqueta, con la opción «todas» y las etiquetas existentes en orden alfabético, que se combine con la búsqueda. Las etiquetas deben conservarse al recargar.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "openai",
+  "reference_commit": null,
+  "patch_path": null
+}

@@ -1,0 +1,51 @@
+{
+  "mutants": {
+    "no-lock": [
+      "R001-A04"
+    ],
+    "keep-choice": [
+      "R001-A05"
+    ],
+    "grade-index": [
+      "R001-A06"
+    ],
+    "score-answered": [
+      "R002-A01",
+      "R002-A02",
+      "R002-A04"
+    ],
+    "end-early": [
+      "R002-A03"
+    ],
+    "restart-keeps-score": [
+      "R002-A06"
+    ],
+    "review-swap": [
+      "R003-A02"
+    ],
+    "review-accumulate": [
+      "R003-A04"
+    ],
+    "review-early": [
+      "R003-A03"
+    ],
+    "seed-plus": [
+      "R004-A01"
+    ],
+    "seed-range": [
+      "R004-A05"
+    ],
+    "review-sorted": [
+      "R004-A07"
+    ],
+    "best-reset": [
+      "R005-A05"
+    ],
+    "best-on-fail": [
+      "R005-A03"
+    ],
+    "streak-no-reset": [
+      "R005-A02"
+    ]
+  }
+}

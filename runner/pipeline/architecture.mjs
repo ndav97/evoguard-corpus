@@ -1,29 +1,58 @@
-// Control de restricciones arquitectónicas de F001 sobre el árbol exportado del candidato.
+// Control de restricciones arquitectónicas sobre el árbol exportado del candidato, derivado del perfil
+// estructural de la familia (family.yaml structural_profile) y de su prompts/architecture.md.
 // Análisis estático de texto: nunca ejecuta código del candidato en el host.
-// Restricciones (prompts/common.md y family.yaml structural_profile): useState centralizado y datos derivados;
-// sin useReducer, efectos, persistencia, gestores externos, backend ni servicios externos; sin dependencias nuevas;
-// fixture sin modificar. El número de componentes es guía de auditoría (5–20), no condición de rechazo.
+// Siempre: sin backend ni servicios externos, sin almacenamiento distinto del exigido, sin dependencias nuevas,
+// fixture sin modificar e importado por la aplicación. El número de componentes es guía de auditoría (5–20).
 import { createHash } from 'node:crypto';
 
 const SOURCE = /^src\/.+\.(tsx?|jsx?|mjs|cjs)$/;
 const TEST = /(^tests?\/)|(\.(test|spec)\.[tj]sx?$)|(^src\/.*__tests__\/)/;
-const FORBIDDEN = [
-  ['useReducer', /\buseReducer\b/],
-  ['useEffect', /\buseEffect\b/],
-  ['useLayoutEffect', /\buseLayoutEffect\b/],
+const ALWAYS_FORBIDDEN = [
   ['useInsertionEffect', /\buseInsertionEffect\b/],
   ['useSyncExternalStore', /\buseSyncExternalStore\b/],
   ['fetch', /\bfetch\s*\(/],
   ['XMLHttpRequest', /\bXMLHttpRequest\b/],
   ['WebSocket', /\bWebSocket\b/],
   ['EventSource', /\bEventSource\b/],
-  ['localStorage', /\blocalStorage\b/],
   ['sessionStorage', /\bsessionStorage\b/],
   ['indexedDB', /\bindexedDB\b/],
   ['document.cookie', /\bdocument\s*\.\s*cookie\b/],
   ['sendBeacon', /\bsendBeacon\b/],
   ['import dinámico', /\bimport\s*\(/]
 ];
+const API = {
+  useState: /\buseState\b/, useReducer: /\buseReducer\b/, useEffect: /\buseEffect\b/, useLayoutEffect: /\buseLayoutEffect\b/,
+  localStorage: /\blocalStorage\b/, createContext: /\bcreateContext\b/, useContext: /\buseContext\b/, useMemo: /\buseMemo\b/,
+  defaultValue: /\bdefaultValue\s*=/, controlledValue: /\bvalue\s*=\s*\{/, onChange: /\bonChange\s*=/,
+  hookDefinition: /(?:function\s+use[A-Z]\w*\s*[(<]|(?:const|let)\s+use[A-Z]\w*\s*(?::[^=]+)?=)/
+};
+// Perfil de F001 (compatibilidad con familias sin perfil ampliado).
+const F001_PROFILE = { state_strategy: 'useState', topology: 'centralized', reducer: false, effects: false, persistence: false };
+
+// Reglas: { forbid: [nombre, regex][], require: [descripción, predicado(stats)][] }.
+export function architectureRules(profile = F001_PROFILE) {
+  const forbid = [...ALWAYS_FORBIDDEN];
+  const require = [];
+  const need = (label, test) => require.push([label, test]);
+  if (profile.reducer === false) forbid.push(['useReducer', API.useReducer]);
+  if (profile.reducer === true) need('no se usa useReducer', s => s.any.useReducer);
+  if (profile.effects === false) forbid.push(['useEffect', API.useEffect], ['useLayoutEffect', API.useLayoutEffect]);
+  if (profile.effects === true) need('no se usa useEffect', s => s.any.useEffect);
+  if (profile.persistence === false) forbid.push(['localStorage', API.localStorage]);
+  if (profile.persistence === 'localStorage') need('no se usa localStorage', s => s.any.localStorage);
+  if (profile.context === false) forbid.push(['createContext', API.createContext], ['useContext', API.useContext]);
+  if (profile.context === true) need('no se usa Context API (createContext y useContext)', s => s.any.createContext && s.any.useContext);
+  if (profile.memoization === true) need('no se usa useMemo', s => s.any.useMemo);
+  if (profile.custom_hooks === true) need('no se definen hooks propios (use*)', s => s.any.hookDefinition);
+  if (profile.controlled_inputs === true) {
+    forbid.push(['defaultValue (campos no controlados)', API.defaultValue]);
+    need('sin campos controlados (value + onChange)', s => s.any.controlledValue && s.any.onChange);
+  }
+  if (profile.state_strategy === 'useState' || profile.reducer === false) need('no se usa useState', s => s.any.useState);
+  if (profile.topology === 'distributed') need('estado no distribuido: useState en menos de dos módulos', s => s.files.useState >= 2);
+  return { forbid, require };
+}
+
 const ALLOWED_PACKAGES = new Set(['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime']);
 
 const sha = data => createHash('sha256').update(data).digest('hex');
@@ -37,11 +66,14 @@ function dependencies(packageJson) {
   return JSON.stringify({ dependencies: parsed.dependencies ?? {}, devDependencies: parsed.devDependencies ?? {}, peerDependencies: parsed.peerDependencies ?? {}, optionalDependencies: parsed.optionalDependencies ?? {} });
 }
 
-// files: { ruta relativa: Buffer } del workspace (sin node_modules/dist/.git); baseline: { package.json, package-lock.json, fixtureSha256 }.
+// files: { ruta relativa: Buffer } del workspace (sin node_modules/dist/.git);
+// baseline: { packageJson, packageLock, fixturePath, fixtureSha256, profile }.
 export function checkArchitecture(files, baseline) {
   const violations = [];
   const add = (rule, detail) => violations.push({ rule, detail });
   const get = path => (files[path] === undefined ? null : text(files[path]));
+  const fixturePath = baseline.fixturePath ?? 'fixtures/products.json';
+  const rules = architectureRules(baseline.profile);
 
   const packageJson = get('package.json');
   if (packageJson === null) add('dependencias', 'package.json ausente');
@@ -50,29 +82,30 @@ export function checkArchitecture(files, baseline) {
     catch { add('dependencias', 'package.json inválido'); }
   }
   if (get('package-lock.json') !== baseline.packageLock) add('dependencias', 'package-lock.json modificado');
-  const fixture = files['fixtures/products.json'];
-  if (!fixture || sha(fixture) !== baseline.fixtureSha256) add('fixture', 'fixtures/products.json ausente o modificado');
+  const fixture = files[fixturePath];
+  if (!fixture || sha(fixture) !== baseline.fixtureSha256) add('fixture', `${fixturePath} ausente o modificado`);
+  const fixtureImport = new RegExp(`${fixturePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`);
 
   const sources = Object.keys(files).filter(path => SOURCE.test(path) && !TEST.test(path)).sort();
   if (!sources.length) add('fuente', 'sin archivos fuente en src/');
-  let usesState = false;
+  const stats = { any: Object.fromEntries(Object.keys(API).map(k => [k, false])), files: Object.fromEntries(Object.keys(API).map(k => [k, 0])) };
   let importsFixture = false;
   let components = 0;
   for (const path of sources) {
     const code = stripComments(text(files[path]));
-    for (const [name, pattern] of FORBIDDEN) if (pattern.test(code)) add('api prohibida', `${name} en ${path}`);
+    for (const [name, pattern] of rules.forbid) if (pattern.test(code)) add('api prohibida', `${name} en ${path}`);
     for (const specifier of imports(code)) {
       if (specifier.startsWith('.') || specifier.startsWith('/')) {
-        if (/fixtures\/products\.json$/.test(specifier)) importsFixture = true;
+        if (fixtureImport.test(specifier)) importsFixture = true;
         continue;
       }
       if (!ALLOWED_PACKAGES.has(specifier)) add('dependencia externa', `${specifier} en ${path}`);
     }
-    if (/\buseState\b/.test(code)) usesState = true;
+    for (const [key, pattern] of Object.entries(API)) if (pattern.test(code)) { stats.any[key] = true; stats.files[key]++; }
     components += (code.match(/(?:export\s+default\s+)?function\s+[A-Z]\w*\s*\(|const\s+[A-Z]\w*\s*[:=][^;]*=>/g) ?? []).length;
   }
-  if (!usesState) add('estado', 'no se usa useState');
-  if (!importsFixture) add('fixture', 'la aplicación no importa fixtures/products.json');
+  for (const [label, test] of rules.require) if (!test(stats)) add(label.startsWith('no se usa useState') ? 'estado' : 'perfil estructural', label);
+  if (!importsFixture) add('fixture', `la aplicación no importa ${fixturePath}`);
 
   return {
     status: violations.length ? 'FAIL' : 'PASS',

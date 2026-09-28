@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Leer aria-pressed de Fijar en N001 y N005.",
+        "Fijar N005; leer.",
+        "Pulsar Fijar en N005 otra vez; leer."
+      ],
+      "expected": "N001 false y N005 false; tras fijar: N005 true; tras pulsar otra vez: N005 false."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Fijar N005."
+      ],
+      "expected": "N005, N001, N002, N003, N004, N006–N012."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Fijar N009; fijar N003."
+      ],
+      "expected": "N003, N009, N001, N002, N004–N008, N010–N012."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Fijar N009; fijar N003; pulsar Fijar en N003 otra vez."
+      ],
+      "expected": "N009, N001–N008, N010–N012."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Fijar N012; Buscar notas = «presupuesto».",
+        "Buscar notas = «»; Filtrar etiqueta = trabajo."
+      ],
+      "expected": "Búsqueda: N012, N003, N007; filtro trabajo: N012, N002, N003."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Fijar N007; fijar N011; recargar."
+      ],
+      "expected": "N007, N011, N001–N006, N008–N010, N012; Fijar de N007 y N011 true, de N001 false."
+    }
+  ]
+}

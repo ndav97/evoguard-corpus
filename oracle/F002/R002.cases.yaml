@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Avanzar K001.",
+        "Estado = en_curso.",
+        "Estado = pendiente."
+      ],
+      "expected": "en_curso: K001, K002, K005, K011, K012, K015, K021, K023; pendiente sin K001."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Avanzar K002.",
+        "Estado = hecha.",
+        "Estado = en_curso."
+      ],
+      "expected": "hecha: K002, K003, K006, K009, K013, K016, K019, K022; en_curso sin K002."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Intentar avanzar K003.",
+        "Estado = hecha."
+      ],
+      "expected": "K003 sin avance habilitado; hecha sigue siendo K003, K006, K009, K013, K016, K019, K022."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Estado = pendiente; avanzar K004.",
+        "Avanzar K008."
+      ],
+      "expected": "Tras K004: K001, K007, K008, K010, K014, K017, K018, K020, K024; tras K008: K001, K007, K010, K014, K017, K018, K020, K024."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Avanzar K001 dos veces.",
+        "Consultar pendiente, en_curso y hecha."
+      ],
+      "expected": "pendiente sin K001; en_curso igual al fixture; hecha: K001, K003, K006, K009, K013, K016, K019, K022."
+    }
+  ]
+}

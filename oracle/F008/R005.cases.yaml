@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Leer Moneda de visualización y Total del mes al cargar."
+      ],
+      "expected": "Moneda de visualización = EUR; Total del mes: 433.84 EUR."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Moneda de visualización = USD.",
+        "Moneda de visualización = GBP."
+      ],
+      "expected": "Total del mes: 472.95 USD; después 371.15 GBP."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Moneda de visualización = USD."
+      ],
+      "expected": "Presupuestos en USD: Comida 159.05 / 272.54, Transporte 108.58 / 130.82, Ocio 90.91 / 109.02, Hogar 93.97 / 436.06, Salud 20.44 / 65.41."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Mes = 2026-02; Moneda de visualización = GBP."
+      ],
+      "expected": "Total del mes: 427.59 GBP; Ocio 90.53 / 85.55 GBP con «Excedido»; Salud 51.33 / 51.33 GBP sin «Excedido»."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Moneda de visualización = USD."
+      ],
+      "expected": "G004 sigue mostrando «G004 2026-01-12 Libro técnico 29.99 USD» y G001 «G001 2026-01-05 Supermercado 62.40 EUR»."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Moneda de visualización = USD; Mes = 2026-03.",
+        "Moneda de visualización = EUR."
+      ],
+      "expected": "Total del mes: 524.89 USD; después 481.48 EUR y Comida 183.64 / 250.00 EUR."
+    }
+  ]
+}

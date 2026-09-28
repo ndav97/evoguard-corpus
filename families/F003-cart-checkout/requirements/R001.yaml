@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "add_to_cart",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Mostrar los 16 productos del catálogo en el orden del fixture, cada uno con un botón para añadirlo al carrito. El carrito empieza vacío. Añadir un producto que no está en el carrito crea una línea con cantidad 1 al final del carrito (orden de primera adición); añadir un producto que ya está suma 1 a la cantidad de su línea, sin crear otra. El subtotal es la suma de precio × cantidad de todas las líneas y se muestra con dos decimales y punto decimal (0.00 con el carrito vacío). Los importes se calculan en céntimos exactos.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar se ven los 16 productos del catálogo en el orden del fixture, el carrito está vacío y el subtotal es 0.00."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Añadir un producto crea su línea con cantidad 1 y actualiza el subtotal."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Añadir otra vez un producto del carrito incrementa su cantidad sin duplicar la línea."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Las líneas aparecen en el orden de primera adición y el subtotal suma todas ellas."
+    },
+    {
+      "id": "R001-A05",
+      "description": "El subtotal se muestra siempre con dos decimales."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página el carrito está vacío y el subtotal es 0.00.",
+    "elements": [
+      {
+        "role": "list",
+        "name": "Catálogo",
+        "rule": "Los productos del catálogo se muestran en una lista (<ul> u <ol>) con nombre accesible «Catálogo» (aria-label). Cada producto es un <li> cuyo texto visible comienza con el ID seguido del nombre, p. ej. «S001 Cuaderno A5», e incluye su precio."
+      },
+      {
+        "role": "button",
+        "name": "Añadir",
+        "rule": "Cada <li> del catálogo contiene un botón «Añadir» que añade ese producto al carrito."
+      },
+      {
+        "role": "list",
+        "name": "Carrito",
+        "rule": "Las líneas del carrito se muestran en una lista (<ul> u <ol>) con nombre accesible «Carrito» (aria-label). Con el carrito vacío la lista no tiene elementos (o no se muestra)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada línea del carrito es un <li> dentro de la lista «Carrito». Su texto visible comienza con el ID del producto seguido de su nombre, p. ej. «S003 Taza de cerámica». Hay una sola línea por producto."
+      },
+      {
+        "role": "spinbutton",
+        "name": "Cantidad",
+        "rule": "Cada línea del carrito contiene dentro de su <li> un <input type=\"number\"> con nombre accesible «Cantidad» cuyo valor es la cantidad de esa línea."
+      },
+      {
+        "role": "status",
+        "name": "Subtotal",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Subtotal» (aria-label) cuyo texto incluye «Subtotal: N» con N con dos decimales y punto decimal (p. ej. «Subtotal: 12.90»)."
+      }
+    ]
+  }
+}

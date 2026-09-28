@@ -73,8 +73,17 @@
                   "combobox",
                   "button",
                   "listitem",
-                  "status"
-                ]
+                  "status",
+                  "textbox",
+                  "checkbox",
+                  "spinbutton",
+                  "radio",
+                  "alert",
+                  "heading",
+                  "list",
+                  "field"
+                ],
+                "description": "Rol ARIA. field: control localizado por su etiqueta (<label>) cuando el tipo de input no tiene rol ARIA (password, date)."
               },
               "name": {
                 "type": [

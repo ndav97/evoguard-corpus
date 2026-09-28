@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "answer_questions",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Presentar las preguntas del fixture de una en una, en el orden del fixture, empezando por la primera. De la pregunta actual se muestran su ID y su enunciado, y sus 4 opciones como botones de opción (radio), ninguna marcada al llegar a la pregunta. «Responder» solo está habilitado con una opción marcada. Al responder se muestra el resultado («Correcto» si la opción marcada es la correcta, «Incorrecto» en otro caso, junto con el texto de la respuesta correcta), las opciones quedan bloqueadas (deshabilitadas, conservando la marcada) y no se puede volver a responder. «Siguiente» solo está disponible tras responder y pasa a la pregunta siguiente, sin opción marcada y sin resultado.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar se muestra Q001 con su enunciado y sus 4 opciones sin marcar, sin resultado y con Responder deshabilitado."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Responder con la opción correcta muestra «Correcto» y la respuesta correcta."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Responder con una opción incorrecta muestra «Incorrecto» y la respuesta correcta."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Tras responder, las opciones quedan deshabilitadas conservando la marcada y Responder deja de estar disponible."
+    },
+    {
+      "id": "R001-A05",
+      "description": "Siguiente no está disponible antes de responder; tras responder lleva a la pregunta siguiente sin opción marcada, sin resultado y con Responder deshabilitado."
+    },
+    {
+      "id": "R001-A06",
+      "description": "El resultado se evalúa con la respuesta correcta de la pregunta actual en cada pregunta."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página se muestra la primera pregunta del fixture (Q001) sin ninguna opción marcada.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Pregunta",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Pregunta» (aria-label) cuyo texto comienza con el ID de la pregunta actual seguido de su enunciado, p. ej. «Q001 ¿Cuál es la capital de Australia?». No se muestra en la pantalla final."
+      },
+      {
+        "role": "radio",
+        "name": null,
+        "rule": "Cada opción de la pregunta actual es un <input type=\"radio\"> cuyo nombre accesible (su <label>) es exactamente el texto de la opción del fixture. Solo son visibles las 4 opciones de la pregunta actual; tras responder quedan deshabilitadas (atributo disabled) y la marcada sigue marcada. En la pantalla final no hay opciones visibles."
+      },
+      {
+        "role": "button",
+        "name": "Responder",
+        "rule": "Un botón «Responder» que evalúa la opción marcada. Deshabilitado (atributo disabled) sin opción marcada; tras responder está deshabilitado u oculto hasta la pregunta siguiente."
+      },
+      {
+        "role": "status",
+        "name": "Resultado",
+        "rule": "Tras responder, un elemento con role=\"status\" y nombre accesible «Resultado» cuyo texto comienza por «Correcto» o por «Incorrecto» e incluye «Respuesta correcta: <texto de la opción correcta>». Antes de responder está oculto o vacío."
+      },
+      {
+        "role": "button",
+        "name": "Siguiente",
+        "rule": "Un botón «Siguiente», disponible solo tras responder (antes está oculto o deshabilitado), que pasa a la pregunta siguiente."
+      }
+    ]
+  }
+}

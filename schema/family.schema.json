@@ -76,22 +76,41 @@
       "type": "object",
       "properties": {
         "state_strategy": {
-          "const": "useState"
+          "enum": [
+            "useState",
+            "useReducer",
+            "context",
+            "custom_hooks"
+          ]
         },
         "topology": {
-          "const": "centralized"
+          "enum": [
+            "centralized",
+            "distributed",
+            "provider"
+          ]
         },
         "derived_state": {
-          "const": true
+          "type": "boolean"
         },
         "reducer": {
-          "const": false
+          "type": "boolean",
+          "description": "true exige useReducer; false lo prohíbe."
         },
         "effects": {
-          "const": false
+          "enum": [
+            true,
+            false,
+            "allowed"
+          ],
+          "description": "true exige useEffect; false prohíbe efectos; allowed no impone regla."
         },
         "persistence": {
-          "const": false
+          "enum": [
+            false,
+            "localStorage"
+          ],
+          "description": "false prohíbe almacenamiento del navegador; localStorage lo exige (y prohíbe los demás)."
         },
         "external_state_manager": {
           "const": false
@@ -118,6 +137,22 @@
             "binding"
           ],
           "additionalProperties": false
+        },
+        "context": {
+          "type": "boolean",
+          "description": "true exige createContext+useContext; false los prohíbe; ausente no impone regla."
+        },
+        "memoization": {
+          "type": "boolean",
+          "description": "true exige useMemo."
+        },
+        "custom_hooks": {
+          "type": "boolean",
+          "description": "true exige definir y usar hooks propios (use*)."
+        },
+        "controlled_inputs": {
+          "type": "boolean",
+          "description": "true exige campos controlados (value+onChange) y prohíbe defaultValue."
         }
       },
       "required": [
@@ -156,6 +191,10 @@
           },
           "minItems": 3,
           "uniqueItems": true
+        },
+        "initial_request": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -218,14 +257,15 @@
       "properties": {
         "path": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^fixtures/[a-z0-9-]+\\.json$"
         },
         "sha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
         "count": {
-          "const": 30
+          "type": "integer",
+          "minimum": 1
         },
         "category_counts": {
           "type": "object",
@@ -250,13 +290,16 @@
             "Books"
           ],
           "additionalProperties": false
+        },
+        "summary": {
+          "type": "object",
+          "description": "Invariantes declarados del fixture (conteos por grupo, etc.); los comprueba el módulo de la familia."
         }
       },
       "required": [
         "path",
         "sha256",
-        "count",
-        "category_counts"
+        "count"
       ],
       "additionalProperties": false
     },

@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Al cargar, consultar Semilla.",
+        "Semilla = 20; Aplicar semilla.",
+        "Responder las 12 preguntas con la opción correcta y Siguiente tras cada una."
+      ],
+      "expected": "Semilla vacía al cargar; orden presentado: Q005, Q010, Q001, Q006, Q011, Q002, Q007, Q012, Q003, Q008, Q004, Q009; Final con «Puntuación final: 12 de 12»."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Marcar «Canberra»; Responder.",
+        "Semilla = 41; Aplicar semilla."
+      ],
+      "expected": "Pregunta empieza por «Q012»; Puntuación 0/12; sin Resultado; Responder deshabilitado."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Semilla = 20; Aplicar semilla.",
+        "Semilla = 0; Aplicar semilla.",
+        "Responder las 12 preguntas con la opción correcta y Siguiente tras cada una."
+      ],
+      "expected": "Tras 20 la primera pregunta es Q005; tras 0 el orden presentado es Q001–Q012."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Semilla = 41; Aplicar semilla.",
+        "Semilla vacía; Aplicar semilla.",
+        "Responder las 12 preguntas con la opción correcta y Siguiente tras cada una."
+      ],
+      "expected": "Tras 41 la primera pregunta es Q012; tras vaciar el orden presentado es Q001–Q012."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Semilla = 20; Aplicar semilla; marcar «Volga»; Responder.",
+        "Semilla = 97; Aplicar semilla.",
+        "Semilla = -1; Aplicar semilla.",
+        "Semilla = 2.5; Aplicar semilla.",
+        "Siguiente.",
+        "Semilla = 96; Aplicar semilla."
+      ],
+      "expected": "Tras cada valor inválido: aviso con «La semilla debe ser un número entero entre 0 y 96», Pregunta Q005, Resultado «Correcto» y Puntuación 1/12; Siguiente lleva a Q010; con 96: Pregunta Q012 y Puntuación 0/12."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Semilla = 41; Aplicar semilla; responder Q012 con «60 grados»; Siguiente.",
+        "Reiniciar."
+      ],
+      "expected": "Antes de Reiniciar la Pregunta es Q005; tras Reiniciar: Pregunta Q012 y Puntuación 0/12."
+    },
+    {
+      "id": "R004-A07",
+      "steps": [
+        "Semilla = 20; Aplicar semilla.",
+        "Responder las 12 preguntas con Siguiente tras cada una: Q005 con «Rin» y el resto con la opción correcta.",
+        "Revisar."
+      ],
+      "expected": "Revisión en el orden Q005, Q010, Q001, Q006, Q011, Q002, Q007, Q012, Q003, Q008, Q004, Q009; Q005 «Incorrecta» y el resto «Correcta»."
+    }
+  ]
+}

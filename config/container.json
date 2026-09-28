@@ -17,7 +17,7 @@
   },
   "verification": {
     "path": "docs/verification/container.json",
-    "sha256": "54590867e0f59396882845b9a707b28ace2e5c06971bc1c82e1e8e035d8d57e4"
+    "sha256": "1bb9071acc8af8f7e4bf534852e340f894cb910c50a4aeccd1f139e1c0bed30d"
   },
   "verification_inputs": {
     "docker/base.json": "aa726bd05f1985e60897061ce3b72a6e203af81db42c99f452f9d5022439e714",
@@ -30,20 +30,22 @@
     "templates/react-vite/index.html": "51fbebfe78a2600f59120aa039c14db07c4d849c5cc5a23599a1a6dcde49a92e",
     "templates/react-vite/src/App.tsx": "3d364951397a141db0090129e50780ea509e1fe49fd43187304872f450f58653",
     "templates/react-vite/src/main.tsx": "c922b796e04fbcff1c9734ef34acb52073a3bf064b281d59359780878d5cb465",
-    "runner/sandbox/policy.mjs": "3b45151dc648413951461c4955af23178ae68433bcc4a0c4e8575257b941489c",
+    "runner/sandbox/policy.mjs": "d2f9419fc8315292ba793dda2af7159680e8d55ab64a554bfa94765b77d6f133",
     "runner/sandbox/docker.mjs": "86d12ec06193a6cadfd01688a491bcba537566061c55f883180dee47b9a98879",
-    "runner/sandbox/seed-init.mjs": "5aa60f8a6b1bd7d4aa6247f90eac1f433d2b6c5438602fbf3bd5217dfa9aa7ae",
-    "runner/sandbox/lineage.mjs": "ed45cff4d150ddadd00f9f5be9269c0fe72b447188d45f66d3a95b9f28365e26",
+    "runner/sandbox/seed-init.mjs": "7ebc015fda8fd6e0c5cc425e737bbeec7aea0b79c03d1701c1a159249c85530d",
+    "runner/sandbox/lineage.mjs": "ac0d04cd54a1c04f16f7f9a6da852d1c1a99744e737d9f93e449494f38335878",
     "runner/sandbox/lock.mjs": "b5e5223ace7a054baac47f363028c6f006cb32ead01f08d3a06882511cd1468d",
     "runner/sandbox/build.mjs": "5322123d0f8758dc197d3650ba1d4e8c58683923828cde481d33efe30af8a6e0",
     "runner/sandbox/verify.mjs": "a3faceb8dd119da1f44bddcde08ab9eb814d821bd8dc5bba16179a666c9fe4bf",
     "runner/sandbox/probe.mjs": "982ada4464ab006d0341562125307d0ca6bebc2fd04fbadb278dc2a8e7c09e6f",
     "runner/sandbox/cli.mjs": "ff10056c92bccdeb5c80ea4f96b6560cf46aef81c4c9057d90fad8dab15ae8ae",
     "runner/sandbox/sessions.mjs": "431696354463cb78415a2e009a73e844eaa837a98b54c2e6ef5804ead5c5463a",
-    "runner/packet.mjs": "f7cd0124331254ec63a0c12a781f40dca4dbcb500bf783d3487cba477d52a8bc",
-    "runner/validation/corpus.mjs": "ac49a4fb5cd7582540d21b80f5f7433f0e6f8a1ee275a87ba091418df4622fdd",
-    "prompts/common.md": "eb49600b9a86b52d156f3fb1f142b33b1b225afc8c7c0871a18d2aeb230c2683",
-    "prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",
+    "runner/packet.mjs": "4b2e31001bb10ca02159f82f57a8f64ff4a49575fa7632a261e7e9593aa48204",
+    "runner/validation/corpus.mjs": "df98bd7b53ae45af49113a2e9d9cf004a3687728176d11983026ebb2ed3cfc74",
+    "prompts/common.md": "002a5e56035e88e4c985f7c0d91dcdbdbd2728fdd16393f34f71a539bed52e1e",
+    "families/F001-product-catalog/prompts/architecture.md": "6167d21661440f5ca79b8c5fa0b9cdbcb6dc8313fa3b5d25ff5abd9d49633019",
+    "families/F001-product-catalog/prompts/generate-v0.md": "18656269f3f16b7a24dee0760288c3483302d855fa6a0f69be7dda94534a0d44",
+    "runner/families.mjs": "427243acee0655df4998796875a95de55d1dd111bab2ab053965e0e0f6ebf72e",
     "families/F001-product-catalog/fixtures/products.json": "3f958343e6a420566b2edfe5392ab1aa4bfeec6fa465b459f60864483d0b65c9",
     "families/F001-product-catalog/requirements/R001.yaml": "29d620c6add0021c4ac6a3c95609e0c127595a88a9f75bae210ad72ace8109cb",
     "families/F001-product-catalog/requirements/R002.yaml": "1b6e1b4cf287fb4b160b91adc3d8a0e81bbdf7711f22d17170e5dbf1e182b377"

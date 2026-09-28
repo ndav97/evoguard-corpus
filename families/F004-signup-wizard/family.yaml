@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F004",
+  "slug": "signup-wizard",
+  "name": "Signup Wizard",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "useState",
+    "topology": "centralized",
+    "derived_state": true,
+    "reducer": false,
+    "effects": false,
+    "persistence": false,
+    "controlled_inputs": true,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye el asistente de registro cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "local_a",
+    "V1": "local_b",
+    "V2": "openai",
+    "V3": "anthropic"
+  },
+  "fixture": {
+    "path": "fixtures/signup-options.json",
+    "sha256": "433a0fe5433cbfe28a79f9e8fbbf1eeeb6bc546d8aff3ef1df3d0521444f8f81",
+    "count": 6,
+    "summary": {
+      "country_codes": [
+        "ES",
+        "MX",
+        "AR",
+        "CL",
+        "PT",
+        "FR"
+      ],
+      "countries_with_regions": [
+        "ES",
+        "AR"
+      ],
+      "region_count": 7,
+      "plan_codes": [
+        "basico",
+        "pro",
+        "equipo"
+      ],
+      "free_email_domain_count": 4
+    }
+  },
+  "oracle": {
+    "path": "oracle/F004",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

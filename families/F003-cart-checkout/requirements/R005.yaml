@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "shipping_and_total",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Mostrar el coste de envío y el total a pagar. El envío es el `shipping` de la región elegida; vale 0.00 si el carrito está vacío o si subtotal − descuento es mayor o igual que `free_shipping_threshold` (50.00). El total a pagar es subtotal − descuento + impuesto + envío, con dos decimales. Ambos se actualizan con cada cambio del carrito, del cupón o de la región.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Con el carrito vacío el envío y el total a pagar son 0.00."
+    },
+    {
+      "id": "R005-A02",
+      "description": "El total a pagar suma subtotal, impuesto y envío de la región elegida."
+    },
+    {
+      "id": "R005-A03",
+      "description": "El envío es gratuito cuando el importe llega al umbral de 50.00 y vuelve a cobrarse por debajo."
+    },
+    {
+      "id": "R005-A04",
+      "description": "El umbral se compara con el subtotal menos el descuento."
+    },
+    {
+      "id": "R005-A05",
+      "description": "El envío depende de la región elegida."
+    },
+    {
+      "id": "R005-A06",
+      "description": "El total a pagar combina descuento, impuesto y envío de la región."
+    },
+    {
+      "id": "R005-A07",
+      "description": "Vaciar el carrito devuelve el envío y el total a pagar a 0.00."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar el envío y el total a pagar son 0.00.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Envío",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Envío» (aria-label) cuyo texto incluye «Envío: N» con dos decimales."
+      },
+      {
+        "role": "status",
+        "name": "Total a pagar",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Total a pagar» (aria-label) cuyo texto incluye «Total a pagar: N» con dos decimales."
+      }
+    ]
+  }
+}

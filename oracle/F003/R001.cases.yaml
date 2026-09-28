@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin interactuar."
+      ],
+      "expected": "Catálogo: S001–S016 en ese orden; Carrito sin líneas; Subtotal 0.00."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Añadir S003."
+      ],
+      "expected": "Carrito: una línea «S003 Taza de cerámica» con Cantidad 1; Subtotal 7.25."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Añadir S005; añadir S002; añadir S005."
+      ],
+      "expected": "Carrito: S005 (Cantidad 2), S002 (Cantidad 1), sin líneas repetidas; Subtotal 61.90."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Añadir S016; añadir S001; añadir S009."
+      ],
+      "expected": "Carrito: S016, S001, S009 en ese orden; Subtotal 48.70."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Añadir S010.",
+        "Añadir S008."
+      ],
+      "expected": "Subtotal 2.80 tras S010 y 9.20 tras S008 (con dos decimales)."
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F010 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F010. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <section id="days" hidden>
+      <p id="day" role="status" aria-label="Día"></p>
+      <button type="button" id="advance">Avanzar día</button>
+      <p id="overdue" role="status" aria-label="Vencidos"></p>
+    </section>
+    <p id="restriction" role="status" aria-label="Restricción" hidden></p>
+    <h2>Catálogo</h2>
+    <ul id="catalog" aria-label="Catálogo"></ul>
+    <h2>Préstamos</h2>
+    <ul id="loans" aria-label="Préstamos"></ul>
+    <section id="historybox" hidden>
+      <h2>Historial</h2>
+      <ul id="history" aria-label="Historial"></ul>
+    </section>
+  </main>
+  <script>
+    const FIXTURE = {"loan_days":14,"renew_days":7,"start_day":1,"books":[{"id":"L001","title":"El faro del norte","author":"Marta Ibarra","copies":2},{"id":"L002","title":"Cartas desde Almería","author":"Tomás Rey","copies":1},{"id":"L003","title":"La isla de los relojes","author":"Lucía Ferrer","copies":1},{"id":"L004","title":"Sombras en el andén","author":"Diego Salas","copies":2},{"id":"L005","title":"El jardín de invierno","author":"Nuria Campos","copies":1},{"id":"L006","title":"Mapas de sal","author":"Andrés Vidal","copies":2},{"id":"L007","title":"La última cosecha","author":"Elena Soto","copies":1},{"id":"L008","title":"Viaje al centro del barrio","author":"Pablo Ortega","copies":1},{"id":"L009","title":"El cuaderno azul","author":"Inés Molina","copies":2},{"id":"L010","title":"Noches de biblioteca","author":"Raúl Castro","copies":1},{"id":"L011","title":"Puentes de papel","author":"Sara Delgado","copies":1},{"id":"L012","title":"El vuelo de la garza","author":"Jorge Prieto","copies":2},{"id":"L013","title":"Crónicas del río","author":"Ana Beltrán","copies":1},{"id":"L014","title":"La casa de las veletas","author":"Luis Navarro","copies":2},{"id":"L015","title":"Horizonte cercano","author":"Clara Gil","copies":1}]};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    const KEY = 'calibracion-F010';
+    const LIMIT = level >= 3 ? (mutant === 'limit-4' ? 4 : 3) : Infinity;
+
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(KEY));
+        if (saved && Array.isArray(saved.loans)) return { day: saved.day ?? FIXTURE.start_day, loans: saved.loans, history: saved.history ?? [], uid: saved.uid ?? 1 };
+      } catch { /* sin datos */ }
+      return { day: FIXTURE.start_day, loans: [], history: [], uid: 1 };
+    }
+    let state = load();
+    function save() {
+      if (mutant === 'no-persist') return;
+      const copy = { ...state };
+      if (mutant === 'day-not-saved') delete copy.day;
+      localStorage.setItem(KEY, JSON.stringify(copy));
+    }
+    const book = id => FIXTURE.books.find(b => b.id === id);
+    const available = id => book(id).copies - state.loans.filter(l => l.id === id).length;
+    const isOverdue = l => mutant === 'overdue-lte' ? l.due <= state.day : l.due < state.day;
+    const blocksLending = l => mutant === 'overdue-lte-block' ? l.due <= state.day : isOverdue(l);
+    function reason() {
+      if (level < 3) return '';
+      const overdue = mutant !== 'overdue-no-block' && state.loans.some(blocksLending);
+      const full = state.loans.length >= LIMIT;
+      if (mutant === 'reason-priority' && full) return 'Límite de 3 préstamos alcanzado';
+      if (overdue) return 'Hay préstamos vencidos';
+      if (full) return 'Límite de 3 préstamos alcanzado';
+      return '';
+    }
+
+    function lend(id) {
+      const base = mutant === 'due-from-start' ? FIXTURE.start_day : state.day;
+      const extra = mutant === 'day-per-loan' ? state.loans.length : 0;
+      const loan = { uid: state.uid++, id, loanDay: state.day, due: base + FIXTURE.loan_days + extra, renewals: 0 };
+      if (mutant === 'prepend-loans') state.loans.unshift(loan); else state.loans.push(loan);
+      save(); render();
+    }
+    function giveBack(uid) {
+      const loan = state.loans.find(l => l.uid === uid);
+      state.loans = mutant === 'return-all-copies' ? state.loans.filter(l => l.id !== loan.id) : state.loans.filter(l => l.uid !== uid);
+      if (level >= 3) {
+        const entry = { id: loan.id, loanDay: loan.loanDay, returnDay: state.day };
+        if (mutant === 'history-oldest-first') state.history.push(entry); else state.history.unshift(entry);
+      }
+      if (mutant !== 'return-not-saved') save();
+      render();
+    }
+    function renew(uid) {
+      for (const l of state.loans) {
+        if (l.uid === uid || (mutant === 'renew-all-copies' && l.id === state.loans.find(x => x.uid === uid).id)) {
+          l.due = (mutant === 'renew-from-day' ? state.day : l.due) + FIXTURE.renew_days;
+          l.renewals++;
+        }
+      }
+      save(); render();
+    }
+    function button(label, enabled, action) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = label; b.disabled = !enabled; b.onclick = action;
+      return b;
+    }
+
+    function render() {
+      const why = reason();
+      $('catalog').replaceChildren(...FIXTURE.books.map(b => {
+        const li = document.createElement('li');
+        const n = available(b.id);
+        li.append(`${b.id} ${b.title} — ${b.author} · Disponibles: ${n} `, button('Prestar', (n > 0 || mutant === 'no-disable') && !why, () => lend(b.id)));
+        return li;
+      }));
+      $('loans').replaceChildren(...state.loans.map(l => {
+        const li = document.createElement('li');
+        let text = `${l.id} ${book(l.id).title} — vence día ${l.due}`;
+        if (level >= 1 && isOverdue(l)) text += ' · Vencido';
+        if (level >= 2) text += ` · Renovaciones: ${l.renewals}`;
+        li.append(text + ' ', button('Devolver', true, () => giveBack(l.uid)));
+        if (level >= 2) {
+          const max = mutant === 'renew-max3' ? 3 : 2;
+          li.append(' ', button('Renovar', l.renewals < max && (mutant === 'renew-overdue' || !isOverdue(l)), () => renew(l.uid)));
+        }
+        return li;
+      }));
+      $('days').hidden = level < 1;
+      $('day').textContent = `Día ${state.day}`;
+      const overdueCount = level >= 1 ? state.loans.filter(isOverdue).length : 0;
+      $('overdue').textContent = `Vencidos: ${overdueCount}`;
+      $('restriction').hidden = !why;
+      $('restriction').textContent = why;
+      $('historybox').hidden = level < 3;
+      $('history').replaceChildren(...state.history.map(h => {
+        const li = document.createElement('li');
+        li.textContent = `${h.id} prestado día ${h.loanDay}, devuelto día ${h.returnDay}`;
+        return li;
+      }));
+    }
+    $('advance').onclick = () => { state.day++; save(); render(); };
+    render();
+  </script>
+</body>
+</html>

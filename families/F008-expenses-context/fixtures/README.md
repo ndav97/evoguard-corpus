@@ -1,0 +1,3 @@
+# Fixture fijo
+Gastos personales sintéticos de enero a marzo de 2026: tres monedas con su tasa fija a EUR (EUR 1, USD 0.9173, GBP 1.1689; un importe en moneda × tasa = importe en EUR), cinco categorías, un presupuesto mensual en EUR por categoría y 30 gastos (G001–G030) con fecha ISO, descripción, categoría, importe (como máximo dos decimales) y moneda. Varios gastos comparten fecha y el orden del fichero no coincide con el orden por fecha e ID. Ninguna conversión a EUR cae exactamente en medio céntimo.
+Archivo canónico UTF-8/LF; SHA-256 en family.yaml y provenance.yaml. No regenerar al ejecutar modelos. Cambios requieren revisión y actualización explícita de procedencia.

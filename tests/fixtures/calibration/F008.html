@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F008 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F008. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <label>Mes <select id="month"><option value="2026-01">Enero</option><option value="2026-02">Febrero</option><option value="2026-03">Marzo</option></select></label>
+    <label id="display-wrap">Moneda de visualización <select id="display"><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></label>
+    <p id="total" role="status" aria-label="Total del mes"></p>
+    <form id="create" novalidate>
+      <label>Descripción <input type="text" id="description"></label>
+      <label>Categoría <select id="category"></select></label>
+      <label>Importe <input type="text" id="amount"></label>
+      <label>Divisa <select id="currency"><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></label>
+      <label>Fecha <input type="date" id="date"></label>
+      <button type="submit">Añadir gasto</button>
+    </form>
+    <p id="error" role="alert" hidden></p>
+    <ul id="expenses" aria-label="Gastos"></ul>
+    <ul id="budgets" aria-label="Presupuestos"></ul>
+  </main>
+  <script>
+    const FIXTURE = {"currencies":[{"code":"EUR","rate":1},{"code":"USD","rate":0.9173},{"code":"GBP","rate":1.1689}],"categories":[{"id":"comida","name":"Comida"},{"id":"transporte","name":"Transporte"},{"id":"ocio","name":"Ocio"},{"id":"hogar","name":"Hogar"},{"id":"salud","name":"Salud"}],"budgets":{"comida":250,"transporte":120,"ocio":100,"hogar":400,"salud":60},"expenses":[{"id":"G006","date":"2026-01-05","description":"Frutería","category":"comida","amount":12.35,"currency":"EUR"},{"id":"G001","date":"2026-01-05","description":"Supermercado","category":"comida","amount":62.4,"currency":"EUR"},{"id":"G004","date":"2026-01-12","description":"Libro técnico","category":"ocio","amount":29.99,"currency":"USD"},{"id":"G002","date":"2026-01-12","description":"Cena con amigos","category":"ocio","amount":45.8,"currency":"EUR"},{"id":"G003","date":"2026-01-03","description":"Abono de transporte","category":"transporte","amount":54.6,"currency":"EUR"},{"id":"G005","date":"2026-01-20","description":"Farmacia","category":"salud","amount":18.75,"currency":"EUR"},{"id":"G007","date":"2026-01-28","description":"Factura de luz","category":"hogar","amount":86.2,"currency":"EUR"},{"id":"G008","date":"2026-01-17","description":"Taxi al aeropuerto","category":"transporte","amount":38.5,"currency":"GBP"},{"id":"G009","date":"2026-01-24","description":"Mercado","category":"comida","amount":71.15,"currency":"EUR"},{"id":"G010","date":"2026-01-09","description":"Suscripción de música","category":"ocio","amount":10.99,"currency":"USD"},{"id":"G016","date":"2026-02-02","description":"Panadería","category":"comida","amount":9.6,"currency":"EUR"},{"id":"G011","date":"2026-02-02","description":"Supermercado","category":"comida","amount":88.9,"currency":"EUR"},{"id":"G014","date":"2026-02-14","description":"Regalo","category":"ocio","amount":70,"currency":"GBP"},{"id":"G012","date":"2026-02-14","description":"Cine","category":"ocio","amount":24,"currency":"EUR"},{"id":"G013","date":"2026-02-07","description":"Gasolina","category":"transporte","amount":61.3,"currency":"EUR"},{"id":"G015","date":"2026-02-21","description":"Dentista","category":"salud","amount":45,"currency":"EUR"},{"id":"G017","date":"2026-02-25","description":"Factura de gas","category":"hogar","amount":72.45,"currency":"EUR"},{"id":"G018","date":"2026-02-11","description":"Tren a Madrid","category":"transporte","amount":42.8,"currency":"EUR"},{"id":"G019","date":"2026-02-18","description":"Restaurante","category":"comida","amount":64.25,"currency":"USD"},{"id":"G020","date":"2026-02-27","description":"Óptica","category":"salud","amount":15,"currency":"EUR"},{"id":"G026","date":"2026-03-04","description":"Carnicería","category":"comida","amount":34.55,"currency":"EUR"},{"id":"G021","date":"2026-03-04","description":"Supermercado","category":"comida","amount":95.7,"currency":"EUR"},{"id":"G022","date":"2026-03-15","description":"Concierto","category":"ocio","amount":68,"currency":"USD"},{"id":"G023","date":"2026-03-09","description":"Parking","category":"transporte","amount":22.4,"currency":"EUR"},{"id":"G024","date":"2026-03-15","description":"Lámpara","category":"hogar","amount":119.99,"currency":"GBP"},{"id":"G025","date":"2026-03-01","description":"Farmacia","category":"salud","amount":12.8,"currency":"EUR"},{"id":"G027","date":"2026-03-22","description":"Factura de agua","category":"hogar","amount":38.1,"currency":"EUR"},{"id":"G028","date":"2026-03-18","description":"Autobús","category":"transporte","amount":1.5,"currency":"EUR"},{"id":"G029","date":"2026-03-26","description":"Librería","category":"ocio","amount":17.45,"currency":"GBP"},{"id":"G030","date":"2026-03-30","description":"Mercado","category":"comida","amount":58.2,"currency":"USD"}]};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    // Aritmética en enteros: céntimos y tasas en diezmilésimas; redondeo al céntimo 0,5 hacia arriba.
+    const rate4 = Object.fromEntries(FIXTURE.currencies.map(c => [c.code, Math.round(c.rate * 10000)]));
+    const cents = v => Math.round(v * 100);
+    const fmt = c => (c / 100).toFixed(2);
+    function eurCents(e) {
+      if (mutant === 'no-convert' || (mutant === 'budget-no-convert' && e.forBudget)) return cents(e.amount);
+      const micro = cents(e.amount) * rate4[e.currency];
+      if (mutant === 'truncate') return Math.floor(micro / 10000);
+      return Math.floor((micro + 5000) / 10000);
+    }
+    // Conversión de céntimos EUR a la moneda de visualización: redondeo al céntimo de eur / tasa.
+    function toDisplay(eur, code) {
+      if (code === 'EUR') return eur;
+      if (mutant === 'display-multiply') return Math.floor((eur * rate4[code] + 5000) / 10000);
+      return Math.floor((eur * 10000 * 2 + rate4[code]) / (2 * rate4[code]));
+    }
+
+    let expenses = FIXTURE.expenses.map(e => ({ ...e }));
+    let nextId = 31;
+    for (const c of FIXTURE.categories) $('category').add(new Option(c.name, c.id));
+
+    function monthOf(e) { return e.date.slice(0, 7); }
+    function render() {
+      const month = $('month').value;
+      const code = level >= 3 ? $('display').value : 'EUR';
+      let list = expenses.filter(e => monthOf(e) === month || (mutant === 'always-show' && e.added));
+      if (mutant === 'sort-date-only') list.sort((a, b) => a.date.localeCompare(b.date));
+      else if (mutant === 'append-end') list = [...list.filter(e => !e.added).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)), ...list.filter(e => e.added)];
+      else list.sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+      const ul = $('expenses');
+      ul.replaceChildren();
+      for (const e of list) {
+        const li = document.createElement('li');
+        const shown = mutant === 'no-decimals' ? String(e.amount) : e.amount.toFixed(2);
+        li.textContent = mutant === 'convert-items' && code !== 'EUR'
+          ? `${e.id} ${e.date} ${e.description} ${fmt(toDisplay(eurCents(e), code))} ${code}`
+          : `${e.id} ${e.date} ${e.description} ${shown} ${e.currency}`;
+        ul.append(li);
+      }
+      const inMonth = expenses.filter(e => monthOf(e) === month);
+      let totalEur;
+      if (mutant === 'round-sum') totalEur = Math.floor((inMonth.reduce((n, e) => n + cents(e.amount) * rate4[e.currency], 0) + 5000) / 10000);
+      else totalEur = inMonth.reduce((n, e) => n + eurCents(e), 0);
+      const totalShown = mutant === 'display-sum-convert' && code !== 'EUR'
+        ? inMonth.reduce((n, e) => n + toDisplay(eurCents(e), code), 0) : toDisplay(totalEur, code);
+      $('total').textContent = `Total del mes: ${fmt(totalShown)} ${code}`;
+      const bl = $('budgets');
+      bl.replaceChildren();
+      for (const cat of FIXTURE.categories) {
+        const source = mutant === 'budget-all-months' ? expenses : inMonth;
+        const spent = source.filter(e => e.category === cat.id).reduce((n, e) => n + eurCents({ ...e, forBudget: true }), 0);
+        const limit = cents(FIXTURE.budgets[cat.id]);
+        const exceeded = mutant === 'exceed-ge' ? spent >= limit : spent > limit;
+        const li = document.createElement('li');
+        li.textContent = `${cat.name}: ${fmt(toDisplay(spent, code))} / ${fmt(toDisplay(limit, code))} ${code}${exceeded ? ' Excedido' : ''}`;
+        bl.append(li);
+      }
+    }
+
+    function fail(message) { $('error').textContent = message; $('error').hidden = false; }
+    $('create').onsubmit = event => {
+      event.preventDefault();
+      $('error').hidden = true;
+      const description = $('description').value.trim();
+      if (!description) return fail('La descripción es obligatoria');
+      const raw = $('amount').value.trim();
+      const pattern = mutant === 'amount-3dec' ? /^\d+(\.\d{1,3})?$/ : /^\d+(\.\d{1,2})?$/;
+      if (!pattern.test(raw) || Number(raw) <= 0) return fail('El importe debe ser mayor que 0 con como máximo dos decimales');
+      const date = $('date').value;
+      const valid = mutant === 'date-any' ? /^\d{4}-\d{2}-\d{2}$/.test(date) : ['2026-01', '2026-02', '2026-03'].includes(date.slice(0, 7)) && /^\d{4}-\d{2}-\d{2}$/.test(date);
+      if (!valid) return fail('La fecha debe pertenecer a uno de los meses disponibles');
+      expenses.push({ id: 'G' + String(nextId++).padStart(3, '0'), date, description, category: $('category').value, amount: Number(raw), currency: $('currency').value, added: true });
+      if (mutant !== 'keep-fields') { $('description').value = ''; $('amount').value = ''; }
+      render();
+    };
+
+    $('month').onchange = () => {
+      if (mutant === 'display-resets-on-month') $('display').value = 'EUR';
+      render();
+    };
+    $('display').onchange = render;
+    $('create').hidden = level < 1;
+    $('budgets').hidden = level < 2;
+    $('display-wrap').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

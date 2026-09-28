@@ -7,7 +7,7 @@ export const SCAFFOLD_FILES = ['package.json','package-lock.json','tsconfig.json
 export const IMAGE_FILES = ['docker/base.json','docker/Dockerfile','docker/init.mjs','templates/react-vite/package.json','templates/react-vite/package-lock.json'];
 export const VERIFICATION_FILES = [...new Set([...IMAGE_FILES,...SCAFFOLD_FILES.map(p=>`templates/react-vite/${p}`),
   'runner/sandbox/policy.mjs','runner/sandbox/docker.mjs','runner/sandbox/seed-init.mjs','runner/sandbox/lineage.mjs','runner/sandbox/lock.mjs','runner/sandbox/build.mjs','runner/sandbox/verify.mjs','runner/sandbox/probe.mjs','runner/sandbox/cli.mjs','runner/sandbox/sessions.mjs','runner/packet.mjs','runner/validation/corpus.mjs',
-  'prompts/common.md','prompts/generate-v0.md','families/F001-product-catalog/fixtures/products.json','families/F001-product-catalog/requirements/R001.yaml','families/F001-product-catalog/requirements/R002.yaml'])];
+  'prompts/common.md','families/F001-product-catalog/prompts/architecture.md','families/F001-product-catalog/prompts/generate-v0.md','runner/families.mjs','families/F001-product-catalog/fixtures/products.json','families/F001-product-catalog/requirements/R001.yaml','families/F001-product-catalog/requirements/R002.yaml'])];
 export function assertRelativePath(path) {
   if (typeof path !== 'string' || !path || /[\\:\x00-\x1f]/.test(path) || path.split('/').some(s=>!s || s==='.' || s==='..')) throw new Error('Ruta relativa inválida');
 }
@@ -22,12 +22,12 @@ export function readContainedFile(root,path) {
   if(!lstatSync(at).isFile()) throw new Error(`No es archivo: ${path}`);
   return readFileSync(at,'utf8');
 }
-export function seedFiles(root,version='V0') {
+export function seedFiles(root,version='V0',familyId='F001') {
   if(version !== 'V0') throw new Error('Solo V0: falta exportador auditado de historia para una referencia validada');
-  const data=loadCorpus(root), errors=validateCorpus(data,root);
+  const data=loadCorpus(root,familyId), errors=validateCorpus(data,root);
   if(errors.length) throw new Error(errors.join('\n'));
   const files=Object.fromEntries(SCAFFOLD_FILES.map(p=>[p,readContainedFile(root,`templates/react-vite/${p}`)]));
-  files['fixtures/products.json']=readContainedFile(root,'families/F001-product-catalog/fixtures/products.json');
+  files[data.family.fixture.path]=readContainedFile(root,`${data.familyDir}/${data.family.fixture.path}`);
   files['TASK.json']=JSON.stringify(makePacket(data,version),null,2)+'\n';
   files['.gitignore']='node_modules/\ndist/\ncoverage/\n';
   return files;

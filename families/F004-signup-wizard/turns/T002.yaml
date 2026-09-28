@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "En el paso Resumen, sin añadir pasos nuevos, deja elegir el plan (Básico, Pro o Equipo, del fixture) con Básico por defecto. Deshabilita Pro si la edad es menor de 18. Si elijo Equipo, pide el nombre de la empresa (obligatorio, sin contar espacios) y no envíes si falta, mostrando «La empresa es obligatoria». El resumen debe incluir «Plan: <nombre>», «Precio mensual: N» y, con Equipo, la empresa. El plan elegido debe conservarse al ir atrás y volver.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "openai",
+  "reference_commit": null,
+  "patch_path": null
+}

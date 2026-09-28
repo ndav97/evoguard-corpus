@@ -5,8 +5,9 @@ import { readdirSync, readFileSync, lstatSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { runSuiteOnSite, VERSIONS } from './evaluate.mjs';
 
-const [version, timeoutText] = process.argv.slice(2);
+const [version, timeoutText, family = 'F001'] = process.argv.slice(2);
 if (!VERSIONS.includes(version)) throw new Error(`Versión desconocida: ${version}`);
+if (!/^F\d{3}$/.test(family)) throw new Error(`Familia inválida: ${family}`);
 const site = '/workspace/site';
 const files = {};
 const walk = directory => {
@@ -19,5 +20,5 @@ const walk = directory => {
   }
 };
 walk(site);
-const report = await runSuiteOnSite(version, files, { timeout: Number(timeoutText) || 5000 });
+const report = await runSuiteOnSite(version, files, { timeout: Number(timeoutText) || 5000, family });
 process.stdout.write(JSON.stringify(report));

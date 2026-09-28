@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Marca a los estudiantes en riesgo: nota final (redondeada) por debajo de 60 o alguna tarea sin entregar. Añade un resumen «En riesgo» con cuántos hay (siempre sobre todos los estudiantes) y una casilla «Solo en riesgo» para ver solo a esos estudiantes, sin cambiar los resúmenes.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "local_a",
+  "reference_commit": null,
+  "patch_path": null
+}

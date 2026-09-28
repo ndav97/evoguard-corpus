@@ -1,0 +1,1 @@
+Arquitectura: el estado de dominio (las tareas) se gestiona con useReducer mediante acciones explícitas, y la vista se deriva de ese estado. Los valores de los campos de formulario pueden usar useState. No uses useEffect, useLayoutEffect ni ninguna forma de persistencia.

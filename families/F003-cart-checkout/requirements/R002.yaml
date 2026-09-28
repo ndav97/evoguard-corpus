@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "edit_cart_quantities",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Editar la cantidad de cada línea del carrito con su campo «Cantidad» (entero de 0 a 99). Al cambiar la cantidad el subtotal se actualiza de inmediato, sin botón de confirmación. Una cantidad 0 elimina la línea. Cada línea tiene además un botón «Quitar» que la elimina. Las demás líneas conservan su orden y cantidad. Si se vuelve a añadir un producto eliminado, su línea empieza de nuevo con cantidad 1 al final del carrito. Añadir desde el catálogo un producto cuya cantidad se ha editado suma 1 a la cantidad actual.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Cambiar la cantidad de una línea actualiza el subtotal."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Poner la cantidad a 0 elimina la línea y actualiza el subtotal."
+    },
+    {
+      "id": "R002-A03",
+      "description": "El botón Quitar elimina la línea y las demás se conservan."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Volver a añadir un producto quitado crea una línea nueva con cantidad 1 al final."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Añadir desde el catálogo tras editar la cantidad suma 1 a la cantidad editada."
+    },
+    {
+      "id": "R002-A06",
+      "description": "Quitar la única línea deja el carrito vacío y el subtotal en 0.00."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar el carrito está vacío.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Quitar",
+        "rule": "Cada línea del carrito contiene dentro de su <li> un botón «Quitar» que elimina esa línea."
+      }
+    ]
+  }
+}

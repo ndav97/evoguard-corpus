@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Quiero poder cambiar los pesos de las categorías: tres campos con los pesos actuales y un botón «Aplicar pesos». Los pesos deben ser enteros entre 0 y 100 y sumar exactamente 100; si no, muestra un aviso y deja los pesos anteriores. Al aplicarlos, recalcula notas, letras y distribución.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}

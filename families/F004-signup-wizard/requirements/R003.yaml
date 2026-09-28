@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "conditional_province",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Si el país elegido en Perfil tiene regiones en el fixture (`regions` no vacía), aparece un selector «Provincia» obligatorio con una opción vacía (valor \"\", inicial) seguida de las regiones del país en su orden. Si el país no tiene regiones, el selector no se muestra. Al cambiar de país la provincia vuelve a vacía; si el nuevo país no tiene regiones, el selector desaparece y la provincia anterior se descarta: no se valida ni aparece en el Resumen. Con un país con regiones y la provincia vacía, «Siguiente» no avanza y muestra un aviso. Si hay provincia, el Resumen incluye «Provincia: <nombre>». «Atrás» conserva la provincia elegida.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Elegir un país con regiones muestra el selector Provincia con sus regiones; un país sin regiones no lo muestra."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Con un país con regiones, la provincia es obligatoria para avanzar."
+    },
+    {
+      "id": "R003-A03",
+      "description": "El Resumen incluye la provincia elegida y el país."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Cambiar a un país sin regiones descarta la provincia: se avanza sin ella y el Resumen no la incluye."
+    },
+    {
+      "id": "R003-A05",
+      "description": "Cambiar entre países con regiones vacía la provincia y ofrece las regiones del nuevo país."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Atrás desde Resumen conserva la provincia elegida."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no hay país elegido y el selector Provincia no se muestra.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Provincia",
+        "rule": "Un <select> con nombre accesible «Provincia», visible en el paso Perfil solo si el país elegido tiene regiones, con opciones de valor \"\" (vacía, inicial) y los códigos de las regiones del país en el orden del fixture."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si falta la provincia, aparece un elemento con role=\"alert\" cuyo texto contiene «Selecciona una provincia»."
+      }
+    ]
+  }
+}

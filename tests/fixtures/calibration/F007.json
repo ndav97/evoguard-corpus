@@ -1,0 +1,20 @@
+{
+  "mutants": {
+    "room-or": ["R001-A01", "R001-A02"],
+    "sort-id": ["R001-A01"],
+    "touch-conflict": ["R002-A02"],
+    "no-contain": ["R002-A04"],
+    "any-room-conflict": ["R002-A05"],
+    "close-ge": ["R002-A06"],
+    "notrim": ["R002-A07"],
+    "reuse-id": ["R003-A03", "R003-A05"],
+    "cancel-blocks": ["R003-A02"],
+    "week-sort-start": ["R004-A01"],
+    "hours-day": ["R004-A02"],
+    "hours-all-rooms": ["R004-A02"],
+    "cap-max": ["R005-A03"],
+    "cap-ge": ["R005-A02", "R005-A06"],
+    "attendees-float": ["R005-A04"],
+    "attendees-keep": ["R005-A05"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Quiero poder cancelar reservas: pon un botón «Cancelar» en cada reserva de la lista. Al cancelar, la reserva desaparece y su hueco queda libre para reservar de nuevo, sin afectar a las demás. Los IDs de reservas canceladas no se reutilizan: la siguiente reserva nueva recibe el ID siguiente al mayor asignado alguna vez.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}

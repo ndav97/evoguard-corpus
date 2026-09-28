@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Leer Presupuestos al cargar."
+      ],
+      "expected": "Comida 145.90 / 250.00, Transporte 99.60 / 120.00, Ocio 83.39 / 100.00, Hogar 86.20 / 400.00, Salud 18.75 / 60.00, en ese orden, en EUR y sin «Excedido»."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Mes = 2026-02."
+      ],
+      "expected": "Comida 157.44 / 250.00, Transporte 104.10 / 120.00, Ocio 105.82 / 100.00 con «Excedido», Hogar 72.45 / 400.00, Salud 60.00 / 60.00 sin «Excedido»."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Mes = 2026-03."
+      ],
+      "expected": "Comida 183.64 / 250.00, Transporte 23.90 / 120.00, Ocio 82.78 / 100.00, Hogar 178.36 / 400.00, Salud 12.80 / 60.00; ninguna con «Excedido»."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Descripción = «Peaje»; Categoría = transporte; Importe = «20.40»; Fecha = 2026-01-30; Añadir gasto.",
+        "Descripción = «Peaje extra»; Importe = «0.01»; Añadir gasto."
+      ],
+      "expected": "Tras el primero: Transporte 120.00 / 120.00 sin «Excedido»; tras el segundo: Transporte 120.01 / 120.00 con «Excedido»."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Descripción = «Entradas»; Categoría = ocio; Importe = «18»; Divisa = USD; Fecha = 2026-01-15; Añadir gasto."
+      ],
+      "expected": "Ocio 99.90 / 100.00 sin «Excedido» (18.00 USD = 16.51 EUR)."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Descripción = «Fisioterapia»; Categoría = salud; Importe = «50»; Fecha = 2026-02-10; Añadir gasto.",
+        "Mes = 2026-02."
+      ],
+      "expected": "En enero Salud sigue 18.75 / 60.00; en febrero Salud 110.00 / 60.00 con «Excedido»."
+    }
+  ]
+}

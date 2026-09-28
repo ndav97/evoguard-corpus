@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F003",
+  "slug": "cart-checkout",
+  "name": "Cart Checkout",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "useState",
+    "topology": "distributed",
+    "derived_state": true,
+    "reducer": false,
+    "effects": false,
+    "persistence": false,
+    "context": false,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye el carrito de la compra cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "google",
+    "V1": "local_a",
+    "V2": "local_b",
+    "V3": "openai"
+  },
+  "fixture": {
+    "path": "fixtures/catalog.json",
+    "sha256": "cbe75e594ea2631228d7c40be91e341a770ec736d0e93de5956664fadec948de",
+    "count": 16,
+    "summary": {
+      "category_counts": {
+        "Papelería": 4,
+        "Libros": 4,
+        "Hogar": 4,
+        "Electrónica": 4
+      },
+      "catalog_total": 190.29,
+      "coupon_codes": [
+        "AHORRO10",
+        "MENOS5",
+        "LIBROS20"
+      ],
+      "region_codes": [
+        "peninsula",
+        "baleares",
+        "canarias"
+      ]
+    }
+  },
+  "oracle": {
+    "path": "oracle/F003",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

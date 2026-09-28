@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Título = «Revisión legal»; Inicio = 12:00; Duración = 60; Reservar."
+      ],
+      "expected": "Reservas: B003, B006, B001, B015, B009; B015 muestra «B015 12:00–13:00 Revisión legal»; Título vacío."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Título = «Preparación»; Inicio = 08:00; Duración = 60; Reservar.",
+        "Título = «Seguimiento»; Inicio = 13:00; Duración = 120; Reservar."
+      ],
+      "expected": "Ambas se crean sin aviso: Reservas: B015 (08:00–09:00), B003, B006, B001, B016 (13:00–15:00), B009."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Título = «Solape»; Inicio = 16:00; Duración = 60; Reservar.",
+        "Inicio = 14:30; Duración = 60; Reservar."
+      ],
+      "expected": "En ambos intentos aviso con «La reserva se solapa con» y «B009»; la lista sigue siendo B003, B006, B001, B009."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Título = «Bloque largo»; Inicio = 08:30; Duración = 120; Reservar."
+      ],
+      "expected": "Aviso con «La reserva se solapa con» y «B003»; la lista sigue siendo B003, B006, B001, B009."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Sala = auditorio; Título = «Ensayo»; Inicio = 09:00; Duración = 90; Reservar.",
+        "Sala = norte; Día = 2026-03-03; Título = «Ensayo 2»; Inicio = 09:00; Duración = 90; Reservar."
+      ],
+      "expected": "Auditorio 2026-03-02: B015, B012; norte 2026-03-03: B016, B004."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Consultar las opciones de Inicio y Duración.",
+        "Sala = auditorio; Día = 2026-03-03; Título = «Tarde»; Inicio = 18:30; Duración = 60; Reservar.",
+        "Inicio = 18:00; Duración = 60; Reservar."
+      ],
+      "expected": "Inicio: 08:00 a 18:30 cada 30 minutos (22 opciones); Duración: 30, 60, 90, 120; el primer intento avisa «La reserva termina después del cierre» y no crea nada; el segundo crea «B015 18:00–19:00 Tarde»."
+    },
+    {
+      "id": "R002-A07",
+      "steps": [
+        "Título = «   »; Inicio = 12:00; Reservar.",
+        "Título = «»; Reservar."
+      ],
+      "expected": "Aviso con «El título es obligatorio» en ambos intentos; la lista sigue siendo B003, B006, B001, B009."
+    }
+  ]
+}

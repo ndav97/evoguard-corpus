@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Leer Día y Vencidos al cargar.",
+        "Avanzar día 3 veces."
+      ],
+      "expected": "Día 1 y Vencidos 0; después Día 4."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Prestar L003.",
+        "Avanzar día 14 veces.",
+        "Avanzar día."
+      ],
+      "expected": "Tras 14: Día 15, L003 sin «Vencido» y Vencidos 0; tras 15: Día 16, L003 con «Vencido» y Vencidos 1."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Prestar L003.",
+        "Avanzar día 5 veces; prestar L005."
+      ],
+      "expected": "Día 6; Préstamos: L003 «vence día 15» y L005 «vence día 20»."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Prestar L003; avanzar día 5 veces; prestar L005.",
+        "Avanzar día 10 veces.",
+        "Avanzar día 5 veces."
+      ],
+      "expected": "Día 16: L003 «Vencido», L005 no, Vencidos 1; Día 21: ambos «Vencido», Vencidos 2."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Avanzar día 3 veces; prestar L003; recargar.",
+        "Avanzar día 15 veces; recargar."
+      ],
+      "expected": "Tras la primera recarga: Día 4 y L003 «vence día 18»; tras la segunda: Día 19, L003 «Vencido» y Vencidos 1."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Prestar L003; prestar L004; avanzar día 15 veces.",
+        "Devolver L003."
+      ],
+      "expected": "Día 16 con Vencidos 2; tras devolver: Vencidos 1, Préstamos solo L004 y L003 «Disponibles: 1»."
+    }
+  ]
+}

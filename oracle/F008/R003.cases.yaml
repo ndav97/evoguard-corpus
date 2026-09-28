@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Descripción = «Peluquería»; Categoría = salud; Importe = «20»; Divisa = EUR; Fecha = 2026-01-12; Añadir gasto."
+      ],
+      "expected": "Gastos: G003, G001, G006, G010, G002, G004, G031, G008, G005, G009, G007; G031 muestra «G031 2026-01-12 Peluquería 20.00 EUR»; Total del mes: 453.84 EUR."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Descripción = «   »; Importe = «10»; Fecha = 2026-01-10; Añadir gasto.",
+        "Descripción = «»; Añadir gasto."
+      ],
+      "expected": "Aviso con «La descripción es obligatoria» en ambos intentos; siguen los 10 gastos de enero."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Descripción = «Hotel»; Fecha = 2026-01-10; Importe = «0»; Añadir gasto.",
+        "Importe = «-5»; Añadir gasto.",
+        "Importe = «12.345»; Añadir gasto.",
+        "Importe = «abc»; Añadir gasto."
+      ],
+      "expected": "Aviso con «El importe debe ser mayor que 0 con como máximo dos decimales» en los cuatro intentos; siguen los 10 gastos de enero."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Descripción = «Hotel»; Importe = «80»; Fecha vacía; Añadir gasto.",
+        "Fecha = 2026-04-01; Añadir gasto.",
+        "Fecha = 2025-12-31; Añadir gasto."
+      ],
+      "expected": "Aviso con «La fecha debe pertenecer a uno de los meses disponibles» en los tres intentos; siguen los 10 gastos de enero; Mes = 2026-03 sigue mostrando sus 10 gastos."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Descripción = «Ferretería»; Categoría = hogar; Importe = «15.5»; Divisa = GBP; Fecha = 2026-03-31; Añadir gasto.",
+        "Mes = 2026-03."
+      ],
+      "expected": "Enero sigue con sus 10 gastos y total 433.84 EUR; en marzo el último gasto es «G031 2026-03-31 Ferretería 15.50 GBP» y el total es 499.60 EUR (15.50 × 1.1689 = 18.12)."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Descripción = «Café»; Importe = «3.20»; Fecha = 2026-01-05; Añadir gasto.",
+        "Descripción = «Té»; Importe = «2.80»; Añadir gasto."
+      ],
+      "expected": "Gastos: G003, G001, G006, G031, G032, G010, G002, G004, G008, G005, G009, G007; tras cada alta Descripción e Importe vacíos; Fecha sigue en 2026-01-05."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade una vista semanal: un selector «Vista» con día (la actual, por defecto) y semana. En la vista semanal muestra todas las reservas de la sala en los cinco días, ordenadas por fecha y hora de inicio, incluyendo la fecha en cada reserva (p. ej. «B003 2026-03-02 09:00–10:30 Revisión de presupuesto»). Muestra también, en ambas vistas, las horas reservadas de la sala en toda la semana con dos decimales («Horas reservadas: 10.00»), actualizadas al crear y cancelar.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "local_a",
+  "reference_commit": null,
+  "patch_path": null
+}

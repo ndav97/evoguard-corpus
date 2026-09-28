@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente."
+      ],
+      "expected": "Básico marcado; Pro y Equipo sin marcar y habilitados; Resumen incluye «Plan: Básico» y Precio mensual 4.99."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 17; País = MX; Siguiente.",
+        "Atrás; Edad = 18; Siguiente."
+      ],
+      "expected": "Con 17: Pro deshabilitado y Básico marcado; con 18: Pro habilitado."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente; marcar Pro.",
+        "Enviar."
+      ],
+      "expected": "Resumen incluye «Plan: Pro» y Precio mensual 12.90; tras enviar, Confirmación con «ana@empresa.es»."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente; marcar Equipo; Empresa = «   »; Enviar.",
+        "Empresa = «Talleres Norte»; Enviar."
+      ],
+      "expected": "Primero: aviso con «La empresa es obligatoria» y sin Confirmación; después: Confirmación con «ana@empresa.es»."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente; marcar Equipo; Empresa = «Talleres Norte».",
+        "Marcar Básico."
+      ],
+      "expected": "Con Equipo: Empresa visible; Resumen incluye «Plan: Equipo», Precio mensual 29.00 y «Talleres Norte»; con Básico: Empresa no visible; Resumen incluye «Plan: Básico» y Precio mensual 4.99 y no «Talleres Norte»."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente; marcar Pro.",
+        "Atrás; Siguiente."
+      ],
+      "expected": "Pro sigue marcado; Resumen incluye «Plan: Pro»."
+    }
+  ]
+}

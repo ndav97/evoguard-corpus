@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Eliminar N004.",
+        "Recargar."
+      ],
+      "expected": "Antes y después de recargar: N001–N003, N005–N012."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Eliminar N004; Deshacer eliminación."
+      ],
+      "expected": "N001–N012 en su orden."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Eliminar N002; eliminar N006; Deshacer eliminación.",
+        "Consultar Deshacer eliminación."
+      ],
+      "expected": "N001, N003–N012 (N006 restaurada, N002 no); Deshacer eliminación deshabilitado."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Al cargar, consultar Deshacer eliminación.",
+        "Eliminar N010; consultar.",
+        "Crear «Nota nueva»; consultar.",
+        "Eliminar N011; consultar.",
+        "Recargar; consultar."
+      ],
+      "expected": "Deshabilitado, habilitado, deshabilitado, habilitado, deshabilitado; tras recargar N011 sigue eliminada."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Fijar N008; eliminar N008; Deshacer eliminación."
+      ],
+      "expected": "N008 vuelve la primera, con Fijar en true; después N001–N007, N009–N012."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Eliminar N005; crear «Nota posterior»."
+      ],
+      "expected": "N001–N004, N006–N012, N013 «Nota posterior»."
+    },
+    {
+      "id": "R005-A07",
+      "steps": [
+        "Eliminar N006; leer las opciones de Filtrar etiqueta.",
+        "Deshacer eliminación; leer las opciones."
+      ],
+      "expected": "Sin N006: todas, casa, compras, finanzas, ideas, lectura, trabajo, viaje; tras deshacer vuelve salud entre lectura y trabajo."
+    }
+  ]
+}

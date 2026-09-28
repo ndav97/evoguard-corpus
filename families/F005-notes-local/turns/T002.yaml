@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T002",
+  "episode_id": "E001",
+  "from_version": "V1",
+  "to_version": "V2",
+  "request": "Añade un botón para fijar o desfijar cada nota (con aria-pressed). Las notas fijadas deben aparecer primero, en su orden habitual, seguidas de las demás, también en búsquedas y filtros. Al desfijar, la nota vuelve a su sitio. El fijado debe conservarse al recargar.",
+  "introduces": [
+    "R004"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "provider": "anthropic",
+  "reference_commit": null,
+  "patch_path": null
+}

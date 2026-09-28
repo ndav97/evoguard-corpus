@@ -1,0 +1,97 @@
+{
+  "loan_days": 14,
+  "renew_days": 7,
+  "start_day": 1,
+  "books": [
+    {
+      "id": "L001",
+      "title": "El faro del norte",
+      "author": "Marta Ibarra",
+      "copies": 2
+    },
+    {
+      "id": "L002",
+      "title": "Cartas desde Almería",
+      "author": "Tomás Rey",
+      "copies": 1
+    },
+    {
+      "id": "L003",
+      "title": "La isla de los relojes",
+      "author": "Lucía Ferrer",
+      "copies": 1
+    },
+    {
+      "id": "L004",
+      "title": "Sombras en el andén",
+      "author": "Diego Salas",
+      "copies": 2
+    },
+    {
+      "id": "L005",
+      "title": "El jardín de invierno",
+      "author": "Nuria Campos",
+      "copies": 1
+    },
+    {
+      "id": "L006",
+      "title": "Mapas de sal",
+      "author": "Andrés Vidal",
+      "copies": 2
+    },
+    {
+      "id": "L007",
+      "title": "La última cosecha",
+      "author": "Elena Soto",
+      "copies": 1
+    },
+    {
+      "id": "L008",
+      "title": "Viaje al centro del barrio",
+      "author": "Pablo Ortega",
+      "copies": 1
+    },
+    {
+      "id": "L009",
+      "title": "El cuaderno azul",
+      "author": "Inés Molina",
+      "copies": 2
+    },
+    {
+      "id": "L010",
+      "title": "Noches de biblioteca",
+      "author": "Raúl Castro",
+      "copies": 1
+    },
+    {
+      "id": "L011",
+      "title": "Puentes de papel",
+      "author": "Sara Delgado",
+      "copies": 1
+    },
+    {
+      "id": "L012",
+      "title": "El vuelo de la garza",
+      "author": "Jorge Prieto",
+      "copies": 2
+    },
+    {
+      "id": "L013",
+      "title": "Crónicas del río",
+      "author": "Ana Beltrán",
+      "copies": 1
+    },
+    {
+      "id": "L014",
+      "title": "La casa de las veletas",
+      "author": "Luis Navarro",
+      "copies": 2
+    },
+    {
+      "id": "L015",
+      "title": "Horizonte cercano",
+      "author": "Clara Gil",
+      "copies": 1
+    }
+  ]
+}

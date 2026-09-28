@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F005 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F005. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <label>Buscar notas <input type="search" id="search"></label>
+    <label id="filter-label">Filtrar etiqueta <select id="filter"></select></label>
+    <form id="create">
+      <label>Título <input type="text" id="title"></label>
+      <label>Contenido <textarea id="body"></textarea></label>
+      <label id="tags-label">Etiquetas <input type="text" id="tags"></label>
+      <button type="submit">Guardar nota</button>
+    </form>
+    <p id="error" role="alert" hidden></p>
+    <button type="button" id="undo">Deshacer eliminación</button>
+    <ul id="notes" aria-label="Notas"></ul>
+  </main>
+  <script>
+    const FIXTURE = [{"id": "N001", "title": "Lista de la compra", "body": "Leche, pan, huevos y café para toda la semana.", "tags": ["casa", "compras"]}, {"id": "N002", "title": "Ideas para el blog", "body": "Escribir sobre RECETAS de temporada y la huerta urbana.", "tags": ["ideas", "trabajo"]}, {"id": "N003", "title": "Reunión de equipo", "body": "Revisar el presupuesto del trimestre y las entregas.", "tags": ["trabajo"]}, {"id": "N004", "title": "Receta de lentejas", "body": "Remojar la noche anterior y cocer con verduras.", "tags": ["casa"]}, {"id": "N005", "title": "Viaje a Oporto", "body": "Reservar tren y buscar alojamiento cerca del río.", "tags": ["viaje"]}, {"id": "N006", "title": "Cita con el dentista", "body": "Pedir hora para la revisión anual.", "tags": ["salud"]}, {"id": "N007", "title": "Presupuesto de la reforma", "body": "Comparar tres ofertas para la cocina.", "tags": ["casa", "finanzas"]}, {"id": "N008", "title": "Libros pendientes", "body": "Terminar la novela y empezar el ensayo sobre la huerta.", "tags": ["lectura", "ideas"]}, {"id": "N009", "title": "Cena del sábado", "body": "Probar la receta de la abuela con el horno nuevo.", "tags": ["casa"]}, {"id": "N010", "title": "Declaración de la renta", "body": "Reunir los certificados del banco antes de junio.", "tags": ["finanzas"]}, {"id": "N011", "title": "Maleta de verano", "body": "No olvidar el cargador y el protector solar para el viaje.", "tags": ["viaje", "compras"]}, {"id": "N012", "title": "Informe mensual", "body": "Enviar el PRESUPUESTO revisado al equipo de ventas.", "tags": ["trabajo"]}];
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const KEY = 'calibracion-notas';
+    const $ = id => document.getElementById(id);
+    let pinSeq = 0;
+    function load() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (raw) return JSON.parse(raw);
+      } catch { /* sin almacenamiento */ }
+      return FIXTURE.map(n => ({ ...n, tags: [...n.tags], pinned: false, pinSeq: 0 }));
+    }
+    function save() {
+      if (mutant === 'no-persist') return;
+      const stored = notes.map(n => ({ ...n, tags: mutant === 'tags-lost' ? [] : n.tags, pinned: mutant === 'pin-no-persist' ? false : n.pinned }));
+      localStorage.setItem(KEY, JSON.stringify(stored));
+    }
+    let notes = load();
+    let counter = 12; // mutante id-reset: contador en memoria que se reinicia al recargar
+    let lastDeleted = null;
+    let stack = []; // mutante undo-stack
+    let filter = 'todas';
+    const initialTags = [...new Set(notes.flatMap(n => n.tags))].sort();
+
+    function nextId() {
+      let n;
+      if (mutant === 'id-reset') n = ++counter;
+      else if (mutant === 'count-id') n = notes.length + 1;
+      else n = Math.max(0, ...notes.map(x => Number(x.id.slice(1)))) + 1;
+      return 'N' + String(n).padStart(3, '0');
+    }
+
+    function tagOptions() {
+      if (mutant === 'stale-options') return initialTags;
+      const tags = [...new Set(notes.flatMap(n => n.tags))];
+      return mutant === 'tag-order' ? tags : tags.sort();
+    }
+
+    function matches(note, query) {
+      if (!query) return true;
+      const norm = s => mutant === 'search-case' ? s : s.toLowerCase();
+      const q = norm(query);
+      const has = s => mutant === 'search-starts' ? norm(s).startsWith(q) : norm(s).includes(q);
+      if (mutant === 'search-title') return has(note.title);
+      if (mutant === 'search-tags' && note.tags.some(has)) return true;
+      return has(note.title) || has(note.body);
+    }
+
+    function visible() {
+      const raw = $('search').value;
+      const query = mutant === 'search-notrim' ? raw : raw.trim();
+      const tagOn = level >= 1 && filter !== 'todas';
+      let list = notes.filter(n => {
+        const byTag = !tagOn || n.tags.includes(filter);
+        const bySearch = matches(n, query);
+        if (mutant === 'tag-or' && tagOn && query) return byTag || bySearch;
+        return byTag && bySearch;
+      });
+      if (level >= 2 && !(mutant === 'pin-search' && (query || tagOn))) {
+        const pinned = list.filter(n => n.pinned);
+        if (mutant === 'pin-order') pinned.sort((a, b) => a.pinSeq - b.pinSeq);
+        list = [...pinned, ...list.filter(n => !n.pinned)];
+      }
+      return list;
+    }
+
+    function render() {
+      if (level >= 1) {
+        const options = tagOptions();
+        if (filter !== 'todas' && !options.includes(filter)) filter = 'todas';
+        const select = $('filter');
+        select.replaceChildren(...['todas', ...options].map(v => { const o = document.createElement('option'); o.value = v; o.textContent = v === 'todas' ? 'Todas' : v; return o; }));
+        select.value = filter;
+      }
+      const list = $('notes');
+      list.replaceChildren();
+      for (const note of visible()) {
+        const li = document.createElement('li');
+        li.append(`${note.id} ${note.title} `);
+        const body = document.createElement('span');
+        body.textContent = note.body ? ` ${note.body} ` : ' ';
+        li.append(body);
+        if (level >= 1) li.append(note.tags.map(t => `#${t}`).join(' ') + ' ');
+        if (level >= 2) {
+          const button = document.createElement('button');
+          button.type = 'button'; button.textContent = 'Fijar';
+          button.setAttribute('aria-pressed', String(Boolean(note.pinned)));
+          button.onclick = () => togglePin(note.id);
+          li.append(button, ' ');
+        }
+        if (level >= 3) {
+          const button = document.createElement('button');
+          button.type = 'button'; button.textContent = 'Eliminar';
+          button.onclick = () => remove(note.id);
+          li.append(button);
+        }
+        list.append(li);
+      }
+      const canUndo = mutant === 'undo-stack' ? stack.length > 0 : Boolean(lastDeleted);
+      $('undo').disabled = !canUndo;
+    }
+
+    function togglePin(id) {
+      const index = notes.findIndex(n => n.id === id);
+      const note = notes[index];
+      note.pinned = !note.pinned;
+      note.pinSeq = ++pinSeq;
+      if (mutant === 'unpin-end' && !note.pinned) { notes.splice(index, 1); notes.push(note); }
+      save(); render();
+    }
+
+    function remove(id) {
+      const index = notes.findIndex(n => n.id === id);
+      const [note] = notes.splice(index, 1);
+      lastDeleted = { note, index };
+      stack.push(lastDeleted);
+      if (mutant !== 'delete-no-persist') save();
+      render();
+    }
+
+    $('undo').onclick = () => {
+      const entry = mutant === 'undo-stack' ? stack.pop() : lastDeleted;
+      if (!entry) return;
+      const note = mutant === 'undo-unpin' ? { ...entry.note, pinned: false } : entry.note;
+      if (mutant === 'undo-end') notes.push(note); else notes.splice(entry.index, 0, note);
+      lastDeleted = null;
+      save(); render();
+    };
+
+    function parseTags(raw) {
+      let tags = raw.split(',').map(t => mutant === 'tags-case' ? t.trim() : t.trim().toLowerCase()).filter(Boolean);
+      if (mutant !== 'tags-dup') tags = [...new Set(tags)];
+      return tags;
+    }
+
+    $('create').onsubmit = event => {
+      event.preventDefault();
+      $('error').hidden = true;
+      const title = mutant === 'notrim' ? $('title').value : $('title').value.trim();
+      if (!title) { $('error').textContent = 'El título es obligatorio'; $('error').hidden = false; return; }
+      const note = { id: nextId(), title, body: mutant === 'body-lost' ? '' : $('body').value.trim(), tags: level >= 1 ? parseTags($('tags').value) : [], pinned: false, pinSeq: 0 };
+      if (mutant === 'prepend') notes.unshift(note); else notes.push(note);
+      if (mutant !== 'undo-create') { lastDeleted = null; stack = []; }
+      if (mutant !== 'keep-fields') { $('title').value = ''; $('body').value = ''; $('tags').value = ''; }
+      save(); render();
+    };
+
+    $('search').oninput = render;
+    $('filter').onchange = () => { filter = $('filter').value; render(); };
+
+    // Funcionalidades por versión.
+    $('filter-label').hidden = level < 1;
+    $('tags-label').hidden = level < 1;
+    $('undo').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

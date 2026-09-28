@@ -1,0 +1,287 @@
+{
+  "currencies": [
+    {
+      "code": "EUR",
+      "rate": 1
+    },
+    {
+      "code": "USD",
+      "rate": 0.9173
+    },
+    {
+      "code": "GBP",
+      "rate": 1.1689
+    }
+  ],
+  "categories": [
+    {
+      "id": "comida",
+      "name": "Comida"
+    },
+    {
+      "id": "transporte",
+      "name": "Transporte"
+    },
+    {
+      "id": "ocio",
+      "name": "Ocio"
+    },
+    {
+      "id": "hogar",
+      "name": "Hogar"
+    },
+    {
+      "id": "salud",
+      "name": "Salud"
+    }
+  ],
+  "budgets": {
+    "comida": 250,
+    "transporte": 120,
+    "ocio": 100,
+    "hogar": 400,
+    "salud": 60
+  },
+  "expenses": [
+    {
+      "id": "G006",
+      "date": "2026-01-05",
+      "description": "Frutería",
+      "category": "comida",
+      "amount": 12.35,
+      "currency": "EUR"
+    },
+    {
+      "id": "G001",
+      "date": "2026-01-05",
+      "description": "Supermercado",
+      "category": "comida",
+      "amount": 62.4,
+      "currency": "EUR"
+    },
+    {
+      "id": "G004",
+      "date": "2026-01-12",
+      "description": "Libro técnico",
+      "category": "ocio",
+      "amount": 29.99,
+      "currency": "USD"
+    },
+    {
+      "id": "G002",
+      "date": "2026-01-12",
+      "description": "Cena con amigos",
+      "category": "ocio",
+      "amount": 45.8,
+      "currency": "EUR"
+    },
+    {
+      "id": "G003",
+      "date": "2026-01-03",
+      "description": "Abono de transporte",
+      "category": "transporte",
+      "amount": 54.6,
+      "currency": "EUR"
+    },
+    {
+      "id": "G005",
+      "date": "2026-01-20",
+      "description": "Farmacia",
+      "category": "salud",
+      "amount": 18.75,
+      "currency": "EUR"
+    },
+    {
+      "id": "G007",
+      "date": "2026-01-28",
+      "description": "Factura de luz",
+      "category": "hogar",
+      "amount": 86.2,
+      "currency": "EUR"
+    },
+    {
+      "id": "G008",
+      "date": "2026-01-17",
+      "description": "Taxi al aeropuerto",
+      "category": "transporte",
+      "amount": 38.5,
+      "currency": "GBP"
+    },
+    {
+      "id": "G009",
+      "date": "2026-01-24",
+      "description": "Mercado",
+      "category": "comida",
+      "amount": 71.15,
+      "currency": "EUR"
+    },
+    {
+      "id": "G010",
+      "date": "2026-01-09",
+      "description": "Suscripción de música",
+      "category": "ocio",
+      "amount": 10.99,
+      "currency": "USD"
+    },
+    {
+      "id": "G016",
+      "date": "2026-02-02",
+      "description": "Panadería",
+      "category": "comida",
+      "amount": 9.6,
+      "currency": "EUR"
+    },
+    {
+      "id": "G011",
+      "date": "2026-02-02",
+      "description": "Supermercado",
+      "category": "comida",
+      "amount": 88.9,
+      "currency": "EUR"
+    },
+    {
+      "id": "G014",
+      "date": "2026-02-14",
+      "description": "Regalo",
+      "category": "ocio",
+      "amount": 70,
+      "currency": "GBP"
+    },
+    {
+      "id": "G012",
+      "date": "2026-02-14",
+      "description": "Cine",
+      "category": "ocio",
+      "amount": 24,
+      "currency": "EUR"
+    },
+    {
+      "id": "G013",
+      "date": "2026-02-07",
+      "description": "Gasolina",
+      "category": "transporte",
+      "amount": 61.3,
+      "currency": "EUR"
+    },
+    {
+      "id": "G015",
+      "date": "2026-02-21",
+      "description": "Dentista",
+      "category": "salud",
+      "amount": 45,
+      "currency": "EUR"
+    },
+    {
+      "id": "G017",
+      "date": "2026-02-25",
+      "description": "Factura de gas",
+      "category": "hogar",
+      "amount": 72.45,
+      "currency": "EUR"
+    },
+    {
+      "id": "G018",
+      "date": "2026-02-11",
+      "description": "Tren a Madrid",
+      "category": "transporte",
+      "amount": 42.8,
+      "currency": "EUR"
+    },
+    {
+      "id": "G019",
+      "date": "2026-02-18",
+      "description": "Restaurante",
+      "category": "comida",
+      "amount": 64.25,
+      "currency": "USD"
+    },
+    {
+      "id": "G020",
+      "date": "2026-02-27",
+      "description": "Óptica",
+      "category": "salud",
+      "amount": 15,
+      "currency": "EUR"
+    },
+    {
+      "id": "G026",
+      "date": "2026-03-04",
+      "description": "Carnicería",
+      "category": "comida",
+      "amount": 34.55,
+      "currency": "EUR"
+    },
+    {
+      "id": "G021",
+      "date": "2026-03-04",
+      "description": "Supermercado",
+      "category": "comida",
+      "amount": 95.7,
+      "currency": "EUR"
+    },
+    {
+      "id": "G022",
+      "date": "2026-03-15",
+      "description": "Concierto",
+      "category": "ocio",
+      "amount": 68,
+      "currency": "USD"
+    },
+    {
+      "id": "G023",
+      "date": "2026-03-09",
+      "description": "Parking",
+      "category": "transporte",
+      "amount": 22.4,
+      "currency": "EUR"
+    },
+    {
+      "id": "G024",
+      "date": "2026-03-15",
+      "description": "Lámpara",
+      "category": "hogar",
+      "amount": 119.99,
+      "currency": "GBP"
+    },
+    {
+      "id": "G025",
+      "date": "2026-03-01",
+      "description": "Farmacia",
+      "category": "salud",
+      "amount": 12.8,
+      "currency": "EUR"
+    },
+    {
+      "id": "G027",
+      "date": "2026-03-22",
+      "description": "Factura de agua",
+      "category": "hogar",
+      "amount": 38.1,
+      "currency": "EUR"
+    },
+    {
+      "id": "G028",
+      "date": "2026-03-18",
+      "description": "Autobús",
+      "category": "transporte",
+      "amount": 1.5,
+      "currency": "EUR"
+    },
+    {
+      "id": "G029",
+      "date": "2026-03-26",
+      "description": "Librería",
+      "category": "ocio",
+      "amount": 17.45,
+      "currency": "GBP"
+    },
+    {
+      "id": "G030",
+      "date": "2026-03-30",
+      "description": "Mercado",
+      "category": "comida",
+      "amount": 58.2,
+      "currency": "USD"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Responder Q001–Q012 con Siguiente tras cada una: Q003 con «1965», Q010 con «186» y el resto con la opción correcta.",
+        "Revisar."
+      ],
+      "expected": "Revisión: Q001–Q012 en ese orden; Q003 y Q010 «Incorrecta»; las demás «Correcta»."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Responder Q001–Q012 con Siguiente tras cada una: Q003 con «1965», Q010 con «186» y el resto con la opción correcta.",
+        "Revisar."
+      ],
+      "expected": "Q003 incluye «Elegida: 1965» y «Respuesta correcta: 1969»; Q010 «Elegida: 186» y «Respuesta correcta: 206»; Q001 «Elegida: Canberra» y «Respuesta correcta: Canberra»."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Consultar Revisar al cargar.",
+        "Responder Q001–Q012 con la opción correcta y Siguiente tras cada una salvo la última; consultar Revisar.",
+        "Siguiente; consultar la lista Revisión.",
+        "Revisar."
+      ],
+      "expected": "Revisar no disponible al cargar ni tras responder Q012; en el final la lista Revisión no se muestra hasta pulsar Revisar; después tiene 12 ítems Q001–Q012, todos «Correcta»."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Responder Q001–Q012 con la opción correcta y Siguiente tras cada una; Revisar.",
+        "Reiniciar.",
+        "Responder Q001–Q012 con la opción siguiente a la correcta en el orden del fixture, cíclica, y Siguiente tras cada una; Revisar."
+      ],
+      "expected": "Tras Reiniciar la lista Revisión no se muestra; la segunda revisión tiene 12 ítems Q001–Q012, todos «Incorrecta»."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Responder Q001–Q012 con Siguiente tras cada una: las impares (Q001, Q003, …) con la opción siguiente a la correcta en el orden del fixture, cíclica, y las pares con la correcta.",
+        "Revisar."
+      ],
+      "expected": "Impares «Incorrecta» y pares «Correcta»; Q001 incluye «Elegida: Melbourne»; Q002 «Elegida: Dióxido de carbono»; el Final sigue mostrando «Puntuación final: 6 de 12»."
+    }
+  ]
+}

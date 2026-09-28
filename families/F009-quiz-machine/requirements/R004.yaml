@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "seeded_order",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Permitir fijar el orden de presentación con una semilla entera de 0 a 96 (campo «Semilla», vacío al cargar) y el botón «Aplicar semilla». Con una semilla s de 1 a 96, las preguntas se ordenan por la clave ((i + 1) · s) mod 97, donde i es la posición de la pregunta en el fixture empezando en 0, de menor a mayor clave; a igual clave, por posición en el fixture. Una semilla vacía o 0 restablece el orden del fixture. Aplicar una semilla válida reinicia el cuestionario (primera pregunta del nuevo orden, puntuación 0, sin resultado ni revisión). Si el valor no es un entero de 0 a 96 se muestra un aviso y no cambia nada (ni el orden, ni la pregunta, ni la puntuación). Reiniciar conserva el orden de la semilla aplicada. La revisión sigue el orden en que se presentaron las preguntas. Sin semilla aplicada el orden es el del fixture.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Con la semilla 20 las preguntas se presentan en el orden de la clave y el cuestionario se completa con normalidad."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Aplicar una semilla reinicia el cuestionario: primera pregunta del nuevo orden, puntuación 0 y sin resultado."
+    },
+    {
+      "id": "R004-A03",
+      "description": "La semilla 0 restablece el orden del fixture."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Una semilla vacía restablece el orden del fixture."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Valores fuera de 0–96 o no enteros muestran un aviso y no cambian nada; 96 es válido."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Reiniciar conserva el orden de la semilla aplicada."
+    },
+    {
+      "id": "R004-A07",
+      "description": "La revisión sigue el orden de presentación con semilla."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar el campo Semilla está vacío y el orden es el del fixture.",
+    "elements": [
+      {
+        "role": "spinbutton",
+        "name": "Semilla",
+        "rule": "Un <input type=\"number\"> con nombre accesible «Semilla», vacío al cargar."
+      },
+      {
+        "role": "button",
+        "name": "Aplicar semilla",
+        "rule": "Un botón «Aplicar semilla» que valida la semilla y, si es válida, reordena y reinicia el cuestionario."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si la semilla no es un entero de 0 a 96, aparece un elemento con role=\"alert\" cuyo texto contiene «La semilla debe ser un número entero entre 0 y 96» y no cambia nada."
+      }
+    ]
+  }
+}

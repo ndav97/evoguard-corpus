@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Vista = semana."
+      ],
+      "expected": "Reservas: B003, B006, B001, B009, B004, B011, B008, B013 en ese orden; B003 muestra «B003 2026-03-02 09:00–10:30 Revisión de presupuesto» y B008 «B008 2026-03-05 08:00–09:00 Planificación semanal»."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Leer Horas reservadas al cargar.",
+        "Sala = sur.",
+        "Sala = auditorio."
+      ],
+      "expected": "10.00, 5.00 y 4.00."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Título = «Extra»; Inicio = 12:00; Duración = 90; Reservar.",
+        "Vista = semana."
+      ],
+      "expected": "Horas reservadas 11.50; Reservas: B003, B006, B001, B015, B009, B004, B011, B008, B013."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Vista = semana; cancelar B013."
+      ],
+      "expected": "Reservas: B003, B006, B001, B009, B004, B011, B008; Horas reservadas 8.50."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Vista = semana.",
+        "Vista = dia."
+      ],
+      "expected": "Reservas: B003, B006, B001, B009; B003 muestra «B003 09:00–10:30 Revisión de presupuesto»; Horas reservadas 10.00."
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "return_and_persist",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Cada préstamo tiene un botón «Devolver» que lo elimina de la lista y recupera el ejemplar disponible; los demás préstamos conservan su orden. Si hay dos préstamos del mismo libro, «Devolver» actúa sobre el préstamo pulsado. Todo el estado (préstamos y disponibles) se guarda en localStorage y se recupera igual al recargar la página; sin datos guardados se parte del fixture.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Devolver un préstamo lo quita de la lista y recupera el ejemplar disponible."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Con dos préstamos del mismo libro, devolver uno deja el otro y 1 disponible."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Devolver un préstamo intermedio conserva el orden de los demás."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Los préstamos y los disponibles se conservan al recargar."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Las devoluciones se conservan al recargar."
+    },
+    {
+      "id": "R002-A06",
+      "description": "Se puede devolver un préstamo recuperado tras recargar."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados se parte del fixture.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Devolver",
+        "rule": "Cada préstamo contiene dentro de su <li> un botón «Devolver» que lo elimina y recupera el ejemplar."
+      }
+    ]
+  }
+}

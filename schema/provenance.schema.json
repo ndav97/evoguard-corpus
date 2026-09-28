@@ -12,7 +12,8 @@
       "pattern": "^F[0-9]{3}$"
     },
     "created_at": {
-      "const": "2026-09-22"
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
     },
     "protocol_source": {
       "type": "object",
@@ -51,7 +52,10 @@
       "type": "object",
       "properties": {
         "specification_materializer": {
-          "const": "Codex"
+          "enum": [
+            "Codex",
+            "Claude"
+          ]
         },
         "reference_application_generator": {
           "enum": [

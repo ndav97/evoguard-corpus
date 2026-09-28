@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "category_budgets",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Mostrar el estado de los presupuestos del mes seleccionado. Una lista con un elemento por categoría (en el orden del fixture) muestra el nombre de la categoría, lo gastado en el mes (suma de los gastos de esa categoría convertidos a EUR y redondeados al céntimo uno a uno, igual que el total) y el presupuesto mensual, ambos con dos decimales y «EUR», y la marca «Excedido» solo cuando lo gastado es estrictamente mayor que el presupuesto. Se actualiza al cambiar de mes y al añadir gastos.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Al cargar se muestran las cinco categorías de enero con gastado y presupuesto y ninguna excedida."
+    },
+    {
+      "id": "R004-A02",
+      "description": "En febrero Ocio aparece excedida y Salud, con gastado igual al presupuesto, no."
+    },
+    {
+      "id": "R004-A03",
+      "description": "En marzo se muestran los importes de marzo y ninguna categoría excedida."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Un gasto que deja lo gastado igual al presupuesto no lo excede; un céntimo más sí."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Lo gastado suma los gastos en otras monedas convertidos a EUR."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Añadir un gasto de otro mes no cambia los presupuestos del mes seleccionado y sí los de su mes."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, los presupuestos corresponden a 2026-01.",
+    "elements": [
+      {
+        "role": "list",
+        "name": "Presupuestos",
+        "rule": "Una lista (<ul> u <ol>) con nombre accesible «Presupuestos» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "La lista «Presupuestos» (aria-label) contiene un <li> por categoría, en el orden del fixture. Su texto comienza con el nombre de la categoría (Comida, Transporte, Ocio, Hogar, Salud) e incluye el gastado y el presupuesto del mes con dos decimales y el código de moneda, p. ej. «Comida: 145.90 / 250.00 EUR», y la palabra «Excedido» solo cuando el gastado supera el presupuesto. No contiene otros importes con dos decimales."
+      }
+    ]
+  }
+}

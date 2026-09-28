@@ -1,0 +1,1 @@
+Arquitectura: la lógica de estado se encapsula en hooks propios (funciones use…) construidos sobre useState, y lo que se muestra (p. ej. ejemplares disponibles) se deriva de ese estado. El estado se persiste en localStorage: al cargar sin datos guardados se parte del fixture. Puedes usar useEffect. No uses useReducer ni otros almacenamientos (sessionStorage, IndexedDB, cookies).

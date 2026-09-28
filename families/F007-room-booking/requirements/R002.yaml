@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R002",
+  "name": "create_booking_with_conflicts",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Crear reservas en la sala y el día seleccionados indicando título, hora de inicio (de 08:00 a 18:30 cada 30 minutos; valor inicial 08:00) y duración en minutos (30, 60, 90 o 120; valor inicial 60). Las reservas son intervalos [inicio, fin): dos reservas de la misma sala y el mismo día están en conflicto si se solapan; que una termine exactamente cuando empieza otra no es conflicto. Reservas de otra sala o de otro día nunca están en conflicto. Validación, en este orden: el título no puede quedar vacío tras recortar espacios; la reserva no puede terminar después de la hora de cierre (19:00; terminar a las 19:00 está permitido); no puede solaparse con otra reserva. Si falla alguna, se muestra el aviso correspondiente y no se crea nada. Cada reserva nueva recibe como ID el siguiente al mayor ID asignado hasta el momento (B015, B016, …) y aparece en su posición por hora de inicio. Tras crearla, el título queda vacío; inicio y duración conservan su valor. Tras un intento rechazado, todos los campos conservan sus valores.",
+  "acceptance": [
+    {
+      "id": "R002-A01",
+      "description": "Crear una reserva en un hueco libre la añade con el ID B015 en su posición por hora de inicio y deja el título vacío."
+    },
+    {
+      "id": "R002-A02",
+      "description": "Una reserva que termina justo cuando empieza otra, o empieza justo cuando termina otra, no es conflicto."
+    },
+    {
+      "id": "R002-A03",
+      "description": "Una reserva que se solapa parcialmente con otra se rechaza con un aviso que incluye el ID de la reserva en conflicto."
+    },
+    {
+      "id": "R002-A04",
+      "description": "Una reserva que contiene por completo a otra se rechaza con el aviso de conflicto y el ID de esa reserva."
+    },
+    {
+      "id": "R002-A05",
+      "description": "Las reservas de otra sala o de otro día no generan conflicto."
+    },
+    {
+      "id": "R002-A06",
+      "description": "El inicio ofrece de 08:00 a 18:30 cada 30 minutos y la duración 30, 60, 90 y 120; una reserva que terminaría después de las 19:00 se rechaza con un aviso y una que termina a las 19:00 se acepta."
+    },
+    {
+      "id": "R002-A07",
+      "description": "Un título vacío o solo con espacios no crea la reserva y muestra un aviso."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el título está vacío, el inicio es 08:00 y la duración 60.",
+    "elements": [
+      {
+        "role": "textbox",
+        "name": "Título",
+        "rule": "Un <input type=\"text\"> con nombre accesible «Título»."
+      },
+      {
+        "role": "combobox",
+        "name": "Inicio",
+        "rule": "Un <select> con nombre accesible «Inicio» y opciones de valor 08:00, 08:30, …, 18:30 (cada 30 minutos, en orden); valor inicial 08:00."
+      },
+      {
+        "role": "combobox",
+        "name": "Duración",
+        "rule": "Un <select> con nombre accesible «Duración» y opciones de valor 30, 60, 90 y 120 (minutos); valor inicial 60."
+      },
+      {
+        "role": "button",
+        "name": "Reservar",
+        "rule": "Un botón «Reservar» que intenta crear la reserva en la sala y el día seleccionados."
+      },
+      {
+        "role": "alert",
+        "name": null,
+        "rule": "Si el título está vacío tras recortar, aparece un elemento con role=\"alert\" cuyo texto contiene «El título es obligatorio». Si la reserva terminaría después de las 19:00, su texto contiene «La reserva termina después del cierre». Si se solapa con otra reserva, su texto contiene «La reserva se solapa con» seguido del ID de la reserva en conflicto (si hay varias, la de inicio más temprano). En todos los casos no se crea la reserva."
+      }
+    ]
+  }
+}

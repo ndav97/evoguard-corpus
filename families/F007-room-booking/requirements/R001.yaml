@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R001",
+  "name": "view_room_day_bookings",
+  "introduced_at": "V0",
+  "status": "active",
+  "description": "Consultar las reservas de una sala en un día. Se elige la sala y el día (solo los días del fixture) y se muestran únicamente las reservas que son de esa sala y de ese día, ordenadas por hora de inicio ascendente. Cada reserva se muestra con su ID, su intervalo «inicio–fin» y su título. Si no hay reservas, la lista queda vacía.",
+  "acceptance": [
+    {
+      "id": "R001-A01",
+      "description": "Al cargar están seleccionados la sala norte y el día 2026-03-02, y se muestran sus reservas ordenadas por hora de inicio con ID, intervalo y título."
+    },
+    {
+      "id": "R001-A02",
+      "description": "Cambiar la sala muestra solo las reservas de esa sala en el día seleccionado."
+    },
+    {
+      "id": "R001-A03",
+      "description": "Cambiar el día muestra solo las reservas de la sala seleccionada en ese día."
+    },
+    {
+      "id": "R001-A04",
+      "description": "Una sala sin reservas en el día seleccionado muestra la lista vacía."
+    },
+    {
+      "id": "R001-A05",
+      "description": "El selector de sala ofrece las tres salas del fixture y el de día los cinco días del fixture, en orden."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar la página la sala seleccionada es norte y el día 2026-03-02.",
+    "elements": [
+      {
+        "role": "combobox",
+        "name": "Sala",
+        "rule": "Un <select> con nombre accesible «Sala» cuyas opciones tienen como valor el ID de cada sala del fixture (norte, sur, auditorio), en ese orden; etiquetas visibles libres. La vista se actualiza al cambiar la opción."
+      },
+      {
+        "role": "combobox",
+        "name": "Día",
+        "rule": "Un <select> con nombre accesible «Día» cuyas opciones tienen como valor cada fecha ISO del fixture (2026-03-02 … 2026-03-06), en ese orden; etiquetas visibles libres."
+      },
+      {
+        "role": "list",
+        "name": "Reservas",
+        "rule": "Las reservas visibles se muestran en una única lista (<ul> u <ol>) con nombre accesible «Reservas» (aria-label)."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada reserva visible es un <li> dentro de la lista «Reservas». Su texto visible comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título, p. ej. «B003 09:00–10:30 Revisión de presupuesto». Ningún otro elemento de esa lista comienza con un ID de reserva."
+      }
+    ]
+  }
+}

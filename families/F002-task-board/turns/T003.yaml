@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Añade un botón para deshacer la última acción que modificó las tareas (avanzar o crear), repetible en orden inverso hasta el estado inicial. Deshacer una creación elimina la tarea y libera su ID. Los intentos de creación rechazados y los cambios de filtro no se deshacen, y deshacer no cambia el filtro. Deshabilita el botón cuando no haya nada que deshacer.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "local_b",
+  "reference_commit": null,
+  "patch_path": null
+}

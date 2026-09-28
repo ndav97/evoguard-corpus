@@ -1,0 +1,21 @@
+{
+  "mutants": {
+    "sort-date-only": ["R001-A01", "R001-A02", "R001-A03"],
+    "no-decimals": ["R001-A05"],
+    "no-convert": ["R002-A01", "R002-A02"],
+    "round-sum": ["R002-A03"],
+    "truncate": ["R002-A01"],
+    "amount-3dec": ["R003-A03"],
+    "date-any": ["R003-A04"],
+    "always-show": ["R003-A05"],
+    "keep-fields": ["R003-A06"],
+    "append-end": ["R003-A01", "R003-A06"],
+    "exceed-ge": ["R004-A02", "R004-A04"],
+    "budget-no-convert": ["R004-A05"],
+    "budget-all-months": ["R004-A01", "R004-A06"],
+    "display-multiply": ["R005-A02"],
+    "convert-items": ["R005-A05"],
+    "display-sum-convert": ["R005-A02"],
+    "display-resets-on-month": ["R005-A06"]
+  }
+}

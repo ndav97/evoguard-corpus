@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R003",
+  "name": "days_and_overdue",
+  "introduced_at": "T001",
+  "status": "active",
+  "description": "Mostrar el día actual («Día n», empieza en start_day = 1) y un botón «Avanzar día» que lo incrementa en 1. Los préstamos nuevos vencen el día actual + 14. Un préstamo cuyo día de vencimiento es menor que el día actual está vencido: su ítem muestra «Vencido» (el día del vencimiento todavía no está vencido). Un resumen «Vencidos: n» cuenta los préstamos vencidos. El día se guarda en localStorage junto con el resto del estado.",
+  "acceptance": [
+    {
+      "id": "R003-A01",
+      "description": "Al cargar el día es 1 y no hay vencidos; Avanzar día incrementa el día de uno en uno."
+    },
+    {
+      "id": "R003-A02",
+      "description": "Un préstamo no está vencido el día de su vencimiento y sí el día siguiente."
+    },
+    {
+      "id": "R003-A03",
+      "description": "El vencimiento de un préstamo nuevo se calcula desde el día actual."
+    },
+    {
+      "id": "R003-A04",
+      "description": "Cada préstamo vence según su propio día y el resumen cuenta solo los vencidos."
+    },
+    {
+      "id": "R003-A05",
+      "description": "El día y los vencimientos se conservan al recargar."
+    },
+    {
+      "id": "R003-A06",
+      "description": "Devolver un préstamo vencido lo descuenta del resumen."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados el día actual es 1.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Día",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Día» cuyo texto incluye «Día n»."
+      },
+      {
+        "role": "button",
+        "name": "Avanzar día",
+        "rule": "Un botón «Avanzar día» que incrementa el día actual en 1."
+      },
+      {
+        "role": "status",
+        "name": "Vencidos",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Vencidos» cuyo texto incluye «Vencidos: n»."
+      }
+    ]
+  }
+}

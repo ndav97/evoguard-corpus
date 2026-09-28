@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F002",
+  "slug": "task-board",
+  "name": "Task Board",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "useReducer",
+    "topology": "centralized",
+    "derived_state": true,
+    "reducer": true,
+    "effects": false,
+    "persistence": false,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye el tablero de tareas cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "anthropic",
+    "V1": "google",
+    "V2": "local_a",
+    "V3": "local_b"
+  },
+  "fixture": {
+    "path": "fixtures/tasks.json",
+    "sha256": "78f5d49d60d12d8dc27aba9977a26e42a1cee0e3af5229bb708efb9116239fe1",
+    "count": 24,
+    "summary": {
+      "status_counts": {
+        "pendiente": 10,
+        "en_curso": 7,
+        "hecha": 7
+      },
+      "remaining_hours": 65
+    }
+  },
+  "oracle": {
+    "path": "oracle/F002",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

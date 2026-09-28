@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "task_summary",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Mostrar un resumen con el número de tareas por estado y las horas restantes (suma de las estimaciones de las tareas no hechas). El resumen cuenta todas las tareas, con independencia del filtro, y se actualiza con cada cambio.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Al cargar, el resumen indica 10 pendientes, 7 en curso, 7 hechas y 65 horas restantes."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Avanzar tareas actualiza los contadores y resta las horas de una tarea al pasar a hecha."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Crear una tarea suma una pendiente y sus horas."
+    },
+    {
+      "id": "R004-A04",
+      "description": "Cambiar el filtro no modifica el resumen."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Llevar a hecha una tarea creada resta sus horas."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar, el resumen refleja las 24 tareas del fixture.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Resumen",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Resumen» (aria-label) cuyo texto incluye «Pendientes: N», «En curso: N», «Hechas: N» y «Horas restantes: N», con N entero."
+      }
+    ]
+  }
+}

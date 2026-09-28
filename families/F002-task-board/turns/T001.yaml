@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Permite crear tareas nuevas indicando título y horas estimadas (entero de 1 a 8, por defecto 1). El título no puede quedar vacío tras recortar espacios; si el título o las horas no son válidos, muestra un aviso y no crees la tarea. Cada tarea nueva recibe el siguiente ID (K025, K026, …), empieza pendiente y se añade al final. Tras crearla, deja el título vacío y vuelve a poner 1 hora.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}

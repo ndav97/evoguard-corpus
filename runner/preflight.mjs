@@ -10,8 +10,8 @@ import { pipelineFingerprint } from './pipeline/sources.mjs';
 
 const FROZEN_KEYS = ['display_name', 'api_model_id', 'transport', 'context', 'max_output_tokens', 'reasoning', 'temperature', 'seed', 'digest'];
 
-export function generationBlockers(root) {
-  const data = loadCorpus(root);
+export function generationBlockers(root, familyId = 'F001') {
+  const data = loadCorpus(root, familyId);
   const blockers = validateCorpus(data, root);
   let lock = null;
   try {
@@ -42,14 +42,15 @@ export function generationBlockers(root) {
     const changed = Object.keys(current).filter(path => evidence.sources_sha256?.[path] !== current[path]);
     if (changed.length) blockers.push(`Pipeline: cambió código ensayado (${changed.join(', ')}); repetir npm run pipeline:rehearse.`);
   }
-  if (data.family.status === 'FROZEN') blockers.push('F001 está FROZEN: no se regenera; abrir nueva revisión.');
+  if (data.family.status === 'FROZEN') blockers.push(`${familyId} está FROZEN: no se regenera; abrir nueva revisión.`);
   return blockers;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const blockers = generationBlockers(fileURLToPath(new URL('../', import.meta.url)));
-    if (blockers.length) { console.error('Generación no autorizada por preflight:\n' + blockers.map(b => `- ${b}`).join('\n')); process.exitCode = 1; }
-    else console.log('Preflight despejado: la generación experimental puede ejecutarse.');
+    const familyId = process.argv[2] ?? 'F001';
+    const blockers = generationBlockers(fileURLToPath(new URL('../', import.meta.url)), familyId);
+    if (blockers.length) { console.error(`${familyId}: generación no autorizada por preflight:\n` + blockers.map(b => `- ${b}`).join('\n')); process.exitCode = 1; }
+    else console.log(`${familyId}: preflight despejado; la generación experimental puede ejecutarse.`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

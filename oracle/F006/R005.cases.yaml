@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R005",
+  "minimum_version": "V3",
+  "cases": [
+    {
+      "id": "R005-A01",
+      "steps": [
+        "Leer En riesgo."
+      ],
+      "expected": "En riesgo: 6."
+    },
+    {
+      "id": "R005-A02",
+      "steps": [
+        "Marcar Solo en riesgo.",
+        "Desmarcar Solo en riesgo."
+      ],
+      "expected": "Marcada: E003, E011, E012, E015, E016, E018; desmarcada: E001–E020."
+    },
+    {
+      "id": "R005-A03",
+      "steps": [
+        "Marcar Solo en riesgo."
+      ],
+      "expected": "E012 (76.50, con una tarea no entregada) aparece; E010 (60.00, sin tareas pendientes) no aparece."
+    },
+    {
+      "id": "R005-A04",
+      "steps": [
+        "Marcar Solo en riesgo; leer En riesgo y Distribución."
+      ],
+      "expected": "En riesgo: 6; Distribución A: 3, B: 4, C: 4, D: 5, F: 4."
+    },
+    {
+      "id": "R005-A05",
+      "steps": [
+        "Marcar Solo en riesgo; Editar E018; Proyecto final = 20; Guardar."
+      ],
+      "expected": "Lista: E003, E011, E012, E015, E016; En riesgo: 5."
+    },
+    {
+      "id": "R005-A06",
+      "steps": [
+        "Pesos 26, 51, 23; Aplicar pesos; marcar Solo en riesgo."
+      ],
+      "expected": "En riesgo: 5; lista: E003, E012, E015, E016, E018."
+    }
+  ]
+}

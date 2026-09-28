@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "undo_last_action",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Deshacer la última acción que modificó las tareas (avanzar o crear), en orden inverso y sin límite hasta el estado inicial. Deshacer una creación elimina la tarea y su ID vuelve a quedar disponible para la siguiente creación. Un intento de creación rechazado no se registra. Cambiar el filtro no es una acción deshacible y deshacer no cambia el filtro seleccionado.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Deshacer tras avanzar restaura el estado anterior de la tarea."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Deshacer tras crear elimina la tarea y la siguiente creación vuelve a usar el mismo ID."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Varias acciones se deshacen en orden inverso."
+    },
+    {
+      "id": "R005-A04",
+      "description": "Al cargar Deshacer está deshabilitado y un intento de creación rechazado no lo habilita; se habilita tras una acción y se deshabilita al agotar el historial."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Deshacer actualiza el resumen."
+    },
+    {
+      "id": "R005-A06",
+      "description": "Deshacer no cambia el filtro seleccionado y los cambios de filtro no se deshacen."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar no hay acciones que deshacer.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Deshacer",
+        "rule": "Un botón «Deshacer» que revierte la última acción registrada; está deshabilitado (atributo disabled) cuando no hay acciones que deshacer."
+      }
+    ]
+  }
+}

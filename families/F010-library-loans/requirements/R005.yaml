@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R005",
+  "name": "loan_limits_and_history",
+  "introduced_at": "T003",
+  "status": "active",
+  "description": "Limitar los préstamos: como máximo 3 préstamos a la vez, y no se puede prestar si hay algún préstamo vencido. Cuando se da alguna de estas condiciones, todos los botones «Prestar» quedan deshabilitados y un aviso «Restricción» explica el motivo: «Hay préstamos vencidos» si hay alguno vencido (tiene prioridad) o, si no, «Límite de 3 préstamos alcanzado»; sin restricción el aviso está oculto o vacío. Devolver o renovar puede levantar la restricción. Además, cada devolución se registra en la lista «Historial», del más reciente al más antiguo, como «L003 prestado día 1, devuelto día 5»; el historial se guarda en localStorage y está vacío al empezar.",
+  "acceptance": [
+    {
+      "id": "R005-A01",
+      "description": "Con 3 préstamos todos los Prestar quedan deshabilitados y se avisa del límite."
+    },
+    {
+      "id": "R005-A02",
+      "description": "Devolver un préstamo con el límite alcanzado vuelve a permitir prestar y retira el aviso."
+    },
+    {
+      "id": "R005-A03",
+      "description": "Con un préstamo vencido no se puede prestar y se avisa; al devolverlo se levanta la restricción."
+    },
+    {
+      "id": "R005-A04",
+      "description": "El día del vencimiento todavía se puede prestar y al día siguiente ya no."
+    },
+    {
+      "id": "R005-A05",
+      "description": "Cada devolución se registra en el historial con el día del préstamo y el de la devolución."
+    },
+    {
+      "id": "R005-A06",
+      "description": "El historial muestra primero la devolución más reciente y se conserva al recargar."
+    },
+    {
+      "id": "R005-A07",
+      "description": "Con el límite alcanzado y un préstamo vencido, el aviso indica los vencidos."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al cargar sin datos guardados no hay restricción y el historial está vacío.",
+    "elements": [
+      {
+        "role": "status",
+        "name": "Restricción",
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Restricción» cuyo texto incluye «Hay préstamos vencidos» si hay préstamos vencidos o, si no, «Límite de 3 préstamos alcanzado» con 3 préstamos; sin restricción está oculto o vacío."
+      },
+      {
+        "role": "list",
+        "name": "Historial",
+        "rule": "Las devoluciones se muestran en una lista con nombre accesible «Historial», la más reciente primero."
+      },
+      {
+        "role": "listitem",
+        "name": null,
+        "rule": "Cada devolución es un <li> de «Historial» cuyo texto comienza con el ID del libro e incluye «prestado día n, devuelto día m», p. ej. «L003 prestado día 1, devuelto día 5»."
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R001",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R001-A01",
+      "steps": [
+        "Cargar la página sin tocar nada."
+      ],
+      "expected": "Mes = 2026-01; Gastos: G003, G001, G006, G010, G002, G004, G008, G005, G009, G007; G001 muestra «G001 2026-01-05 Supermercado 62.40 EUR» y G004 «G004 2026-01-12 Libro técnico 29.99 USD»."
+    },
+    {
+      "id": "R001-A02",
+      "steps": [
+        "Mes = 2026-02."
+      ],
+      "expected": "G011, G016, G013, G018, G012, G014, G019, G015, G017, G020."
+    },
+    {
+      "id": "R001-A03",
+      "steps": [
+        "Mes = 2026-03."
+      ],
+      "expected": "G025, G021, G026, G023, G022, G024, G028, G027, G029, G030."
+    },
+    {
+      "id": "R001-A04",
+      "steps": [
+        "Consultar las opciones de Mes.",
+        "Mes = 2026-03; Mes = 2026-01."
+      ],
+      "expected": "Opciones 2026-01, 2026-02, 2026-03; al volver a enero, G003, G001, G006, G010, G002, G004, G008, G005, G009, G007."
+    },
+    {
+      "id": "R001-A05",
+      "steps": [
+        "Mes = 2026-02.",
+        "Mes = 2026-03."
+      ],
+      "expected": "G012 muestra «G012 2026-02-14 Cine 24.00 EUR» y G014 «G014 2026-02-14 Regalo 70.00 GBP»; G028 muestra «G028 2026-03-18 Autobús 1.50 EUR» y G030 «G030 2026-03-30 Mercado 58.20 USD»."
+    }
+  ]
+}

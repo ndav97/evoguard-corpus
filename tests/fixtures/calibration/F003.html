@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Calibración F003 (solo pruebas del oráculo)</title></head>
+<body>
+  <!-- Página de calibración del oráculo F003. Material de prueba: no es referencia V0–V3 ni se entrega al constructor.
+       Parámetros: ?version=V0|V1|V2|V3 (por defecto V3) y ?mutant=<defecto deliberado> para controles negativos. -->
+  <main>
+    <h2>Catálogo</h2>
+    <ul id="catalog" aria-label="Catálogo"></ul>
+    <h2>Carrito</h2>
+    <ul id="cart" aria-label="Carrito"></ul>
+    <p id="subtotal" role="status" aria-label="Subtotal"></p>
+    <form id="coupon-form" hidden>
+      <label>Cupón <input type="text" id="coupon"></label>
+      <button type="submit">Aplicar</button>
+    </form>
+    <p id="error" role="alert" hidden></p>
+    <p id="discount" role="status" aria-label="Descuento" hidden></p>
+    <label id="region-label" hidden>Región <select id="region"></select></label>
+    <p id="tax" role="status" aria-label="Impuesto" hidden></p>
+    <p id="shipping" role="status" aria-label="Envío" hidden></p>
+    <p id="total" role="status" aria-label="Total a pagar" hidden></p>
+  </main>
+  <script>
+    const FIXTURE = {"products":[{"id":"S001","name":"Cuaderno A5","category":"Papelería","price":3.45},{"id":"S002","name":"Novela El faro","category":"Libros","price":12.9},{"id":"S003","name":"Taza de cerámica","category":"Hogar","price":7.25},{"id":"S004","name":"Auriculares básicos","category":"Electrónica","price":19.99},{"id":"S005","name":"Atlas escolar","category":"Libros","price":24.5},{"id":"S006","name":"Bolígrafos pack de 10","category":"Papelería","price":4.15},{"id":"S007","name":"Lámpara de escritorio","category":"Hogar","price":18.75},{"id":"S008","name":"Cable USB-C","category":"Electrónica","price":6.4},{"id":"S009","name":"Diccionario bilingüe","category":"Libros","price":15.35},{"id":"S010","name":"Carpeta de anillas","category":"Papelería","price":2.8},{"id":"S011","name":"Cojín estampado","category":"Hogar","price":9.95},{"id":"S012","name":"Ratón inalámbrico","category":"Electrónica","price":14.6},{"id":"S013","name":"Guía de viaje","category":"Libros","price":8.7},{"id":"S014","name":"Agenda semanal","category":"Papelería","price":6.05},{"id":"S015","name":"Juego de trapos","category":"Hogar","price":5.55},{"id":"S016","name":"Altavoz portátil","category":"Electrónica","price":29.9}],"coupons":[{"code":"AHORRO10","kind":"percent","value":10,"min_subtotal":0,"category":"todas"},{"code":"MENOS5","kind":"fixed","value":5.0,"min_subtotal":30.0,"category":"todas"},{"code":"LIBROS20","kind":"percent","value":20,"min_subtotal":0,"category":"Libros"}],"regions":[{"code":"peninsula","name":"Península","tax_rate":0.21,"shipping":4.95},{"code":"baleares","name":"Baleares","tax_rate":0.21,"shipping":7.5},{"code":"canarias","name":"Canarias","tax_rate":0.07,"shipping":9.9}],"free_shipping_threshold":50.0};
+    const params = new URLSearchParams(location.search);
+    const level = Number((params.get('version') || 'V3').slice(1));
+    const mutant = params.get('mutant') || '';
+    const $ = id => document.getElementById(id);
+    const cents = value => Math.round(value * 100);
+    const half = (numerator, denominator) => Math.floor((2 * numerator + denominator) / (2 * denominator));
+    const fmt = c => mutant === 'subtotal-format' ? String(c / 100) : (c / 100).toFixed(2);
+    const money = c => (c / 100).toFixed(2);
+    const product = id => FIXTURE.products.find(p => p.id === id);
+    // Estado: líneas del carrito [{id, qty, hidden}], cupón activo, región.
+    let lines = [];
+    let coupon = null;
+    let region = FIXTURE.regions[0].code;
+
+    function add(id) {
+      const line = lines.find(l => l.id === id && (mutant !== 'add-duplicate'));
+      if (line && line.hidden) { line.hidden = false; line.qty += 1; }
+      else if (line) line.qty = mutant === 'add-resets' ? 1 : line.qty + 1;
+      else if (mutant === 'add-prepend') lines.unshift({ id, qty: 1 });
+      else lines.push({ id, qty: 1 });
+      render();
+    }
+    function remove(id) {
+      if (mutant === 'readd-restores') { const line = lines.find(l => l.id === id); line.hidden = true; line.qty = 0; }
+      else lines = lines.filter(l => l.id !== id);
+      render();
+    }
+    function setQty(id, raw) {
+      if (!/^\d+$/.test(raw)) return;
+      const qty = Number(raw);
+      if (qty > 99) return;
+      const line = lines.find(l => l.id === id && !l.hidden);
+      if (qty === 0 && mutant !== 'qty-zero-keeps') return remove(id);
+      line.qty = qty;
+      render();
+    }
+
+    function totals() {
+      const active = lines.filter(l => !l.hidden);
+      const subtotal = active.reduce((n, l) => n + cents(product(l.id).price) * l.qty, 0);
+      let discount = 0;
+      const coupons = mutant === 'coupon-stack' ? (coupon || []) : (coupon ? [coupon] : []);
+      for (const found of coupons) {
+        const min = cents(found.min_subtotal);
+        if (mutant === 'min-strict' ? subtotal <= min : subtotal < min) continue;
+        if (found.kind === 'fixed') discount += cents(found.value);
+        else {
+          const base = found.category === 'todas' || mutant === 'books-all' ? subtotal
+            : active.filter(l => product(l.id).category === found.category).reduce((n, l) => n + cents(product(l.id).price) * l.qty, 0);
+          discount += mutant === 'discount-trunc' ? Math.floor(base * found.value / 100) : half(base * found.value, 100);
+        }
+      }
+      const zone = FIXTURE.regions.find(r => r.code === (level >= 2 ? region : FIXTURE.regions[0].code));
+      const rate = Math.round((mutant === 'region-fixed-rate' ? FIXTURE.regions[0] : zone).tax_rate * 10000);
+      const taxable = mutant === 'tax-gross' ? subtotal : subtotal - discount;
+      const tax = mutant === 'tax-trunc' ? Math.floor(taxable * rate / 10000) : half(taxable * rate, 10000);
+      const threshold = cents(FIXTURE.free_shipping_threshold);
+      const reach = mutant === 'ship-gross' ? subtotal : subtotal - discount;
+      const free = (!active.length && mutant !== 'ship-empty') || (mutant === 'ship-strict' ? reach > threshold : reach >= threshold);
+      const shipping = free ? 0 : cents(zone.shipping);
+      const total = subtotal - discount + (mutant === 'total-no-tax' ? 0 : tax) + shipping;
+      return { subtotal, discount, tax, shipping, total };
+    }
+
+    function render() {
+      const list = $('cart');
+      list.replaceChildren();
+      for (const line of lines) {
+        if (line.hidden) continue;
+        const p = product(line.id);
+        const li = document.createElement('li');
+        li.append(`${p.id} ${p.name} · ${money(cents(p.price))} `);
+        const label = document.createElement('label');
+        label.append('Cantidad ');
+        const input = document.createElement('input');
+        input.type = 'number'; input.min = '0'; input.max = '99'; input.value = String(line.qty);
+        input.oninput = () => setQty(line.id, input.value);
+        label.append(input);
+        const button = document.createElement('button');
+        button.type = 'button'; button.textContent = 'Quitar';
+        button.onclick = () => remove(line.id);
+        li.append(label, ' ', button);
+        list.append(li);
+      }
+      const t = totals();
+      $('subtotal').textContent = `Subtotal: ${fmt(t.subtotal)}`;
+      $('discount').textContent = `Descuento: ${money(t.discount)}`;
+      $('tax').textContent = `Impuesto: ${money(t.tax)}`;
+      $('shipping').textContent = `Envío: ${money(t.shipping)}`;
+      $('total').textContent = `Total a pagar: ${money(t.total)}`;
+    }
+
+    for (const p of FIXTURE.products) {
+      const li = document.createElement('li');
+      li.append(`${p.id} ${p.name} · ${p.category} · ${money(cents(p.price))} `);
+      const button = document.createElement('button');
+      button.type = 'button'; button.textContent = 'Añadir';
+      button.onclick = () => add(p.id);
+      li.append(button);
+      $('catalog').append(li);
+    }
+    for (const r of FIXTURE.regions) {
+      const option = document.createElement('option');
+      option.value = r.code; option.textContent = r.name;
+      $('region').append(option);
+    }
+
+    $('coupon-form').onsubmit = event => {
+      event.preventDefault();
+      const raw = $('coupon').value;
+      const code = mutant === 'coupon-case' ? raw.trim() : raw.trim().toUpperCase();
+      const found = FIXTURE.coupons.find(c => c.code === code);
+      if (!found) {
+        $('error').textContent = 'Cupón no válido'; $('error').hidden = false;
+        if (mutant !== 'invalid-keeps') coupon = mutant === 'coupon-stack' ? [] : null;
+      } else {
+        $('error').hidden = true;
+        coupon = mutant === 'coupon-stack' ? [...(coupon || []), found] : found;
+      }
+      render();
+    };
+    $('region').onchange = () => { region = $('region').value; render(); };
+
+    // Funcionalidades por versión.
+    $('coupon-form').hidden = level < 1;
+    $('discount').hidden = level < 1;
+    $('region-label').hidden = level < 2;
+    $('tax').hidden = level < 2;
+    $('shipping').hidden = level < 3;
+    $('total').hidden = level < 3;
+    render();
+  </script>
+</body>
+</html>

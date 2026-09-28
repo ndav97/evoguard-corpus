@@ -46,10 +46,10 @@ export function loadReference(referencesDir, version) {
 
 // Seed para abrir el workspace de `version` (V0 devuelve el scaffold sin pasos).
 // through: true reconstruye hasta la referencia de `version` inclusive, sin tarea siguiente (auditoría).
-export function evolutionSeed(root, version, referencesDir, { through = false } = {}) {
+export function evolutionSeed(root, version, referencesDir, { through = false, familyId = 'F001' } = {}) {
   const index = VERSIONS.indexOf(version);
   if (index < 0) throw new Error(`Versión desconocida: ${version}`);
-  const files = seedFiles(root, 'V0');
+  const files = seedFiles(root, 'V0', familyId);
   if (index === 0 && !through) return { files, steps: [] };
   const previous = VERSIONS.slice(0, index + (through ? 1 : 0)).map(v => ({ version: v, ...loadReference(referencesDir, v) }));
   // La base debe ser exactamente la que recibió V0 (su TASK.json histórico).
@@ -61,7 +61,7 @@ export function evolutionSeed(root, version, referencesDir, { through = false } 
     steps.push({ type: 'patch', patch: item.patch, message: `reference: ${item.version}`, expect: item.reference.candidate_commit });
   }
   if (through) return { files, steps, task: previous.at(-1).task };
-  const data = loadCorpus(root);
+  const data = loadCorpus(root, familyId);
   const current = JSON.stringify(makePacket(data, version), null, 2) + '\n';
   steps.push({ type: 'task', content: current, message: `task: ${version}` });
   return { files, steps, task: current };

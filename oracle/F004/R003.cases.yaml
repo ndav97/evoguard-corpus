@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "País = ES.",
+        "País = MX."
+      ],
+      "expected": "Con ES: Provincia visible con opciones \"\", madrid, barcelona, valencia, sevilla; con MX: Provincia no visible."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Pablo Díaz»; Edad = 40; País = ES; Siguiente."
+      ],
+      "expected": "Paso contiene «Perfil»; aviso con «Selecciona una provincia»."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Pablo Díaz»; Edad = 40; País = ES; Provincia = barcelona; Siguiente."
+      ],
+      "expected": "Paso contiene «Resumen»; Resumen incluye «Barcelona» y «España»."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Pablo Díaz»; Edad = 40; País = ES; Provincia = sevilla.",
+        "País = MX; Siguiente."
+      ],
+      "expected": "Paso contiene «Resumen»; Resumen incluye «México» y no incluye «Sevilla» ni «Provincia»."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Pablo Díaz»; Edad = 40; País = ES; Provincia = valencia.",
+        "País = AR; Siguiente.",
+        "Provincia = cordoba; Siguiente."
+      ],
+      "expected": "Tras cambiar a AR: Provincia = \"\" con opciones \"\", buenos-aires, cordoba, mendoza; Siguiente deja Paso en «Perfil» con aviso «Selecciona una provincia»; con cordoba, Resumen incluye «Córdoba» y «Argentina»."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Pablo Díaz»; Edad = 40; País = ES; Provincia = madrid; Siguiente.",
+        "Atrás."
+      ],
+      "expected": "Paso contiene «Perfil»; Provincia = madrid."
+    }
+  ]
+}

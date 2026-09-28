@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Cancelar B006."
+      ],
+      "expected": "Reservas: B003, B001, B009."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Cancelar B009.",
+        "Título = «Nueva entrevista»; Inicio = 15:00; Duración = 90; Reservar."
+      ],
+      "expected": "Tras cancelar: B003, B006, B001; tras reservar, sin aviso: B003, B006, B001, B015 (15:00–16:30)."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Título = «Temporal»; Inicio = 12:00; Duración = 60; Reservar.",
+        "Cancelar B015.",
+        "Título = «Definitiva»; Inicio = 12:00; Duración = 60; Reservar."
+      ],
+      "expected": "Reservas: B003, B006, B001, B016, B009; B016 muestra «B016 12:00–13:00 Definitiva»; B015 no aparece."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Cancelar B003.",
+        "Sala = sur.",
+        "Sala = norte; Día = 2026-03-03."
+      ],
+      "expected": "Norte 2026-03-02: B006, B001, B009; sur: B002, B010; norte 2026-03-03: B004."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Sala = sur; Día = 2026-03-06; cancelar B014.",
+        "Título = «Visita»; Inicio = 09:30; Duración = 60; Reservar."
+      ],
+      "expected": "Tras cancelar la lista queda vacía; la reserva nueva se crea sin aviso como «B015 09:30–10:30 Visita»."
+    }
+  ]
+}

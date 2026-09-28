@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T003",
+  "episode_id": "E001",
+  "from_version": "V2",
+  "to_version": "V3",
+  "request": "Permite eliminar notas y deshacer la última eliminación: la nota vuelve a su posición con sus datos y su fijado. Solo se puede deshacer la última eliminación; crear una nota o recargar la página anula la posibilidad de deshacer, y el botón de deshacer debe estar deshabilitado cuando no haya nada que deshacer. Las eliminaciones deben conservarse al recargar.",
+  "introduces": [
+    "R005"
+  ],
+  "preserves": [
+    "R001",
+    "R002",
+    "R003",
+    "R004"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003",
+    "R004",
+    "R005"
+  ],
+  "provider": "google",
+  "reference_commit": null,
+  "patch_path": null
+}

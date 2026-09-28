@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R003",
+  "minimum_version": "V1",
+  "cases": [
+    {
+      "id": "R003-A01",
+      "steps": [
+        "Leer el texto de N001 y de N004."
+      ],
+      "expected": "N001 contiene «#casa» y «#compras»; N004 contiene «#casa» y no «#compras»."
+    },
+    {
+      "id": "R003-A02",
+      "steps": [
+        "Leer las opciones de Filtrar etiqueta."
+      ],
+      "expected": "Valores: todas, casa, compras, finanzas, ideas, lectura, salud, trabajo, viaje."
+    },
+    {
+      "id": "R003-A03",
+      "steps": [
+        "Filtrar etiqueta = trabajo.",
+        "Filtrar etiqueta = casa."
+      ],
+      "expected": "trabajo: N002, N003, N012; casa: N001, N004, N007, N009."
+    },
+    {
+      "id": "R003-A04",
+      "steps": [
+        "Filtrar etiqueta = trabajo; Buscar notas = «presupuesto»."
+      ],
+      "expected": "N003, N012."
+    },
+    {
+      "id": "R003-A05",
+      "steps": [
+        "Título = «Vacaciones»; Etiquetas = « Viaje, playa ,,viaje, »; Guardar nota.",
+        "Leer N013, el campo Etiquetas y las opciones de Filtrar etiqueta."
+      ],
+      "expected": "N013 con etiquetas exactamente #viaje #playa; Etiquetas vacío; opciones: todas, casa, compras, finanzas, ideas, lectura, playa, salud, trabajo, viaje."
+    },
+    {
+      "id": "R003-A06",
+      "steps": [
+        "Crear «Revisar caldera» con etiquetas «Casa, urgente»; recargar.",
+        "Filtrar etiqueta = urgente."
+      ],
+      "expected": "Solo N013, con #casa #urgente."
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+[
+  {
+    "id": "N001",
+    "title": "Lista de la compra",
+    "body": "Leche, pan, huevos y café para toda la semana.",
+    "tags": [
+      "casa",
+      "compras"
+    ]
+  },
+  {
+    "id": "N002",
+    "title": "Ideas para el blog",
+    "body": "Escribir sobre RECETAS de temporada y la huerta urbana.",
+    "tags": [
+      "ideas",
+      "trabajo"
+    ]
+  },
+  {
+    "id": "N003",
+    "title": "Reunión de equipo",
+    "body": "Revisar el presupuesto del trimestre y las entregas.",
+    "tags": [
+      "trabajo"
+    ]
+  },
+  {
+    "id": "N004",
+    "title": "Receta de lentejas",
+    "body": "Remojar la noche anterior y cocer con verduras.",
+    "tags": [
+      "casa"
+    ]
+  },
+  {
+    "id": "N005",
+    "title": "Viaje a Oporto",
+    "body": "Reservar tren y buscar alojamiento cerca del río.",
+    "tags": [
+      "viaje"
+    ]
+  },
+  {
+    "id": "N006",
+    "title": "Cita con el dentista",
+    "body": "Pedir hora para la revisión anual.",
+    "tags": [
+      "salud"
+    ]
+  },
+  {
+    "id": "N007",
+    "title": "Presupuesto de la reforma",
+    "body": "Comparar tres ofertas para la cocina.",
+    "tags": [
+      "casa",
+      "finanzas"
+    ]
+  },
+  {
+    "id": "N008",
+    "title": "Libros pendientes",
+    "body": "Terminar la novela y empezar el ensayo sobre la huerta.",
+    "tags": [
+      "lectura",
+      "ideas"
+    ]
+  },
+  {
+    "id": "N009",
+    "title": "Cena del sábado",
+    "body": "Probar la receta de la abuela con el horno nuevo.",
+    "tags": [
+      "casa"
+    ]
+  },
+  {
+    "id": "N010",
+    "title": "Declaración de la renta",
+    "body": "Reunir los certificados del banco antes de junio.",
+    "tags": [
+      "finanzas"
+    ]
+  },
+  {
+    "id": "N011",
+    "title": "Maleta de verano",
+    "body": "No olvidar el cargador y el protector solar para el viaje.",
+    "tags": [
+      "viaje",
+      "compras"
+    ]
+  },
+  {
+    "id": "N012",
+    "title": "Informe mensual",
+    "body": "Enviar el PRESUPUESTO revisado al equipo de ventas.",
+    "tags": [
+      "trabajo"
+    ]
+  }
+]

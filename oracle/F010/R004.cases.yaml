@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R004",
+  "minimum_version": "V2",
+  "cases": [
+    {
+      "id": "R004-A01",
+      "steps": [
+        "Prestar L003; consultar el préstamo.",
+        "Renovar L003."
+      ],
+      "expected": "Antes: «vence día 15» y «Renovaciones: 0»; después: «vence día 22» y «Renovaciones: 1»."
+    },
+    {
+      "id": "R004-A02",
+      "steps": [
+        "Prestar L003; Renovar L003 dos veces.",
+        "Intentar Renovar L003."
+      ],
+      "expected": "«vence día 29», «Renovaciones: 2» y Renovar deshabilitado; sigue «vence día 29»."
+    },
+    {
+      "id": "R004-A03",
+      "steps": [
+        "Prestar L003; avanzar día 15 veces.",
+        "Intentar Renovar L003."
+      ],
+      "expected": "L003 «Vencido» con Renovar deshabilitado; sigue «vence día 15» y «Renovaciones: 0»."
+    },
+    {
+      "id": "R004-A04",
+      "steps": [
+        "Prestar L003; avanzar día 14 veces.",
+        "Renovar L003; avanzar día."
+      ],
+      "expected": "Día 15 con Renovar habilitado; después Día 16, «vence día 22», sin «Vencido» y Vencidos 0."
+    },
+    {
+      "id": "R004-A05",
+      "steps": [
+        "Prestar L003; avanzar día 10 veces; Renovar L003; recargar.",
+        "Renovar L003; recargar."
+      ],
+      "expected": "Tras la primera recarga: «vence día 22» y «Renovaciones: 1»; tras la segunda: «vence día 29», «Renovaciones: 2» y Renovar deshabilitado."
+    },
+    {
+      "id": "R004-A06",
+      "steps": [
+        "Prestar L001 dos veces; Renovar el primer préstamo de L001."
+      ],
+      "expected": "Préstamos: L001 «vence día 22» con «Renovaciones: 1» y L001 «vence día 15» con «Renovaciones: 0», en ese orden."
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "protocol_version": "1.0",
+  "family_id": "F009",
+  "slug": "quiz-machine",
+  "name": "Quiz",
+  "status": "DRAFT",
+  "origin": {
+    "type": "synthetic",
+    "construction": "multimodel"
+  },
+  "technology": {
+    "framework": "React",
+    "language": "TypeScript",
+    "build_tool": "Vite",
+    "stack_manifest": "config/stack.json"
+  },
+  "structural_profile": {
+    "state_strategy": "useReducer",
+    "topology": "centralized",
+    "derived_state": true,
+    "reducer": true,
+    "effects": false,
+    "persistence": false,
+    "external_state_manager": false,
+    "external_backend": false,
+    "relevant_components": {
+      "min": 5,
+      "max": 20,
+      "binding": "audit_guideline"
+    }
+  },
+  "pilot": {
+    "episode_id": "E001",
+    "initial_requirements": [
+      "R001",
+      "R002"
+    ],
+    "turns": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "initial_request": "Construye el cuestionario cumpliendo R001 y R002."
+  },
+  "generation_plan": {
+    "V0": "local_a",
+    "V1": "local_b",
+    "V2": "openai",
+    "V3": "anthropic"
+  },
+  "fixture": {
+    "path": "fixtures/quiz.json",
+    "sha256": "f326ee7372b18dd8041cd5259a6aaed6a4ffe1923d8022cbe6b4a0833a56024a",
+    "count": 12,
+    "summary": {
+      "topic_counts": {
+        "geografía": 3,
+        "ciencia": 3,
+        "historia": 3,
+        "matemáticas": 3
+      },
+      "answer_index_counts": [
+        3,
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "oracle": {
+    "path": "oracle/F009",
+    "status": "E2E_CALIBRATED",
+    "stability_runs_required": 5
+  },
+  "reference_versions": {
+    "V0": null,
+    "V1": null,
+    "V2": null,
+    "V3": null
+  }
+}

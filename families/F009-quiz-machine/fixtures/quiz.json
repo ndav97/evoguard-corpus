@@ -1,0 +1,146 @@
+[
+  {
+    "id": "Q001",
+    "topic": "geografía",
+    "prompt": "¿Cuál es la capital de Australia?",
+    "options": [
+      "Sídney",
+      "Canberra",
+      "Melbourne",
+      "Perth"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "Q002",
+    "topic": "ciencia",
+    "prompt": "¿Qué gas absorben las plantas en la fotosíntesis?",
+    "options": [
+      "Oxígeno",
+      "Nitrógeno",
+      "Dióxido de carbono",
+      "Helio"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "Q003",
+    "topic": "historia",
+    "prompt": "¿En qué año llegó el ser humano a la Luna?",
+    "options": [
+      "1969",
+      "1965",
+      "1972",
+      "1958"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "Q004",
+    "topic": "matemáticas",
+    "prompt": "¿Cuánto es 7 × 8?",
+    "options": [
+      "54",
+      "48",
+      "64",
+      "56"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "Q005",
+    "topic": "geografía",
+    "prompt": "¿Cuál es el río más largo de Europa?",
+    "options": [
+      "Danubio",
+      "Volga",
+      "Rin",
+      "Loira"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "Q006",
+    "topic": "ciencia",
+    "prompt": "¿Cuál es el símbolo químico del oro?",
+    "options": [
+      "Au",
+      "Ag",
+      "Fe",
+      "Pb"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "Q007",
+    "topic": "historia",
+    "prompt": "¿Quién pintó «Las meninas»?",
+    "options": [
+      "Goya",
+      "El Greco",
+      "Velázquez",
+      "Murillo"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "Q008",
+    "topic": "matemáticas",
+    "prompt": "¿Cuál es el siguiente número primo después de 13?",
+    "options": [
+      "15",
+      "19",
+      "21",
+      "17"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "Q009",
+    "topic": "geografía",
+    "prompt": "¿En qué continente está Kenia?",
+    "options": [
+      "África",
+      "Asia",
+      "Oceanía",
+      "América"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "Q010",
+    "topic": "ciencia",
+    "prompt": "¿Cuántos huesos tiene el cuerpo humano adulto?",
+    "options": [
+      "186",
+      "212",
+      "198",
+      "206"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "Q011",
+    "topic": "historia",
+    "prompt": "¿En qué ciudad se firmó la Declaración de Independencia de Estados Unidos?",
+    "options": [
+      "Boston",
+      "Filadelfia",
+      "Nueva York",
+      "Washington"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "Q012",
+    "topic": "matemáticas",
+    "prompt": "¿Cuánto mide cada ángulo interior de un triángulo equilátero?",
+    "options": [
+      "45 grados",
+      "90 grados",
+      "60 grados",
+      "30 grados"
+    ],
+    "answer": 2
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "id": "R004",
+  "name": "renew_loans",
+  "introduced_at": "T002",
+  "status": "active",
+  "description": "Cada préstamo tiene un botón «Renovar» que suma renew_days (7) a su día de vencimiento (no al día actual). Cada préstamo admite como máximo 2 renovaciones; su ítem muestra «Renovaciones: n» (0 al prestar) y, alcanzado el máximo, «Renovar» queda deshabilitado. Un préstamo vencido no se puede renovar («Renovar» deshabilitado); el día de su vencimiento todavía se puede. Renovar afecta solo al préstamo pulsado y se guarda en localStorage.",
+  "acceptance": [
+    {
+      "id": "R004-A01",
+      "description": "Renovar suma 7 días al vencimiento del préstamo y cuenta la renovación."
+    },
+    {
+      "id": "R004-A02",
+      "description": "Tras 2 renovaciones Renovar queda deshabilitado y el vencimiento no cambia más."
+    },
+    {
+      "id": "R004-A03",
+      "description": "Un préstamo vencido no se puede renovar."
+    },
+    {
+      "id": "R004-A04",
+      "description": "El día del vencimiento todavía se puede renovar y, renovado, el préstamo no está vencido al día siguiente."
+    },
+    {
+      "id": "R004-A05",
+      "description": "Las renovaciones se conservan al recargar y el máximo sigue aplicándose."
+    },
+    {
+      "id": "R004-A06",
+      "description": "Renovar afecta solo al préstamo pulsado, aunque haya otro del mismo libro."
+    }
+  ],
+  "ui_contract": {
+    "initial_state": "Al prestar, un préstamo tiene 0 renovaciones.",
+    "elements": [
+      {
+        "role": "button",
+        "name": "Renovar",
+        "rule": "Cada préstamo contiene dentro de su <li> un botón «Renovar», deshabilitado cuando el préstamo está vencido o ya tiene 2 renovaciones."
+      }
+    ]
+  }
+}

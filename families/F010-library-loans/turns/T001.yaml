@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "T001",
+  "episode_id": "E001",
+  "from_version": "V0",
+  "to_version": "V1",
+  "request": "Quiero manejar el paso de los días: muestra «Día n» (empezando en el día 1) y un botón «Avanzar día» que lo suma de uno en uno. Los préstamos nuevos vencen el día actual más 14. Si el día de vencimiento de un préstamo ya pasó (es menor que el día actual), márcalo como «Vencido» y muestra «Vencidos: n» con cuántos hay. El día también debe guardarse al recargar.",
+  "introduces": [
+    "R003"
+  ],
+  "preserves": [
+    "R001",
+    "R002"
+  ],
+  "active_after": [
+    "R001",
+    "R002",
+    "R003"
+  ],
+  "provider": "openai",
+  "reference_commit": null,
+  "patch_path": null
+}

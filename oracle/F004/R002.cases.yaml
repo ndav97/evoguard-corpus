@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "requirement_id": "R002",
+  "minimum_version": "V0",
+  "cases": [
+    {
+      "id": "R002-A01",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente."
+      ],
+      "expected": "Paso contiene «Resumen»; Resumen incluye «ana@empresa.es», «Ana Pérez», Edad 30 y «México»."
+    },
+    {
+      "id": "R002-A02",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «   »; Edad = 30; País = CL; Siguiente."
+      ],
+      "expected": "Paso contiene «Perfil»; aviso con «El nombre es obligatorio»."
+    },
+    {
+      "id": "R002-A03",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Luis Gómez»; País = FR; Edad = 12; Siguiente.",
+        "Edad = 121; Siguiente.",
+        "Edad = 13.5; Siguiente.",
+        "Edad = 120; Siguiente."
+      ],
+      "expected": "Con 12, 121 y 13.5: Paso contiene «Perfil» y aviso con «La edad debe ser un número entero entre 13 y 120»; con 120: Paso contiene «Resumen» y Resumen con Edad 120."
+    },
+    {
+      "id": "R002-A04",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Eva Ruiz»; Edad = 13; Siguiente.",
+        "País = PT; Siguiente."
+      ],
+      "expected": "Primero: Paso contiene «Perfil» y aviso con «Selecciona un país»; después: Paso contiene «Resumen» y Resumen incluye «Portugal» y Edad 13."
+    },
+    {
+      "id": "R002-A05",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Marta Gil»; Edad = 45; País = CL; Siguiente.",
+        "Atrás.",
+        "Atrás otra vez (a Cuenta).",
+        "Siguiente; Siguiente."
+      ],
+      "expected": "En Perfil: Nombre «Marta Gil», Edad «45», País CL; en Cuenta: Correo «ana@empresa.es» y Contraseña «clave123»; de nuevo en Resumen con «Marta Gil», Edad 45 y «Chile»."
+    },
+    {
+      "id": "R002-A06",
+      "steps": [
+        "Cuenta válida (Correo = «ana@empresa.es», Contraseña = «clave123»); Siguiente.",
+        "Nombre = «Ana Pérez»; Edad = 30; País = MX; Siguiente.",
+        "Enviar."
+      ],
+      "expected": "Confirmación contiene «Registro completado» y «ana@empresa.es»."
+    }
+  ]
+}
