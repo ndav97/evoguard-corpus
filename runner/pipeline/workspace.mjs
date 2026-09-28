@@ -36,7 +36,8 @@ walk(root);console.log(JSON.stringify({files}));`;
 const COMMIT = `const {execFileSync}=require('node:child_process');
 const env={...process.env,GIT_AUTHOR_NAME:'EvoGuard Pipeline',GIT_AUTHOR_EMAIL:'pipeline@evoguard.invalid',GIT_COMMITTER_NAME:'EvoGuard Pipeline',GIT_COMMITTER_EMAIL:'pipeline@evoguard.invalid',GIT_AUTHOR_DATE:'2000-01-01T00:00:00Z',GIT_COMMITTER_DATE:'2000-01-01T00:00:00Z'};
 execFileSync('git',['add','--all'],{env});
-execFileSync('git',['commit','--allow-empty','-q','-m',process.argv[1]],{env});
+// Sin hooks del repositorio (p. ej. husky/lefthook instalados por el gestor de paquetes).
+execFileSync('git',['-c','core.hooksPath=/dev/null','commit','--no-verify','--allow-empty','-q','-m',process.argv[1]],{env});
 process.stdout.write(execFileSync('git',['rev-parse','HEAD'],{env,encoding:'utf8'}).trim());`;
 
 export function workspaceOps(session, { exec = execSandbox } = {}) {

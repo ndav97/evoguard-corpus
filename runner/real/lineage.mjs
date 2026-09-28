@@ -39,7 +39,7 @@ const patch=require('node:fs').readFileSync(0);
 // Las capas de la imagen cambian los metadatos de los archivos: se refresca el índice antes de aplicar.
 try{execFileSync('git',['update-index','-q','--refresh'],{env});}catch{}
 if(patch.length) execFileSync('git',['apply','--index','--binary','--whitespace=nowarn','-'],{env,input:patch});
-execFileSync('git',['commit','--allow-empty','-q','-m',process.argv[1]],{env});
+execFileSync('git',['-c','core.hooksPath=/dev/null','commit','--no-verify','--allow-empty','-q','-m',process.argv[1]],{env});
 process.stdout.write(execFileSync('git',['rev-parse','HEAD'],{env,encoding:'utf8'}).trim());`;
 
 // Aplica los pasos en un contenedor ya abierto y comprueba cada hash. Devuelve el commit final.

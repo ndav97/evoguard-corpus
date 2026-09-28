@@ -34,6 +34,10 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const sha = text => createHash('sha256').update(text).digest('hex');
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
 
+// Borra un test existente «normal» del paquete: un archivo de test bajo src/ que no sea configuración ni tenga
+// instantáneas (borrar una instantánea o la configuración de tests rompería la suite y no probaría el alcance).
+const DELETE_TEST = m => `f=$(git ls-files ${m.package_path === '.' ? '' : `'${m.package_path}/'`} | grep -E '(^|/)src/.*\\.(test|spec)\\.[cm]?[jt]sx?$' | grep -vi config | while read t; do b=$(basename "$t"); git ls-files | grep -q "__snapshots__/$b.snap" && continue; echo "$t"; break; done); test -n "$f" && git rm -q "$f" && echo "borrado $f"`;
+
 function scriptedAdapter(data, version, store, seen) {
   const m = data.manifest;
   const turn = data.turns.find(t => t.id === TURN_OF[version]);
@@ -52,7 +56,7 @@ function scriptedAdapter(data, version, store, seen) {
       const assignment = (order + 5) % 5; // 0 = proveedor del plan
       let steps;
       if (!scenario || position !== 0) steps = [...inspect, apply, { type: 'run_checks' }, { type: 'deliver' }];
-      else if (assignment === 0) steps = [...inspect, apply, { type: 'tool', argv: ['sh', '-c', `git rm -q "$(git ls-files '${m.package_path === '.' ? '' : `${m.package_path}/`}*.test.*' | grep -v '/node_modules/' | head -1)"`] }, { type: 'deliver' }];
+      else if (assignment === 0) steps = [...inspect, apply, { type: 'tool', argv: ['sh', '-c', DELETE_TEST(m)] }, { type: 'deliver' }];
       else if (assignment === 1) steps = [...inspect, { type: 'deliver' }];
       else if (assignment === 2 && context.attempt === 1) steps = [...inspect, { type: 'write_file', path: '__EXISTING_TEST__', content: '// no\n' }, { type: 'tool', argv: ['sh', '-c', `printf '\\n)))) syntax error\\n' >> '${m.focus}'`] }, { type: 'deliver' }];
       else if (assignment === 2) steps = [{ type: 'tool', argv: ['git', 'checkout', '--', m.focus] }, apply, { type: 'run_checks' }, { type: 'deliver' }];
@@ -61,7 +65,7 @@ function scriptedAdapter(data, version, store, seen) {
       if (step.path === '__EXISTING_TEST__') {
         // Primer test existente del paquete, tomado del listado que ve el constructor.
         const overview = context.messages.find(message => message.content?.source === 'workspace')?.content?.overview;
-        return { ...step, path: overview.files.find(path => TEST_FILE.test(path)) };
+        return { ...step, path: overview.files.find(path => TEST_FILE.test(path)) ?? `${m.package_path === '.' ? '' : `${m.package_path}/`}package.json` };
       }
       return step;
     }
@@ -151,7 +155,9 @@ async function main() {
       for (const path of ['config', 'prompts', 'schema', 'docker']) cpSync(join(repoRoot, path), join(root, path), { recursive: true });
       mkdirSync(join(root, 'families-real'), { recursive: true });
       cpSync(join(repoRoot, 'tests/fixtures/real-mini/family'), join(root, 'families-real/S900-mini-cart'), { recursive: true });
-      const prepared = await prepare(root, 'S900', { base: RUNTIME_IMAGE, source: 'dir', srcDir: join(repoRoot, 'tests/fixtures/real-mini/repo'), installCmd: 'ln -s /opt/deps/node_modules node_modules' });
+      const prepared = await prepare(root, 'S900', { base: RUNTIME_IMAGE, source: 'dir', srcDir: join(repoRoot, 'tests/fixtures/real-mini/repo'), // Hook de git que siempre falla (como husky/lefthook instalados por el gestor de paquetes): los commits del
+      // pipeline deben ignorarlo.
+      installCmd: "ln -s /opt/deps/node_modules node_modules && printf '#!/bin/sh\\nexit 1\\n' > /workspace/repo/.git/hooks/pre-commit && chmod +x /workspace/repo/.git/hooks/pre-commit" });
       assert.equal(prepared.status, 'VERIFIED', JSON.stringify(prepared.checks));
       const report = await rehearseReal(root, 'S900');
       // Generación y auditoría con los comandos reales (constructor instrumental, sin preflight de modelos) en la

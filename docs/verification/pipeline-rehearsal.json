@@ -2,9 +2,9 @@
   "artifact_type": "pipeline_rehearsal",
   "status": "PASS",
   "experimental": false,
-  "task_id": "600c0f2c-048f-4f1f-8bd3-b9ba29c8348c",
+  "task_id": "5aefb354-148e-4501-a28a-5061ac169986",
   "image_id": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
-  "checked_at": "2026-09-28T03:28:28.328Z",
+  "checked_at": "2026-09-28T13:54:59.692Z",
   "outcomes": [
     {
       "provider": "openai",
@@ -63,7 +63,7 @@
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/context/policy.mjs": "5b1316beca21a60ef91c681af0d06f77e43981c3e1f74678499fb4d023c7d492",
     "runner/providers/adapter.mjs": "f6c7616e98909eaeeaf1f9a51f34ba8b236b004dea1b1d0c88e800b845cdcf21",
-    "runner/pipeline/workspace.mjs": "88d146856aa7c619ddf50180d58ca847a56dfe0711f12bbad134982d22cc1798",
+    "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
     "runner/pipeline/evaluator.mjs": "de2aa0d95763af6e1dbc57d92cf3c200236a1ad0890b73c86b55b18e5aa3e624",
     "runner/pipeline/architecture.mjs": "e17a0a5ce9cdfd0c5314d4f737c6bd84ce2c08700f3c890ef8da043fcb14ab72",
     "runner/pipeline/store.mjs": "39186d4b69549a81c1ebfb823427d0586151270aab764fc48adfcbfc04fd1bed",
