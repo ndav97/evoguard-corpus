@@ -191,3 +191,10 @@ Segunda sonda: se añade la variante F (D con la herramienta en modo `strict`, q
 2. Si ninguna llega, se revisa si los fallos son campos vacíos omitidos. Si lo son, se considera rellenarlos como normalización registrada.
 3. Si no hay otra salida, se usa E y se declara la diferencia de razonamiento.
 
+## Huella de los ensayos sin el transporte de proveedores — 2026-09-29
+El usuario probablemente cambiará el intermediario de Sonnet. Hasta ahora `runner/providers/adapter.mjs` formaba parte de la huella de los ensayos (`runner/pipeline/sources.mjs` y `runner/real/sources.mjs`), así que cualquier ajuste de transporte obligaba a repetir los ensayos de S001–S010, que tardan horas. Los ensayos usan constructores guionados y no ejecutan ese archivo, que solo lo usa el adaptador para interpretar la salida de los modelos. Decisión de Claude con autorización del usuario:
+- **Se quita `runner/providers/adapter.mjs` de ambas huellas.** El transporte se verifica con sus pruebas unitarias y con `npm run providers:diagnose`, que ya es requisito antes de generar.
+- **`runner/protocol/actions.mjs` sigue dentro**, porque el motor valida las acciones con ese archivo.
+- **Regla para el cambio de proveedor:** se hará solo en `runner/providers/*` y `config/models.json`, sin tocar `actions.mjs`.
+- **Efecto:** las evidencias sintética y S900 siguen vigentes. Las de S001–S010 hay que repetirlas una vez por el cambio de `actions.mjs` del 2026-09-28, y el cambio de proveedor ya no las invalidará.
+

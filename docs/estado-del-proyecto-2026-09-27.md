@@ -82,7 +82,7 @@ Commits en el PC (`evoguard-corpus`):
 ### Con modelos (usuario)
 1. ~~`npm run providers:diagnose`~~ Hecho el 2026-09-28: openai y google HEALTHY (9/10). anthropic FAILING (0/10) por prosa antes del JSON, porque Synterolink no aplica la salida estructurada. Corregido con la normalización acotada `prose_prefix`; con las muestras reales pasaría a 9/10 (`operational-decisions.md`, 2026-09-28). Falta:
    - segundo diagnóstico (2026-09-29): openai 10/10, google 9/10, anthropic 6/10 (DEGRADED). Los 4 rechazos son pseudo-llamadas XML. Primera sonda: Synterolink ignora la salida estructurada pero respeta las herramientas nativas (8/8 `tool_use`). **Siguiente paso: `npm run providers -- probe --rounds=5 --variants=D,E,F`** para elegir entre la herramienta con razonamiento (D/F) y la forzada (E);
-   - **repetir `scripts\real\ensayar-familias.cmd`**, porque el cambio del protocolo desactualiza la huella de los ensayos S001–S010. Los ensayos sintético y S900 ya están reverificados.
+   - **repetir `scripts\real\ensayar-familias.cmd`** una vez, porque el cambio de `actions.mjs` desactualiza la huella de S001–S010. Desde el 2026-09-29 el transporte de proveedores no forma parte de la huella, así que el cambio de intermediario de Sonnet ya no obliga a repetirlos. Los ensayos sintético y S900 están vigentes.
 2. Banco de modelos locales en Vast.ai, elección de `local_a`/`local_b`, recongelado de `config/models.json` y recalibración del contexto. Con repositorios reales, valorar una ventana mayor que 8 192 tokens.
 3. Generar y auditar cada familia sintética:
    - `npm run generation:preflight -- Fxxx`
