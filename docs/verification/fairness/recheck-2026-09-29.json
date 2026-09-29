@@ -1,0 +1,328 @@
+{
+ "items": [
+  {
+   "family": "F002",
+   "id_or_issue": "R003-A01",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F002",
+   "id_or_issue": "R003-A03",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F003",
+   "id_or_issue": "R001-A02",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. Además los IDs se renombraron a A0xx (contrato «A003 Taza de cerámica», plan startsWith('A003 Taza de cerámica')); spec-lock coincide con los YAML."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "R002-A01",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "R002-A03",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "R002-A05",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. La lectura tras reload ahora espera a DOM quieto (settle)."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "R005-A06",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R003-A01",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R003-A02",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R003-A04",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R003-A05",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R004-A04",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "R004-A05",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex /Letra:\\s*([ABCDF])(?![A-Za-z])/ ya ve un espacio tras la letra aunque el botón vaya pegado en el DOM."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R001-A01",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R002-A01",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R002-A02",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R002-A06",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R003-A02",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R003-A03",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R003-A05",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R004-A01",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R004-A05",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. dashes() tolera espacios alrededor del guion, que boundaryText puede introducir."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R005-A01",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». «3 personas Cancelar» satisface /(\\d+)\\s+personas?\\b/."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R005-A02",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R005-A03",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable. El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». Además R002.description visible añade «Cambiar de sala, de día o de vista no modifica los valores de los campos del formulario»."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R005-A05",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». «3 personas Cancelar» satisface /(\\d+)\\s+personas?\\b/."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "R005-A06",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». «3 personas Cancelar» satisface /(\\d+)\\s+personas?\\b/."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R001-A02",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex del veredicto (sin cambios) pasa sobre «Correcto Respuesta correcta: …» (verificado)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R001-A03",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex del veredicto (sin cambios) pasa sobre «Correcto Respuesta correcta: …» (verificado)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R001-A04",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex del veredicto (sin cambios) pasa sobre «Correcto Respuesta correcta: …» (verificado)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R001-A06",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex del veredicto (sin cambios) pasa sobre «Correcto Respuesta correcta: …» (verificado)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R003-A01",
+   "status": "RESOLVED",
+   "reason": "review() ahora elimina cualquier separador no letra/número tras el ID (/^[^\\p{L}\\p{N}]+/u) y exige (?!\\p{L}) tras el veredicto; probado con «<span>Q003</span>\\n<span>— Incorrecta</span>» -> Incorrecta. Coherente con «separadores libres» y con el párrafo de formato («el separador puede ser cualquiera»)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R003-A03",
+   "status": "RESOLVED",
+   "reason": "review() ahora elimina cualquier separador no letra/número tras el ID (/^[^\\p{L}\\p{N}]+/u) y exige (?!\\p{L}) tras el veredicto; probado con «<span>Q003</span>\\n<span>— Incorrecta</span>» -> Incorrecta. Coherente con «separadores libres» y con el párrafo de formato («el separador puede ser cualquiera»)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R003-A04",
+   "status": "RESOLVED",
+   "reason": "review() ahora elimina cualquier separador no letra/número tras el ID (/^[^\\p{L}\\p{N}]+/u) y exige (?!\\p{L}) tras el veredicto; probado con «<span>Q003</span>\\n<span>— Incorrecta</span>» -> Incorrecta. Coherente con «separadores libres» y con el párrafo de formato («el separador puede ser cualquiera»)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R003-A05",
+   "status": "RESOLVED",
+   "reason": "review() ahora elimina cualquier separador no letra/número tras el ID (/^[^\\p{L}\\p{N}]+/u) y exige (?!\\p{L}) tras el veredicto; probado con «<span>Q003</span>\\n<span>— Incorrecta</span>» -> Incorrecta. Coherente con «separadores libres» y con el párrafo de formato («el separador puede ser cualquiera»)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R004-A05",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». La regex del veredicto (sin cambios) pasa sobre «Correcto Respuesta correcta: …» (verificado)."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "R004-A07",
+   "status": "RESOLVED",
+   "reason": "review() ahora elimina cualquier separador no letra/número tras el ID (/^[^\\p{L}\\p{N}]+/u) y exige (?!\\p{L}) tras el veredicto; probado con «<span>Q003</span>\\n<span>— Incorrecta</span>» -> Incorrecta. Coherente con «separadores libres» y con el párrafo de formato («el separador puede ser cualquiera»)."
+  },
+  {
+   "family": "F002",
+   "id_or_issue": "CC: textContent concatena ID y título (detección de filas)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». rows()/row()/rowText usan boundaryText."
+  },
+  {
+   "family": "F003",
+   "id_or_issue": "CC: amount() exigía un único importe en el status",
+   "status": "RESOLVED",
+   "reason": "money() ahora toma el importe tras la etiqueta del contrato («Subtotal:», «Envío:», «Descuento:», «Impuesto:», «Total a pagar:», que coinciden literalmente con los ui_contract regenerados) y solo cae a amount() si falta la etiqueta; «Envío: 0.00 (gratis desde 50.00)» ya pasa."
+  },
+  {
+   "family": "F003",
+   "id_or_issue": "CC: textContent concatena ID y título",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F004",
+   "id_or_issue": "CC: step() exige exactamente un nombre de paso en «Paso»",
+   "status": "RESOLVED",
+   "reason": "R001.ui_contract visible (regenerado) dice ahora «…y ningún otro nombre de paso»; un stepper con los tres nombres dentro del status queda excluido explícitamente."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "CC: Detección de filas por textContent (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "CC: Lecturas inmediatas tras reload (useEffect)",
+   "status": "RESOLVED",
+   "reason": "reload()/reset() esperan DOM quieto (250 ms sin mutaciones, máx. 3 s); probado: hidratación diferida 120 ms tras load -> se lee el estado guardado. Residual bajo: una hidratación >250 ms después de la última mutación no se esperaría (irreal en React)."
+  },
+  {
+   "family": "F005",
+   "id_or_issue": "CC: Separador ID–título no normativo",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "CC: Detección de filas por textContent (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F006",
+   "id_or_issue": "CC: Parseo «Letra: X» pegado a «Editar» (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "CC: Detección de filas por textContent (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "CC: Separador entre ID/fecha/intervalo/título solo en ejemplos",
+   "status": "RESOLVED",
+   "reason": "architecture.md (visible, verificado en el paquete V3 regenerado) añade «Formato de los textos de la interfaz»: partes de «comienza con» en orden y separadas por un espacio o por el separador del ejemplo; así el ejemplo del ui_contract pasa a ser normativo y el startsWith con un espacio es derivable."
+  },
+  {
+   "family": "F007",
+   "id_or_issue": "CC: attendeesOf \\b tras «personas» pegado a «Cancelar» (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "CC: textContent en Resultado/Revisión (high)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar»."
+  },
+  {
+   "family": "F009",
+   "id_or_issue": "CC: «separadores libres» vs plan que solo tolera espacios (high)",
+   "status": "RESOLVED",
+   "reason": "review() tolera cualquier separador no alfanumérico; el párrafo de formato confirma «separadores libres» = cualquiera."
+  },
+  {
+   "family": "F010",
+   "id_or_issue": "CC: Carrera de hidratación tras reload (medium)",
+   "status": "RESOLVED",
+   "reason": "Los planes usan ui.reload(), que ahora llama a settle(); probado con hidratación diferida. Mismo residual bajo que F005."
+  },
+  {
+   "family": "F010",
+   "id_or_issue": "CC: textContent concatena ID y título (medium)",
+   "status": "RESOLVED",
+   "reason": "El adaptador usa boundaryText (espacio en cada límite de elemento): probado en Chromium, <strong>Correcto</strong><p>Respuesta…</p> -> «Correcto Respuesta…», <span>E001</span><span>Ana</span><span>Letra: B</span><button>Editar</button> -> «E001 Ana Letra: B Editar». Además las listas se buscan primero por nombre exacto: probado que «Historial de préstamos» ya no contamina «Préstamos»."
+  },
+  {
+   "family": "ALL",
+   "id_or_issue": "Integridad: spec-lock vs cases.yaml tras los cambios",
+   "status": "RESOLVED",
+   "reason": "specHash de todos los casos F002–F010 coincide con spec-lock.json y todos tienen plan; no quedan IDs S0xx en F003."
+  }
+ ]
+}

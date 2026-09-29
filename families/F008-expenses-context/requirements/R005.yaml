@@ -42,7 +42,7 @@
       {
         "role": "status",
         "name": "Total del mes",
-        "rule": "Con la moneda de visualización elegida, el texto incluye «Total del mes: N XXX» con XXX el código de esa moneda."
+        "rule": "Con la moneda de visualización elegida, el texto incluye «Total del mes: N XXX» con XXX el código de esa moneda, y ningún otro código de moneda."
       }
     ]
   }

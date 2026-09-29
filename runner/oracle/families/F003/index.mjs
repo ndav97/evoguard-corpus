@@ -3,7 +3,7 @@
 import { amount } from '../../generic-adapter.mjs';
 
 export const FAMILY_ID = 'F003';
-export const ID_PREFIX = 'S';
+export const ID_PREFIX = 'A';
 export const FIXTURE = 'fixtures/catalog.json';
 const MONEY = { type: 'number', minimum: 0 };
 export const FIXTURE_SCHEMA = {
@@ -14,7 +14,7 @@ export const FIXTURE_SCHEMA = {
       items: {
         type: 'object',
         properties: {
-          id: { type: 'string', pattern: '^S0[0-1][0-9]$' },
+          id: { type: 'string', pattern: '^A0[0-1][0-9]$' },
           name: { type: 'string', minLength: 1 },
           category: { enum: ['Papelería', 'Libros', 'Hogar', 'Electrónica'] },
           price: { type: 'number', exclusiveMinimum: 0 }
@@ -66,7 +66,7 @@ export function checkFixture(catalog, family) {
   const demand = (ok, message) => { if (!ok) errors.push(message); };
   const { products, coupons, regions, free_shipping_threshold: threshold } = catalog;
   const summary = family.fixture.summary ?? {};
-  demand(JSON.stringify(products.map(p => p.id)) === JSON.stringify(Array.from({ length: 16 }, (_, i) => `S${String(i + 1).padStart(3, '0')}`)), 'IDs de productos deben ser S001–S016 ordenados');
+  demand(JSON.stringify(products.map(p => p.id)) === JSON.stringify(Array.from({ length: 16 }, (_, i) => `A${String(i + 1).padStart(3, '0')}`)), 'IDs de productos deben ser A001–A016 ordenados');
   demand(new Set(products.map(p => p.name.toLowerCase())).size === products.length, 'Nombres de productos repetidos');
   demand(products.every(p => twoDecimals(p.price)), 'Precios con más de dos decimales');
   const categories = {};
@@ -98,8 +98,8 @@ export const CONTROL = {
   total: { role: 'status', name: 'Total a pagar' }
 };
 export const LISTS = {
-  catalog: { name: 'Catálogo', id: 'S\\d{3}' },
-  cart: { name: 'Carrito', id: 'S\\d{3}' }
+  catalog: { name: 'Catálogo', id: 'A\\d{3}' },
+  cart: { name: 'Carrito', id: 'A\\d{3}' }
 };
 
 export const context = catalog => ({ catalog, productIds: catalog.products.map(p => p.id), regionCodes: catalog.regions.map(r => r.code) });
@@ -110,7 +110,14 @@ const setQuantity = (ui, id, n) => ui.rowFill('cart', id, CONTROL.quantity, Stri
 const quantity = (ui, id) => ui.rowValue('cart', id, CONTROL.quantity);
 const remove = (ui, id) => ui.rowClick('cart', id, CONTROL.remove);
 const cart = ui => ui.ids('cart');
-const money = async (ui, key) => amount(await ui.text(key));
+// Importe tras la etiqueta del contrato («Subtotal: N», «Envío: N»…). Si la etiqueta no aparece se exige un único
+// importe en el texto, como antes (revisión de equidad 2026-09-29: el contrato dice «incluye», no «solo»).
+const money = async (ui, key) => {
+  const text = await ui.text(key);
+  const label = CONTROL[key].name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = text.match(new RegExp(`${label}:\\s*(-?\\d+\\.\\d{2})(?!\\d)`));
+  return match ? Number(match[1]) : amount(text);
+};
 async function applyCoupon(ui, code) {
   await ui.fill('coupon', code);
   await ui.click('apply');
@@ -125,85 +132,85 @@ export const PLANS = {
     c.eq('subtotal', await money(ui, 'subtotal'), 0);
   },
   'R001-A02': async (ui, c) => {
-    await add(ui, 'S003');
+    await add(ui, 'A003');
     const rows = await ui.rows('cart');
-    c.eq('líneas', rows.map(r => r.id), ['S003']);
-    c.eq('texto de la línea', rows[0]?.text.startsWith('S003 Taza de cerámica'), true);
-    c.eq('cantidad', await quantity(ui, 'S003'), '1');
+    c.eq('líneas', rows.map(r => r.id), ['A003']);
+    c.eq('texto de la línea', rows[0]?.text.startsWith('A003 Taza de cerámica'), true);
+    c.eq('cantidad', await quantity(ui, 'A003'), '1');
     c.eq('subtotal', await money(ui, 'subtotal'), 7.25);
   },
   'R001-A03': async (ui, c) => {
-    await add(ui, 'S005'); await add(ui, 'S002'); await add(ui, 'S005');
-    c.eq('líneas', await cart(ui), ['S005', 'S002']);
-    c.eq('cantidad S005', await quantity(ui, 'S005'), '2');
-    c.eq('cantidad S002', await quantity(ui, 'S002'), '1');
+    await add(ui, 'A005'); await add(ui, 'A002'); await add(ui, 'A005');
+    c.eq('líneas', await cart(ui), ['A005', 'A002']);
+    c.eq('cantidad A005', await quantity(ui, 'A005'), '2');
+    c.eq('cantidad A002', await quantity(ui, 'A002'), '1');
     c.eq('subtotal', await money(ui, 'subtotal'), 61.9);
   },
   'R001-A04': async (ui, c) => {
-    await add(ui, 'S016'); await add(ui, 'S001'); await add(ui, 'S009');
-    c.eq('líneas', await cart(ui), ['S016', 'S001', 'S009']);
+    await add(ui, 'A016'); await add(ui, 'A001'); await add(ui, 'A009');
+    c.eq('líneas', await cart(ui), ['A016', 'A001', 'A009']);
     c.eq('subtotal', await money(ui, 'subtotal'), 48.7);
   },
   'R001-A05': async (ui, c) => {
-    await add(ui, 'S010');
-    c.eq('subtotal tras S010', await money(ui, 'subtotal'), 2.8);
-    await add(ui, 'S008');
-    c.eq('subtotal tras S008', await money(ui, 'subtotal'), 9.2);
+    await add(ui, 'A010');
+    c.eq('subtotal tras A010', await money(ui, 'subtotal'), 2.8);
+    await add(ui, 'A008');
+    c.eq('subtotal tras A008', await money(ui, 'subtotal'), 9.2);
   },
 
   // ---------- R002 — editar cantidades (V0) ----------
   'R002-A01': async (ui, c) => {
-    await add(ui, 'S002'); await setQuantity(ui, 'S002', 3);
-    c.eq('cantidad S002', await quantity(ui, 'S002'), '3');
+    await add(ui, 'A002'); await setQuantity(ui, 'A002', 3);
+    c.eq('cantidad A002', await quantity(ui, 'A002'), '3');
     c.eq('subtotal', await money(ui, 'subtotal'), 38.7);
   },
   'R002-A02': async (ui, c) => {
-    await add(ui, 'S003'); await add(ui, 'S007'); await setQuantity(ui, 'S003', 0);
-    c.eq('líneas', await cart(ui), ['S007']);
+    await add(ui, 'A003'); await add(ui, 'A007'); await setQuantity(ui, 'A003', 0);
+    c.eq('líneas', await cart(ui), ['A007']);
     c.eq('subtotal', await money(ui, 'subtotal'), 18.75);
   },
   'R002-A03': async (ui, c) => {
-    await add(ui, 'S004'); await add(ui, 'S011'); await remove(ui, 'S004');
-    c.eq('líneas', await cart(ui), ['S011']);
-    c.eq('cantidad S011', await quantity(ui, 'S011'), '1');
+    await add(ui, 'A004'); await add(ui, 'A011'); await remove(ui, 'A004');
+    c.eq('líneas', await cart(ui), ['A011']);
+    c.eq('cantidad A011', await quantity(ui, 'A011'), '1');
     c.eq('subtotal', await money(ui, 'subtotal'), 9.95);
   },
   'R002-A04': async (ui, c) => {
-    await add(ui, 'S001'); await add(ui, 'S002'); await remove(ui, 'S001'); await add(ui, 'S001');
-    c.eq('líneas', await cart(ui), ['S002', 'S001']);
-    c.eq('cantidad S001', await quantity(ui, 'S001'), '1');
+    await add(ui, 'A001'); await add(ui, 'A002'); await remove(ui, 'A001'); await add(ui, 'A001');
+    c.eq('líneas', await cart(ui), ['A002', 'A001']);
+    c.eq('cantidad A001', await quantity(ui, 'A001'), '1');
     c.eq('subtotal', await money(ui, 'subtotal'), 16.35);
   },
   'R002-A05': async (ui, c) => {
-    await add(ui, 'S006'); await setQuantity(ui, 'S006', 4); await add(ui, 'S006');
-    c.eq('cantidad S006', await quantity(ui, 'S006'), '5');
+    await add(ui, 'A006'); await setQuantity(ui, 'A006', 4); await add(ui, 'A006');
+    c.eq('cantidad A006', await quantity(ui, 'A006'), '5');
     c.eq('subtotal', await money(ui, 'subtotal'), 20.75);
   },
   'R002-A06': async (ui, c) => {
-    await add(ui, 'S012'); await setQuantity(ui, 'S012', 2); await remove(ui, 'S012');
+    await add(ui, 'A012'); await setQuantity(ui, 'A012', 2); await remove(ui, 'A012');
     c.eq('líneas', await cart(ui), []);
     c.eq('subtotal', await money(ui, 'subtotal'), 0);
   },
 
   // ---------- R003 — cupones (V1) ----------
   'R003-A01': async (ui, c) => {
-    await add(ui, 'S004'); await add(ui, 'S013'); await applyCoupon(ui, 'AHORRO10');
+    await add(ui, 'A004'); await add(ui, 'A013'); await applyCoupon(ui, 'AHORRO10');
     c.eq('descuento', await money(ui, 'discount'), 2.87);
     c.eq('subtotal', await money(ui, 'subtotal'), 28.69);
   },
   'R003-A02': async (ui, c) => {
-    await add(ui, 'S016'); await applyCoupon(ui, '  ahorro10  ');
+    await add(ui, 'A016'); await applyCoupon(ui, '  ahorro10  ');
     c.eq('descuento', await money(ui, 'discount'), 2.99);
   },
   'R003-A03': async (ui, c) => {
-    await add(ui, 'S016'); await applyCoupon(ui, 'AHORRO10');
+    await add(ui, 'A016'); await applyCoupon(ui, 'AHORRO10');
     c.eq('descuento con AHORRO10', await money(ui, 'discount'), 2.99);
     await applyCoupon(ui, 'AHORRO15');
     c.eq('aviso', await alertMatches(ui, 'Cupón no válido'), true);
     c.eq('descuento con AHORRO15', await money(ui, 'discount'), 0);
   },
   'R003-A04': async (ui, c) => {
-    await add(ui, 'S009'); await add(ui, 'S012'); await add(ui, 'S001');
+    await add(ui, 'A009'); await add(ui, 'A012'); await add(ui, 'A001');
     await applyCoupon(ui, 'AHORRO10');
     c.eq('descuento AHORRO10', await money(ui, 'discount'), 3.34);
     c.eq('subtotal', await money(ui, 'subtotal'), 33.4);
@@ -215,21 +222,21 @@ export const PLANS = {
     c.eq('subtotal', await money(ui, 'subtotal'), 33.4);
   },
   'R003-A05': async (ui, c) => {
-    await add(ui, 'S008'); await applyCoupon(ui, 'LIBROS20');
-    c.eq('descuento solo con S008', await money(ui, 'discount'), 0);
-    await add(ui, 'S013'); await setQuantity(ui, 'S013', 3);
+    await add(ui, 'A008'); await applyCoupon(ui, 'LIBROS20');
+    c.eq('descuento solo con A008', await money(ui, 'discount'), 0);
+    await add(ui, 'A013'); await setQuantity(ui, 'A013', 3);
     c.eq('subtotal', await money(ui, 'subtotal'), 32.5);
-    c.eq('descuento con S013 × 3', await money(ui, 'discount'), 5.22);
+    c.eq('descuento con A013 × 3', await money(ui, 'discount'), 5.22);
   },
   'R003-A06': async (ui, c) => {
-    await add(ui, 'S003'); await add(ui, 'S011'); await add(ui, 'S015');
-    await setQuantity(ui, 'S003', 2); await applyCoupon(ui, 'MENOS5');
+    await add(ui, 'A003'); await add(ui, 'A011'); await add(ui, 'A015');
+    await setQuantity(ui, 'A003', 2); await applyCoupon(ui, 'MENOS5');
     c.eq('subtotal 30.00', await money(ui, 'subtotal'), 30);
     c.eq('descuento con 30.00', await money(ui, 'discount'), 5);
-    await setQuantity(ui, 'S003', 1);
+    await setQuantity(ui, 'A003', 1);
     c.eq('subtotal 22.75', await money(ui, 'subtotal'), 22.75);
     c.eq('descuento con 22.75', await money(ui, 'discount'), 0);
-    await setQuantity(ui, 'S003', 2);
+    await setQuantity(ui, 'A003', 2);
     c.eq('subtotal de nuevo 30.00', await money(ui, 'subtotal'), 30);
     c.eq('descuento de nuevo', await money(ui, 'discount'), 5);
   },
@@ -241,28 +248,28 @@ export const PLANS = {
     c.eq('impuesto', await money(ui, 'tax'), 0);
   },
   'R004-A02': async (ui, c) => {
-    await add(ui, 'S002');
+    await add(ui, 'A002');
     c.eq('impuesto', await money(ui, 'tax'), 2.71);
   },
   'R004-A03': async (ui, c) => {
-    await add(ui, 'S016'); await applyCoupon(ui, 'AHORRO10');
+    await add(ui, 'A016'); await applyCoupon(ui, 'AHORRO10');
     c.eq('descuento', await money(ui, 'discount'), 2.99);
     c.eq('impuesto', await money(ui, 'tax'), 5.65);
   },
   'R004-A04': async (ui, c) => {
-    await add(ui, 'S002'); await ui.select('region', 'canarias');
+    await add(ui, 'A002'); await ui.select('region', 'canarias');
     c.eq('impuesto canarias', await money(ui, 'tax'), 0.9);
     await ui.select('region', 'baleares');
     c.eq('impuesto baleares', await money(ui, 'tax'), 2.71);
   },
   'R004-A05': async (ui, c) => {
-    await add(ui, 'S002'); await setQuantity(ui, 'S002', 2);
+    await add(ui, 'A002'); await setQuantity(ui, 'A002', 2);
     c.eq('impuesto', await money(ui, 'tax'), 5.42);
     await ui.select('region', 'canarias');
     c.eq('impuesto canarias', await money(ui, 'tax'), 1.81);
   },
   'R004-A06': async (ui, c) => {
-    await add(ui, 'S009'); await add(ui, 'S001'); await applyCoupon(ui, 'AHORRO10'); await ui.select('region', 'canarias');
+    await add(ui, 'A009'); await add(ui, 'A001'); await applyCoupon(ui, 'AHORRO10'); await ui.select('region', 'canarias');
     c.eq('subtotal', await money(ui, 'subtotal'), 18.8);
     c.eq('descuento', await money(ui, 'discount'), 1.88);
     c.eq('impuesto', await money(ui, 'tax'), 1.18);
@@ -274,29 +281,29 @@ export const PLANS = {
     c.eq('total a pagar', await money(ui, 'total'), 0);
   },
   'R005-A02': async (ui, c) => {
-    await add(ui, 'S002');
+    await add(ui, 'A002');
     c.eq('envío', await money(ui, 'shipping'), 4.95);
     c.eq('total a pagar', await money(ui, 'total'), 20.56);
   },
   'R005-A03': async (ui, c) => {
-    await add(ui, 'S002'); await add(ui, 'S008'); await add(ui, 'S009'); await setQuantity(ui, 'S009', 2);
+    await add(ui, 'A002'); await add(ui, 'A008'); await add(ui, 'A009'); await setQuantity(ui, 'A009', 2);
     c.eq('subtotal 50.00', await money(ui, 'subtotal'), 50);
     c.eq('envío con 50.00', await money(ui, 'shipping'), 0);
     c.eq('total con 50.00', await money(ui, 'total'), 60.5);
-    await setQuantity(ui, 'S009', 1);
+    await setQuantity(ui, 'A009', 1);
     c.eq('subtotal 34.65', await money(ui, 'subtotal'), 34.65);
     c.eq('envío con 34.65', await money(ui, 'shipping'), 4.95);
     c.eq('total con 34.65', await money(ui, 'total'), 46.88);
   },
   'R005-A04': async (ui, c) => {
-    await add(ui, 'S002'); await add(ui, 'S008'); await add(ui, 'S009'); await setQuantity(ui, 'S009', 2);
+    await add(ui, 'A002'); await add(ui, 'A008'); await add(ui, 'A009'); await setQuantity(ui, 'A009', 2);
     await applyCoupon(ui, 'AHORRO10');
     c.eq('descuento', await money(ui, 'discount'), 5);
     c.eq('envío', await money(ui, 'shipping'), 4.95);
     c.eq('total a pagar', await money(ui, 'total'), 59.4);
   },
   'R005-A05': async (ui, c) => {
-    await add(ui, 'S002'); await ui.select('region', 'baleares');
+    await add(ui, 'A002'); await ui.select('region', 'baleares');
     c.eq('envío baleares', await money(ui, 'shipping'), 7.5);
     c.eq('total baleares', await money(ui, 'total'), 23.11);
     await ui.select('region', 'canarias');
@@ -304,7 +311,7 @@ export const PLANS = {
     c.eq('total canarias', await money(ui, 'total'), 23.7);
   },
   'R005-A06': async (ui, c) => {
-    await add(ui, 'S005'); await add(ui, 'S013'); await add(ui, 'S004');
+    await add(ui, 'A005'); await add(ui, 'A013'); await add(ui, 'A004');
     await applyCoupon(ui, 'LIBROS20'); await ui.select('region', 'canarias');
     c.eq('subtotal', await money(ui, 'subtotal'), 53.19);
     c.eq('descuento', await money(ui, 'discount'), 6.64);
@@ -313,7 +320,7 @@ export const PLANS = {
     c.eq('total a pagar', await money(ui, 'total'), 59.71);
   },
   'R005-A07': async (ui, c) => {
-    await add(ui, 'S002'); await remove(ui, 'S002');
+    await add(ui, 'A002'); await remove(ui, 'A002');
     c.eq('envío', await money(ui, 'shipping'), 0);
     c.eq('total a pagar', await money(ui, 'total'), 0);
   }

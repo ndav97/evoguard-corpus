@@ -2,9 +2,9 @@
   "artifact_type": "pipeline_rehearsal",
   "status": "PASS",
   "experimental": false,
-  "task_id": "1c2c8a60-e7d8-4bd2-9571-718ab7e65fee",
+  "task_id": "1f717213-04d3-4ecc-b859-2c4d752852bd",
   "image_id": "sha256:3ed948d6314561f36a6d7e0cc5b27f32098fa40fe11b3cb2afb927a187f11f95",
-  "checked_at": "2026-09-29T00:15:27.828Z",
+  "checked_at": "2026-09-29T04:17:40.034Z",
   "outcomes": [
     {
       "provider": "openai",
@@ -62,7 +62,6 @@
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/context/policy.mjs": "5b1316beca21a60ef91c681af0d06f77e43981c3e1f74678499fb4d023c7d492",
-    "runner/providers/adapter.mjs": "6a60aa2a7cf446de377bc836fc217383aa8270b15e5ec6df980b72c21025b605",
     "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
     "runner/pipeline/evaluator.mjs": "de2aa0d95763af6e1dbc57d92cf3c200236a1ad0890b73c86b55b18e5aa3e624",
     "runner/pipeline/architecture.mjs": "e17a0a5ce9cdfd0c5314d4f737c6bd84ce2c08700f3c890ef8da043fcb14ab72",
@@ -70,7 +69,7 @@
     "runner/pipeline/rehearse.mjs": "62efee5e69ba5764b4e136a45231be9067bbc8031524f92beb5dddda67d5af88",
     "runner/oracle/evaluate.mjs": "34bc730b8a8939b49799300bbbe15f730d02f071b505495ad7d4c944a125e771",
     "runner/oracle/spec.mjs": "dd635e6be875785f9b798973a7e332bbdfc0d88fa0247ae2a2530ca7f5d67051",
-    "runner/oracle/generic-adapter.mjs": "e802898e0708eb9fa5328a04c15702ae5225c3788d0b26e3d43a9084eeee3c4d",
+    "runner/oracle/generic-adapter.mjs": "61b2987288868c3adf46513e4d34168fe13de4c7f19a3721a20e4142eca3a127",
     "runner/oracle/families/index.mjs": "5a439fb37eee70eecdeaa96b54d1bd2a737b4f32250c4d45fadce7e2f1698411",
     "runner/oracle/families/F001/index.mjs": "285f4d9464e1319a9de3de62e094283850e1598aa62883b23b0baf326aebbf99",
     "runner/oracle/families/F001/spec-lock.json": "9876da24275aa2c0e37f99feeb56f98f6bb9e19f58181ebe46932c91afe3a839",

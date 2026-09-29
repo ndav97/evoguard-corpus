@@ -198,3 +198,24 @@ El usuario probablemente cambiará el intermediario de Sonnet. Hasta ahora `runn
 - **Regla para el cambio de proveedor:** se hará solo en `runner/providers/*` y `config/models.json`, sin tocar `actions.mjs`.
 - **Efecto:** las evidencias sintética y S900 siguen vigentes. Las de S001–S010 hay que repetirlas una vez por el cambio de `actions.mjs` del 2026-09-28, y el cambio de proveedor ya no las invalidará.
 
+## Tareas sin modelos del 2026-09-29
+Decisiones de Claude con autorización del usuario. El avance y lo que queda están en `docs/progreso-tareas-sin-modelos.md`.
+- **Equidad de los oráculos F002–F010**:
+  - Revisión independiente con 3 revisores: de 260 casos, 0 no deducibles y 41 ambiguos. Todos los ambiguos se debían a cómo el oráculo lee la interfaz.
+  - Correcciones en el adaptador genérico: texto con límites entre elementos, listas por nombre exacto y espera tras recargar.
+  - Correcciones en los planes de F003 (importe tras la etiqueta) y F009 (separador libre tras el ID).
+  - Aclaraciones en el texto visible: formato normativo de los ejemplos en `architecture.md`, y ajustes en F004, F007 y F008.
+  - Detalle en `docs/revision-equidad-oraculos-2026-09-29.md`. F001 (FROZEN) no usa el adaptador genérico y no cambia.
+- **Prefijo de F003**: los productos pasan de `S001–S016` a `A001–A016`. Así no coinciden con las familias semi-reales, y `P` ya lo usa F001. Se actualizaron:
+  - el fixture y su hash;
+  - los casos y su spec-lock;
+  - el plan y la página de calibración.
+- **F009**: los 9 mutantes implementados que faltaban por declarar se declararon; todos son detectados. Hay 24 mutantes en total.
+- **Ensayo de una familia nueva** (`npm run pipeline:rehearse-family -- F002`, copia desechable): V0→V3 aceptadas con candidatos guionados escritos por Claude, auditoría PASS con 5/5 ejecuciones estables y FROZEN. Los candidatos (`tests/fixtures/rehearsal-family/F002.mjs`) son material de prueba, nunca referencias.
+- **Fuerza de los tests ocultos semi-reales** (`npm run real:mutants`):
+  - mutación sobre las líneas que añade cada referencia de calibración, evaluada solo con los tests ocultos del turno;
+  - puntuación = eliminados / (eliminados + sobrevivientes). Los que no compilan cuentan aparte;
+  - los sobrevivientes se revisan a mano, porque pueden ser equivalentes;
+  - se probó con la familia de prueba S900 (3/3 eliminados). Las familias reales se ejecutan en el PC del usuario.
+  - `runner/real/mutants.mjs` no forma parte de la huella de los ensayos.
+

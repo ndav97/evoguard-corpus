@@ -129,7 +129,7 @@ async function applySeed(ui, value) { await ui.fill('seed', String(value)); awai
 const alertMatches = async ui => (await ui.alerts()).some(a => a.includes(ALERT));
 // Revisión: [{ id, verdict, text }] con el veredicto que sigue al ID.
 async function review(ui) {
-  return (await ui.rows('review')).map(r => ({ id: r.id, verdict: r.text.slice(r.id.length).trim().match(/^(Correcta|Incorrecta)(?![A-Za-záéíóú])/)?.[1] ?? null, text: r.text }));
+  return (await ui.rows('review')).map(r => ({ id: r.id, verdict: r.text.slice(r.id.length).replace(/^[^\p{L}\p{N}]+/u, '').match(/^(Correcta|Incorrecta)(?![\p{L}])/u)?.[1] ?? null, text: r.text }));
 }
 
 // Juega preguntas en el orden que presenta la página: pick(q) → texto de la opción a marcar.

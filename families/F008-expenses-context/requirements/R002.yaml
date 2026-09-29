@@ -29,7 +29,7 @@
       {
         "role": "status",
         "name": "Total del mes",
-        "rule": "Un elemento con role=\"status\" y nombre accesible «Total del mes» (aria-label) cuyo texto incluye «Total del mes: N EUR», con N con dos decimales y punto decimal (p. ej. «Total del mes: 433.84 EUR»), y ningún otro importe con dos decimales."
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Total del mes» (aria-label) cuyo texto incluye «Total del mes: N EUR», con N con dos decimales y punto decimal (p. ej. «Total del mes: 433.84 EUR»), y ningún otro importe con dos decimales ni otro código de moneda."
       }
     ]
   }

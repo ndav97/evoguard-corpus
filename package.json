@@ -20,6 +20,7 @@
     "providers:diagnose": "node --env-file-if-exists=.env runner/providers/cli.mjs diagnose",
     "context:calibrate": "node runner/context/calibrate.mjs",
     "pipeline:rehearse": "node runner/pipeline/rehearse.mjs",
+    "pipeline:rehearse-family": "node runner/pipeline/rehearse-family.mjs",
     "corpus:generate": "node --env-file-if-exists=.env runner/pipeline/generate.mjs",
     "corpus:audit": "node runner/pipeline/audit.mjs",
     "bench:local": "node runner/bench/local.mjs",
@@ -27,7 +28,8 @@
     "oracle:lock": "node runner/oracle/lock.mjs",
     "test:calibration": "node --test tests/calibration/*.test.mjs",
     "real:prepare": "node runner/real/prepare.mjs",
-    "real:rehearse": "node runner/real/rehearse.mjs"
+    "real:rehearse": "node runner/real/rehearse.mjs",
+    "real:mutants": "node runner/real/mutants.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",

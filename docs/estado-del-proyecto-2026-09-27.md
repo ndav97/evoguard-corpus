@@ -68,15 +68,15 @@ Commits en el PC (`evoguard-corpus`):
 
 ### Sin modelos (Claude)
 1. **Estrato semi-real listo para generar** (2026-09-28): integrado al runner (fases R1–R5, `docs/estrato-semi-real.md`); las 10 imágenes VERIFIED (`config/real-bases.json`) y el ensayo del pipeline con cada repositorio real en PASS con el código actual (`docs/verification/real-rehearsal-s0xx.json`, commit `1f9fdd3`). Correcciones surgidas de los ensayos: hooks de git de los repos (lefthook), selección del test a borrar en el escenario, contenedores de ejecuciones interrumpidas y falsos positivos del filtro de secretos. Solo faltan los modelos (preflight: modelos congelados y contexto).
-2. **Estrato sintético:**
-   - completar la corrida conjunta de la calibración;
-   - revisión independiente de la equidad del oráculo (comprobaciones que no se deducen del texto visible);
-   - declarar los 9 mutantes de F009 que aún no se verifican;
-   - un ensayo instrumental de generación y auditoría en una familia nueva.
+2. **Estrato sintético** (2026-09-29, `docs/progreso-tareas-sin-modelos.md`):
+   - hecho: revisión independiente de la equidad de los oráculos, con 41 ambigüedades corregidas (`docs/revision-equidad-oraculos-2026-09-29.md`);
+   - hecho: 9 mutantes de F009 declarados;
+   - hecho: ensayo de generación y auditoría de F002 hasta FROZEN;
+   - hecho: calibración conjunta F002–F010, 72/72.
 3. **Estrato semi-real:**
-   - prueba de fuerza de los tests ocultos, con mutantes sobre las referencias;
+   - prueba de fuerza de los tests ocultos: herramienta lista (`npm run real:mutants`), la ejecuta el usuario después del ensayo;
    - revisión humana de los enunciados T001–T003.
-4. **Coherencia de nombres:** los productos de F003 usan IDs `S001–S016`, que coinciden con los nombres de las familias semi-reales. Conviene cambiar el prefijo de F003 antes de generar.
+4. ~~Coherencia de nombres~~: hecho. Los productos de F003 pasan a `A001–A016`.
 5. **Documentación:** registrar en `operational-decisions.md` la decisión del estrato semi-real y los criterios de calibración de ambos estratos.
 
 ### Con modelos (usuario)

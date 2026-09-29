@@ -6,42 +6,42 @@
     {
       "id": "R002-A01",
       "steps": [
-        "Añadir S002; Cantidad de S002 = 3."
+        "Añadir A002; Cantidad de A002 = 3."
       ],
-      "expected": "Cantidad de S002 = 3; Subtotal 38.70."
+      "expected": "Cantidad de A002 = 3; Subtotal 38.70."
     },
     {
       "id": "R002-A02",
       "steps": [
-        "Añadir S003; añadir S007; Cantidad de S003 = 0."
+        "Añadir A003; añadir A007; Cantidad de A003 = 0."
       ],
-      "expected": "Carrito: solo S007; Subtotal 18.75."
+      "expected": "Carrito: solo A007; Subtotal 18.75."
     },
     {
       "id": "R002-A03",
       "steps": [
-        "Añadir S004; añadir S011; Quitar S004."
+        "Añadir A004; añadir A011; Quitar A004."
       ],
-      "expected": "Carrito: solo S011 (Cantidad 1); Subtotal 9.95."
+      "expected": "Carrito: solo A011 (Cantidad 1); Subtotal 9.95."
     },
     {
       "id": "R002-A04",
       "steps": [
-        "Añadir S001; añadir S002; Quitar S001; añadir S001."
+        "Añadir A001; añadir A002; Quitar A001; añadir A001."
       ],
-      "expected": "Carrito: S002, S001 en ese orden; Cantidad de S001 = 1; Subtotal 16.35."
+      "expected": "Carrito: A002, A001 en ese orden; Cantidad de A001 = 1; Subtotal 16.35."
     },
     {
       "id": "R002-A05",
       "steps": [
-        "Añadir S006; Cantidad de S006 = 4; añadir S006."
+        "Añadir A006; Cantidad de A006 = 4; añadir A006."
       ],
-      "expected": "Cantidad de S006 = 5; Subtotal 20.75."
+      "expected": "Cantidad de A006 = 5; Subtotal 20.75."
     },
     {
       "id": "R002-A06",
       "steps": [
-        "Añadir S012; Cantidad de S012 = 2; Quitar S012."
+        "Añadir A012; Cantidad de A012 = 2; Quitar A012."
       ],
       "expected": "Carrito sin líneas; Subtotal 0.00."
     }

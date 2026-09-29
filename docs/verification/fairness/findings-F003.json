@@ -1,0 +1,178 @@
+{
+ "family": "F003",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: lista «Catálogo» con <li> que empieza por el ID; carrito vacío (lista sin elementos o no visible, lo que rows() trata como []); «Subtotal: 0.00»."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Línea, cantidad '1' (spinbutton «Cantidad» dentro del <li>) y subtotal 7.25 derivables. Pero rows[0].text.startsWith('S003 Taza de cerámica') exige exactamente un espacio; el contrato solo da un ejemplo («p. ej. «S003 Taza de cerámica»»).",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«añadir un producto que ya está suma 1… sin crear otra»; orden de primera adición; 61.90 con dos decimales."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«al final del carrito (orden de primera adición)»; 48.70."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«se muestra con dos decimales y punto decimal»; «Subtotal: 12.90» como formato."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "«Al cambiar la cantidad el subtotal se actualiza de inmediato, sin botón de confirmación»; spinbutton «Cantidad»."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Una cantidad 0 elimina la línea»."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Botón «Quitar» dentro del <li> (R002.ui_contract); «Las demás líneas conservan su orden y cantidad»."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«Si se vuelve a añadir un producto eliminado, su línea empieza de nuevo con cantidad 1 al final del carrito»."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«Añadir desde el catálogo un producto cuya cantidad se ha editado suma 1 a la cantidad actual»."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R002-A06: carrito vacío y subtotal 0.00."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "percent 10 % sobre 28.69 = 2.869 → 2.87 (redondeo al céntimo); «Descuento: N» con dos decimales sin signo; «El subtotal no cambia»."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«sin distinguir mayúsculas y minúsculas y tras recortar espacios»."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «Cupón no válido»; «deja sin cupón activo (descuento 0.00)» aunque hubiera uno."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«Solo hay un cupón activo: aplicar otro código lo reemplaza»; LIBROS20 = 20 % de 15.35 = 3.07 (solo categoría Libros, fixture)."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«si category no es «todas», solo de la suma de las líneas de esa categoría»; con S008 solo: 0.00 sin aviso (el cupón existe); 20 % de 26.10 = 5.22."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«mayor o igual que min_subtotal»; «pasa a 0.00 y vuelve si se cumple otra vez»; céntimos exactos evitan el error de 30.00 en coma flotante."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract: combobox «Región» con valores peninsula, baleares, canarias en ese orden, inicial peninsula; «Impuesto: 0.00»."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "12.90 × 0.21 = 2.709 → 2.71."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "(29.90 − 2.99) × 0.21 = 5.6511 → 5.65; «(subtotal − descuento) × tax_rate»."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "tax_rate del fixture: canarias 0.07 → 0.90; baleares 0.21 → 2.71."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "25.80 × 0.21 = 5.418 → 5.42; × 0.07 = 1.806 → 1.81."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Cambiar la región no modifica el subtotal ni el descuento»; 16.92 × 0.07 = 1.1844 → 1.18."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "«vale 0.00 si el carrito está vacío»; total 0.00 (ui_contract initial_state)."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "12.90 + 2.71 + 4.95 = 20.56."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«mayor o igual que free_shipping_threshold (50.00)»; 50.00 → envío 0; 34.65 → impuesto 7.2765 → 7.28, total 46.88. Requiere céntimos exactos (declarado en R001)."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«subtotal − descuento» se compara con el umbral: 45.00 < 50 → 4.95; total 59.40."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "shipping de la región del fixture (7.50 / 9.90)."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Subtotal 53.19; LIBROS20 sobre 33.20 = 6.64; 46.55 × 0.07 = 3.2585 → 3.26; 46.55 < 50 → 9.90; total 59.71. Ningún importe cae en empate exacto de medio céntimo, así que el modo de redondeo no afecta."
+  },
+  {
+   "id": "R005-A07",
+   "verdict": "DERIVABLE",
+   "evidence": "«vale 0.00 si el carrito está vacío»; «Vaciar el carrito devuelve el envío y el total a 0.00»."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "amount() exige EXACTAMENTE un número con dos decimales en todo el texto del status. El contrato dice que el texto «incluye «Envío: N»» (o Subtotal/Descuento/Impuesto/Total a pagar), sin prohibir otros importes. Implementaciones razonables como «Envío: 0.00 (gratis desde 50.00)», «Descuento: 5.00 (MENOS5, mínimo 30.00)» o «Total a pagar: 20.56 (IVA 2.71)» hacen fallar el caso con una excepción.",
+   "severity": "medium",
+   "fix": "Declarar en el ui_contract que el status contiene un único importe con dos decimales, o hacer que el plan use labeled(text,'Envío') / una regex anclada a la etiqueta en lugar de amount()."
+  },
+  {
+   "issue": "El adaptador identifica filas con textContent del <li> y la regex ^(ID)(?![A-Za-z0-9]); rowText/startsWith también usan textContent. Si el ID y el título se renderizan en elementos contiguos sin espacio textual (p. ej. JSX en líneas separadas <span>{id}</span>\\n<span>{title}</span> con separación visual por CSS gap), textContent es «K001Revisar…»: la fila no se reconoce y casi todos los casos basados en listas fallan. El ui_contract habla de «texto visible» (que visualmente sí cumple).",
+   "severity": "medium",
+   "fix": "Declarar en common.md/ui_contract que el ID debe ir seguido de un espacio (o separador no alfanumérico) en el propio texto del DOM, no solo por estilos; o hacer que rows()/row() usen innerText (que inserta saltos entre elementos de bloque/flex)."
+  },
+  {
+   "issue": "Formato «ID + espacio + nombre» exigido por startsWith en R001-A02; el contrato solo da un ejemplo.",
+   "severity": "low",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "issue": "Redondeo y coma flotante: no hay ningún caso de empate exacto (x.xx5) y el umbral 50.00 de R005-A03 solo es frágil si no se usan céntimos, lo que R001 exige explícitamente («Los importes se calculan en céntimos exactos»). No hay problema.",
+   "severity": "low",
+   "fix": "Ninguno (opcional: añadir un caso con empate para comprobar de verdad el «0,5 hacia arriba»)."
+  }
+ ]
+}

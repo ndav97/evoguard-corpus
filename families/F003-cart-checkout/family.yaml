@@ -52,7 +52,7 @@
   },
   "fixture": {
     "path": "fixtures/catalog.json",
-    "sha256": "cbe75e594ea2631228d7c40be91e341a770ec736d0e93de5956664fadec948de",
+    "sha256": "bd1d7ed1a3c0ae9c8ccfcac64d9812ac5b03be876ce77abb211e091e21c6ad66",
     "count": 16,
     "summary": {
       "category_counts": {

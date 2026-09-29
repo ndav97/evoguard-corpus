@@ -33,7 +33,7 @@
       {
         "role": "status",
         "name": "Paso",
-        "rule": "Un elemento con role=\"status\" y nombre accesible «Paso» (aria-label) cuyo texto contiene el nombre del paso actual: «Cuenta», «Perfil» o «Resumen» (p. ej. «Paso 1 de 3: Cuenta»)."
+        "rule": "Un elemento con role=\"status\" y nombre accesible «Paso» (aria-label) cuyo texto contiene el nombre del paso actual: «Cuenta», «Perfil» o «Resumen» (p. ej. «Paso 1 de 3: Cuenta»), y ningún otro nombre de paso."
       },
       {
         "role": "textbox",

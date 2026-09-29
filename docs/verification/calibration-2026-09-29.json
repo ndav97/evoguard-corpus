@@ -1,0 +1,339 @@
+{
+  "artifact_type": "oracle_calibration_run",
+  "date": "2026-09-29",
+  "command": "node --test tests/calibration/F0xx.test.mjs (F002–F010)",
+  "context": "Tras la revisión de equidad (adaptador genérico nuevo), el cambio de prefijo de F003 y los 9 mutantes declarados de F009",
+  "summary": {
+    "tests": 72,
+    "pass": 72,
+    "fail": 0
+  },
+  "families": {
+    "F002": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F003": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F004": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F005": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F006": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F007": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F008": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F009": {
+      "pass": 8,
+      "fail": 0
+    },
+    "F010": {
+      "pass": 8,
+      "fail": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "PASS",
+      "test": "F002: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F002 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F002 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F002 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F002 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F002: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F002: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F002: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F004: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F004 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F004 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F004 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F004 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F004: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F004: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F004: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F005: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F005 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F005 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F005 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F005 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F005: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F005: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F005: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F006: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F006 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F006 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F006 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F006 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F006: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F006: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F006: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F007: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F007 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F007 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F007 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F007 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F007: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F007: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F007: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F008: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F008 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F008 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F008 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F008 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F008: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F008: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F008: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F009: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F009 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F009 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F009 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F009 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F009: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F009: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F009: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F010: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F010 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F010 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F010 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F010 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F010: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F010: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F010: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    },
+    {
+      "status": "PASS",
+      "test": "F003: la página de calibración embebe exactamente el fixture de la familia"
+    },
+    {
+      "status": "PASS",
+      "test": "F003 V0: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F003 V1: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F003 V2: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F003 V3: la implementación de calibración correcta pasa todos los casos aplicables"
+    },
+    {
+      "status": "PASS",
+      "test": "F003: la versión anterior falla exactamente los casos del requisito nuevo"
+    },
+    {
+      "status": "PASS",
+      "test": "F003: cada mutante es rechazado por los casos que le corresponden"
+    },
+    {
+      "status": "PASS",
+      "test": "F003: estabilidad 5/5 del oráculo en V3 (policy.oracle_stability_runs)"
+    }
+  ]
+}

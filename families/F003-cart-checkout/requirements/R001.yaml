@@ -33,7 +33,7 @@
       {
         "role": "list",
         "name": "Catálogo",
-        "rule": "Los productos del catálogo se muestran en una lista (<ul> u <ol>) con nombre accesible «Catálogo» (aria-label). Cada producto es un <li> cuyo texto visible comienza con el ID seguido del nombre, p. ej. «S001 Cuaderno A5», e incluye su precio."
+        "rule": "Los productos del catálogo se muestran en una lista (<ul> u <ol>) con nombre accesible «Catálogo» (aria-label). Cada producto es un <li> cuyo texto visible comienza con el ID seguido del nombre, p. ej. «A001 Cuaderno A5», e incluye su precio."
       },
       {
         "role": "button",
@@ -48,7 +48,7 @@
       {
         "role": "listitem",
         "name": null,
-        "rule": "Cada línea del carrito es un <li> dentro de la lista «Carrito». Su texto visible comienza con el ID del producto seguido de su nombre, p. ej. «S003 Taza de cerámica». Hay una sola línea por producto."
+        "rule": "Cada línea del carrito es un <li> dentro de la lista «Carrito». Su texto visible comienza con el ID del producto seguido de su nombre, p. ej. «A003 Taza de cerámica». Hay una sola línea por producto."
       },
       {
         "role": "spinbutton",

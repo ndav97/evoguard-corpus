@@ -1,0 +1,181 @@
+{
+ "family": "F007",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Valores iniciales norte/2026-03-02 y orden por inicio derivables (R001.ui_contract initial_state, description). El plan compara dashes(rowText).startsWith('B003 09:00–10:30 Revisión de presupuesto'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre hora de fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «únicamente las reservas que son de esa sala y de ese día, ordenadas por hora de inicio»."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Ídem; select «Día» con valores ISO."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «Si no hay reservas, la lista queda vacía»."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: valores norte, sur, auditorio y 2026-03-02…2026-03-06 en orden."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "ID B015 («siguiente al mayor ID asignado»), posición por hora y título vacío derivables. El plan compara dashes(rowText).startsWith('B015 12:00–13:00 Revisión legal'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Semántica [inicio, fin) explícita en R002.description. startsWith('B015 08:00–09:00') / ('B016 13:00–15:00'): El plan compara dashes(rowText).startsWith('B015 08:00–09:00'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract alert «La reserva se solapa con» seguido del ID; «Tras un intento rechazado, todos los campos conservan sus valores» justifica el 2.º intento sin reescribir el título."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Solape por contención; [08:30,10:30) solo solapa con B003; alerta con ID."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «Reservas de otra sala o de otro día nunca están en conflicto»; IDs B015, B016 globales."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Opciones (22 inicios, 4 duraciones) y regla de cierre (terminar a las 19:00 permitido) derivables; conserva título «Tarde» tras rechazo (explícito). startsWith('B015 18:00–19:00 Tarde'): El plan compara dashes(rowText).startsWith('B015 18:00–19:00 Tarde'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R002-A07",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract alert «El título es obligatorio»; vacío tras recortar."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract botón «Cancelar» en el <li>; «Cancelar no afecta a las demás»."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Hueco libre tras cancelar derivable. startsWith('B015 15:00–16:30'): El plan compara dashes(rowText).startsWith('B015 15:00–16:30'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "«Los IDs de reservas canceladas no se reutilizan» → B016 derivable. startsWith('B016 12:00–13:00 Definitiva'): El plan compara dashes(rowText).startsWith('B016 12:00–13:00 Definitiva'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description «Cancelar no afecta a las demás reservas»."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "«mayor asignado alguna vez (incluidos los del fixture y los cancelados)» → B015 derivable. startsWith('B015 09:30–10:30 Visita'): El plan compara dashes(rowText).startsWith('B015 09:30–10:30 Visita'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Orden por fecha y hora derivable; formato con fecha dado en R004.description «cada elemento incluye la fecha: «B003 2026-03-02 09:00–10:30 …»» (más normativo que en R001, pero sigue siendo un ejemplo). El plan compara dashes(rowText).startsWith('B003 2026-03-02 09:00–10:30 Revisión de presupuesto'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora, entre ID y fecha y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract status «Horas reservadas» con «Horas reservadas: N» dos decimales; «visible en ambas vistas»; norte 10.00, sur 5.00, auditorio 4.00 (verificado a mano)."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «se actualiza al crear»; crear usa sala y día seleccionados; orden semanal."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «se actualiza al… cancelar»; «Cancelar» presente en ambas vistas (R003 «Cada reserva visible»)."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Valor «dia» del select declarado; «La vista de día no cambia». startsWith sin fecha: El plan compara dashes(rowText).startsWith('B003 09:00–10:30 Revisión de presupuesto'): tolera -, – o — y espacios alrededor del guion, pero exige un único espacio entre ID y hora y entre fin y título. R001.ui_contract enumera las partes («comienza con el ID, la hora de inicio, un guion largo «–», la hora de fin y el título») pero el separador solo aparece en el ejemplo («p. ej. «B003 09:00–10:30 Revisión de presupuesto»»); «B003 · 09:00–10:30 · Revisión…» o «B003 | 09:00–10:30 – Revisión…» cumplen el enunciado y rows() las detecta, pero fallan. (Riesgo bajo-medio; el riesgo mayor es la concatenación JSX sin espacios, ver transversal.)",
+   "fix": "Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Formato «N personas»/«1 persona» y «en ambas vistas» explícitos. El plan extrae /(\\d+)\\s+personas?\\b/ del textContent del <li>. R005.ui_contract solo exige «después del título, sus asistentes en la forma «N personas» (o «1 persona»)». Si a continuación viene el botón «Cancelar» sin espacio literal en el DOM (JSX en líneas distintas), textContent es «3 personasCancelar»/«1 personaCancelar» y \\b falla → null.",
+   "fix": "Usar /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ (mayúscula de «Cancelar» no bloquea) o exigir en el contrato un espacio/fin tras «personas»."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Igual a la capacidad permitido (explícito). startsWith('B015 12:00–13:00') con la ambigüedad de separador y attendeesOf con la de «personas» pegado a «Cancelar». El plan extrae /(\\d+)\\s+personas?\\b/ del textContent del <li>. R005.ui_contract solo exige «después del título, sus asistentes en la forma «N personas» (o «1 persona»)». Si a continuación viene el botón «Cancelar» sin espacio literal en el DOM (JSX en líneas distintas), textContent es «3 personasCancelar»/«1 personaCancelar» y \\b falla → null.",
+   "fix": "Usar /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ (mayúscula de «Cancelar» no bloquea) o exigir en el contrato un espacio/fin tras «personas». / Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Capacidad por sala y conservación de campos tras rechazo explícitas (R005 «tras un intento rechazado conservan su valor», R002 ídem); que cambiar de sala no reinicie el formulario no se dice pero es lo natural. Depende de startsWith y attendeesOf. El plan extrae /(\\d+)\\s+personas?\\b/ del textContent del <li>. R005.ui_contract solo exige «después del título, sus asistentes en la forma «N personas» (o «1 persona»)». Si a continuación viene el botón «Cancelar» sin espacio literal en el DOM (JSX en líneas distintas), textContent es «3 personasCancelar»/«1 personaCancelar» y \\b falla → null.",
+   "fix": "Usar /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ (mayúscula de «Cancelar» no bloquea) o exigir en el contrato un espacio/fin tras «personas». / Normativizar «ID, espacio, inicio–fin, espacio, título» en el ui_contract, o comparar con regex ^ID\\W+HH:MM\\s*[-–—]\\s*HH:MM\\W+Título."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.ui_contract alert «Los asistentes deben ser un número entero mayor o igual que 1»; 0 y 2.5 inválidos; common.md: no depender de validación nativa."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Valor inicial 1 y vuelta a 1 tras crear explícitos (R005.description/ui_contract). Lectura «1 persona»/«3 personas» vía attendeesOf. El plan extrae /(\\d+)\\s+personas?\\b/ del textContent del <li>. R005.ui_contract solo exige «después del título, sus asistentes en la forma «N personas» (o «1 persona»)». Si a continuación viene el botón «Cancelar» sin espacio literal en el DOM (JSX en líneas distintas), textContent es «3 personasCancelar»/«1 personaCancelar» y \\b falla → null.",
+   "fix": "Usar /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ (mayúscula de «Cancelar» no bloquea) o exigir en el contrato un espacio/fin tras «personas»."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Auditorio 20 explícito. Lectura «20 personas» vía attendeesOf. El plan extrae /(\\d+)\\s+personas?\\b/ del textContent del <li>. R005.ui_contract solo exige «después del título, sus asistentes en la forma «N personas» (o «1 persona»)». Si a continuación viene el botón «Cancelar» sin espacio literal en el DOM (JSX en líneas distintas), textContent es «3 personasCancelar»/«1 personaCancelar» y \\b falla → null.",
+   "fix": "Usar /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ (mayúscula de «Cancelar» no bloquea) o exigir en el contrato un espacio/fin tras «personas»."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "Detección de filas por textContent sin espacios: rows()/row() (generic-adapter.mjs) leen item.textContent (no innerText) y exigen que el ID vaya seguido de un carácter no alfanumérico (^(ID)(?![A-Za-z0-9])). En React es habitual escribir <span>{id}</span> y <span>{titulo}</span> en líneas JSX distintas: JSX elimina ese salto, textContent queda «X001Titulo» (o «B00309:00» en F007) y la fila desaparece para el oráculo aunque visualmente (gap/margin CSS) se lea «X001 Título». El ui_contract habla de «texto visible», que un desarrollador interpreta como lo renderizado. Afecta a prácticamente todos los casos de la familia. En F007 es especialmente grave: tras el ID viene un dígito de la hora («B00309:00»), así que cualquier <span>{id}</span><span>{start}…</span> sin espacio literal hace invisible la fila.",
+   "severity": "high",
+   "fix": "En el ui_contract del listitem exigir que el texto DOM del <li> contenga un espacio literal entre las partes (p. ej. «escribe el ID y el título separados por un espacio en el propio texto, no solo por estilos»), o que el adaptador use innerText (que refleja el layout) y un separador tolerante \\W+ tras el ID."
+  },
+  {
+   "issue": "Separador entre ID/fecha/intervalo/título solo mostrado en ejemplos; 11 casos usan startsWith con un único espacio (R001-A01, R002-A01/A02/A06, R003-A02/A03/A05, R004-A01/A05, R005-A02/A03).",
+   "severity": "medium",
+   "fix": "Normativizar el formato exacto en el ui_contract o usar regex tolerantes (\\W+) en startsWith."
+  },
+  {
+   "issue": "attendeesOf usa \\b tras «personas?» sobre textContent: falla si el botón «Cancelar» sigue sin espacio. Afecta a R005-A01/A02/A03/A05/A06.",
+   "severity": "high",
+   "fix": "Regex /(\\d+)\\s+(personas|persona)(?![a-záéíóúñ])/ o exigir espacio tras «N personas» en el contrato."
+  },
+  {
+   "issue": "R005-A03 asume que cambiar la sala no reinicia título/asistentes/inicio/duración; el paquete dice que se conservan tras un rechazo pero no menciona el cambio de sala.",
+   "severity": "low",
+   "fix": "Añadir en R002: «cambiar la sala, el día o la vista no modifica los campos del formulario»."
+  }
+ ]
+}

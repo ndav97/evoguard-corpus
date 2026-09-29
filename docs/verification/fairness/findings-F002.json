@@ -1,0 +1,160 @@
+{
+ "family": "F002",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: lista «Tareas», <li> que comienza con el ID; initial_state «filtro Todas y se ven las 24 tareas»; descripción «orden del fixture»."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "combobox «Estado» con valor pendiente (ui_contract R001); «conservando el orden relativo del fixture»."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Igual que A02 con valor en_curso."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Igual que A02 con valor hecha."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Valor «todas» declarado en el ui_contract; A05 «Volver al filtro Todas muestra otra vez las 24 tareas»."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "Botón «Avanzar» dentro del <li> (R002.ui_contract); pendiente→en_curso; la tarea mantiene su posición del fixture en el filtro (R001 «orden relativo del fixture»)."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "en_curso→hecha; orden relativo del fixture en el filtro hecha."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract: «En una tarea hecha ese botón no existe o está deshabilitado»; rowEnabled acepta ambas opciones."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R002-A04 y descripción: «se refleja de inmediato en el filtro activo», las demás conservan su orden."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R002-A05; K001 en hecha ordenada por fixture (R001 descripción)."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "IDs y posición al final son derivables (R003 descripción: «K025…, se añade al final»). Pero el plan exige text.startsWith('K025 Comprar sobres') (exactamente un espacio). El contrato solo dice «comienza con el ID seguido del título, p. ej. «K001 Revisar…»»: el ejemplo no es normativo; «K025 · Comprar sobres», «K025 – Comprar sobres» o «K025: Comprar sobres» pasan rows() pero fallan este check.",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract alert: «El título es obligatorio»; horas por defecto 1; common.md prohíbe depender de validación nativa."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "IDs K025/K026 derivables; la comprobación startsWith('K025 Llamar al banco') / ('K026 Pagar seguro') tiene el mismo problema de separador que R003-A01. Además depende de que Horas se restablezca a 1 (sí declarado).",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«empieza pendiente y se añade al final»; «puede avanzar» (R003-A04); el orden en filtros coloca K025 al final."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R003 descripción y ui_contract: título vacío y horas 1 tras crear; value() lee '1' del input number."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «Las horas deben ser un número entero entre 1 y 8» y «Unas horas fuera de 1–8 o no enteras» (A06). parseInt('2.5') sería un error del modelo, no ambigüedad."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract: «Pendientes: N», «En curso: N», «Hechas: N», «Horas restantes: N» con N entero, que es exactamente lo que parsea labeled(); valores 10/7/7/65 en A01."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«resta las horas de una tarea al pasar a hecha»; horas restantes = suma de no hechas."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Crear una tarea suma una pendiente y sus horas»."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«El resumen cuenta todas las tareas, con independencia del filtro»."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "A05 «Llevar a hecha una tarea creada resta sus horas»."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005-A01; botón «Deshacer» en ui_contract."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Deshacer una creación elimina la tarea y su ID vuelve a quedar disponible». El startsWith('K025 Tarea definitiva') hereda la ambigüedad del separador (ver R003-A01), pero el foco del caso es derivable.",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«en orden inverso y sin límite»; los cambios de filtro intermedios del plan no son deshacibles (R005 descripción)."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "ui_contract: deshabilitado (atributo disabled) sin acciones; «Un intento de creación rechazado no se registra»."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«Deshacer actualiza el resumen»; valores calculables del fixture."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Cambiar el filtro no es una acción deshacible y deshacer no cambia el filtro seleccionado»; value('status') = 'hecha' (valor de opción declarado)."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "El adaptador identifica filas con textContent del <li> y la regex ^(ID)(?![A-Za-z0-9]); rowText/startsWith también usan textContent. Si el ID y el título se renderizan en elementos contiguos sin espacio textual (p. ej. JSX en líneas separadas <span>{id}</span>\\n<span>{title}</span> con separación visual por CSS gap), textContent es «K001Revisar…»: la fila no se reconoce y casi todos los casos basados en listas fallan. El ui_contract habla de «texto visible» (que visualmente sí cumple).",
+   "severity": "medium",
+   "fix": "Declarar en common.md/ui_contract que el ID debe ir seguido de un espacio (o separador no alfanumérico) en el propio texto del DOM, no solo por estilos; o hacer que rows()/row() usen innerText (que inserta saltos entre elementos de bloque/flex)."
+  },
+  {
+   "issue": "Formato «ID + espacio + título» exigido por startsWith en R003-A01, R003-A03 y R005-A02, mientras que el contrato solo da un ejemplo («p. ej.»).",
+   "severity": "low",
+   "fix": "Hacer normativo el separador en el ui_contract («el ID, un espacio y el título, en el propio texto del <li>») o relajar el plan a una regex tipo ^ID\\W+Título en lugar de startsWith('ID Título')."
+  },
+  {
+   "issue": "Preservación: los casos R001–R004 siguen siendo válidos en V3 (deshacer no altera el estado inicial ni el filtro); no hay conflicto entre turnos.",
+   "severity": "low",
+   "fix": "Ninguno."
+  }
+ ]
+}

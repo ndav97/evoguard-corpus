@@ -1,0 +1,157 @@
+{
+ "family": "F008",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: select «Mes» valor inicial 2026-01; lista aria-label «Gastos»; li que comienza con «ID fecha descripción importe(2 dec) moneda» separados por espacios con ejemplo literal «G001 2026-01-05 Supermercado 62.40 EUR». Orden fecha+ID en R001.description. Orden esperado verificado contra el fixture."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description (filtro por mes, orden fecha asc y a igual fecha ID asc). Verificado: G011<G016 el 02-02, G012<G014 el 02-14."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Igual que A02; G021<G026 el 03-04, G022<G024 el 03-15."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "ui_contract «Mes»: opciones 2026-01, 2026-02, 2026-03 en ese orden (el plan compara option.value)."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "ui_contract listitem: importe con dos decimales y punto decimal + código de moneda original (24.00, 70.00 GBP, 1.50, 58.20 USD)."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract: role=status aria-label «Total del mes», texto «Total del mes: N EUR», ningún otro importe con dos decimales; valor 433.84 dado en R002-A01. El plan exige exactamente un importe y un único código EUR/USD/GBP en el texto."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Valor 499.81 dado en R002-A02."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description: convertir y redondear cada gasto al céntimo (0,5 arriba) antes de sumar; 481.48 dado en R002-A03 (recalculado: suma-y-redondeo daría 481.47)."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «Se actualiza al cambiar de mes»; valores dados en A01–A03."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description: ID siguiente G031, posición por fecha e ID, cuenta en el total; ui_contract de Descripción/Categoría/Importe/Divisa/Fecha(<label>)/Añadir gasto. G031 (01-12) tras G002 y G004 por ID; total 433.84+20.00=453.84."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Aviso role=alert con «La descripción es obligatoria» (R003.ui_contract alert); vacío tras recortar; campos conservan valores."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Aviso «El importe debe ser mayor que 0 con como máximo dos decimales»; reglas >0, punto decimal, ≤2 decimales en R003.description; el plan reutiliza Descripción/Fecha porque los campos se conservan tras un fallo (explícito)."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Aviso «La fecha debe pertenecer a uno de los meses disponibles»; fecha obligatoria y en 2026-01..03. common.md advierte no depender de la validación nativa (min/max en <input type=date> dentro de un <form> bloquearía el aviso)."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«aparece ... solo si su fecha pertenece al mes seleccionado (el mes no cambia al añadir), y cuenta en el total de su mes»; 15.5*1.1689=18.11795->18.12; 481.48+18.12=499.60."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Tras añadir, la descripción y el importe quedan vacíos; la categoría, la divisa y la fecha conservan su valor»; G031/G032 en 01-05 tras G001,G006 por ID."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract: lista aria-label «Presupuestos», un li por categoría en orden del fixture, texto que comienza con el nombre (Comida...) con ejemplo «Comida: 145.90 / 250.00 EUR», sin otros importes; «Excedido» solo si supera. Valores recalculados correctos."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Estrictamente mayor (R004.description); Salud 60.00/60.00 sin marca, Ocio 105.82/100.00 con marca; texto de R004-A02 lo anticipa."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Valores de marzo recalculados (183.64, 23.90, 82.78, 178.36, 12.80)."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "99.60+20.40=120.00 no excede; +0.01 excede. Categoría/fecha se conservan entre altas (R003)."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "18*0.9173=16.5114->16.51; 83.39+16.51=99.90."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Se actualiza al cambiar de mes y al añadir gastos»; gasto de febrero no afecta a enero."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.ui_contract: select «Moneda de visualización» valor inicial EUR."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description: total EUR / tasa, redondeo al céntimo, seguido del código; 433.84/0.9173=472.95, /1.1689=371.15."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«lo gastado en EUR y el presupuesto en EUR se convierten igual, cada uno por separado»; código de moneda en la línea: R004.ui_contract exige «el código de moneda» y la solicitud V3 «muestra el código de la moneda». Valores recalculados correctos."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«Excedido» decidido en EUR; Salud 51.33/51.33 GBP sin marca, Ocio 90.53/85.55 con marca; total 427.59 GBP recalculado."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«Los gastos de la lista conservan su importe y su moneda originales»."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R005-A06 visible: la moneda se mantiene al cambiar de mes; 481.48/0.9173=524.89; EUR restaura."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "El total se valida exigiendo un único código EUR|USD|GBP en todo el texto del role=status «Total del mes» (total() en index.mjs). El contrato solo prohíbe otros importes con dos decimales, no otros códigos; si el desarrollador anida el select de moneda o escribe p. ej. «(equivalente en EUR)» dentro del status, falla.",
+   "severity": "low",
+   "fix": "Añadir al ui_contract de R002/R005: «y ningún otro código de moneda», o que el plan tome el código inmediatamente después del importe."
+  },
+  {
+   "issue": "El adaptador lee el texto con textContent (generic-adapter.mjs: ui.text/textOrNull, rows), no con innerText: elementos hermanos sin espacio literal entre ellos se concatenan (p. ej. <p>X</p><p>Y</p> -> 'XY'). En F008 el contrato de los gastos dice «separados por espacios» (derivable), pero las líneas de presupuestos solo dan un ejemplo; <span>Comida</span><span>145.90 / 250.00 EUR</span> sin espacio daría 'Comida145.90…' y la fila no se detecta (regex de ID con (?![A-Za-z0-9])); '433.84EUR' también rompe \\b(EUR)\\b en el total.",
+   "severity": "low",
+   "fix": "Usar innerText en rows()/text() del adaptador genérico, o indicar en el contrato que las partes van separadas por espacio o signo de puntuación."
+  },
+  {
+   "issue": "Preservación: con EUR, R005 («Con EUR todo se ve como antes») mantiene R002/R004; ningún caso anterior queda invalidado por turnos posteriores. Sin persistencia (arquitectura la prohíbe) y cada caso usa contexto nuevo.",
+   "severity": "low",
+   "fix": "Ninguno."
+  }
+ ]
+}

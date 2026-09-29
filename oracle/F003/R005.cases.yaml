@@ -13,29 +13,29 @@
     {
       "id": "R005-A02",
       "steps": [
-        "Añadir S002."
+        "Añadir A002."
       ],
       "expected": "Envío 4.95; Total a pagar 20.56."
     },
     {
       "id": "R005-A03",
       "steps": [
-        "Añadir S002, S008 y S009; Cantidad de S009 = 2.",
-        "Cantidad de S009 = 1."
+        "Añadir A002, A008 y A009; Cantidad de A009 = 2.",
+        "Cantidad de A009 = 1."
       ],
       "expected": "Con Subtotal 50.00: Envío 0.00 y Total a pagar 60.50; con Subtotal 34.65: Envío 4.95 y Total a pagar 46.88."
     },
     {
       "id": "R005-A04",
       "steps": [
-        "Añadir S002, S008 y S009; Cantidad de S009 = 2; aplicar AHORRO10."
+        "Añadir A002, A008 y A009; Cantidad de A009 = 2; aplicar AHORRO10."
       ],
       "expected": "Descuento 5.00; Envío 4.95; Total a pagar 59.40."
     },
     {
       "id": "R005-A05",
       "steps": [
-        "Añadir S002; Región = baleares.",
+        "Añadir A002; Región = baleares.",
         "Región = canarias."
       ],
       "expected": "baleares: Envío 7.50 y Total a pagar 23.11; canarias: Envío 9.90 y Total a pagar 23.70."
@@ -43,14 +43,14 @@
     {
       "id": "R005-A06",
       "steps": [
-        "Añadir S005, S013 y S004; aplicar LIBROS20; Región = canarias."
+        "Añadir A005, A013 y A004; aplicar LIBROS20; Región = canarias."
       ],
       "expected": "Subtotal 53.19; Descuento 6.64; Impuesto 3.26; Envío 9.90; Total a pagar 59.71."
     },
     {
       "id": "R005-A07",
       "steps": [
-        "Añadir S002; Quitar S002."
+        "Añadir A002; Quitar A002."
       ],
       "expected": "Envío 0.00; Total a pagar 0.00."
     }

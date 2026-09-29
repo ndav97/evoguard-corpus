@@ -1,97 +1,97 @@
 {
   "products": [
     {
-      "id": "S001",
+      "id": "A001",
       "name": "Cuaderno A5",
       "category": "Papelería",
       "price": 3.45
     },
     {
-      "id": "S002",
+      "id": "A002",
       "name": "Novela El faro",
       "category": "Libros",
       "price": 12.9
     },
     {
-      "id": "S003",
+      "id": "A003",
       "name": "Taza de cerámica",
       "category": "Hogar",
       "price": 7.25
     },
     {
-      "id": "S004",
+      "id": "A004",
       "name": "Auriculares básicos",
       "category": "Electrónica",
       "price": 19.99
     },
     {
-      "id": "S005",
+      "id": "A005",
       "name": "Atlas escolar",
       "category": "Libros",
       "price": 24.5
     },
     {
-      "id": "S006",
+      "id": "A006",
       "name": "Bolígrafos pack de 10",
       "category": "Papelería",
       "price": 4.15
     },
     {
-      "id": "S007",
+      "id": "A007",
       "name": "Lámpara de escritorio",
       "category": "Hogar",
       "price": 18.75
     },
     {
-      "id": "S008",
+      "id": "A008",
       "name": "Cable USB-C",
       "category": "Electrónica",
       "price": 6.4
     },
     {
-      "id": "S009",
+      "id": "A009",
       "name": "Diccionario bilingüe",
       "category": "Libros",
       "price": 15.35
     },
     {
-      "id": "S010",
+      "id": "A010",
       "name": "Carpeta de anillas",
       "category": "Papelería",
       "price": 2.8
     },
     {
-      "id": "S011",
+      "id": "A011",
       "name": "Cojín estampado",
       "category": "Hogar",
       "price": 9.95
     },
     {
-      "id": "S012",
+      "id": "A012",
       "name": "Ratón inalámbrico",
       "category": "Electrónica",
       "price": 14.6
     },
     {
-      "id": "S013",
+      "id": "A013",
       "name": "Guía de viaje",
       "category": "Libros",
       "price": 8.7
     },
     {
-      "id": "S014",
+      "id": "A014",
       "name": "Agenda semanal",
       "category": "Papelería",
       "price": 6.05
     },
     {
-      "id": "S015",
+      "id": "A015",
       "name": "Juego de trapos",
       "category": "Hogar",
       "price": 5.55
     },
     {
-      "id": "S016",
+      "id": "A016",
       "name": "Altavoz portátil",
       "category": "Electrónica",
       "price": 29.9

@@ -13,21 +13,21 @@
     {
       "id": "R004-A02",
       "steps": [
-        "Añadir S002."
+        "Añadir A002."
       ],
       "expected": "Impuesto 2.71."
     },
     {
       "id": "R004-A03",
       "steps": [
-        "Añadir S016; aplicar AHORRO10."
+        "Añadir A016; aplicar AHORRO10."
       ],
       "expected": "Descuento 2.99; Impuesto 5.65."
     },
     {
       "id": "R004-A04",
       "steps": [
-        "Añadir S002; Región = canarias.",
+        "Añadir A002; Región = canarias.",
         "Región = baleares."
       ],
       "expected": "Impuesto 0.90 en canarias y 2.71 en baleares."
@@ -35,7 +35,7 @@
     {
       "id": "R004-A05",
       "steps": [
-        "Añadir S002; Cantidad de S002 = 2.",
+        "Añadir A002; Cantidad de A002 = 2.",
         "Región = canarias."
       ],
       "expected": "Impuesto 5.42; en canarias 1.81."
@@ -43,7 +43,7 @@
     {
       "id": "R004-A06",
       "steps": [
-        "Añadir S009; añadir S001; aplicar AHORRO10; Región = canarias."
+        "Añadir A009; añadir A001; aplicar AHORRO10; Región = canarias."
       ],
       "expected": "Subtotal 18.80; Descuento 1.88; Impuesto 1.18."
     }

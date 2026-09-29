@@ -1,0 +1,167 @@
+{
+ "family": "F004",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "ui_contract R001: status «Paso» contiene «Cuenta»; Correo/Contraseña vacíos; no hay avisos. Las alertas vacías se ignoran (alerts() filtra texto vacío)."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Siguiente avanza a Perfil solo si ambos campos son válidos… al avanzar no queda ningún aviso»."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Regex del correo dada literalmente en R001; clave123 es válida, así que no hay aviso de contraseña."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«al menos 8 caracteres y al menos un dígito (ambas condiciones)»."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«se muestra un aviso por cada campo inválido. Cada intento de avanzar sustituye los avisos anteriores»."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "ui_contract Resumen: incluye correo, nombre recortado, «Edad: N» (lo que parsea labeled) y el nombre del país."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «El nombre es obligatorio»; «no queda vacío tras recortar espacios»."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «La edad debe ser un número entero entre 13 y 120»; «entero de 13 a 120»; common.md prohíbe depender de validación nativa (min/max/step)."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Opción vacía inicial en «País»; alert «Selecciona un país»; el Resumen muestra el nombre, no el código."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«Atrás vuelve al paso anterior conservando todos los valores introducidos (en Cuenta también la contraseña)»; value('age') '45', value('country') 'CL'."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "status «Confirmación» con «Registro completado» y el correo."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract: select «Provincia» con \"\" y los códigos de las regiones en el orden del fixture; no visible si el país no tiene regiones."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «Selecciona una provincia»."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Si hay provincia, el Resumen incluye «Provincia: <nombre>»» (nombre, no código); país por nombre."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«la provincia anterior se descarta: no se valida ni aparece en el Resumen»; el plan comprueba que no aparezca ni «Sevilla» ni la palabra «Provincia», coherente con no mostrar la línea."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«Al cambiar de país la provincia vuelve a vacía»; opciones de AR en orden; aviso al avanzar sin provincia."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Atrás conserva la provincia elegida»."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "Radios «Básico»/«Pro»/«Equipo»; Básico por defecto; «Plan: <nombre>» y «Precio mensual: N» (dos decimales, R004 descripción) → 4.99."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Pro deshabilitado (atributo disabled) si la edad es menor que 18 (min_age del fixture)."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Plan: Pro», precio 12.90 (dos decimales); Enviar confirma con el correo."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «La empresa es obligatoria» y «no se muestra la confirmación»; no vale solo con espacios."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Empresa visible solo con Equipo; «con otro plan el campo no se muestra y la empresa no aparece en el Resumen»; precio 29.00."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«El plan elegido se conserva al ir Atrás y volver a Resumen»."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "Alert «El plan Equipo requiere un correo de empresa»; «no envía»; el paso sigue en Resumen."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "(4) «La confirmación incluye además «Plan: <nombre>»»."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "El dominio se compara sin distinguir mayúsculas; «con otros planes esos dominios se aceptan». La confirmación contiene el correo tal como se escribió (rosa@GMAIL.com). Nada invita a normalizarlo, y R001 fija «sin recortar espacios»."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "(2) «el plan vuelve a Básico»; Pro deshabilitado con 16; da igual si se reinicia al cambiar la edad o al llegar a Resumen."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "(3) La parte local de 3 o más caracteres está contenida sin distinguir mayúsculas; alert «La contraseña no puede contener el usuario del correo»."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Dominio gratuito aceptado con Pro; la confirmación incluye «Plan: Pro»."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "step() exige que el texto del status «Paso» contenga EXACTAMENTE uno de «Cuenta», «Perfil», «Resumen». El contrato solo pide que «contiene el nombre del paso actual». Un indicador tipo migas o stepper dentro del mismo status («Cuenta › Perfil › Resumen», con el actual resaltado o con aria-current) es razonable y hace fallar casi todos los casos.",
+   "severity": "medium",
+   "fix": "Añadir al ui_contract R001: «el texto del status Paso no contiene los nombres de los otros pasos». Alternativa: leer el paso actual con una regex anclada (p. ej. /:\\s*(Cuenta|Perfil|Resumen)/) o mediante aria-current."
+  },
+  {
+   "issue": "Preservación V0→V3: las cuentas «válidas» de los casos (ana@empresa.es / clave123, abcdefg1) no contienen la parte local «ana», así que la regla (3) de R005 no rompe R001/R002. R002-A06 sigue pasando con «Plan: …» añadido a la confirmación. Todos los países de los casos R002/R004/R005 (MX, CL, FR, PT) carecen de regiones, así que R003 no interfiere.",
+   "severity": "low",
+   "fix": "Ninguno."
+  },
+  {
+   "issue": "El status «Resumen» comparte palabra con el nombre del paso «Resumen». El adaptador busca por nombre accesible exacto primero, así que no hay colisión mientras el indicador se llame «Paso».",
+   "severity": "low",
+   "fix": "Ninguno."
+  }
+ ]
+}

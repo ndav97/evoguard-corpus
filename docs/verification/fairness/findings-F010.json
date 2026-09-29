@@ -1,0 +1,177 @@
+{
+ "family": "F010",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: lista «Catálogo», li que comienza con ID + título e incluye «Disponibles: n»; lista «Préstamos» vacía sin datos guardados."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Prestar dentro del li, disabled sin ejemplares; li de préstamo empieza con ID+título e incluye «vence día n» (ejemplo literal «L003 La isla de los relojes — vence día 15»); start_day 1 + loan_days 14."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Un libro con 2 ejemplares puede tener 2 préstamos a la vez»."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Préstamos al final de la lista en orden de alta; disponibles = ejemplares - prestados."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Prestar no cambia el día; todos vencen el 15."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract: botón «Devolver» dentro del li del préstamo."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Dos préstamos del mismo libro: se pulsa el primero (visibleFirst); resultado observable idéntico."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«los demás préstamos conservan su orden»."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Persistencia en localStorage explícita (R002.description, architecture.md). El oráculo no depende de la clave ni del formato; contexto de navegador nuevo por caso (evaluate.mjs openAdapter). Ver cross_cutting sobre carrera de hidratación."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Idem; devoluciones persistidas."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Idem; Devolver sobre préstamo recuperado."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract: status «Día» con «Día n», status «Vencidos» con «Vencidos: n», botón «Avanzar día»."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«vencido si vencimiento < día actual; el día del vencimiento todavía no»; ítem muestra «Vencido»."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Vencimiento = día actual + 14 (6+14=20)."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Cada préstamo con su vencimiento; resumen cuenta solo vencidos."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«El día se guarda en localStorage junto con el resto del estado»."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Devolver elimina el préstamo; el resumen se deriva del estado."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004: Renovar suma renew_days (7) al vencimiento; «Renovaciones: n» (0 al prestar)."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Máximo 2 renovaciones, Renovar deshabilitado; rowTryClick no actúa sobre botón deshabilitado."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Un préstamo vencido no se puede renovar («Renovar» deshabilitado)»."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "«el día de su vencimiento todavía se puede»; 15+7=22."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "«se guarda en localStorage»; el máximo sigue aplicándose."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Renovar afecta solo al préstamo pulsado»; orden de lista por alta no cambia."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005: máximo 3 préstamos, todos los Prestar deshabilitados, status «Restricción» con «Límite de 3 préstamos alcanzado»."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Devolver o renovar puede levantar la restricción»; sin restricción oculto o vacío."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Hay préstamos vencidos» bloquea el préstamo."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Vencido estrictamente menor; día 15 permite prestar (15+14=29), día 16 no."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Lista «Historial» vacía al empezar; li empieza por ID e incluye «prestado día n, devuelto día m» (formato literal dado)."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«del más reciente al más antiguo» y «se guarda en localStorage»."
+  },
+  {
+   "id": "R005-A07",
+   "verdict": "DERIVABLE",
+   "evidence": "«Hay préstamos vencidos» tiene prioridad («o, si no, Límite…»); todos los Prestar deshabilitados."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "Carrera de hidratación tras recargar: el plan lee la UI inmediatamente después de page.reload({waitUntil:'load'}) sin espera ni reintento (count()/evaluateAll no esperan). architecture.md permite explícitamente «Puedes usar useEffect», y cargar el estado guardado en un useEffect (patrón muy común) hace que el primer render muestre el fixture y el estado real llegue en un render posterior, posiblemente después del evento load. Afecta a R002-A04/A05/A06, R003-A05, R004-A05, R005-A06 de forma no determinista; favorece a quien lee localStorage en el inicializador perezoso de useState.",
+   "severity": "medium",
+   "fix": "Tras reload esperar a que la página se estabilice (p. ej. waitForFunction de un frame + microtareas, o reintentar las lecturas con expect.poll hasta timeout); o indicar en architecture.md que el estado guardado debe estar presente en el primer render (inicializador de useState)."
+  },
+  {
+   "issue": "El adaptador lee el texto con textContent (generic-adapter.mjs: ui.text/textOrNull, rows), no con innerText: elementos hermanos sin espacio literal entre ellos se concatenan (p. ej. <p>X</p><p>Y</p> -> 'XY'). En F010 los ítems de Catálogo/Préstamos/Historial se detectan por /^L\\d{3}(?![A-Za-z0-9])/: <span>L001</span><span>El faro…</span> en líneas JSX separadas da 'L001El faro…' y la fila no existe para el oráculo. El contrato solo da ejemplos con espacio.",
+   "severity": "medium",
+   "fix": "Usar innerText en rows()/row() o añadir al contrato «el ID seguido de un espacio»."
+  },
+  {
+   "issue": "Las listas se buscan siempre con getByRole('list',{name, exact:false}) (subcadena, sin distinguir mayúsculas): si el historial se nombrara «Historial de préstamos», sus ítems (que también empiezan por L0xx) se mezclarían con los de «Préstamos». El contrato pide «Historial», por lo que es poco probable.",
+   "severity": "low",
+   "fix": "Probar primero coincidencia exacta del nombre de la lista, como ya se hace con los controles."
+  },
+  {
+   "issue": "Preservación: R001/R002 no quedan invalidados por R005 (ningún caso previo hace más de 3 préstamos simultáneos ni presta con vencidos). Persistencia: el oráculo no exige clave ni formato de localStorage; cada caso usa contexto nuevo (almacenamiento vacío).",
+   "severity": "low",
+   "fix": "Ninguno."
+  }
+ ]
+}

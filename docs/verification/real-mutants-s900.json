@@ -1,0 +1,90 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S900",
+  "image_id": "sha256:267ca49203cf5ee93675a8acd1179e78fb301ca06cd380d6468d1ac4f86dc7c3",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T04:24:39.380Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.js",
+      "mutants": [
+        {
+          "file": "src/cart.js",
+          "line": 11,
+          "operator": "texto",
+          "original": "return `Total: ${subtotal(items).toFixed(2)}`;",
+          "mutated": "return `Total: ·X${subtotal(items).toFixed(2)}`;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.js",
+      "mutants": [
+        {
+          "file": "src/cart.js",
+          "line": 16,
+          "operator": "igualdad",
+          "original": "return String(code ?? '').trim().toUpperCase() === 'SAVE10' ? total * 0.9 : total;",
+          "mutated": "return String(code ?? '').trim().toUpperCase() !== 'SAVE10' ? total * 0.9 : total;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.js",
+      "mutants": [
+        {
+          "file": "src/cart.js",
+          "line": 11,
+          "operator": "texto",
+          "original": "return `Total: ${applyCoupon(items, code).toFixed(2)}`;",
+          "mutated": "return `Total: ·X${applyCoupon(items, code).toFixed(2)}`;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-09-29T04:24:54.926Z"
+}

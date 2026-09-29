@@ -1,0 +1,173 @@
+{
+ "family": "F006",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «en el orden del fixture»; lista «Estudiantes», <li> que empieza por el ID."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Fórmula explícita en R001.description (Σ peso_c × puntos_c/máximo_c); ui_contract: nota con dos decimales y punto, último número con dos decimales del <li>. Verificado: E001 84.30, E002 96.70."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description suma puntos y máximos por categoría; E004 66.00 (verificado)."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «una tarea no entregada (null) cuenta como 0 puntos y su máximo sigue contando». Verificado E003 43.00, E016 57.00, E018 69.50."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «se muestra siempre con dos decimales y punto decimal (p. ej. 90.00)»."
+  },
+  {
+   "id": "R001-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Todas las notas coinciden con una implementación ingenua Math.round(x*100)/100 (verificado: sin empates de medio céntimo con estos máximos)."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract: «Editar» en el <li>, spinbutton «Tarea 2», «Guardar»; recalcula. E004 81.00 verificado."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «rellenado con la puntuación actual (vacío si no está entregada)»; nombres de campo = nombres de tarea."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «o quedar vacío (= no entregada)». E001 59.30 verificado; reabrir muestra vacío."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description: entero entre 0 y máximo; si no, aviso, no se guarda ningún cambio y el editor sigue abierto (el plan rellena de nuevo sin reabrir); texto del alert en ui_contract. common.md: no depender de validación nativa."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «entre 0 y la puntuación máxima de la tarea, ambos incluidos». E015 58.00 verificado."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «solo uno a la vez: abrir otro lo sustituye y descarta lo no guardado… Los demás estudiantes no cambian»."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Umbrales derivables (R003.description: ≥90 A… sobre nota redondeada). El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract status «Distribución» con «A: n»…«F: n»; conteo 3/4/4/5/4 verificado y además declarado en R003-A03."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Nota 90.90 y distribución 4/3/4/5/4 derivables; la parte letter(E006)='A' tiene la ambigüedad de parseo de «Letra: X». El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Nota 59.20 y distribución derivables; letter(E010) depende del parseo de «Letra: X». El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract valores iniciales 30/50/20; description «Los cambios solo se aplican al pulsar «Aplicar pesos»»."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Misma fórmula con pesos vigentes; todas las notas 40/40/20 verificadas con implementación ingenua."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description: enteros 0–100 que sumen exactamente 100; si no, aviso (texto en ui_contract) y se mantienen los pesos. Incluso un parseInt('30.5') daría suma 99 → rechazo."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Letras/distribución con 40/40/20 derivables (verificado 3/5/3/5/4); lectura de letras vía «Letra: X» con la misma ambigüedad de parseo. El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "R004.description «la letra, sobre la nota redondeada» hace derivable E008 80.00→B y E011 60.00→D (valores sin redondear 79.99x/59.99x); la lectura de la letra tiene la ambigüedad de parseo. El plan lee la letra con /Letra:\\s*([ABCDF])(?![A-Za-z])/ sobre textContent. R003.ui_contract solo exige que el texto «incluye «Letra: X»». Implementación razonable: <span>Letra: {l}</span> seguido en otra línea JSX de <button>Editar</button> → textContent «Letra: BEditar» → la lookahead falla y letter()=null, aunque visualmente se vea «Letra: B  [Editar]».",
+   "fix": "Relajar la lookahead a minúsculas (?![a-záéíóúñ]) o a \\s|$|[^A-Za-z]; o exigir en el contrato que «Letra: X» vaya seguido de espacio/fin en el texto del <li>."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «Un peso 0 es válido… Las ediciones posteriores de puntuaciones usan los pesos vigentes». E018 59.50→83.50 verificado."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.ui_contract status «En riesgo» con texto «En riesgo: N»; 6 verificado (E003,E011,E012,E015,E016,E018)."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «limita la lista a los estudiantes en riesgo, en el orden del fixture»; checkbox «Solo en riesgo»."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «nota final redondeada menor que 60.00 o alguna tarea no entregada»: E012 (A3 null) sí, E010 (60.00) no."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «contando siempre a todos… no afecta a los resúmenes»."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «Todo se actualiza al editar puntuaciones»; E018 deja de tener null."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «al aplicar pesos»; con 26/51/23 E011 redondea a 60.00 → fuera de riesgo (verificado)."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "Detección de filas por textContent sin espacios: rows()/row() (generic-adapter.mjs) leen item.textContent (no innerText) y exigen que el ID vaya seguido de un carácter no alfanumérico (^(ID)(?![A-Za-z0-9])). En React es habitual escribir <span>{id}</span> y <span>{titulo}</span> en líneas JSX distintas: JSX elimina ese salto, textContent queda «X001Titulo» (o «B00309:00» en F007) y la fila desaparece para el oráculo aunque visualmente (gap/margin CSS) se lea «X001 Título». El ui_contract habla de «texto visible», que un desarrollador interpreta como lo renderizado. Afecta a prácticamente todos los casos de la familia.",
+   "severity": "high",
+   "fix": "En el ui_contract del listitem exigir que el texto DOM del <li> contenga un espacio literal entre las partes (p. ej. «escribe el ID y el título separados por un espacio en el propio texto, no solo por estilos»), o que el adaptador use innerText (que refleja el layout) y un separador tolerante \\W+ tras el ID."
+  },
+  {
+   "issue": "Parseo de «Letra: X» con lookahead (?![A-Za-z]) sobre textContent: falla si el siguiente nodo de texto del <li> (p. ej. el botón «Editar») va pegado sin espacio literal. Afecta a R003-A01/A02/A04/A05 y R004-A04/A05.",
+   "severity": "high",
+   "fix": "Cambiar la lookahead a (?![a-záéíóúñ]) o exigir en el ui_contract un separador tras la letra."
+  },
+  {
+   "issue": "La nota se toma como el último número con dos decimales del <li>; si el editor se renderiza dentro del <li> (permitido) y muestra algo con dos decimales (p. ej. una vista previa), R002-A04 (que lee la nota con el editor abierto) fallaría. El contrato sí lo prohíbe («la nota final es el último número con dos decimales del texto del elemento»), así que es derivable, pero conviene recordarlo.",
+   "severity": "low",
+   "fix": "Opcional: indicar que el editor no debe mostrar números con dos decimales o que puede ir fuera del <li>."
+  }
+ ]
+}

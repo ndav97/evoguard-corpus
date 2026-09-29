@@ -1,1 +1,3 @@
 Arquitectura: el estado de dominio (las tareas) se gestiona con useReducer mediante acciones explícitas, y la vista se deriva de ese estado. Los valores de los campos de formulario pueden usar useState. No uses useEffect, useLayoutEffect ni ninguna forma de persistencia.
+
+Formato de los textos de la interfaz: cuando un contrato indica que un texto «comienza con» varias partes (por ejemplo, el ID seguido del título), esas partes aparecen en ese orden y separadas por un espacio, o por el separador que muestre el ejemplo (como «–» entre dos horas), igual que en el ejemplo; los datos concretos del ejemplo son ilustrativos. Si el contrato dice «separadores libres», el separador puede ser cualquiera.

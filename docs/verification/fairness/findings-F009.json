@@ -1,0 +1,187 @@
+{
+ "family": "F009",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract: status «Pregunta» que comienza con el ID + enunciado (ejemplo Q001); radios cuyo <label> es exactamente el texto; ninguna marcada; Responder disabled sin selección; Resultado oculto o vacío antes de responder."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Resultado: el plan exige /^(Correcto|Incorrecto)(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/ sobre el textContent del status «Resultado». La visible (R001.ui_contract Resultado) solo dice «texto comienza por «Correcto» ... e incluye «Respuesta correcta: …»». Una implementación natural <div role=status aria-label=Resultado><strong>Correcto</strong><p>Respuesta correcta: Canberra</p></div> produce textContent 'CorrectoRespuesta correcta: Canberra' y el veredicto no se reconoce (falla) aunque visualmente cumple.",
+   "fix": "Oráculo: quitar la lookahead de letras (usar /^(Incorrecto|Correcto)/) o leer innerText; o contrato: «seguido de un espacio o signo de puntuación»."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Resultado: el plan exige /^(Correcto|Incorrecto)(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/ sobre el textContent del status «Resultado». La visible (R001.ui_contract Resultado) solo dice «texto comienza por «Correcto» ... e incluye «Respuesta correcta: …»». Una implementación natural <div role=status aria-label=Resultado><strong>Correcto</strong><p>Respuesta correcta: Canberra</p></div> produce textContent 'CorrectoRespuesta correcta: Canberra' y el veredicto no se reconoce (falla) aunque visualmente cumple.",
+   "fix": "Oráculo: quitar la lookahead de letras (usar /^(Incorrecto|Correcto)/) o leer innerText; o contrato: «seguido de un espacio o signo de puntuación»."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Bloqueo derivable (radios disabled conservando la marcada; Responder disabled u oculto). Pero también comprueba el veredicto «Incorrecto» con la misma regex. Resultado: el plan exige /^(Correcto|Incorrecto)(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/ sobre el textContent del status «Resultado». La visible (R001.ui_contract Resultado) solo dice «texto comienza por «Correcto» ... e incluye «Respuesta correcta: …»». Una implementación natural <div role=status aria-label=Resultado><strong>Correcto</strong><p>Respuesta correcta: Canberra</p></div> produce textContent 'CorrectoRespuesta correcta: Canberra' y el veredicto no se reconoce (falla) aunque visualmente cumple.",
+   "fix": "Oráculo: quitar la lookahead de letras (usar /^(Incorrecto|Correcto)/) o leer innerText; o contrato: «seguido de un espacio o signo de puntuación»."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Siguiente oculto o deshabilitado antes de responder; tras Siguiente, Q002 sin marca ni resultado (R001.description y ui_contract Siguiente/Resultado)."
+  },
+  {
+   "id": "R001-A06",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Transición derivable; verifica veredicto «Correcto» de Q002. Resultado: el plan exige /^(Correcto|Incorrecto)(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/ sobre el textContent del status «Resultado». La visible (R001.ui_contract Resultado) solo dice «texto comienza por «Correcto» ... e incluye «Respuesta correcta: …»». Una implementación natural <div role=status aria-label=Resultado><strong>Correcto</strong><p>Respuesta correcta: Canberra</p></div> produce textContent 'CorrectoRespuesta correcta: Canberra' y el veredicto no se reconoce (falla) aunque visualmente cumple.",
+   "fix": "Oráculo: quitar la lookahead de letras (usar /^(Incorrecto|Correcto)/) o leer innerText; o contrato: «seguido de un espacio o signo de puntuación»."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract: status «Puntuación» con «Puntuación: n/12»; se actualiza al responder."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Puntuación acumulada; «opción siguiente a la correcta» es solo el guion del caso, el resultado sigue de R001/R002."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "Final: status «Final» con «Puntuación final: n de 12»; Pregunta no se muestra en la pantalla final y no hay radios visibles (R001.ui_contract)."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Solo cuenta aciertos."
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Reiniciar visible y habilitado siempre; vuelve a Q001 sin resultado, puntuación 0; Final oculto antes del final."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Reiniciar a mitad; transición explícita."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Revisión: el plan toma el texto tras el ID, hace trim() y exige /^(Correcta|Incorrecta)/ inmediatamente. R003.ui_contract listitem dice «separadores libres»; un ítem «Q003: Incorrecta», «Q003 — Incorrecta» o «Q003 · Incorrecta» cumple la letra visible y falla (veredicto null). Además, con <span>Q003</span><span>Incorrecta</span> en líneas JSX distintas el textContent es 'Q003Incorrecta' y la fila ni se detecta.",
+   "fix": "Oráculo: permitir separadores no alfanuméricos entre ID y veredicto (p. ej. /^[^A-Za-z0-9]*(Correcta|Incorrecta)/) y usar innerText; o contrato: «el ID, un espacio y «Correcta»/«Incorrecta»» y restringir «separadores libres» al resto."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Elegida: <texto>» y «Respuesta correcta: <texto>» explícitos en R003.ui_contract; el plan usa includes. (Solo afectado si ID y veredicto quedan pegados sin separador; ver cross_cutting.)"
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Disponibilidad de Revisar (oculto/deshabilitado antes del final) y lista oculta hasta pulsar son derivables; la comprobación final de veredictos usa la misma extracción. Revisión: el plan toma el texto tras el ID, hace trim() y exige /^(Correcta|Incorrecta)/ inmediatamente. R003.ui_contract listitem dice «separadores libres»; un ítem «Q003: Incorrecta», «Q003 — Incorrecta» o «Q003 · Incorrecta» cumple la letra visible y falla (veredicto null). Además, con <span>Q003</span><span>Incorrecta</span> en líneas JSX distintas el textContent es 'Q003Incorrecta' y la fila ni se detecta.",
+   "fix": "Oráculo: permitir separadores no alfanuméricos entre ID y veredicto (p. ej. /^[^A-Za-z0-9]*(Correcta|Incorrecta)/) y usar innerText; o contrato: «el ID, un espacio y «Correcta»/«Incorrecta»» y restringir «separadores libres» al resto."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "AMBIGUOUS",
+   "evidence": "«Reiniciar oculta la revisión» derivable; la segunda revisión se valida por veredicto. Revisión: el plan toma el texto tras el ID, hace trim() y exige /^(Correcta|Incorrecta)/ inmediatamente. R003.ui_contract listitem dice «separadores libres»; un ítem «Q003: Incorrecta», «Q003 — Incorrecta» o «Q003 · Incorrecta» cumple la letra visible y falla (veredicto null). Además, con <span>Q003</span><span>Incorrecta</span> en líneas JSX distintas el textContent es 'Q003Incorrecta' y la fila ni se detecta.",
+   "fix": "Oráculo: permitir separadores no alfanuméricos entre ID y veredicto (p. ej. /^[^A-Za-z0-9]*(Correcta|Incorrecta)/) y usar innerText; o contrato: «el ID, un espacio y «Correcta»/«Incorrecta»» y restringir «separadores libres» al resto."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Veredictos alternos + «Elegida: Melbourne»; final 6 de 12. Revisión: el plan toma el texto tras el ID, hace trim() y exige /^(Correcta|Incorrecta)/ inmediatamente. R003.ui_contract listitem dice «separadores libres»; un ítem «Q003: Incorrecta», «Q003 — Incorrecta» o «Q003 · Incorrecta» cumple la letra visible y falla (veredicto null). Además, con <span>Q003</span><span>Incorrecta</span> en líneas JSX distintas el textContent es 'Q003Incorrecta' y la fila ni se detecta.",
+   "fix": "Oráculo: permitir separadores no alfanuméricos entre ID y veredicto (p. ej. /^[^A-Za-z0-9]*(Correcta|Incorrecta)/) y usar innerText; o contrato: «el ID, un espacio y «Correcta»/«Incorrecta»» y restringir «separadores libres» al resto."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract: <input type=number> «Semilla» vacío; clave ((i+1)·s) mod 97 explícita. Orden con 20 recalculado: Q005,Q010,Q001,Q006,Q011,Q002,Q007,Q012,Q003,Q008,Q004,Q009."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "«Aplicar una semilla válida reinicia el cuestionario (primera pregunta del nuevo orden, puntuación 0, sin resultado ni revisión)». Con 41 la clave mínima es 7 (Q012)."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "«Una semilla vacía o 0 restablece el orden del fixture»."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Idem con vacía; si no reiniciara, la pregunta actual (índice 0, sin responder) es igualmente Q001."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Validación derivable (97, -1, 2.5 inválidos; 96 válido -> Q012 primera; aviso con texto exacto; «no cambia nada» incluye pregunta/resultado/puntuación). Pero el caso también exige veredicto «Correcto» del Resultado. Resultado: el plan exige /^(Correcto|Incorrecto)(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/ sobre el textContent del status «Resultado». La visible (R001.ui_contract Resultado) solo dice «texto comienza por «Correcto» ... e incluye «Respuesta correcta: …»». Una implementación natural <div role=status aria-label=Resultado><strong>Correcto</strong><p>Respuesta correcta: Canberra</p></div> produce textContent 'CorrectoRespuesta correcta: Canberra' y el veredicto no se reconoce (falla) aunque visualmente cumple.",
+   "fix": "Oráculo: quitar la lookahead de letras (usar /^(Incorrecto|Correcto)/) o leer innerText; o contrato: «seguido de un espacio o signo de puntuación»."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "«Reiniciar conserva el orden de la semilla aplicada»; con 41 el 2º es Q005 (clave 11)."
+  },
+  {
+   "id": "R004-A07",
+   "verdict": "AMBIGUOUS",
+   "evidence": "Orden de revisión = orden presentado (explícito). Revisión: el plan toma el texto tras el ID, hace trim() y exige /^(Correcta|Incorrecta)/ inmediatamente. R003.ui_contract listitem dice «separadores libres»; un ítem «Q003: Incorrecta», «Q003 — Incorrecta» o «Q003 · Incorrecta» cumple la letra visible y falla (veredicto null). Además, con <span>Q003</span><span>Incorrecta</span> en líneas JSX distintas el textContent es 'Q003Incorrecta' y la fila ni se detecta.",
+   "fix": "Oráculo: permitir separadores no alfanuméricos entre ID y veredicto (p. ej. /^[^A-Za-z0-9]*(Correcta|Incorrecta)/) y usar innerText; o contrato: «el ID, un espacio y «Correcta»/«Incorrecta»» y restringir «separadores libres» al resto."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.ui_contract: status «Racha actual»/«Mejor racha» con «Racha actual: n»/«Mejor racha: n», 0 al cargar; labeled() acepta ese formato."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "Fallo pone la actual a 0, la mejor se conserva."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "La mejor se actualiza en cuanto se supera."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "Visibles en el final; 8 aciertos, fallo en Q009, 3 aciertos -> actual 3, mejor 8."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "Reiniciar pone actual a 0, conserva la mejor."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "Aplicar semilla válida reinicia (actual 0, mejor 3); luego Q005 con Volga (correcta) -> 1 y 3."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "El adaptador lee el texto con textContent (generic-adapter.mjs: ui.text/textOrNull, rows), no con innerText: elementos hermanos sin espacio literal entre ellos se concatenan (p. ej. <p>X</p><p>Y</p> -> 'XY'). En F009 afecta sobre todo al status «Resultado» (veredicto + «Respuesta correcta» en elementos hermanos) y a los ítems de «Revisión» (ID y veredicto en spans separados). Afecta 10 casos (R001-A02/A03/A04/A06, R003-A01/A03/A04/A05, R004-A05/A07).",
+   "severity": "high",
+   "fix": "En el adaptador usar innerText (o insertar separador entre nodos de bloque) y relajar regex: veredicto sin lookahead de letras y tolerando separadores no alfanuméricos tras el ID; o fijar en ui_contract el formato exacto con espacios."
+  },
+  {
+   "issue": "R003.ui_contract dice «separadores libres» pero el plan solo tolera espacios entre el ID y «Correcta/Incorrecta».",
+   "severity": "high",
+   "fix": "Aclarar en el contrato «ID, espacio, Correcta/Incorrecta; separadores libres después» o tolerar puntuación en el oráculo."
+  },
+  {
+   "issue": "Máquina de estados: las transiciones probadas (sin responder -> respondida -> siguiente/final; reinicio desde cualquier fase; semilla válida = reinicio; semilla inválida = sin cambios incluso en fase respondida) están todas enunciadas en R001–R005. Semilla aplicada desde la pantalla final no se prueba. Preservación: R002 «vuelve a la primera pregunta» sigue siendo cierto con R004 (primera del orden vigente) y los casos R001–R003 no aplican semilla.",
+   "severity": "low",
+   "fix": "Ninguno necesario."
+  },
+  {
+   "issue": "Controles hallados con fallback por subcadena insensible a mayúsculas (generic-adapter find): si «Pregunta» o «Final» están ocultos, un status visible cuyo nombre contenga 'pregunta'/'final' sería tomado (p. ej. un aria-label «Puntuación final»). Improbable con el contrato actual.",
+   "severity": "low",
+   "fix": "En comprobaciones de ausencia (textOrNull) usar solo coincidencia exacta."
+  }
+ ]
+}

@@ -46,6 +46,49 @@
     ],
     "streak-no-reset": [
       "R005-A02"
+    ],
+    "answer-enabled": [
+      "R001-A01",
+      "R001-A05",
+      "R002-A05",
+      "R004-A02"
+    ],
+    "last-uncounted": [
+      "R002-A03",
+      "R002-A04",
+      "R003-A05",
+      "R004-A01",
+      "R005-A04"
+    ],
+    "result-stale": [
+      "R001-A05"
+    ],
+    "review-last-missing": [
+      "R003-A01",
+      "R003-A03",
+      "R003-A04",
+      "R003-A05",
+      "R004-A07"
+    ],
+    "score-on-next": [
+      "R002-A01",
+      "R002-A02",
+      "R002-A03",
+      "R002-A06",
+      "R004-A05"
+    ],
+    "seed-keeps-streak": [
+      "R005-A06"
+    ],
+    "seed-norestart": [
+      "R004-A02",
+      "R004-A05"
+    ],
+    "seed-restart-original": [
+      "R004-A06"
+    ],
+    "streak-hidden-final": [
+      "R005-A04"
     ]
   }
 }

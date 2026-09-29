@@ -1,0 +1,186 @@
+{
+ "family": "F005",
+ "cases": [
+  {
+   "id": "R001-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.ui_contract initial_state «se ven las 12 notas del fixture»; description «primero las del fixture en su orden»; lista «Notas» con <li> que empieza por el ID. Contexto nuevo por caso (evaluate.mjs newContext) = sin datos guardados."
+  },
+  {
+   "id": "R001-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description: recortado, sin distinguir mayúsculas, subcadena de título o cuerpo. Fixture: N002 cuerpo «RECETAS», N004 título «Receta», N009 cuerpo «receta»."
+  },
+  {
+   "id": "R001-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «recortado de espacios al principio y al final»; N002 y N008 contienen «huerta» en el cuerpo."
+  },
+  {
+   "id": "R001-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R001.description «como subcadena del título o del cuerpo de cada nota (no de otros datos)»: «trabajo» solo es etiqueta. «Con la búsqueda vacía se muestran todas»."
+  },
+  {
+   "id": "R001-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R001-A05 y description: resultados se actualizan al escribir, orden de las notas. presupuesto→N003,N007,N012; equipo→N003,N012."
+  },
+  {
+   "id": "R002-A01",
+   "verdict": "AMBIGUOUS",
+   "evidence": "El plan exige rowText.startsWith('N013 Plan de viaje') (ID, un único espacio y el título). R001.ui_contract (listitem) solo dice «comienza con el ID seguido del título, p. ej. «N001 Lista de la compra»»: el separador aparece solo en un ejemplo no normativo; «N013 · Plan de viaje» o «N013 — Plan de viaje» cumple la letra del contrato y rows() lo detecta, pero falla startsWith. Además, si ID y título van en elementos JSX sin espacio literal, textContent es «N013Título» (ver transversal).",
+   "fix": "Hacer normativo el formato («el ID, un espacio y el título, como texto del propio <li>») o relajar el plan a una regex ^ID\\W+Título."
+  },
+  {
+   "id": "R002-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.ui_contract alert «El título es obligatorio» con role=alert; description «vacío tras recortar espacios… aunque haya contenido» (R002-A02)."
+  },
+  {
+   "id": "R002-A03",
+   "verdict": "AMBIGUOUS",
+   "evidence": "IDs y orden: «mayor número de ID existente más uno (N013, N014…) y se añade al final». Los startsWith('N013 Llamar al fontanero') / ('N014 Pagar el gas') tienen la misma ambigüedad de separador que R002-A01.",
+   "fix": "Hacer normativo el formato («el ID, un espacio y el título, como texto del propio <li>») o relajar el plan a una regex ^ID\\W+Título."
+  },
+  {
+   "id": "R002-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «Tras guardarla, los campos quedan vacíos»; value('')"
+  },
+  {
+   "id": "R002-A05",
+   "verdict": "AMBIGUOUS",
+   "evidence": "R002.description: se guardan en almacenamiento local y se restauran al recargar, numeración continúa. (Incluye startsWith con la misma ambigüedad de separador que R002-A01, y lectura inmediata tras reload: ver transversales.)",
+   "fix": "Hacer normativo el formato («el ID, un espacio y el título, como texto del propio <li>») o relajar el plan a una regex ^ID\\W+Título."
+  },
+  {
+   "id": "R002-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R002.description «Título y contenido se guardan»; R001 busca en el cuerpo sin distinguir mayúsculas."
+  },
+  {
+   "id": "R003-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description «cada una como «#etiqueta»»; ui_contract listitem: «#etiqueta» separada del resto del texto por espacios y # no aparece en otro lugar. El plan extrae /#([^\\s#]*)/ del textContent: si tras la última etiqueta viene el botón «Fijar» sin espacio literal en el DOM («#comprasFijar») falla, pero el contrato exige espacios explícitamente."
+  },
+  {
+   "id": "R003-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.ui_contract combobox «Filtrar etiqueta»: primera opción valor todas, luego valor = etiqueta en orden alfabético."
+  },
+  {
+   "id": "R003-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description «solo se ven las notas que la tienen… El orden de la lista no cambia»."
+  },
+  {
+   "id": "R003-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description «El filtro se combina con la búsqueda»."
+  },
+  {
+   "id": "R003-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description: recortar, minúsculas, descartar vacías y repetidas conservando la primera aparición; mostrar en su orden; campo vacío tras guardar; opciones de etiquetas presentes en orden alfabético."
+  },
+  {
+   "id": "R003-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R003.description «Las etiquetas se guardan con las notas y se conservan al recargar»; normalización «Casa»→casa."
+  },
+  {
+   "id": "R004-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.ui_contract: botón «Fijar» en el <li> con aria-pressed \"true\"/\"false\"; initial_state ninguna fijada."
+  },
+  {
+   "id": "R004-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «La lista muestra primero las notas fijadas»."
+  },
+  {
+   "id": "R004-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «dentro de cada grupo se conserva el orden de las notas… con independencia del orden en que se fijaron»."
+  },
+  {
+   "id": "R004-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «Al dejar de estar fijada, una nota vuelve a su posición»."
+  },
+  {
+   "id": "R004-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «El orden por fijado se aplica también a los resultados de la búsqueda y del filtro»."
+  },
+  {
+   "id": "R004-A06",
+   "verdict": "DERIVABLE",
+   "evidence": "R004.description «El estado de fijado se guarda… y se conserva al recargar»."
+  },
+  {
+   "id": "R005-A01",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «la eliminación se guarda y se conserva al recargar»; botón «Eliminar» en el <li>."
+  },
+  {
+   "id": "R005-A02",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «en la misma posición que ocupaba en el orden de las notas»."
+  },
+  {
+   "id": "R005-A03",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «restaura solo la nota eliminada en último lugar… tras deshacer ya no hay nada que deshacer»; ui_contract disabled. enabled() acepta también botón oculto."
+  },
+  {
+   "id": "R005-A04",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «Crear una nota o recargar la página descarta la posibilidad de deshacer»; ui_contract «deshabilitado (atributo disabled)»; initial_state sin eliminación."
+  },
+  {
+   "id": "R005-A05",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «con todos sus datos, incluido su estado de fijado» + R004 orden fijadas primero."
+  },
+  {
+   "id": "R005-A06",
+   "verdict": "AMBIGUOUS",
+   "evidence": "La numeración (N013 tras eliminar N005) es derivable («mayor ID existente más uno»), pero el plan también exige startsWith('N013 Nota posterior'): misma ambigüedad de separador ID–título que R002-A01.",
+   "fix": "Hacer normativo el formato («el ID, un espacio y el título, como texto del propio <li>») o relajar el plan a una regex ^ID\\W+Título."
+  },
+  {
+   "id": "R005-A07",
+   "verdict": "DERIVABLE",
+   "evidence": "R005.description «Las etiquetas del filtro reflejan siempre las notas existentes»; salud solo está en N006."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "issue": "Detección de filas por textContent sin espacios: rows()/row() (generic-adapter.mjs) leen item.textContent (no innerText) y exigen que el ID vaya seguido de un carácter no alfanumérico (^(ID)(?![A-Za-z0-9])). En React es habitual escribir <span>{id}</span> y <span>{titulo}</span> en líneas JSX distintas: JSX elimina ese salto, textContent queda «X001Titulo» (o «B00309:00» en F007) y la fila desaparece para el oráculo aunque visualmente (gap/margin CSS) se lea «X001 Título». El ui_contract habla de «texto visible», que un desarrollador interpreta como lo renderizado. Afecta a prácticamente todos los casos de la familia.",
+   "severity": "high",
+   "fix": "En el ui_contract del listitem exigir que el texto DOM del <li> contenga un espacio literal entre las partes (p. ej. «escribe el ID y el título separados por un espacio en el propio texto, no solo por estilos»), o que el adaptador use innerText (que refleja el layout) y un separador tolerante \\W+ tras el ID."
+  },
+  {
+   "issue": "Lecturas inmediatas tras reload sin espera: ids()/rowAttribute() se evalúan justo tras page.reload({waitUntil:'load'}) sin auto-espera. prompts/architecture.md prescribe cargar localStorage «mediante useEffect», lo que produce un primer render con el fixture (o vacío) antes de aplicar lo guardado; R002-A05, R003-A06, R004-A06, R005-A01 y R005-A04 pueden leer ese estado transitorio (flaky, dependiente de la carrera render/efecto vs evento load).",
+   "severity": "medium",
+   "fix": "En el adaptador, tras reload/goto, esperar a que la lista esté estable (p. ej. expect.poll sobre ids() o esperar networkidle + un frame), o permitir en la arquitectura el inicializador perezoso de useState leyendo localStorage."
+  },
+  {
+   "issue": "Preservación textual: R001.description (V3) sigue diciendo «El orden es siempre el de las notas» y R002 «se añade al final de la lista», contradichos por R004 (fijadas primero). Ningún caso mezcla ambas cosas, pero el paquete visible es internamente inconsistente.",
+   "severity": "low",
+   "fix": "Añadir en R001/R002 «salvo el orden por fijado de R004» o reformular R004 como regla de precedencia."
+  },
+  {
+   "issue": "Separador ID–título no normativo (solo «p. ej.») usado por startsWith en R002-A01/A03/A05 y R005-A06.",
+   "severity": "medium",
+   "fix": "Normativizar «ID + espacio + título» en el ui_contract o usar regex ^ID\\W+Título en el plan."
+  },
+  {
+   "issue": "Clave/forma de localStorage no especificadas: no es un problema (el oráculo solo observa la UI y cada caso usa contexto nuevo).",
+   "severity": "low",
+   "fix": "Ninguno."
+  }
+ ]
+}
