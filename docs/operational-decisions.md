@@ -170,3 +170,24 @@ Por llamada registra el estado HTTP (con el cuerpo del error recortado y redacta
 1. La que dé ≥ 9/10 conservando el razonamiento, en el orden A, B, D.
 2. Si solo E funciona, se usará E y se documentará que Sonnet genera sin razonamiento extendido. Es una diferencia de configuración entre modelos que habría que declarar en el análisis.
 
+### Resultado de la sonda (2026-09-29 02:33 UTC, 2 rondas × 2 escenarios por variante)
+Evidencia: `.artifacts/providers/probe-anthropic-2026-09-29T02-33-16-279Z.json`. Todas las llamadas devolvieron HTTP 200 con `claude-sonnet-5`.
+
+| Variante | Válidas | Observación |
+|---|---|---|
+| A `output_config.format` | 3/4 | Siempre prosa antes del JSON. Hubo 1 pseudo-llamada XML. |
+| B `output_format` (beta) | 2/4 | 2 pseudo-llamadas XML. |
+| C A sin razonamiento | 3/4 | 1 pseudo-llamada XML. |
+| D herramienta, `auto`, con razonamiento | 3/4 | Siempre emitió `tool_use`. El único fallo fue `INVALID_ACTION`: la entrada no cumplía el esquema. |
+| E herramienta forzada, sin razonamiento | 4/4 | Siempre `tool_use`. |
+
+Conclusiones:
+- **Synterolink ignora la salida estructurada** con cualquiera de los dos nombres de parámetro (A, B, C): la respuesta sigue siendo texto libre.
+- **Sí respeta las herramientas nativas.** Con herramienta, Sonnet emitió `tool_use` en 8 de 8 llamadas, con razonamiento o sin él.
+- **La herramienta es la vía de transporte.** Queda por decidir entre D (conserva el razonamiento, criterio preferente) y E (forzada, sin razonamiento). El fallo de D no se pudo inspeccionar porque la primera sonda no guardaba la entrada de la herramienta.
+
+Segunda sonda: se añade la variante F (D con la herramienta en modo `strict`, que impone el esquema) y se registra la entrada de la herramienta, recortada y redactada. Comando: `npm run providers -- probe --rounds=5 --variants=D,E,F` (30 llamadas). Criterios:
+1. Se adopta la primera de F y D con ≥ 9/10.
+2. Si ninguna llega, se revisa si los fallos son campos vacíos omitidos. Si lo son, se considera rellenarlos como normalización registrada.
+3. Si no hay otra salida, se usa E y se declara la diferencia de razonamiento.
+

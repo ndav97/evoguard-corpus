@@ -29,7 +29,10 @@ test('la sonda prueba cada variante, registra errores HTTP sin la clave y escrib
   assert.equal(report.variants.B_output_format_beta.calls[0].error, 'HTTP_400');
   assert.match(report.variants.B_output_format_beta.calls[0].error_body, /Extra inputs/);
   assert.equal(report.variants.E_tool_forced.calls[0].via, 'tool_use');
+  assert.match(report.variants.E_tool_forced.calls[0].tool_input, /list_files/);
+  assert.equal(seen.find(s => s.body.tools?.[0].strict).body.thinking.type, 'adaptive');
+  const subset = await probe({ models, credentials: { anthropic: 'k' }, packet: {}, scenarios: [{ name: 's', messages: [] }], rounds: 1, only: ['D', 'F'], fetchImpl, root, log: () => {} });
+  assert.deepEqual(Object.keys(subset.variants), ['D_tool_auto_thinking', 'F_tool_auto_thinking_strict']);
   assert.equal(report.variants.A_output_config.calls[0].valid, false);
-  const file = readdirSync(join(root, '.artifacts/providers'))[0];
-  assert.doesNotMatch(readFileSync(join(root, '.artifacts/providers', file), 'utf8'), /sk-test/);
+  for (const file of readdirSync(join(root, '.artifacts/providers'))) assert.doesNotMatch(readFileSync(join(root, '.artifacts/providers', file), 'utf8'), /sk-test/);
 });

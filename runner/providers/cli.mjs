@@ -52,8 +52,8 @@ async function diagnose(args) {
 async function main() {
   const [mode,...selected]=process.argv.slice(2);
   if(mode==='diagnose') return diagnose(selected);
-  if(mode==='probe') {const rounds=Number(selected.find(a=>/^--rounds=\d+$/.test(a))?.split('=')[1]??2);return probe({models,credentials,packet:makePacket(loadCorpus(root),'V0'),scenarios:SCENARIOS,rounds,root});}
-  if(!['inspect','smoke'].includes(mode)||selected.some(p=>!models[p])||(mode==='inspect'&&selected.length))throw Error('Uso: providers inspect | providers smoke <proveedor...> | providers diagnose [proveedor...] [--rounds=N] | providers probe [--rounds=N]');
+  if(mode==='probe') {const rounds=Number(selected.find(a=>/^--rounds=\d+$/.test(a))?.split('=')[1]??2);const only=selected.find(a=>a.startsWith('--variants='))?.split('=')[1].split(',').map(v=>v.trim().toUpperCase())??null;return probe({models,credentials,packet:makePacket(loadCorpus(root),'V0'),scenarios:SCENARIOS,rounds,only,root});}
+  if(!['inspect','smoke'].includes(mode)||selected.some(p=>!models[p])||(mode==='inspect'&&selected.length))throw Error('Uso: providers inspect | providers smoke <proveedor...> | providers diagnose [proveedor...] [--rounds=N] | providers probe [--rounds=N] [--variants=D,F]');
   if(mode==='smoke'&&!selected.length)throw Error('Indica proveedores explícitos; no se llama al pool completo por defecto');
   const report={artifact_type:'provider_connectivity',experimental:false,created_at:new Date().toISOString(),mode,models:[]};
   let tags,version;

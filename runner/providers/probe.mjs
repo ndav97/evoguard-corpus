@@ -1,5 +1,5 @@
 // Sonda del transporte Anthropic vía Synterolink (diagnóstico, no genera corpus).
-// Uso: npm run providers -- probe [--rounds=N]
+// Uso: npm run providers -- probe [--rounds=N] [--variants=D,F]
 // Motivo (docs/operational-decisions.md, 2026-09-28): Sonnet 5 responde con prosa y pseudo-llamadas XML aunque el
 // adaptador pide salida estructurada, lo que indica que el intermediario no aplica `output_config.format`. La sonda
 // prueba variantes de la petición con el mismo contexto que `providers diagnose` y registra, por llamada, el estado
@@ -18,7 +18,9 @@ export const VARIANTS = {
   B_output_format_beta: c => ({ body: { thinking: { type: 'adaptive' }, output_config: { effort: c.reasoning }, output_format: { type: 'json_schema', schema: ACTION_SCHEMA } }, headers: { 'anthropic-beta': 'structured-outputs-2025-11-13' } }),
   C_output_config_no_thinking: c => ({ body: { output_config: { effort: c.reasoning, format: { type: 'json_schema', schema: ACTION_SCHEMA } } } }),
   D_tool_auto_thinking: c => ({ body: { thinking: { type: 'adaptive' }, output_config: { effort: c.reasoning }, tools: [TOOL], tool_choice: { type: 'auto' } } }),
-  E_tool_forced: c => ({ body: { output_config: { effort: c.reasoning }, tools: [TOOL], tool_choice: { type: 'tool', name: TOOL.name } } })
+  E_tool_forced: c => ({ body: { output_config: { effort: c.reasoning }, tools: [TOOL], tool_choice: { type: 'tool', name: TOOL.name } } }),
+  // Segunda sonda (2026-09-29): D con la herramienta en modo estricto (el esquema se impone a la entrada).
+  F_tool_auto_thinking_strict: c => ({ body: { thinking: { type: 'adaptive' }, output_config: { effort: c.reasoning }, tools: [{ ...TOOL, strict: true }], tool_choice: { type: 'auto' } } })
 };
 
 export function classify(raw) {
@@ -32,16 +34,19 @@ export function classify(raw) {
     else { via = parseAction(text).normalization; }
     valid = true;
   } catch (e) { error = e.code ?? 'INVALID'; }
-  return { block_types: types, stop_reason: raw?.stop_reason ?? null, observed_model: raw?.model ?? null, valid, via, error, text_chars: text.length, text_sample: valid && !text ? null : rejectedSample(text, 300).head };
+  const toolInput = tool ? rejectedSample(JSON.stringify(tool.input ?? null), 600).head : null;
+  return { block_types: types, stop_reason: raw?.stop_reason ?? null, observed_model: raw?.model ?? null, valid, via, error, text_chars: text.length, text_sample: valid && !text ? null : rejectedSample(text, 300).head, tool_input: toolInput };
 }
 
-export async function probe({ models, credentials, packet, scenarios, rounds = 2, fetchImpl = fetch, root, log = console.log }) {
+export async function probe({ models, credentials, packet, scenarios, rounds = 2, only = null, fetchImpl = fetch, root, log = console.log }) {
   const config = models.anthropic;
   const apiKey = credentials.anthropic;
   if (!apiKey) throw new Error('Falta la credencial de anthropic (.env)');
   const { base_url } = connectionFor('anthropic', config);
   const report = { artifact_type: 'anthropic_transport_probe', experimental: true, created_at: new Date().toISOString(), model: config.api_model_id, rounds, variants: {} };
-  for (const [name, variant] of Object.entries(VARIANTS)) {
+  const chosen = Object.entries(VARIANTS).filter(([name]) => !only || only.includes(name[0]));
+  if (!chosen.length) throw new Error(`Variantes desconocidas: ${only}`);
+  for (const [name, variant] of chosen) {
     const row = report.variants[name] = { calls: [], summary: null };
     for (let round = 0; round < rounds; round++) for (const scenario of scenarios) {
       const input = JSON.stringify({ response_contract: RESPONSE_CONTRACT, packet, messages: scenario.messages, attempt: 1, cycle: round + 1 });
