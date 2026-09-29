@@ -1,0 +1,69 @@
+{
+  "family": "S003",
+  "items": [
+    {
+      "turn": "T001",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 105,
+      "operator": "texto",
+      "original": "const zxcvbnLevels = [\"Very weak\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+      "mutated": "const zxcvbnLevels = [\"Very weak·X\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+      "verdict": "WEAKNESS",
+      "reason": "El mutante solo altera el nombre del nivel 0 en la lista ZXCVBN (el modo estándar usa standardLevels). El test T001 comprueba 'Strength: Very weak' solo en modo estándar y en ZXCVBN solo las puntuaciones 3 y 4, así que 'Strength: Very weak·X' con puntuación ZXCVBN 0 no se detecta.",
+      "request_quote": "modo ZXCVBN (0–4): `Very weak`, `Weak`, `Fair`, `Good`, `Strong`.",
+      "test_addition": {
+        "file": "oracle/T001.test.tsx",
+        "where": "Dentro de describe('T001 · indicador de fortaleza'), justo después del it('modo ZXCVBN usa cinco niveles').",
+        "code": "    it(\"modo ZXCVBN con puntuación 0 muestra Very weak\", () => {\n        zxcvbnScore(0);\n        render(<PasswordMeter value={\"a\"} policy={policy({ mode: PasswordPolicyMode.ZXCVBN })} />);\n        expect(bar()).toHaveAttribute(\"aria-valuenow\", \"0\");\n        expect(screen.getByText(\"Strength: Very weak\")).toBeInTheDocument();\n    });"
+      }
+    },
+    {
+      "turn": "T001",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 169,
+      "operator": "texto",
+      "original": "<p className=\"text-[0.7rem] text-left\">",
+      "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia una clase Tailwind del párrafo 'Strength: …'; el texto es idéntico.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 16,
+      "operator": "borrado",
+      "original": "onValidityChange?: (_valid: boolean) => void;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "verdict": "EQUIVALENT",
+      "reason": "Borra la declaración de la prop en la interfaz TypeScript; vitest no hace comprobación de tipos y en tiempo de ejecución props.onValidityChange sigue llegando y llamándose igual. Solo fallaría un tsc/typecheck (fuera del alcance de los tests ocultos).",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 200,
+      "operator": "texto",
+      "original": "<p className=\"text-[0.7rem] text-left\">",
+      "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia una clase Tailwind del párrafo 'Minimum strength required: …'.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 202,
+      "operator": "aritmético",
+      "original": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length - 1)],",
+      "mutated": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length + 1)],",
+      "verdict": "EQUIVALENT",
+      "reason": "Math.min(minScore, 6) frente a Math.min(minScore, 4): idénticos para min_score en 0–4, que es el dominio de ZXCVBN. Solo difiere con min_score ≥ 5 (fuera de dominio; el request no define qué mostrar). Inalcanzable en el dominio.",
+      "request_quote": null,
+      "test_addition": null
+    }
+  ]
+}

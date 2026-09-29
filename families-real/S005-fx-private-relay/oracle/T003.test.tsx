@@ -20,6 +20,7 @@ describe("T003 · quitar la etiqueta", () => {
       <LabelEditor label="Work" onSubmit={jest.fn()} />,
     );
     expect(removeButton()).toBeInTheDocument();
+    expect(removeButton()).toHaveAttribute("type", "button");
     rerender(<LabelEditor label="" onSubmit={jest.fn()} />);
     expect(removeButton()).not.toBeInTheDocument();
   });

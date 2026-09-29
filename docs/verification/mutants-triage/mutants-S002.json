@@ -1,0 +1,69 @@
+{
+  "family": "S002",
+  "items": [
+    {
+      "turn": "T001",
+      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+      "line": 40,
+      "operator": "texto",
+      "original": "<Form.Group controlId=\"bulk-history-search\">",
+      "mutated": "<Form.Group controlId=\"bulk-history-search·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "controlId se propaga a la vez al htmlFor del Form.Label y al id del Form.Control; la etiqueta 'Search uploads' sigue asociada al campo.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T001",
+      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+      "line": 54,
+      "operator": "texto",
+      "original": "className=\"table-striped\"",
+      "mutated": "className=\"table-striped·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "className del DataTable (table-striped): solo estilo de filas alternas.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+      "line": 47,
+      "operator": "texto",
+      "original": "<Form.Group controlId=\"bulk-history-uploader\">",
+      "mutated": "<Form.Group controlId=\"bulk-history-uploader·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "controlId del selector 'Uploaded by' se propaga de forma consistente a label e input; la asociación accesible se mantiene.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+      "line": 21,
+      "operator": "texto",
+      "original": "type=\"button\"",
+      "mutated": "type=\"button·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "type inválido en un <button> equivale a 'submit', pero HistoryTable no está dentro de ningún <form> (ni el request exige type=\"button\" en S002), así que no hay envío ni cambio observable.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+      "line": 28,
+      "operator": "texto",
+      "original": ") : (<span className=\"wrap-text-in-cell\">{user}</span>),",
+      "mutated": ") : (<span className=\"wrap-text-in-cell·X\">{user}</span>),",
+      "verdict": "WEAKNESS",
+      "reason": "El request exige explícitamente que mapHistoryRows llamado solo con la fila devuelva el usuario en un <span class=\"wrap-text-in-cell\">. El test oculto T003 solo renderiza HistoryTable (rama con botón) y nunca llama a mapHistoryRows sin callback, así que la clase de la rama span no se comprueba. Nota: los tests existentes del repo (HistoryTable.test.jsx de upstream) podrían cubrirlo, pero la mutación solo ejecutó los tests ocultos.",
+      "request_quote": "`mapHistoryRows` debe seguir funcionando cuando se llama solo con la fila, como en los tests existentes. En ese caso el usuario se muestra como hasta ahora, en un `<span class=\"wrap-text-in-cell\">`.",
+      "test_addition": {
+        "file": "oracle/T003.test.jsx",
+        "where": "Cambiar el import a `import { HistoryTable, mapHistoryRows } from '@src/components/BulkManagementHistoryView/HistoryTable';` y añadir este it(...) al final del describe 'T003 · filtrar desde la columna de usuario'.",
+        "code": "  it('mapHistoryRows solo con la fila muestra el usuario en un span con wrap-text-in-cell', () => {\n    renderWithAllProviders(<div>{mapHistoryRows(history[0]).user}</div>);\n    const user = screen.getByText('alice');\n    expect(user.tagName).toBe('SPAN');\n    expect(user).toHaveClass('wrap-text-in-cell');\n    expect(screen.queryByRole('button')).not.toBeInTheDocument();\n  });"
+      }
+    }
+  ]
+}

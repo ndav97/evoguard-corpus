@@ -54,6 +54,7 @@ describe('T003 · M recomendado', () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
     setup();
+    expect(screen.queryByText('Copied to clipboard')).not.toBeInTheDocument();
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Copy recommended M' }));
     });

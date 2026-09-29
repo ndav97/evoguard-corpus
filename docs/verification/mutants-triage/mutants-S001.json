@@ -1,0 +1,65 @@
+{
+  "family": "S001",
+  "items": [
+    {
+      "turn": "T001",
+      "file": "src/pages/Tasks.jsx",
+      "line": 192,
+      "operator": "texto",
+      "original": "<p className=\"tasks-summary\">{summary}</p>",
+      "mutated": "<p className=\"tasks-summary·X\">{summary}</p>",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia la clase CSS del párrafo del resumen; el texto 'Showing N of M tasks' es idéntico y el test lo localiza por texto.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T002",
+      "file": "src/pages/Tasks.jsx",
+      "line": 194,
+      "operator": "texto",
+      "original": "<Col xs=\"auto\">",
+      "mutated": "<Col xs=\"auto·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "xs de react-bootstrap solo genera una clase de maquetación de la columna (col-auto·X); el botón 'Clear filters' se muestra y funciona igual.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T002",
+      "file": "src/pages/Tasks.jsx",
+      "line": 195,
+      "operator": "texto",
+      "original": "<Button size=\"sm\" variant=\"secondary\" onClick={this.clearFilters}>",
+      "mutated": "<Button size=\"sm·X\" variant=\"secondary\" onClick={this.clearFilters}>",
+      "verdict": "EQUIVALENT",
+      "reason": "size del Button solo produce la clase btn-sm·X (estilo); nombre, visibilidad y onClick no cambian.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/pages/Tasks.jsx",
+      "line": 228,
+      "operator": "texto",
+      "original": "<Col xs=\"auto\">",
+      "mutated": "<Col xs=\"auto·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "xs de la columna del botón 'Cancel all running tasks': solo clase de maquetación.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/pages/Tasks.jsx",
+      "line": 231,
+      "operator": "texto",
+      "original": "variant=\"danger\"",
+      "mutated": "variant=\"danger·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "variant del Button solo cambia la clase btn-danger·X (color); el comportamiento del botón no cambia.",
+      "request_quote": null,
+      "test_addition": null
+    }
+  ]
+}

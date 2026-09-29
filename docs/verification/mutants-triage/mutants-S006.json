@@ -1,0 +1,93 @@
+{
+ "family": "S006",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 144,
+   "operator": "texto",
+   "original": "<Text size=\"sm\">",
+   "mutated": "<Text size=\"sm·X\">",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia la prop de tamaño de Mantine del <Text> del resumen; el texto «Offset: …» y su presencia no cambian.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 164,
+   "operator": "texto",
+   "original": "<Group gap=\"xs\">",
+   "mutated": "<Group gap=\"xs·X\">",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia el espaciado (gap) del <Group> de los ajustes rápidos; los botones, su orden y su comportamiento no cambian.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 168,
+   "operator": "texto",
+   "original": "size=\"xs\"",
+   "mutated": "size=\"xs·X\"",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia el tamaño visual de los botones de ajuste rápido (prop size de Mantine).",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 169,
+   "operator": "texto",
+   "original": "variant=\"light\"",
+   "mutated": "variant=\"light·X\"",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia la variante visual de los botones de ajuste rápido (prop variant de Mantine).",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 93,
+   "operator": "texto",
+   "original": "const withNormalizeOnBlur = (field: \"hour\" | \"min\" | \"sec\" | \"ms\") => {",
+   "mutated": "const withNormalizeOnBlur = (field: \"hour·X\" | \"min\" | \"sec\" | \"ms\") => {",
+   "verdict": "EQUIVALENT",
+   "reason": "Cambio exclusivamente en la anotación de tipo TypeScript del parámetro; vitest/esbuild elimina los tipos y no hay comprobación de tipos en la ejecución, así que el comportamiento es idéntico.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 98,
+   "operator": "borrado",
+   "original": "props.onBlur?.(event);",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "EQUIVALENT",
+   "reason": "props.onBlur de @mantine/form solo valida el campo al salir si el formulario usa validateInputOnBlur (y marca estado interno); la normalización (setTotal) se ejecuta igual. Los propios tests T003 envían sec=90/ms=1500 sin bloqueo de validación, lo que indica que no hay validación visible en blur. Sin efecto observable. (Nota: no se pudo consultar el fuente v0 sin red; si el useForm tuviera validateInputOnBlur habría que revisarlo.)",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/forms/TimeOffsetForm.tsx",
+   "line": 167,
+   "operator": "texto",
+   "original": "{...withNormalizeOnBlur(\"hour\")}",
+   "mutated": "{...withNormalizeOnBlur(\"hour·X\")}",
+   "verdict": "WEAKNESS",
+   "reason": "El mutante desconecta el campo «hour» del formulario: getInputProps('hour·X') lee/escribe una ruta inexistente, así que lo escrito en «hour» no llega a form.values.hour; no cuenta para el resumen, la normalización ni el envío. Ningún test de T003 escribe en «hour» (el único que ejercita horas llega a ellas desde «min»).",
+   "request_quote": "Al salir de cualquiera de los campos `hour`, `min`, `sec` o `ms`, el total se reparte entre los campos con las mismas reglas que los ajustes rápidos […] Al enviar el formulario, la acción usa siempre los valores normalizados. […] Las horas no tienen tope.",
+   "test_addition": {
+    "file": "oracle/T003.test.tsx",
+    "where": "Dentro de describe(\"T003 · normalización\"), después del it(\"las horas no tienen tope\").",
+    "code": "  it(\"las horas escritas a mano se suman al total normalizado\", async () => {\n    const user = renderForm();\n    await setField(user, \"hour\", \"1\");\n    await setField(user, \"min\", \"90\");\n    await user.click(screen.getByRole(\"button\", { name: \"Start\" }));\n    expect(submittedAction()).toBe(\"shift_offset(h=2,m=30,s=0,ms=0)\");\n  });"
+   }
+  }
+ ]
+}

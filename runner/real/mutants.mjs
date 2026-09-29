@@ -2,8 +2,8 @@
 // Uso: npm run real:mutants -- Sxxx [Sxxx...] [--max=N]   |   npm run real:mutants -- --mini
 // Para cada turno T00n: en un contenedor de la imagen de la familia (sin red) aplica las referencias de
 // calibración T001..T00n, comprueba que los tests ocultos de T00n pasan y luego introduce, de uno en uno, mutantes
-// en las líneas que añade la referencia T00n (código de la app, no tests). Cada mutante se evalúa solo con los
-// tests ocultos de ese turno:
+// en las líneas que añade la referencia T00n (código de la app, no tests). Cada mutante se evalúa con los tests
+// ocultos de T001..T00n, como el oráculo de esa versión:
 //   KILLED    algún test oculto falla;          SURVIVED  todos pasan (posible debilidad o mutante equivalente);
 //   COMPILE   el archivo de tests no llega a ejecutarse (error de compilación o transformación);
 //   ERROR     fallo de infraestructura (tiempo agotado, sin informe).
@@ -41,6 +41,23 @@ export function addedLines(patch) {
   return out.filter(l => SOURCE.test(l.file) && !TEST.test(l.file));
 }
 
+const STYLE_ATTR = /\b(className|class|style|size|variant|color|justify|align|gap|p|m|mb|mt|ml|mr|px|py|pt|pb|xs|sm|md|lg|xl|margin|padding|controlId|id|key|data-testid|order|radius|shadow|w|h)=\{?\s*$/;
+// Literales de cadena de una línea con su posición, respetando comillas y escapes (las plantillas con ${…} se
+// ignoran aquí). Devuelve objetos con la forma de un match: [texto, comilla, contenido] e index.
+export function stringLiterals(text) {
+  const found = [];
+  for (let i = 0; i < text.length; i++) {
+    const quote = text[i];
+    if (!`'"\``.includes(quote)) continue;
+    let j = i + 1;
+    while (j < text.length && text[j] !== quote) j += text[j] === '\\' ? 2 : 1;
+    if (j >= text.length) break;
+    const content = text.slice(i + 1, j);
+    if (!(quote === '`' && content.includes('${'))) found.push(Object.assign([text.slice(i, j + 1), quote, content], { index: i }));
+    i = j;
+  }
+  return found;
+}
 // Operadores de mutación, en orden de preferencia. Cada uno devuelve la línea mutada o null.
 const swap = (pattern, replacement) => text => (pattern.test(text) ? text.replace(pattern, replacement) : null);
 export const OPERATORS = [
@@ -55,14 +72,19 @@ export const OPERATORS = [
   ['negación', swap(/(\bif \()(?!!)/, '$1!')],
   ['texto', text => {
     // Texto de interfaz: literal de cadena (no rutas de import) o texto JSX entre etiquetas.
-    if (/^\s*(import|export \* from)\b/.test(text)) return null;
-    const literal = text.match(/(['"`])([^'"`$\\]{2,})\1/);
-    if (literal && !/^[./@]/.test(literal[2])) return text.replace(literal[0], `${literal[1]}${literal[2]}·X${literal[1]}`);
+    // Se excluyen (2026-09-29, triaje de sobrevivientes): valores de props de estilo o de identificación interna,
+    // claves de módulos CSS y posiciones de tipo de TypeScript, que no cambian el comportamiento observable.
+    if (/^\s*(import|export \* from)\b/.test(text) || /^\s*(export\s+)?(type|interface)\s/.test(text)) return null;
+    for (const literal of stringLiterals(text)) {
+      const before = text.slice(0, literal.index);
+      if (literal[2].length < 2 || /[$\\]/.test(literal[2]) || /^[./@]/.test(literal[2]) || STYLE_ATTR.test(before) || /className=/.test(before) || /styles\[$/.test(before) || /(:\s*|\|\s*)$/.test(before) || /^\s*\|/.test(text.slice(literal.index + literal[0].length))) continue;
+      return text.slice(0, literal.index) + `${literal[1]}${literal[2]}·X${literal[1]}` + text.slice(literal.index + literal[0].length);
+    }
     const jsx = text.match(/>([^<>{}]*[A-Za-zÁÉÍÓÚáéíóúñÑ][^<>{}]*)</);
     if (jsx) return text.replace(jsx[0], `>${jsx[1]}·X<`);
     // Plantilla: primer tramo de texto fijo de un literal `...${...}...`.
     const template = text.match(/`([^`$]*[A-Za-zÁÉÍÓÚáéíóúñÑ][^`$]*)\$\{/);
-    return template ? text.replace(template[0], `\`${template[1]}·X\${`) : null;
+    return template && !/className=/.test(text.slice(0, template.index)) ? text.replace(template[0], `\`${template[1]}·X\${`) : null;
   }],
   ['retorno', (text, file) => {
     const match = text.match(/^(\s*)return (?!undefined\b)[^;{}]+;\s*$/);
@@ -96,12 +118,14 @@ lines[line-1]=text;fs.writeFileSync(file,lines.join('\\n'));`;
 const WRITE = `const fs=require('node:fs'),path=require('node:path');const files=JSON.parse(fs.readFileSync(0,'utf8'));
 for(const [rel,text] of Object.entries(files)){const t=path.join('/workspace/repo',rel);fs.mkdirSync(path.dirname(t),{recursive:true});fs.writeFileSync(t,text);}`;
 
-async function hidden(session, m, rel) {
-  const result = await runSuiteIn(session, m, { files: [rel], timeout: 10 * 60000 });
+// Ejecuta los tests ocultos de T001..T00n (como el oráculo de Vn): un mutante del turno n puede romper un turno anterior.
+async function hidden(session, m, rels) {
+  const result = await runSuiteIn(session, m, { files: rels, timeout: 10 * 60000 });
   if (!result.run) return { status: 'ERROR', detail: result.error };
-  const tests = Object.keys(result.run.results).filter(k => k.startsWith(`${rel} ›`));
-  if (result.run.suiteFailedFiles.includes(rel)) return { status: 'COMPILE', tests: tests.length };
-  const failed = failing(result.run, k => k.startsWith(`${rel} ›`));
+  const mine = k => rels.some(rel => k.startsWith(`${rel} ›`));
+  const tests = Object.keys(result.run.results).filter(mine);
+  if (rels.some(rel => result.run.suiteFailedFiles.includes(rel))) return { status: 'COMPILE', tests: tests.length };
+  const failed = failing(result.run, mine);
   return { status: failed.length ? 'KILLED' : 'SURVIVED', tests: tests.length, failed: failed.length };
 }
 
@@ -114,22 +138,23 @@ export async function mutateFamily(root, familyId, { max = 8 } = {}) {
   const dir = m.package_path === '.' ? '' : ` --directory='${m.package_path}'`;
   for (const [index, version] of REAL_VERSIONS.entries()) {
     const turn = data.turns[index];
-    const rel = `${m.hidden_tests_dir}/${basename(turn.hidden_tests)}`;
-    const entry = { turn: TURN_OF[version], hidden_tests: rel, mutants: [] };
+    const turnsSoFar = data.turns.slice(0, index + 1);
+    const rels = turnsSoFar.map(t => `${m.hidden_tests_dir}/${basename(t.hidden_tests)}`);
+    const entry = { turn: TURN_OF[version], hidden_tests: rels, mutants: [] };
     report.turns.push(entry);
     const session = openReal(base.image_id, 'real-oracle');
     try {
       // Base: V0 de la imagen más las referencias de calibración T001..T00n aplicadas al árbol (sin commits).
       if (execReal(session, ['git', 'rev-parse', 'HEAD']) !== base.v0_repo_commit) throw new Error(`${familyId}: la imagen no está en el V0 registrado`);
       for (const t of data.turns.slice(0, index + 1)) execReal(session, ['sh', '-c', `git apply${dir} --whitespace=nowarn -`], { input: t.patchText, timeout: 300000 });
-      execReal(session, ['node', '-e', WRITE], { input: JSON.stringify({ [inPackage(m, rel)]: turn.hiddenTestsText }) });
-      entry.baseline = await hidden(session, m, rel);
+      execReal(session, ['node', '-e', WRITE], { input: JSON.stringify(Object.fromEntries(turnsSoFar.map((t, i) => [inPackage(m, rels[i]), t.hiddenTestsText]))) });
+      entry.baseline = await hidden(session, m, rels);
       log(`${familyId} ${entry.turn}: referencia ${entry.baseline.status === 'SURVIVED' ? 'PASA' : entry.baseline.status} (${entry.baseline.tests ?? 0} tests ocultos)`);
       if (entry.baseline.status !== 'SURVIVED') { entry.error = 'la referencia no pasa sus tests ocultos'; continue; }
       for (const mutant of selectMutants(addedLines(turn.patchText), max)) {
         const file = `/workspace/repo/${inPackage(m, mutant.file)}`;
         execReal(session, ['node', '-e', EDIT], { input: JSON.stringify([file, mutant.line, mutant.text, mutant.mutated]) });
-        const result = await hidden(session, m, rel);
+        const result = await hidden(session, m, rels);
         execReal(session, ['node', '-e', EDIT], { input: JSON.stringify([file, mutant.line, mutant.mutated, mutant.text]) });
         entry.mutants.push({ file: mutant.file, line: mutant.line, operator: mutant.operator, original: mutant.text.trim().slice(0, 200), mutated: mutant.mutated.trim().slice(0, 200), result: result.status });
         log(`  ${mutant.file}:${mutant.line} ${mutant.operator}: ${result.status}`);

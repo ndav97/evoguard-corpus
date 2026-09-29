@@ -219,3 +219,12 @@ Decisiones de Claude con autorización del usuario. El avance y lo que queda est
   - se probó con la familia de prueba S900 (3/3 eliminados). Las familias reales se ejecutan en el PC del usuario.
   - `runner/real/mutants.mjs` no forma parte de la huella de los ensayos.
 
+## Tests ocultos semi-reales reforzados — 2026-09-29
+Decisión de Claude con autorización del usuario. Detalle en `docs/fuerza-tests-ocultos-semi-reales-2026-09-29.md`.
+- **Triaje independiente** de los 57 mutantes que sobrevivieron: 37 equivalentes, 5 no especificados y 15 debilidades.
+- **Tests reforzados:** se corrigieron 13 debilidades en S002–S006, S008 y S010, añadiendo comprobaciones que solo cubren lo que pide cada petición.
+- **Pendiente:** el cableado de `applications-list.tsx` en S010 T002 necesita un test de integración ejecutable en el PC.
+- **Petición corregida:** en S008, la ruta de traducciones pasa a `public/locales/en/translation.json`.
+- **`real:mutants` ajustado:** usa los tests ocultos T001..T00n y excluye mutaciones de estilo y de tipos.
+- **Verificación:** se hace repitiendo `real:mutants` en el PC, que comprueba primero que cada referencia pasa los tests ampliados. No se repiten los ensayos de familia: los tests ocultos no forman parte de su huella y los escenarios de rechazo no dependen de su contenido.
+

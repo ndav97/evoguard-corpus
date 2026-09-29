@@ -1,0 +1,125 @@
+{
+ "family": "S008",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 54,
+   "operator": "texto",
+   "original": "slotProps={{ title: { variant: 'h6', id: 'modal-modal-title' } }}",
+   "mutated": "slotProps={{ title: { variant: 'h6·X', id: 'modal-modal-title' } }}",
+   "verdict": "EQUIVALENT",
+   "reason": "Cambia la variante tipográfica del título en slotProps.title. CardHeader fuerza component=\"span\" en el título, así que el elemento, el id 'modal-modal-title' y el texto no cambian; solo el estilo.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T001",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 63,
+   "operator": "texto",
+   "original": "<Typography variant=\"body1\" id=\"modal-modal-description\">",
+   "mutated": "<Typography variant=\"body1·X\" id=\"modal-modal-description\">",
+   "verdict": "EQUIVALENT",
+   "reason": "Cambia la variante tipográfica del mensaje; el id 'modal-modal-description' y el texto se mantienen. A lo sumo el elemento pasa de <p> a <span> (variante desconocida), sin efecto exigido por la petición ni por aria-describedby.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 80,
+   "operator": "texto",
+   "original": "margin=\"normal\"",
+   "mutated": "margin=\"normal·X\"",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia el margen visual del TextField (prop margin de MUI); etiqueta, valor y lógica de confirmación idénticos.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 89,
+   "operator": "texto",
+   "original": "<Button color=\"error\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+   "mutated": "<Button color=\"error·X\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia el color del botón de borrar (MUI ignora un color desconocido); texto, habilitado/deshabilitado y onClick idénticos.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 12,
+   "operator": "texto",
+   "original": "deleteFn: () => void | Promise<unknown>",
+   "mutated": "deleteFn: () => void | Promise·X<unknown>",
+   "verdict": "EQUIVALENT",
+   "reason": "Cambio solo en el tipo TypeScript de la prop (Promise·X es un identificador válido en un tipo); se elimina al transpilar y no hay comprobación de tipos en los tests.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 30,
+   "operator": "booleano",
+   "original": "const [failed, setFailed] = useState(false);",
+   "mutated": "const [failed, setFailed] = useState(true);",
+   "verdict": "WEAKNESS",
+   "reason": "Con failed inicializado a true, el diálogo muestra el aviso de error (role=alert 'deleteFailed') desde que se abre, sin haber intentado borrar. Ningún test comprueba que no haya aviso antes de un fallo.",
+   "request_quote": "si se rechaza, el diálogo sigue abierto, muestra un elemento con rol `alert` con el texto `t('deleteFailed')`",
+   "test_addition": {
+    "file": "oracle/T003.test.tsx",
+    "where": "Dentro de describe(\"T003 · borrado asíncrono\"), antes del test(\"las traducciones en inglés existen\").",
+    "code": "    test(\"sin un borrado fallido no se muestra ningún aviso\", () => {\n        render(<DeleteConfirmationModal {...baseProps()} />);\n        expect(screen.queryByRole(\"alert\")).not.toBeInTheDocument();\n        expect(screen.getByRole(\"button\", { name: \"delete\" })).toBeEnabled();\n    });"
+   }
+  },
+  {
+   "turn": "T003",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 36,
+   "operator": "booleano",
+   "original": "setFailed(false);",
+   "mutated": "setFailed(true);",
+   "verdict": "WEAKNESS",
+   "reason": "Al cerrar (isOpen=false) el mutante pone failed=true en lugar de limpiarlo, así que al volver a abrir el diálogo aparece el aviso de error. Ningún test de T003 cierra y reabre el diálogo.",
+   "request_quote": "Al cerrar y volver a abrir el diálogo, desaparecen el aviso de error y el estado de espera.",
+   "test_addition": {
+    "file": "oracle/T003.test.tsx",
+    "where": "Dentro de describe(\"T003 · borrado asíncrono\"), después del test(\"si la promesa falla, muestra un aviso, no se cierra y permite reintentar\").",
+    "code": "    test(\"al cerrar y volver a abrir desaparece el aviso de error\", async () => {\n        const user = userEvent.setup();\n        const props = baseProps({ deleteFn: vi.fn(() => Promise.reject(new Error(\"boom\"))) });\n        const { rerender } = render(<DeleteConfirmationModal {...props} />);\n        await user.click(screen.getByRole(\"button\", { name: \"delete\" }));\n        expect(await screen.findByRole(\"alert\")).toBeInTheDocument();\n        rerender(<DeleteConfirmationModal {...props} isOpen={false} />);\n        rerender(<DeleteConfirmationModal {...props} isOpen={true} />);\n        expect(screen.queryByRole(\"alert\")).not.toBeInTheDocument();\n        expect(screen.getByRole(\"button\", { name: \"delete\" })).toBeEnabled();\n    });"
+   }
+  },
+  {
+   "turn": "T003",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 61,
+   "operator": "booleano",
+   "original": "setPending(false);",
+   "mutated": "setPending(true);",
+   "verdict": "UNSPECIFIED",
+   "reason": "La línea 61 está en la rama .then (éxito): el mutante deja pending=true tras llamar a closeFn, es decir, el botón quedaría en 'deleting' deshabilitado si el padre NO cerrara el diálogo. La petición solo exige «si se resuelve, se llama a `closeFn`»; qué muestra el botón si el diálogo sigue abierto tras un éxito no está especificado, y al cerrar y reabrir el useEffect limpia pending, así que en el uso normal (closeFn cierra) no se observa.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+   "line": 107,
+   "operator": "texto",
+   "original": "{t('deleteFailed')}",
+   "mutated": "{t('deleteFailed·X')}",
+   "verdict": "WEAKNESS",
+   "reason": "El texto del aviso pasa a 'deleteFailed·X'. El test existente usa toHaveTextContent(\"deleteFailed\"), que es una coincidencia por subcadena y acepta 'deleteFailed·X'.",
+   "request_quote": "muestra un elemento con rol `alert` con el texto `t('deleteFailed')`",
+   "test_addition": {
+    "file": "oracle/T003.test.tsx",
+    "where": "En el test(\"si la promesa falla, muestra un aviso, no se cierra y permite reintentar\"), justo después de la línea expect(await screen.findByRole(\"alert\")).toHaveTextContent(\"deleteFailed\"); (o sustituirla).",
+    "code": "        expect(screen.getByRole(\"alert\")).toHaveTextContent(/^deleteFailed$/);"
+   }
+  }
+ ]
+}

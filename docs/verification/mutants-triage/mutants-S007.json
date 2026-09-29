@@ -1,0 +1,29 @@
+{
+ "family": "S007",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "js/dashboard/components/search-input.tsx",
+   "line": 96,
+   "operator": "texto",
+   "original": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200\"",
+   "mutated": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200·X\"",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia clases Tailwind (posición/colores) del botón «Clear search»; rol, nombre accesible y comportamiento idénticos.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "js/dashboard/components/search-input.tsx",
+   "line": 16,
+   "operator": "texto",
+   "original": "placeholderUnfocusedOnlyDesktop = 'Press / to search',",
+   "mutated": "placeholderUnfocusedOnlyDesktop = 'Press / to search·X',",
+   "verdict": "UNSPECIFIED",
+   "reason": "Cambia el texto de ayuda por defecto «Press / to search». La línea solo se tocó en T002 para añadir una coma y la prop resultCount; la petición T002 no menciona ese texto (solo «El botón `Clear search` sigue funcionando igual»). Es una regresión de comportamiento previo, no de lo pedido en T002; el oráculo T001 («vuelven a mostrarse los textos de ayuda», que busca 'Press / to search') sí lo mataría si la mutación ejecutara también los oráculos de turnos anteriores. Recomendación: en el análisis de mutantes ejecutar T001..T00n acumulados como regresión.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

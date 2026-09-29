@@ -65,6 +65,14 @@ describe("T001 · indicador de fortaleza", () => {
         expect(screen.getByText("Strength: Strong")).toBeInTheDocument();
     });
 
+    // Añadido tras la prueba de mutantes (2026-09-29).
+    it("modo ZXCVBN con puntuación 0 muestra Very weak", () => {
+        zxcvbnScore(0);
+        render(<PasswordMeter value={"a"} policy={policy({ mode: PasswordPolicyMode.ZXCVBN })} />);
+        expect(bar()).toHaveAttribute("aria-valuenow", "0");
+        expect(screen.getByText("Strength: Very weak")).toBeInTheDocument();
+    });
+
     it("sin contraseña escrita no muestra el nivel en texto", () => {
         render(<PasswordMeter value={""} policy={policy({ min_length: 8 })} />);
         expect(bar()).toHaveAttribute("aria-valuenow", "0");

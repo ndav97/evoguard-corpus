@@ -1,0 +1,85 @@
+{
+  "family": "S005",
+  "items": [
+    {
+      "turn": "T001",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 75,
+      "operator": "texto",
+      "original": "<span className={styles[\"characters-remaining\"]} aria-live=\"polite\">",
+      "mutated": "<span className={styles[\"characters-remaining·X\"]} aria-live=\"polite\">",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia la clave del módulo CSS (clase del contador); el texto y aria-live no cambian.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 47,
+      "operator": "booleano",
+      "original": "cancelledRef.current = false;",
+      "mutated": "cancelledRef.current = true;",
+      "verdict": "WEAKNESS",
+      "reason": "El mutante deja cancelledRef en true tras consumir la cancelación, así que después de un Escape se descartan todos los guardados posteriores (Enter o blur). Los tests de T002 no hacen ninguna edición después de un Escape.",
+      "request_quote": "Enter y salir del campo sin pulsar Escape siguen guardando como hasta ahora (valor recortado, solo si cambió).",
+      "test_addition": {
+        "file": "oracle/T002.test.tsx",
+        "where": "Dentro de describe('T002 · cancelar con Escape'), después del it('salir del campo sin Escape sigue guardando').",
+        "code": "  it(\"tras cancelar con Escape, una nueva edición se guarda con Enter\", async () => {\n    const onSubmit = jest.fn();\n    render(<LabelEditor label=\"Work\" onSubmit={onSubmit} />);\n    await userEvent.type(input(), \" trip\");\n    await userEvent.keyboard(\"{Escape}\");\n    expect(onSubmit).not.toHaveBeenCalled();\n    await userEvent.type(input(), \"!{Enter}\");\n    expect(onSubmit).toHaveBeenCalledWith(\"Work!\");\n  });"
+      }
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 60,
+      "operator": "borrado",
+      "original": "event.preventDefault();",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "verdict": "EQUIVALENT",
+      "reason": "Escape en un <input type=text> dentro de un formulario no tiene acción por defecto (ni en jsdom ni en navegadores), así que preventDefault no cambia nada observable.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 60,
+      "operator": "booleano",
+      "original": "setHasSaved(true);",
+      "mutated": "setHasSaved(false);",
+      "verdict": "UNSPECIFIED",
+      "reason": "hasSaved solo controla si se muestra el aviso de guardado (clase is-shown/is-hidden) cuando props.label cambia después de quitar la etiqueta. T003 no dice si quitar la etiqueta debe mostrar ese aviso, y además la visibilidad depende solo de clases CSS.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 97,
+      "operator": "texto",
+      "original": "type=\"button\"",
+      "mutated": "type=\"button·X\"",
+      "verdict": "WEAKNESS",
+      "reason": "type inválido hace que el botón sea de tipo submit dentro del <form>; en jsdom el envío implícito no produce una segunda llamada porque el cierre de onSubmit aún ve el inputValue anterior, así que los tests de llamadas no lo detectan. El request pide explícitamente type=\"button\". Prioridad baja.",
+      "request_quote": "muestra junto al campo un botón (`type=\"button\"`) cuyo nombre accesible es el mensaje de Fluent `profile-label-remove`.",
+      "test_addition": {
+        "file": "oracle/T003.test.tsx",
+        "where": "En el it('solo aparece si la máscara tiene etiqueta'), tras el primer expect(removeButton()).toBeInTheDocument().",
+        "code": "    expect(removeButton()).toHaveAttribute(\"type\", \"button\");"
+      }
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 98,
+      "operator": "texto",
+      "original": "className={styles[\"remove-button\"]}",
+      "mutated": "className={styles[\"remove-button·X\"]}",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia la clave del módulo CSS del botón de quitar.",
+      "request_quote": null,
+      "test_addition": null
+    }
+  ]
+}

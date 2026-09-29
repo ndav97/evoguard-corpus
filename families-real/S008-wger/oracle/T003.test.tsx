@@ -43,7 +43,27 @@ describe("T003 · borrado asíncrono", () => {
         render(<DeleteConfirmationModal {...props} />);
         await user.click(screen.getByRole("button", { name: "delete" }));
         expect(await screen.findByRole("alert")).toHaveTextContent("deleteFailed");
+        expect(screen.getByRole("alert")).toHaveTextContent(/^deleteFailed$/);
         expect(props.closeFn).not.toHaveBeenCalled();
+        expect(screen.getByRole("button", { name: "delete" })).toBeEnabled();
+    });
+
+    // Añadidos tras la prueba de mutantes (2026-09-29).
+    test("sin un borrado fallido no se muestra ningún aviso", () => {
+        render(<DeleteConfirmationModal {...baseProps()} />);
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "delete" })).toBeEnabled();
+    });
+
+    test("al cerrar y volver a abrir desaparece el aviso de error", async () => {
+        const user = userEvent.setup();
+        const props = baseProps({ deleteFn: vi.fn(() => Promise.reject(new Error("boom"))) });
+        const { rerender } = render(<DeleteConfirmationModal {...props} />);
+        await user.click(screen.getByRole("button", { name: "delete" }));
+        expect(await screen.findByRole("alert")).toBeInTheDocument();
+        rerender(<DeleteConfirmationModal {...props} isOpen={false} />);
+        rerender(<DeleteConfirmationModal {...props} isOpen={true} />);
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument();
         expect(screen.getByRole("button", { name: "delete" })).toBeEnabled();
     });
 

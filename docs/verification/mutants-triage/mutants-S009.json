@@ -1,0 +1,41 @@
+{
+ "family": "S009",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/components/widgets/stocks/stocks.jsx",
+   "line": 45,
+   "operator": "texto",
+   "original": "title={viewingPercentChange ? t(\"stocks.show_price\") : t(\"stocks.show_percent_change\")}",
+   "mutated": "title={viewingPercentChange ? t(\"stocks.show_price·X\") : t(\"stocks.show_percent_change\")}",
+   "verdict": "UNSPECIFIED",
+   "reason": "Solo cambia el atributo title (tooltip) cuando se muestra el porcentaje; el nombre accesible sale de aria-label, que no cambia. La petición T001 no pide ningún title: lo exige solo por nombre accesible y aria-pressed. Observación: la referencia añade un tooltip visible que la petición no pide y que choca levemente con «El aspecto y el comportamiento del widget no cambian en nada más»; conviene no testearlo y valorar quitarlo de la referencia.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/widgets/stocks/stocks.jsx",
+   "line": 17,
+   "operator": "borrado",
+   "original": "if (!watchlist) return null;",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "EQUIVALENT",
+   "reason": "Sin la guarda, sin watchlist se lee la clave 'homepage-stocks-view:undefined'. Como storeView nunca escribe sin watchlist, esa clave no existe en el dominio y getItem devuelve null: mismo resultado (precios). Solo sería observable si alguien pusiera a mano esa clave, lo que depende del detalle interno de construcción de la clave.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/widgets/stocks/stocks.jsx",
+   "line": 21,
+   "operator": "retorno",
+   "original": "return null;",
+   "mutated": "return undefined;",
+   "verdict": "EQUIVALENT",
+   "reason": "En el catch de readStoredView, devolver undefined en vez de null no cambia nada: el llamador solo compara === \"percent\", falso en ambos casos (el test «keeps working when storage throws» lo confirma).",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

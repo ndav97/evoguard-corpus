@@ -32,6 +32,7 @@ describe('T001 · restablecer valores por defecto', () => {
 
   test('está deshabilitado con los valores por defecto', () => {
     setup();
+    expect(screen.getByRole('heading', { name: 'Inputs' })).toBeInTheDocument();
     expect(resetButton()).toBeDisabled();
   });
 
@@ -68,5 +69,17 @@ describe('T001 · restablecer valores por defecto', () => {
     });
     expect(screen.getByLabelText('Confidence')).toHaveValue('0.999999');
     expect(screen.getByText('Intermediate Values')).toBeInTheDocument();
+  });
+
+  // Añadido tras la prueba de mutantes (2026-09-29).
+  test('restablece también Elements Per Row', async () => {
+    setup();
+    await setValue('Elements Per Row', '7');
+    expect(resetButton()).toBeEnabled();
+    await act(async () => {
+      fireEvent.click(resetButton());
+    });
+    expect(screen.getByLabelText('Elements Per Row')).toHaveValue('3');
+    expect(resetButton()).toBeDisabled();
   });
 });

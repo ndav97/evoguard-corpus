@@ -1,6 +1,6 @@
 import { screen, fireEvent, within } from '@testing-library/react';
 import { renderWithAllProviders, initializeMocks } from '@src/testUtils';
-import { HistoryTable } from '@src/components/BulkManagementHistoryView/HistoryTable';
+import { HistoryTable, mapHistoryRows } from '@src/components/BulkManagementHistoryView/HistoryTable';
 
 jest.mock('@openedx/paragon', () => ({
   ...jest.requireActual('@openedx/paragon'),
@@ -66,5 +66,14 @@ describe('T003 · filtrar desde la columna de usuario', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Show uploads by bob' }));
     fireEvent.change(uploaderSelect(), { target: { value: '' } });
     expect(rows()).toHaveLength(4);
+  });
+
+  // Añadido tras la prueba de mutantes (2026-09-29): llamada solo con la fila, como en los tests existentes.
+  it('mapHistoryRows solo con la fila muestra el usuario en un span con wrap-text-in-cell', () => {
+    renderWithAllProviders(<div>{mapHistoryRows(history[0]).user}</div>);
+    const user = screen.getByText('alice');
+    expect(user.tagName).toBe('SPAN');
+    expect(user).toHaveClass('wrap-text-in-cell');
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

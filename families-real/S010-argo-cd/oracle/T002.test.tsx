@@ -51,6 +51,7 @@ describe('evoguard S010 T002 — legend filters', () => {
         const onFilter = jest.fn();
         await renderSummary(apps(), {onFilter});
 
+        expect(screen.getByRole('button', {name: 'Synced (3)'})).toHaveAttribute('type', 'button');
         fireEvent.click(screen.getByRole('button', {name: 'Synced (3)'}));
         expect(onFilter).toHaveBeenCalledTimes(1);
         expect(onFilter).toHaveBeenCalledWith('sync', 'Synced');

@@ -90,4 +90,13 @@ describe("T003 · normalización", () => {
     await user.click(screen.getByRole("button", { name: "Start" }));
     expect(submittedAction()).toBe("shift_offset(h=2,m=30,s=0,ms=0)");
   });
+
+  // Añadido tras la prueba de mutantes (2026-09-29): las horas escritas a mano cuentan en el total normalizado.
+  it("las horas escritas a mano se suman al total normalizado", async () => {
+    const user = renderForm();
+    await setField(user, "hour", "1");
+    await setField(user, "min", "90");
+    await user.click(screen.getByRole("button", { name: "Start" }));
+    expect(submittedAction()).toBe("shift_offset(h=2,m=30,s=0,ms=0)");
+  });
 });

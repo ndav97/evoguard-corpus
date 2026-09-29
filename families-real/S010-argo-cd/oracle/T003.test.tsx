@@ -70,6 +70,14 @@ describe('evoguard S010 T003 — needs attention', () => {
         expect(valueCell('NEEDS ATTENTION')).toHaveAttribute('title', 'app-1, app-2, app-3, app-4, app-5, +2 more');
     });
 
+    // Añadido tras la prueba de mutantes (2026-09-29): la fila va después de NAMESPACES, que no cambia.
+    it('places NEEDS ATTENTION after NAMESPACES', async () => {
+        await renderSummary([app('a', 'Synced', 'Healthy')]);
+        const namespaces = screen.getByText('NAMESPACES');
+        expect(valueOf('NAMESPACES')).toBe('1');
+        expect(namespaces.compareDocumentPosition(screen.getByText('NEEDS ATTENTION')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
     it('does not show a percentage for NEEDS ATTENTION', async () => {
         await renderSummary([app('a', 'OutOfSync', 'Healthy'), app('b', 'Synced', 'Healthy')]);
 

@@ -1,0 +1,93 @@
+{
+ "family": "S010",
+ "items": [
+  {
+   "turn": "T002",
+   "file": "src/app/applications/components/applications-list/applications-list.tsx",
+   "line": 521,
+   "operator": "igualdad",
+   "original": "{(pref.view === 'summary' && (",
+   "mutated": "{(pref.view !== 'summary' && (",
+   "verdict": "WEAKNESS",
+   "reason": "El mutante invierte la condición: en la vista Summary se muestra la lista paginada y en las demás vistas el resumen. Los oráculos de T002 solo renderizan ApplicationsSummary aislado; nada ejercita applications-list.tsx. Un test de integración en vista Summary que pulse una leyenda lo mataría (no encontraría el botón). Detectarlo requiere renderizar ApplicationsList, bastante más pesado que el resto de oráculos.",
+   "request_quote": "En `applications-list.tsx`, pasa `onFilter` al resumen de modo que se sustituya el filtro de sincronización (`syncFilter`) o de salud (`healthFilter`) de las preferencias por `[status]`, usando el mismo mecanismo con el que ya se cambian los filtros (`onAppFilterPrefChanged`).",
+   "test_addition": {
+    "file": "oracle/T002.test.tsx",
+    "where": "Nuevo it(...) de integración (o archivo aparte); el mismo test cubre también el mutante de la línea 525.",
+    "code": "// BOCETO NO VERIFICADO (sin acceso al fuente v0): ApplicationsList necesita contexto de la app,\n// router y services mockeados. Ajustar los mocks a la versión real antes de incorporarlo.\n// Nuevo archivo sugerido: oracle/T002.list.test.tsx (o bloque adicional en T002.test.tsx).\nit('en la vista Summary, pulsar una leyenda sustituye solo el filtro correspondiente', async () => {\n    // services.viewPreferences.getPreferences() -> appList.view = 'summary', syncFilter = [], healthFilter = ['Healthy']\n    // services.applications.list/watch -> apps() de este archivo\n    // renderizar <ApplicationsList .../> dentro de Router + Context de la app\n    fireEvent.click(await screen.findByRole('button', {name: 'OutOfSync (1)'}));\n    // Verificar por el mecanismo que usa onAppFilterPrefChanged (preferencias guardadas o query de la URL):\n    // expect(updatedPrefs.appList.syncFilter).toEqual(['OutOfSync']);\n    // expect(updatedPrefs.appList.healthFilter).toEqual(['Healthy']);\n});"
+   }
+  },
+  {
+   "turn": "T002",
+   "file": "src/app/applications/components/applications-list/applications-list.tsx",
+   "line": 525,
+   "operator": "igualdad",
+   "original": "onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+   "mutated": "onAppFilterPrefChanged(ctx, {...pref, [type !== 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+   "verdict": "WEAKNESS",
+   "reason": "El mutante intercambia las claves: una leyenda de Sync sustituye healthFilter y una de Health sustituye syncFilter. El punto 6 de la petición lo exige explícitamente, pero ningún oráculo renderiza ApplicationsList, así que el cableado de onFilter no se prueba en absoluto (cualquier implementación que no pase onFilter también aprobaría T002).",
+   "request_quote": "En `applications-list.tsx`, pasa `onFilter` al resumen de modo que se sustituya el filtro de sincronización (`syncFilter`) o de salud (`healthFilter`) de las preferencias por `[status]`",
+   "test_addition": {
+    "file": "oracle/T002.test.tsx",
+    "where": "Mismo test de integración propuesto para la línea 521 (comprueba que syncFilter pasa a ['OutOfSync'] y healthFilter no cambia).",
+    "code": "// BOCETO NO VERIFICADO (sin acceso al fuente v0): ApplicationsList necesita contexto de la app,\n// router y services mockeados. Ajustar los mocks a la versión real antes de incorporarlo.\n// Nuevo archivo sugerido: oracle/T002.list.test.tsx (o bloque adicional en T002.test.tsx).\nit('en la vista Summary, pulsar una leyenda sustituye solo el filtro correspondiente', async () => {\n    // services.viewPreferences.getPreferences() -> appList.view = 'summary', syncFilter = [], healthFilter = ['Healthy']\n    // services.applications.list/watch -> apps() de este archivo\n    // renderizar <ApplicationsList .../> dentro de Router + Context de la app\n    fireEvent.click(await screen.findByRole('button', {name: 'OutOfSync (1)'}));\n    // Verificar por el mecanismo que usa onAppFilterPrefChanged (preferencias guardadas o query de la URL):\n    // expect(updatedPrefs.appList.syncFilter).toEqual(['OutOfSync']);\n    // expect(updatedPrefs.appList.healthFilter).toEqual(['Healthy']);\n});"
+   }
+  },
+  {
+   "turn": "T002",
+   "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+   "line": 32,
+   "operator": "texto",
+   "original": "export type SummaryFilterType = 'sync' | 'health';",
+   "mutated": "export type SummaryFilterType = 'sync·X' | 'health';",
+   "verdict": "EQUIVALENT",
+   "reason": "Cambio solo en el alias de tipo TypeScript; se borra al transpilar (ts-jest/babel sin comprobación de tipos en este caso, ya que el mutante compiló y pasó).",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+   "line": 161,
+   "operator": "texto",
+   "original": "type='button'",
+   "mutated": "type='button·X'",
+   "verdict": "WEAKNESS",
+   "reason": "Con type='button·X' (valor no válido) el botón vuelve al tipo por defecto «submit»: dentro de un formulario enviaría el formulario. La petición exige literalmente `<button type=\"button\">` y ningún test lo comprueba. Impacto real bajo (hoy el resumen no está dentro de un <form>), pero es un requisito explícito y barato de comprobar.",
+   "request_quote": "Si se pasa, cada entrada de las leyendas de **Sync** y **Health** es un `<button type=\"button\">` cuyo texto es el de siempre (`Synced (3)`).",
+   "test_addition": {
+    "file": "oracle/T002.test.tsx",
+    "where": "En el it('calls onFilter with the sync status when a Sync legend entry is clicked'), después del primer fireEvent.click / expect, o como líneas al inicio tras renderSummary.",
+    "code": "        expect(screen.getByRole('button', {name: 'Synced (3)'})).toHaveAttribute('type', 'button');"
+   }
+  },
+  {
+   "turn": "T002",
+   "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+   "line": 162,
+   "operator": "texto",
+   "original": "className='applications-list__summary-legend-button'",
+   "mutated": "className='applications-list__summary-legend-button·X'",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia la clase CSS que da aspecto de texto a los botones (punto 7, puramente visual). En jsdom/jest los estilos SCSS no se aplican, así que no es comprobable sin fijarse en la className, que las reglas de equidad excluyen.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+   "line": 96,
+   "operator": "texto",
+   "original": "{title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+   "mutated": "{title: 'NAMESPACES·X', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+   "verdict": "WEAKNESS",
+   "reason": "Cambia el título de la fila preexistente «NAMESPACES» a «NAMESPACES·X». La petición T003 sitúa la nueva fila «después de `NAMESPACES`», pero ningún test de T003 menciona NAMESPACES ni el orden de las filas.",
+   "request_quote": "Añade al final del bloque *SUMMARY* (después de `NAMESPACES`) una fila `NEEDS ATTENTION`",
+   "test_addition": {
+    "file": "oracle/T003.test.tsx",
+    "where": "Dentro de describe('evoguard S010 T003 — needs attention'), después del it('does not show a percentage for NEEDS ATTENTION').",
+    "code": "    it('places NEEDS ATTENTION right after NAMESPACES', async () => {\n        await renderSummary([app('a', 'Synced', 'Healthy')]);\n\n        expect(valueOf('NAMESPACES')).toBe('1');\n        expect(screen.getByText('NAMESPACES').parentElement.nextElementSibling).toBe(screen.getByText('NEEDS ATTENTION').parentElement);\n    });"
+   }
+  }
+ ]
+}

@@ -1,0 +1,125 @@
+{
+  "family": "S004",
+  "items": [
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 76,
+      "operator": "borrado",
+      "original": "setElemsPerRow(DEFAULTS.elemsPerRow);",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "verdict": "WEAKNESS",
+      "reason": "Al borrar setElemsPerRow(DEFAULTS.elemsPerRow), Reset deja 'Elements Per Row' con el valor modificado (y el botón sigue habilitado). Los tests de T001 solo cambian Statistics Target, Target Selectivity y Confidence antes de restablecer; Elements Per Row nunca se modifica.",
+      "request_quote": "Al pulsarlo, las cuatro entradas vuelven a sus valores iniciales: [...] `Elements Per Row`: 3;",
+      "test_addition": {
+        "file": "oracle/T001.test.tsx",
+        "where": "Dentro de describe('T001 · restablecer valores por defecto'), después del test 'recupera los resultados si se había vaciado un campo'.",
+        "code": "  test('restablece también Elements Per Row', async () => {\n    setup();\n    await setValue('Elements Per Row', '7');\n    expect(resetButton()).toBeEnabled();\n    await act(async () => {\n      fireEvent.click(resetButton());\n    });\n    expect(screen.getByLabelText('Elements Per Row')).toHaveValue('3');\n    expect(resetButton()).toBeDisabled();\n  });"
+      }
+    },
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 97,
+      "operator": "texto",
+      "original": "<Group justify=\"space-between\" mb=\"md\">",
+      "mutated": "<Group justify=\"space-between·X\" mb=\"md\">",
+      "verdict": "EQUIVALENT",
+      "reason": "justify del Group de Mantine solo afecta al estilo (justify-content).",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 98,
+      "operator": "texto",
+      "original": "<Title order={4}>Inputs</Title>",
+      "mutated": "<Title order={4}>Inputs·X</Title>",
+      "verdict": "WEAKNESS",
+      "reason": "El título de la sección pasa a 'Inputs·X'. El request sitúa el botón en la sección «Inputs» y exige que las etiquetas existentes no cambien; ningún test comprueba el encabezado. Prioridad baja (es una regresión del texto preexistente, no de la funcionalidad nueva).",
+      "request_quote": "Añade en la sección «Inputs» un botón con el texto `Reset to defaults`. [...] Las etiquetas, los cálculos y los resultados existentes no cambian.",
+      "test_addition": {
+        "file": "oracle/T001.test.tsx",
+        "where": "Dentro del test 'está deshabilitado con los valores por defecto', tras setup().",
+        "code": "    expect(screen.getByRole('heading', { name: 'Inputs' })).toBeInTheDocument();"
+      }
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 74,
+      "operator": "booleano",
+      "original": "const [copied, setCopied] = useState(false);",
+      "mutated": "const [copied, setCopied] = useState(true);",
+      "verdict": "WEAKNESS",
+      "reason": "Con useState(true), 'Copied to clipboard' aparece desde el primer render, antes de copiar nada. El test solo comprueba que el texto está tras el clic, no que esté ausente antes.",
+      "request_quote": "si la copia tiene éxito, muestra el texto `Copied to clipboard`.",
+      "test_addition": {
+        "file": "oracle/T003.test.tsx",
+        "where": "En el test '«Copy recommended M» copia el valor y lo confirma', justo después de setup() y antes del act(...) con el clic.",
+        "code": "    expect(screen.queryByText('Copied to clipboard')).not.toBeInTheDocument();"
+      }
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 206,
+      "operator": "texto",
+      "original": "<Paper withBorder p=\"md\">",
+      "mutated": "<Paper withBorder p=\"md·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "p del Paper: solo padding.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 207,
+      "operator": "texto",
+      "original": "<Group justify=\"space-between\">",
+      "mutated": "<Group justify=\"space-between·X\">",
+      "verdict": "EQUIVALENT",
+      "reason": "justify del Group: solo estilo.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 210,
+      "operator": "texto",
+      "original": "size=\"xs\"",
+      "mutated": "size=\"xs·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "size del Button: solo estilo.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 211,
+      "operator": "texto",
+      "original": "variant=\"default\"",
+      "mutated": "variant=\"default·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "variant del Button: solo estilo.",
+      "request_quote": null,
+      "test_addition": null
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 216,
+      "operator": "booleano",
+      "original": ".catch(() => setCopied(false));",
+      "mutated": ".catch(() => setCopied(true));",
+      "verdict": "UNSPECIFIED",
+      "reason": "Con el mutante, si writeText falla se muestra 'Copied to clipboard'. Es observable, pero el request solo define el caso de éxito; no dice qué hacer si la copia falla. Además, un test que haga fallar writeText penalizaría con un 'unhandled rejection' a implementaciones sin .catch que cumplen el request literal. Si se quiere cubrir, primero hay que ampliar el request (p. ej. 'Si la copia falla, no muestres ese texto').",
+      "request_quote": null,
+      "test_addition": null
+    }
+  ]
+}

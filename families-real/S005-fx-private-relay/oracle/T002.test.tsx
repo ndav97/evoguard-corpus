@@ -47,6 +47,17 @@ describe("T002 · cancelar con Escape", () => {
     expect(onSubmit).toHaveBeenCalledWith("Work!");
   });
 
+  // Añadido tras la prueba de mutantes (2026-09-29): después de cancelar, las ediciones siguientes se guardan.
+  it("tras cancelar con Escape, una nueva edición se guarda con Enter", async () => {
+    const onSubmit = jest.fn();
+    render(<LabelEditor label="Work" onSubmit={onSubmit} />);
+    await userEvent.type(input(), " trip");
+    await userEvent.keyboard("{Escape}");
+    expect(onSubmit).not.toHaveBeenCalled();
+    await userEvent.type(input(), "!{Enter}");
+    expect(onSubmit).toHaveBeenCalledWith("Work!");
+  });
+
   it("el contador refleja el valor restaurado", async () => {
     render(<LabelEditor label={"c".repeat(45)} onSubmit={jest.fn()} />);
     await userEvent.type(input(), "xyz");
