@@ -1,0 +1,189 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S007",
+  "image_id": "sha256:266b6c29fc0a366620ed405ebccaaa8e10d18fb9055f60bb1dacab471bc4c09b",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:15:55.452Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "js/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 45,
+          "operator": "negación",
+          "original": "if (searchRef.current) {",
+          "mutated": "if (!searchRef.current) {",
+          "result": "COMPILE"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 49,
+          "operator": "booleano",
+          "original": "setHasValue(false)",
+          "mutated": "setHasValue(true)",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 92,
+          "operator": "lógico",
+          "original": "{hasValue && (",
+          "mutated": "{hasValue || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 94,
+          "operator": "texto",
+          "original": "type=\"button\"",
+          "mutated": "type=\"button·X\"",
+          "result": "COMPILE"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 95,
+          "operator": "texto",
+          "original": "aria-label=\"Clear search\"",
+          "mutated": "aria-label=\"Clear search·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 96,
+          "operator": "texto",
+          "original": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200\"",
+          "mutated": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200·X\"",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 1,
+        "COMPILE": 2,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "js/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 16,
+          "operator": "texto",
+          "original": "placeholderUnfocusedOnlyDesktop = 'Press / to search',",
+          "mutated": "placeholderUnfocusedOnlyDesktop = 'Press / to search·X',",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 104,
+          "operator": "igualdad",
+          "original": "{hasValue && resultCount !== undefined && (",
+          "mutated": "{hasValue && resultCount === undefined && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 105,
+          "operator": "texto",
+          "original": "<span role=\"status\" className=\"sr-only\">",
+          "mutated": "<span role=\"status·X\" className=\"sr-only\">",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 106,
+          "operator": "igualdad",
+          "original": "{resultCount === 0",
+          "mutated": "{resultCount !== 0",
+          "result": "COMPILE"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 107,
+          "operator": "texto",
+          "original": "? 'No results'",
+          "mutated": "? 'No results·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 108,
+          "operator": "igualdad",
+          "original": ": `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}",
+          "mutated": ": `${resultCount} ${resultCount !== 1 ? 'result' : 'results'}`}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 4,
+        "SURVIVED": 1,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 0.8
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "js/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "js/dashboard/components/search-input.tsx",
+          "line": 56,
+          "operator": "negación",
+          "original": "if (searchRef.current?.value) {",
+          "mutated": "if (!searchRef.current?.value) {",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.8,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "js/dashboard/components/search-input.tsx",
+      "line": 96,
+      "operator": "texto",
+      "original": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200\"",
+      "mutated": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "js/dashboard/components/search-input.tsx",
+      "line": 16,
+      "operator": "texto",
+      "original": "placeholderUnfocusedOnlyDesktop = 'Press / to search',",
+      "mutated": "placeholderUnfocusedOnlyDesktop = 'Press / to search·X',",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:17:20.004Z"
+}

@@ -1,0 +1,292 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S008",
+  "image_id": "sha256:58fcea9bfe9452e4be00de0466789f1229f9fb54f46e5120efc636dd22d56427",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:17:20.114Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 54,
+          "operator": "texto",
+          "original": "slotProps={{ title: { variant: 'h6', id: 'modal-modal-title' } }}",
+          "mutated": "slotProps={{ title: { variant: 'h6·X', id: 'modal-modal-title' } }}",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 57,
+          "operator": "texto",
+          "original": "<IconButton aria-label={t('closeDialog')} onClick={closeFn}>",
+          "mutated": "<IconButton aria-label={t('closeDialog·X')} onClick={closeFn}>",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 63,
+          "operator": "texto",
+          "original": "<Typography variant=\"body1\" id=\"modal-modal-description\">",
+          "mutated": "<Typography variant=\"body1·X\" id=\"modal-modal-description\">",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.33
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 32,
+          "operator": "borrado",
+          "original": "setTyped('');",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 36,
+          "operator": "igualdad",
+          "original": "const confirmed = confirmationText === undefined || typed.trim() === confirmationText;",
+          "mutated": "const confirmed = confirmationText !== undefined || typed.trim() === confirmationText;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 77,
+          "operator": "igualdad",
+          "original": "{confirmationText !== undefined && (",
+          "mutated": "{confirmationText === undefined && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 80,
+          "operator": "texto",
+          "original": "margin=\"normal\"",
+          "mutated": "margin=\"normal·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 81,
+          "operator": "texto",
+          "original": "variant=\"standard\"",
+          "mutated": "variant=\"standard·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 82,
+          "operator": "texto",
+          "original": "label={t('deleteConfirmationPrompt', { text: confirmationText })}",
+          "mutated": "label={t('deleteConfirmationPrompt·X', { text: confirmationText })}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 89,
+          "operator": "texto",
+          "original": "<Button color=\"error\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+          "mutated": "<Button color=\"error·X\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.71
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 12,
+          "operator": "texto",
+          "original": "deleteFn: () => void | Promise<unknown>",
+          "mutated": "deleteFn: () => void | Promise·X<unknown>",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 30,
+          "operator": "booleano",
+          "original": "const [failed, setFailed] = useState(false);",
+          "mutated": "const [failed, setFailed] = useState(true);",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 36,
+          "operator": "booleano",
+          "original": "setFailed(false);",
+          "mutated": "setFailed(true);",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 57,
+          "operator": "booleano",
+          "original": "setPending(true);",
+          "mutated": "setPending(false);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 61,
+          "operator": "booleano",
+          "original": "setPending(false);",
+          "mutated": "setPending(true);",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 65,
+          "operator": "booleano",
+          "original": "setPending(false);",
+          "mutated": "setPending(true);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 105,
+          "operator": "lógico",
+          "original": "{failed && (",
+          "mutated": "{failed || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+          "line": 107,
+          "operator": "texto",
+          "original": "{t('deleteFailed')}",
+          "mutated": "{t('deleteFailed·X')}",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 5,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.38
+    }
+  ],
+  "score": 0.5,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 54,
+      "operator": "texto",
+      "original": "slotProps={{ title: { variant: 'h6', id: 'modal-modal-title' } }}",
+      "mutated": "slotProps={{ title: { variant: 'h6·X', id: 'modal-modal-title' } }}",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 63,
+      "operator": "texto",
+      "original": "<Typography variant=\"body1\" id=\"modal-modal-description\">",
+      "mutated": "<Typography variant=\"body1·X\" id=\"modal-modal-description\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 80,
+      "operator": "texto",
+      "original": "margin=\"normal\"",
+      "mutated": "margin=\"normal·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 89,
+      "operator": "texto",
+      "original": "<Button color=\"error\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+      "mutated": "<Button color=\"error·X\" variant=\"contained\" onClick={handleDelete} disabled={!confirmed}>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 12,
+      "operator": "texto",
+      "original": "deleteFn: () => void | Promise<unknown>",
+      "mutated": "deleteFn: () => void | Promise·X<unknown>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 30,
+      "operator": "booleano",
+      "original": "const [failed, setFailed] = useState(false);",
+      "mutated": "const [failed, setFailed] = useState(true);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 36,
+      "operator": "booleano",
+      "original": "setFailed(false);",
+      "mutated": "setFailed(true);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 61,
+      "operator": "booleano",
+      "original": "setPending(false);",
+      "mutated": "setPending(true);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/core/ui/Modals/DeleteConfirmationModal.tsx",
+      "line": 107,
+      "operator": "texto",
+      "original": "{t('deleteFailed')}",
+      "mutated": "{t('deleteFailed·X')}",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:18:59.793Z"
+}

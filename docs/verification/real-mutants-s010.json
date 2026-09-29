@@ -1,0 +1,289 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S010",
+  "image_id": "sha256:f2af9c6c3f803392ee9ce44da410f01a9c135f58e0cdf169f39276f1ba6631fd",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:19:54.930Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/app/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 30,
+          "operator": "relacional",
+          "original": "export const withPercentage = (count: number, total: number) => (total > 0 ? `${count} (${Math.round((count * 100) / total)}%)` : `${count}`);",
+          "mutated": "export const withPercentage = (count: number, total: number) => (total <= 0 ? `${count} (${Math.round((count * 100) / total)}%)` : `${count}`);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 59,
+          "operator": "igualdad",
+          "original": "{title: 'SYNCED', value: withPercentage(applications.filter(app => app.status.sync.status === 'Synced').length, applications.length)},",
+          "mutated": "{title: 'SYNCED', value: withPercentage(applications.filter(app => app.status.sync.status !== 'Synced').length, applications.length)},",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 60,
+          "operator": "igualdad",
+          "original": "{title: 'HEALTHY', value: withPercentage(applications.filter(app => app.status.health.status === 'Healthy').length, applications.length)},",
+          "mutated": "{title: 'HEALTHY', value: withPercentage(applications.filter(app => app.status.health.status !== 'Healthy').length, applications.length)},",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 62,
+          "operator": "texto",
+          "original": "title: 'HYDRATED',",
+          "mutated": "title: 'HYDRATED·X',",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 63,
+          "operator": "igualdad",
+          "original": "value: withPercentage(applications.filter(app => app.status.sourceHydrator?.currentOperation?.phase === 'Hydrated').length, applications.length)",
+          "mutated": "value: withPercentage(applications.filter(app => app.status.sourceHydrator?.currentOperation?.phase !== 'Hydrated').length, applications.length)",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/app/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/app/applications/components/applications-list/applications-list.tsx",
+          "line": 521,
+          "operator": "igualdad",
+          "original": "{(pref.view === 'summary' && (",
+          "mutated": "{(pref.view !== 'summary' && (",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-list.tsx",
+          "line": 525,
+          "operator": "igualdad",
+          "original": "onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+          "mutated": "onAppFilterPrefChanged(ctx, {...pref, [type !== 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 32,
+          "operator": "texto",
+          "original": "export type SummaryFilterType = 'sync' | 'health';",
+          "mutated": "export type SummaryFilterType = 'sync·X' | 'health';",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 38,
+          "operator": "borrado",
+          "original": "applications: models.Application[];",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 89,
+          "operator": "texto",
+          "original": "filterType: 'sync' as SummaryFilterType,",
+          "mutated": "filterType: 'sync·X' as SummaryFilterType,",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 95,
+          "operator": "texto",
+          "original": "filterType: 'health' as SummaryFilterType,",
+          "mutated": "filterType: 'health·X' as SummaryFilterType,",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 161,
+          "operator": "texto",
+          "original": "type='button'",
+          "mutated": "type='button·X'",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 162,
+          "operator": "texto",
+          "original": "className='applications-list__summary-legend-button'",
+          "mutated": "className='applications-list__summary-legend-button·X'",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 5,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 0.29
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/app/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 34,
+          "operator": "igualdad",
+          "original": "app.status.sync.status === 'OutOfSync' || app.status.health.status === 'Degraded' || app.status.health.status === 'Missing';",
+          "mutated": "app.status.sync.status !== 'OutOfSync' || app.status.health.status === 'Degraded' || app.status.health.status === 'Missing';",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 39,
+          "operator": "texto",
+          "original": "const shown = names.slice(0, 5).join(', ');",
+          "mutated": "const shown = names.slice(0, 5).join(', ·X');",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 40,
+          "operator": "relacional",
+          "original": "return names.length > 5 ? `${shown}, +${names.length - 5} more` : shown;",
+          "mutated": "return names.length <= 5 ? `${shown}, +${names.length - 5} more` : shown;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 96,
+          "operator": "texto",
+          "original": "{title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+          "mutated": "{title: 'NAMESPACES·X', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 98,
+          "operator": "texto",
+          "original": "title: 'NEEDS ATTENTION',",
+          "mutated": "title: 'NEEDS ATTENTION·X',",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 100,
+          "operator": "relacional",
+          "original": "tooltip: attentionApps.length > 0 ? attentionTooltip(attentionApps) : undefined,",
+          "mutated": "tooltip: attentionApps.length <= 0 ? attentionTooltip(attentionApps) : undefined,",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 101,
+          "operator": "relacional",
+          "original": "attention: attentionApps.length > 0",
+          "mutated": "attention: attentionApps.length <= 0",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+          "line": 133,
+          "operator": "texto",
+          "original": "<div className={`row white-box__details-row${attr.attention ? ' white-box__details-row--attention' : ''}`} key={attr.title}>",
+          "mutated": "<div className={`row white-box__details-row${attr.attention ? ' white-box__details-row--attention·X' : ''}`} key={attr.title}>",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 7,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.88
+    }
+  ],
+  "score": 0.7,
+  "survivors": [
+    {
+      "turn": "T002",
+      "file": "src/app/applications/components/applications-list/applications-list.tsx",
+      "line": 521,
+      "operator": "igualdad",
+      "original": "{(pref.view === 'summary' && (",
+      "mutated": "{(pref.view !== 'summary' && (",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/app/applications/components/applications-list/applications-list.tsx",
+      "line": 525,
+      "operator": "igualdad",
+      "original": "onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+      "mutated": "onAppFilterPrefChanged(ctx, {...pref, [type !== 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+      "line": 32,
+      "operator": "texto",
+      "original": "export type SummaryFilterType = 'sync' | 'health';",
+      "mutated": "export type SummaryFilterType = 'sync·X' | 'health';",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+      "line": 161,
+      "operator": "texto",
+      "original": "type='button'",
+      "mutated": "type='button·X'",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+      "line": 162,
+      "operator": "texto",
+      "original": "className='applications-list__summary-legend-button'",
+      "mutated": "className='applications-list__summary-legend-button·X'",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/app/applications/components/applications-list/applications-summary.tsx",
+      "line": 96,
+      "operator": "texto",
+      "original": "{title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+      "mutated": "{title: 'NAMESPACES·X', value: new Set(applications.map(app => app.spec.destination.namespace)).size},",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:21:16.400Z"
+}

@@ -1,0 +1,264 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S001",
+  "image_id": "sha256:15f30254fcfcf3dfcece5ce7c57eb534622206b689a6a96ff387bdb6e2a1b215",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:00:28.200Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "tests/evoguard/T001.test.jsx",
+      "mutants": [
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 134,
+          "operator": "igualdad",
+          "original": "const summary = `Showing ${filteredItems.length} of ${items.length} ${items.length === 1 ? \"task\" : \"tasks\"}`;",
+          "mutated": "const summary = `Showing ${filteredItems.length} of ${items.length} ${items.length !== 1 ? \"task\" : \"tasks\"}`;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 192,
+          "operator": "texto",
+          "original": "<p className=\"tasks-summary\">{summary}</p>",
+          "mutated": "<p className=\"tasks-summary·X\">{summary}</p>",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 196,
+          "operator": "texto",
+          "original": "<p>No tasks match the current filters.</p>",
+          "mutated": "<p>No tasks match the current filters.·X</p>",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.67
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "tests/evoguard/T002.test.jsx",
+      "mutants": [
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 33,
+          "operator": "borrado",
+          "original": "this.clearFilters = this.clearFilters.bind(this);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 96,
+          "operator": "igualdad",
+          "original": "return this.state.showStatus !== \"All\" || this.state.showKind !== \"All\" || this.state.searchDescription !== \"\";",
+          "mutated": "return this.state.showStatus === \"All\" || this.state.showKind !== \"All\" || this.state.searchDescription !== \"\";",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 100,
+          "operator": "texto",
+          "original": "this.setState({ showStatus: \"All\", showKind: \"All\", searchDescription: \"\" });",
+          "mutated": "this.setState({ showStatus: \"All·X\", showKind: \"All\", searchDescription: \"\" });",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 161,
+          "operator": "texto",
+          "original": "<Dropdown.Item onClick={() => this.setState({ showStatus: \"Success\" })}>Success</Dropdown.Item>",
+          "mutated": "<Dropdown.Item onClick={() => this.setState({ showStatus: \"Success·X\" })}>Success</Dropdown.Item>",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 162,
+          "operator": "texto",
+          "original": "<Dropdown.Item onClick={() => this.setState({ showStatus: \"Canceled\" })}>Canceled</Dropdown.Item>",
+          "mutated": "<Dropdown.Item onClick={() => this.setState({ showStatus: \"Canceled·X\" })}>Canceled</Dropdown.Item>",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 193,
+          "operator": "lógico",
+          "original": "{this.filtersActive() && (",
+          "mutated": "{this.filtersActive() || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 194,
+          "operator": "texto",
+          "original": "<Col xs=\"auto\">",
+          "mutated": "<Col xs=\"auto·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 195,
+          "operator": "texto",
+          "original": "<Button size=\"sm\" variant=\"secondary\" onClick={this.clearFilters}>",
+          "mutated": "<Button size=\"sm·X\" variant=\"secondary\" onClick={this.clearFilters}>",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 6,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "tests/evoguard/T003.test.jsx",
+      "mutants": [
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 29,
+          "operator": "booleano",
+          "original": "cancelling: false,",
+          "mutated": "cancelling: true,",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 108,
+          "operator": "igualdad",
+          "original": "const running = visibleItems.filter((t) => t.status === \"RUNNING\");",
+          "mutated": "const running = visibleItems.filter((t) => t.status !== \"RUNNING\");",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 115,
+          "operator": "aritmético",
+          "original": "const requests = running.map((t) => axios.post(\"/api/v1/tasks/\" + t.id + \"/cancel\", {}));",
+          "mutated": "const requests = running.map((t) => axios.post(\"/api/v1/tasks/\" - t.id + \"/cancel\", {}));",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 119,
+          "operator": "igualdad",
+          "original": "const noun = total === 1 ? \"task\" : \"tasks\";",
+          "mutated": "const noun = total !== 1 ? \"task\" : \"tasks\";",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 123,
+          "operator": "texto",
+          "original": "cancelError: failed ? `Could not cancel ${failed} of ${total} ${noun}.` : null,",
+          "mutated": "cancelError: failed ? `Could not cancel ·X${failed} of ${total} ${noun}.` : null,",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 170,
+          "operator": "igualdad",
+          "original": "const hasRunning = filteredItems.some((t) => t.status === \"RUNNING\");",
+          "mutated": "const hasRunning = filteredItems.some((t) => t.status !== \"RUNNING\");",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 228,
+          "operator": "texto",
+          "original": "<Col xs=\"auto\">",
+          "mutated": "<Col xs=\"auto·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/pages/Tasks.jsx",
+          "line": 231,
+          "operator": "texto",
+          "original": "variant=\"danger\"",
+          "mutated": "variant=\"danger·X\"",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 6,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    }
+  ],
+  "score": 0.74,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/pages/Tasks.jsx",
+      "line": 192,
+      "operator": "texto",
+      "original": "<p className=\"tasks-summary\">{summary}</p>",
+      "mutated": "<p className=\"tasks-summary·X\">{summary}</p>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/pages/Tasks.jsx",
+      "line": 194,
+      "operator": "texto",
+      "original": "<Col xs=\"auto\">",
+      "mutated": "<Col xs=\"auto·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/pages/Tasks.jsx",
+      "line": 195,
+      "operator": "texto",
+      "original": "<Button size=\"sm\" variant=\"secondary\" onClick={this.clearFilters}>",
+      "mutated": "<Button size=\"sm·X\" variant=\"secondary\" onClick={this.clearFilters}>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/pages/Tasks.jsx",
+      "line": 228,
+      "operator": "texto",
+      "original": "<Col xs=\"auto\">",
+      "mutated": "<Col xs=\"auto·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/pages/Tasks.jsx",
+      "line": 231,
+      "operator": "texto",
+      "original": "variant=\"danger\"",
+      "mutated": "variant=\"danger·X\"",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:03:06.836Z"
+}

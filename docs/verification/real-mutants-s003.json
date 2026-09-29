@@ -1,0 +1,304 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S003",
+  "image_id": "sha256:b761a51d4fb4ee6d3fa01cb9b20a19370b2a0d5f45eb1e4c17875594be4a0b2e",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:06:05.291Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 104,
+          "operator": "texto",
+          "original": "const standardLevels = [\"Very weak\", \"Weak\", \"Fair\", \"Strong\"];",
+          "mutated": "const standardLevels = [\"Very weak·X\", \"Weak\", \"Fair\", \"Strong\"];",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 105,
+          "operator": "texto",
+          "original": "const zxcvbnLevels = [\"Very weak\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+          "mutated": "const zxcvbnLevels = [\"Very weak·X\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 146,
+          "operator": "igualdad",
+          "original": "const showLevel = props.value !== \"\" && (mode === PasswordPolicyMode.Standard || mode === PasswordPolicyMode.ZXCVBN);",
+          "mutated": "const showLevel = props.value !== \"\" && (mode !== PasswordPolicyMode.Standard || mode === PasswordPolicyMode.ZXCVBN);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 156,
+          "operator": "texto",
+          "original": "role=\"progressbar\"",
+          "mutated": "role=\"progressbar·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 157,
+          "operator": "texto",
+          "original": "aria-label={translate(\"Password strength\")}",
+          "mutated": "aria-label={translate(\"Password strength·X\")}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 168,
+          "operator": "lógico",
+          "original": "{showLevel && (",
+          "mutated": "{showLevel || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 169,
+          "operator": "texto",
+          "original": "<p className=\"text-[0.7rem] text-left\">",
+          "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 170,
+          "operator": "texto",
+          "original": "{`${translate(\"Strength\")}: ${translate(levels[passwordScore])}`}",
+          "mutated": "{`${translate(\"Strength·X\")}: ${translate(levels[passwordScore])}`}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 6,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 106,
+          "operator": "relacional",
+          "original": "if (policy.min_length > 0) {",
+          "mutated": "if (policy.min_length <= 0) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 107,
+          "operator": "relacional",
+          "original": "items.push({ label: \"At least {{len}} characters\", met: password.length >= policy.min_length, options: { len: policy.min_length } });",
+          "mutated": "items.push({ label: \"At least {{len}} characters\", met: password.length < policy.min_length, options: { len: policy.min_length } });",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 110,
+          "operator": "relacional",
+          "original": "items.push({ label: \"At most {{len}} characters\", met: password.length <= policy.max_length, options: { len: policy.max_length } });",
+          "mutated": "items.push({ label: \"At most {{len}} characters\", met: password.length > policy.max_length, options: { len: policy.max_length } });",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 112,
+          "operator": "negación",
+          "original": "if (policy.require_lowercase) items.push({ label: \"One lowercase letter\", met: /[a-z]/.test(password) });",
+          "mutated": "if (!policy.require_lowercase) items.push({ label: \"One lowercase letter\", met: /[a-z]/.test(password) });",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 114,
+          "operator": "negación",
+          "original": "if (policy.require_number) items.push({ label: \"One number\", met: /\\d/.test(password) });",
+          "mutated": "if (!policy.require_number) items.push({ label: \"One number\", met: /\\d/.test(password) });",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 116,
+          "operator": "retorno",
+          "original": "return items;",
+          "mutated": "return undefined as any;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 164,
+          "operator": "igualdad",
+          "original": "props.policy && mode === PasswordPolicyMode.Standard ? getRequirements(props.value, props.policy) : [];",
+          "mutated": "props.policy && mode !== PasswordPolicyMode.Standard ? getRequirements(props.value, props.policy) : [];",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 191,
+          "operator": "texto",
+          "original": "<ul aria-label={translate(\"Password requirements\")} className=\"text-[0.7rem] text-left\">",
+          "mutated": "<ul aria-label={translate(\"Password requirements·X\")} className=\"text-[0.7rem] text-left\">",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 8,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 16,
+          "operator": "borrado",
+          "original": "onValidityChange?: (_valid: boolean) => void;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 167,
+          "operator": "relacional",
+          "original": "const belowMinScore = isZXCVBN && passwordScore < minScore;",
+          "mutated": "const belowMinScore = isZXCVBN && passwordScore >= minScore;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 168,
+          "operator": "igualdad",
+          "original": "const valid = mode === PasswordPolicyMode.Standard ? requirements.every((r) => r.met) : !belowMinScore;",
+          "mutated": "const valid = mode !== PasswordPolicyMode.Standard ? requirements.every((r) => r.met) : !belowMinScore;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 172,
+          "operator": "borrado",
+          "original": "onValidityChange?.(valid);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 199,
+          "operator": "igualdad",
+          "original": "{isZXCVBN && props.value !== \"\" && belowMinScore && (",
+          "mutated": "{isZXCVBN && props.value === \"\" && belowMinScore && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 200,
+          "operator": "texto",
+          "original": "<p className=\"text-[0.7rem] text-left\">",
+          "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 201,
+          "operator": "texto",
+          "original": "{`${translate(\"Minimum strength required\")}: ${translate(",
+          "mutated": "{`${translate(\"Minimum strength required·X\")}: ${translate(",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/PasswordMeter.tsx",
+          "line": 202,
+          "operator": "aritmético",
+          "original": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length - 1)],",
+          "mutated": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length + 1)],",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 6,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 3,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.63
+    }
+  ],
+  "score": 0.79,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 105,
+      "operator": "texto",
+      "original": "const zxcvbnLevels = [\"Very weak\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+      "mutated": "const zxcvbnLevels = [\"Very weak·X\", \"Weak\", \"Fair\", \"Good\", \"Strong\"];",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 169,
+      "operator": "texto",
+      "original": "<p className=\"text-[0.7rem] text-left\">",
+      "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 16,
+      "operator": "borrado",
+      "original": "onValidityChange?: (_valid: boolean) => void;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 200,
+      "operator": "texto",
+      "original": "<p className=\"text-[0.7rem] text-left\">",
+      "mutated": "<p className=\"text-[0.7rem] text-left·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/PasswordMeter.tsx",
+      "line": 202,
+      "operator": "aritmético",
+      "original": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length - 1)],",
+      "mutated": "zxcvbnLevels[Math.min(minScore, zxcvbnLevels.length + 1)],",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:08:42.576Z"
+}

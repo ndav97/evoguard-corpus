@@ -1,0 +1,238 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S009",
+  "image_id": "sha256:89f4e0423ea070e47c4d7c29f2faf8b3aef572e58243a109c36f80ba32c8f6df",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:18:59.816Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.jsx",
+      "mutants": [
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 44,
+          "operator": "texto",
+          "original": "aria-label={viewingPercentChange ? t(\"stocks.show_price\") : t(\"stocks.show_percent_change\")}",
+          "mutated": "aria-label={viewingPercentChange ? t(\"stocks.show_price·X\") : t(\"stocks.show_percent_change\")}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 45,
+          "operator": "texto",
+          "original": "title={viewingPercentChange ? t(\"stocks.show_price\") : t(\"stocks.show_percent_change\")}",
+          "mutated": "title={viewingPercentChange ? t(\"stocks.show_price·X\") : t(\"stocks.show_percent_change\")}",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.5
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.jsx",
+      "mutants": [
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 18,
+          "operator": "igualdad",
+          "original": "if (sort === \"ticker\") {",
+          "mutated": "if (sort !== \"ticker\") {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 20,
+          "operator": "texto",
+          "original": "displayTicker(a).localeCompare(displayTicker(b), undefined, { sensitivity: \"base\" }),",
+          "mutated": "displayTicker(a).localeCompare(displayTicker(b), undefined, { sensitivity: \"base·X\" }),",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 21,
+          "operator": "borrado",
+          "original": ");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 23,
+          "operator": "igualdad",
+          "original": "if (sort === \"change\") {",
+          "mutated": "if (sort !== \"change\") {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 25,
+          "operator": "igualdad",
+          "original": "const aNull = a.percentChange === null || a.percentChange === undefined;",
+          "mutated": "const aNull = a.percentChange !== null || a.percentChange === undefined;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 26,
+          "operator": "igualdad",
+          "original": "const bNull = b.percentChange === null || b.percentChange === undefined;",
+          "mutated": "const bNull = b.percentChange !== null || b.percentChange === undefined;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 27,
+          "operator": "lógico",
+          "original": "if (aNull || bNull) return Number(aNull) - Number(bNull);",
+          "mutated": "if (aNull && bNull) return Number(aNull) - Number(bNull);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 28,
+          "operator": "aritmético",
+          "original": "return b.percentChange - a.percentChange;",
+          "mutated": "return b.percentChange + a.percentChange;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 7,
+        "SURVIVED": 0,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.jsx",
+      "mutants": [
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 14,
+          "operator": "texto",
+          "original": "export const viewStorageKey = (watchlist) => `homepage-stocks-view:${watchlist}`;",
+          "mutated": "export const viewStorageKey = (watchlist) => `homepage-stocks-view:·X${watchlist}`;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 17,
+          "operator": "borrado",
+          "original": "if (!watchlist) return null;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 19,
+          "operator": "igualdad",
+          "original": "return typeof window !== \"undefined\" ? window.localStorage.getItem(viewStorageKey(watchlist)) : null;",
+          "mutated": "return typeof window === \"undefined\" ? window.localStorage.getItem(viewStorageKey(watchlist)) : null;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 21,
+          "operator": "retorno",
+          "original": "return null;",
+          "mutated": "return undefined;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 26,
+          "operator": "borrado",
+          "original": "if (!watchlist) return;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 28,
+          "operator": "borrado",
+          "original": "window.localStorage.setItem(viewStorageKey(watchlist), view);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 63,
+          "operator": "igualdad",
+          "original": "setViewingPercentChange(readStoredView(options.watchlist) === \"percent\");",
+          "mutated": "setViewingPercentChange(readStoredView(options.watchlist) !== \"percent\");",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 68,
+          "operator": "borrado",
+          "original": "setViewingPercentChange(next);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 6,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    }
+  ],
+  "score": 0.82,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/widgets/stocks/stocks.jsx",
+      "line": 45,
+      "operator": "texto",
+      "original": "title={viewingPercentChange ? t(\"stocks.show_price\") : t(\"stocks.show_percent_change\")}",
+      "mutated": "title={viewingPercentChange ? t(\"stocks.show_price·X\") : t(\"stocks.show_percent_change\")}",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/widgets/stocks/stocks.jsx",
+      "line": 17,
+      "operator": "borrado",
+      "original": "if (!watchlist) return null;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/widgets/stocks/stocks.jsx",
+      "line": 21,
+      "operator": "retorno",
+      "original": "return null;",
+      "mutated": "return undefined;",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:19:54.909Z"
+}

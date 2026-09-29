@@ -1,0 +1,340 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S004",
+  "image_id": "sha256:0d9c1a9ec1ce8e5ed3bc67164d5b7111cf0a72f8c0ebff7e62a3a09cfb0a15d5",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:08:42.719Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 69,
+          "operator": "igualdad",
+          "original": "statisticsTarget === DEFAULTS.statisticsTarget &&",
+          "mutated": "statisticsTarget !== DEFAULTS.statisticsTarget &&",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 70,
+          "operator": "igualdad",
+          "original": "elemsPerRow === DEFAULTS.elemsPerRow &&",
+          "mutated": "elemsPerRow !== DEFAULTS.elemsPerRow &&",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 71,
+          "operator": "igualdad",
+          "original": "confidence === DEFAULTS.confidence &&",
+          "mutated": "confidence !== DEFAULTS.confidence &&",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 75,
+          "operator": "borrado",
+          "original": "setStatisticsTarget(DEFAULTS.statisticsTarget);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 76,
+          "operator": "borrado",
+          "original": "setElemsPerRow(DEFAULTS.elemsPerRow);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 77,
+          "operator": "borrado",
+          "original": "setConfidence(DEFAULTS.confidence);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 97,
+          "operator": "texto",
+          "original": "<Group justify=\"space-between\" mb=\"md\">",
+          "mutated": "<Group justify=\"space-between·X\" mb=\"md\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 98,
+          "operator": "texto",
+          "original": "<Title order={4}>Inputs</Title>",
+          "mutated": "<Title order={4}>Inputs·X</Title>",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 3,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.63
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 83,
+          "operator": "igualdad",
+          "original": "typeof statisticsTarget === 'number' && (statisticsTarget < 100 || statisticsTarget > 10000)",
+          "mutated": "typeof statisticsTarget !== 'number' && (statisticsTarget < 100 || statisticsTarget > 10000)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 84,
+          "operator": "texto",
+          "original": "? 'Must be between 100 and 10000'",
+          "mutated": "? 'Must be between 100 and 10000·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 87,
+          "operator": "igualdad",
+          "original": "typeof elemsPerRow === 'number' && (elemsPerRow < 1 || elemsPerRow > 1000)",
+          "mutated": "typeof elemsPerRow !== 'number' && (elemsPerRow < 1 || elemsPerRow > 1000)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 88,
+          "operator": "texto",
+          "original": "? 'Must be between 1 and 1000'",
+          "mutated": "? 'Must be between 1 and 1000·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 92,
+          "operator": "texto",
+          "original": "? 'Must be greater than 0 and less than 1'",
+          "mutated": "? 'Must be greater than 0 and less than 1·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 95,
+          "operator": "igualdad",
+          "original": "typeof selectivityOverride === 'number' && (selectivityOverride <= 0 || selectivityOverride > 1)",
+          "mutated": "typeof selectivityOverride !== 'number' && (selectivityOverride <= 0 || selectivityOverride > 1)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 96,
+          "operator": "texto",
+          "original": "? 'Must be greater than 0 and at most 1'",
+          "mutated": "? 'Must be greater than 0 and at most 1·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 99,
+          "operator": "igualdad",
+          "original": "const hasErrors = Object.values(errors).some((e) => e !== undefined);",
+          "mutated": "const hasErrors = Object.values(errors).some((e) => e === undefined);",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 8,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 74,
+          "operator": "booleano",
+          "original": "const [copied, setCopied] = useState(false);",
+          "mutated": "const [copied, setCopied] = useState(true);",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 206,
+          "operator": "texto",
+          "original": "<Paper withBorder p=\"md\">",
+          "mutated": "<Paper withBorder p=\"md·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 207,
+          "operator": "texto",
+          "original": "<Group justify=\"space-between\">",
+          "mutated": "<Group justify=\"space-between·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 208,
+          "operator": "texto",
+          "original": "<Text fw={700}>{`Recommended M: ${Math.ceil(results.targetM)}`}</Text>",
+          "mutated": "<Text fw={700}>{`Recommended M: ·X${Math.ceil(results.targetM)}`}</Text>",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 210,
+          "operator": "texto",
+          "original": "size=\"xs\"",
+          "mutated": "size=\"xs·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 211,
+          "operator": "texto",
+          "original": "variant=\"default\"",
+          "mutated": "variant=\"default·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 215,
+          "operator": "booleano",
+          "original": ".then(() => setCopied(true))",
+          "mutated": ".then(() => setCopied(false))",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 216,
+          "operator": "booleano",
+          "original": ".catch(() => setCopied(false));",
+          "mutated": ".catch(() => setCopied(true));",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 6,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.25
+    }
+  ],
+  "score": 0.63,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 76,
+      "operator": "borrado",
+      "original": "setElemsPerRow(DEFAULTS.elemsPerRow);",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 97,
+      "operator": "texto",
+      "original": "<Group justify=\"space-between\" mb=\"md\">",
+      "mutated": "<Group justify=\"space-between·X\" mb=\"md\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 98,
+      "operator": "texto",
+      "original": "<Title order={4}>Inputs</Title>",
+      "mutated": "<Title order={4}>Inputs·X</Title>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 74,
+      "operator": "booleano",
+      "original": "const [copied, setCopied] = useState(false);",
+      "mutated": "const [copied, setCopied] = useState(true);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 206,
+      "operator": "texto",
+      "original": "<Paper withBorder p=\"md\">",
+      "mutated": "<Paper withBorder p=\"md·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 207,
+      "operator": "texto",
+      "original": "<Group justify=\"space-between\">",
+      "mutated": "<Group justify=\"space-between·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 210,
+      "operator": "texto",
+      "original": "size=\"xs\"",
+      "mutated": "size=\"xs·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 211,
+      "operator": "texto",
+      "original": "variant=\"default\"",
+      "mutated": "variant=\"default·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/admin/db/ArrayColumnPadding.tsx",
+      "line": 216,
+      "operator": "booleano",
+      "original": ".catch(() => setCopied(false));",
+      "mutated": ".catch(() => setCopied(true));",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:11:52.596Z"
+}

@@ -1,0 +1,314 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S006",
+  "image_id": "sha256:a2dd14d8f14b0c5afa305ee779bac41927058f4ea1b634de41ce19a479564c6f",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:13:56.330Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 23,
+          "operator": "igualdad",
+          "original": "const num = (v: unknown) => (typeof v === \"number\" && !isNaN(v) ? v : 0);",
+          "mutated": "const num = (v: unknown) => (typeof v !== \"number\" && !isNaN(v) ? v : 0);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 33,
+          "operator": "aritmético",
+          "original": "const total = hour * 3600000 + min * 60000 + sec * 1000 + ms;",
+          "mutated": "const total = hour * 3600000 - min * 60000 + sec * 1000 + ms;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 38,
+          "operator": "texto",
+          "original": "return `${positive ? \"+\" : \"-\"}${pad(h)}:${pad(m)}:${pad(s)}.${pad(r, 3)}`;",
+          "mutated": "return `${positive ? \"+\" : ·X\"-\"}${pad(h)}:${pad(m)}:${pad(s)}.${pad(r, 3)}`;",
+          "result": "COMPILE"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 113,
+          "operator": "texto",
+          "original": "aria-label={form.values.positive ? \"Shift later\" : \"Shift earlier\"}",
+          "mutated": "aria-label={form.values.positive ? \"Shift later·X\" : \"Shift earlier\"}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 143,
+          "operator": "lógico",
+          "original": "{enabled && (",
+          "mutated": "{enabled || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 144,
+          "operator": "texto",
+          "original": "<Text size=\"sm\">",
+          "mutated": "<Text size=\"sm·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 145,
+          "operator": "texto",
+          "original": "{`Offset: ${formatOffset(",
+          "mutated": "{`Offset: ·X${formatOffset(",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 1,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 0.83
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 91,
+          "operator": "borrado",
+          "original": "num(form.values.ms);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 94,
+          "operator": "texto",
+          "original": "[\"+100 ms\", 100],",
+          "mutated": "[\"+100 ms·X\", 100],",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 95,
+          "operator": "texto",
+          "original": "[\"+1 s\", 1000],",
+          "mutated": "[\"+1 s·X\", 1000],",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 96,
+          "operator": "texto",
+          "original": "[\"+1 min\", 60000],",
+          "mutated": "[\"+1 min·X\", 60000],",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 97,
+          "operator": "borrado",
+          "original": "];",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 164,
+          "operator": "texto",
+          "original": "<Group gap=\"xs\">",
+          "mutated": "<Group gap=\"xs·X\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 168,
+          "operator": "texto",
+          "original": "size=\"xs\"",
+          "mutated": "size=\"xs·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 169,
+          "operator": "texto",
+          "original": "variant=\"light\"",
+          "mutated": "variant=\"light·X\"",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 4,
+        "SURVIVED": 3,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 0.57
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 93,
+          "operator": "texto",
+          "original": "const withNormalizeOnBlur = (field: \"hour\" | \"min\" | \"sec\" | \"ms\") => {",
+          "mutated": "const withNormalizeOnBlur = (field: \"hour·X\" | \"min\" | \"sec\" | \"ms\") => {",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 98,
+          "operator": "borrado",
+          "original": "props.onBlur?.(event);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 99,
+          "operator": "borrado",
+          "original": "setTotal(currentTotal());",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 123,
+          "operator": "borrado",
+          "original": "num(values.ms);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 167,
+          "operator": "texto",
+          "original": "{...withNormalizeOnBlur(\"hour\")}",
+          "mutated": "{...withNormalizeOnBlur(\"hour·X\")}",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 172,
+          "operator": "texto",
+          "original": "{...withNormalizeOnBlur(\"min\")}",
+          "mutated": "{...withNormalizeOnBlur(\"min·X\")}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 177,
+          "operator": "texto",
+          "original": "{...withNormalizeOnBlur(\"sec\")}",
+          "mutated": "{...withNormalizeOnBlur(\"sec·X\")}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/forms/TimeOffsetForm.tsx",
+          "line": 182,
+          "operator": "texto",
+          "original": "{...withNormalizeOnBlur(\"ms\")}",
+          "mutated": "{...withNormalizeOnBlur(\"ms·X\")}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 3,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.63
+    }
+  ],
+  "score": 0.67,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 144,
+      "operator": "texto",
+      "original": "<Text size=\"sm\">",
+      "mutated": "<Text size=\"sm·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 164,
+      "operator": "texto",
+      "original": "<Group gap=\"xs\">",
+      "mutated": "<Group gap=\"xs·X\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 168,
+      "operator": "texto",
+      "original": "size=\"xs\"",
+      "mutated": "size=\"xs·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 169,
+      "operator": "texto",
+      "original": "variant=\"light\"",
+      "mutated": "variant=\"light·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 93,
+      "operator": "texto",
+      "original": "const withNormalizeOnBlur = (field: \"hour\" | \"min\" | \"sec\" | \"ms\") => {",
+      "mutated": "const withNormalizeOnBlur = (field: \"hour·X\" | \"min\" | \"sec\" | \"ms\") => {",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 98,
+      "operator": "borrado",
+      "original": "props.onBlur?.(event);",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/forms/TimeOffsetForm.tsx",
+      "line": 167,
+      "operator": "texto",
+      "original": "{...withNormalizeOnBlur(\"hour\")}",
+      "mutated": "{...withNormalizeOnBlur(\"hour·X\")}",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:15:55.340Z"
+}

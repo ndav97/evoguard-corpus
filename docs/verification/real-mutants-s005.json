@@ -1,0 +1,273 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S005",
+  "image_id": "sha256:102f38a0132b91010bfcce0617fdab23e401eca9c261c96c29efd60a85aeb4e0",
+  "max_per_turn": 8,
+  "started_at": "2026-09-29T14:11:52.740Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 74,
+          "operator": "relacional",
+          "original": "{50 - inputValue.length <= 10 && (",
+          "mutated": "{50 - inputValue.length > 10 && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 75,
+          "operator": "texto",
+          "original": "<span className={styles[\"characters-remaining\"]} aria-live=\"polite\">",
+          "mutated": "<span className={styles[\"characters-remaining·X\"]} aria-live=\"polite\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 76,
+          "operator": "texto",
+          "original": "{l10n.getString(\"profile-label-characters-remaining\", {",
+          "mutated": "{l10n.getString(\"profile-label-characters-remaining·X\", {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 77,
+          "operator": "aritmético",
+          "original": "remaining: 50 - inputValue.length,",
+          "mutated": "remaining: 50 + inputValue.length,",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 27,
+          "operator": "booleano",
+          "original": "const cancelledRef = useRef(false);",
+          "mutated": "const cancelledRef = useRef(true);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 46,
+          "operator": "negación",
+          "original": "if (cancelledRef.current) {",
+          "mutated": "if (!cancelledRef.current) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 47,
+          "operator": "booleano",
+          "original": "cancelledRef.current = false;",
+          "mutated": "cancelledRef.current = true;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 59,
+          "operator": "igualdad",
+          "original": "if (event.key === \"Escape\") {",
+          "mutated": "if (event.key !== \"Escape\") {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 60,
+          "operator": "borrado",
+          "original": "event.preventDefault();",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 61,
+          "operator": "booleano",
+          "original": "cancelledRef.current = true;",
+          "mutated": "cancelledRef.current = false;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 62,
+          "operator": "borrado",
+          "original": "setInputValue(props.label);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 63,
+          "operator": "borrado",
+          "original": "inputRef.current?.blur();",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "mutants": [
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 59,
+          "operator": "borrado",
+          "original": "setInputValue(\"\");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 60,
+          "operator": "booleano",
+          "original": "setHasSaved(true);",
+          "mutated": "setHasSaved(false);",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 61,
+          "operator": "borrado",
+          "original": "props.onSubmit(\"\");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 95,
+          "operator": "igualdad",
+          "original": "{props.label !== \"\" && (",
+          "mutated": "{props.label === \"\" && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 97,
+          "operator": "texto",
+          "original": "type=\"button\"",
+          "mutated": "type=\"button·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 98,
+          "operator": "texto",
+          "original": "className={styles[\"remove-button\"]}",
+          "mutated": "className={styles[\"remove-button·X\"]}",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+          "line": 99,
+          "operator": "texto",
+          "original": "aria-label={l10n.getString(\"profile-label-remove\")}",
+          "mutated": "aria-label={l10n.getString(\"profile-label-remove·X\")}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0
+      },
+      "summary": {
+        "KILLED": 4,
+        "SURVIVED": 3,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.57
+    }
+  ],
+  "score": 0.68,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 75,
+      "operator": "texto",
+      "original": "<span className={styles[\"characters-remaining\"]} aria-live=\"polite\">",
+      "mutated": "<span className={styles[\"characters-remaining·X\"]} aria-live=\"polite\">",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 47,
+      "operator": "booleano",
+      "original": "cancelledRef.current = false;",
+      "mutated": "cancelledRef.current = true;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 60,
+      "operator": "borrado",
+      "original": "event.preventDefault();",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 60,
+      "operator": "booleano",
+      "original": "setHasSaved(true);",
+      "mutated": "setHasSaved(false);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 97,
+      "operator": "texto",
+      "original": "type=\"button\"",
+      "mutated": "type=\"button·X\"",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
+      "line": 98,
+      "operator": "texto",
+      "original": "className={styles[\"remove-button\"]}",
+      "mutated": "className={styles[\"remove-button·X\"]}",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-09-29T14:13:56.205Z"
+}
