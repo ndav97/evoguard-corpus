@@ -81,7 +81,7 @@ Commits en el PC (`evoguard-corpus`):
 
 ### Con modelos (usuario)
 1. ~~`npm run providers:diagnose`~~ Hecho el 2026-09-28: openai y google HEALTHY (9/10). anthropic FAILING (0/10) por prosa antes del JSON, porque Synterolink no aplica la salida estructurada. Corregido con la normalización acotada `prose_prefix`; con las muestras reales pasaría a 9/10 (`operational-decisions.md`, 2026-09-28). Falta:
-   - **repetir `npm run providers:diagnose -- anthropic`** para confirmarlo;
+   - segundo diagnóstico (2026-09-29): openai 10/10, google 9/10, anthropic 6/10 (DEGRADED). Los 4 rechazos son pseudo-llamadas XML. **Siguiente paso: `npm run providers -- probe`**, que prueba cinco variantes del transporte Anthropic (salida estructurada, nombre beta, herramienta forzada…) para elegir la que funcione en Synterolink;
    - **repetir `scripts\real\ensayar-familias.cmd`**, porque el cambio del protocolo desactualiza la huella de los ensayos S001–S010. Los ensayos sintético y S900 ya están reverificados.
 2. Banco de modelos locales en Vast.ai, elección de `local_a`/`local_b`, recongelado de `config/models.json` y recalibración del contexto. Con repositorios reales, valorar una ventana mayor que 8 192 tokens.
 3. Generar y auditar cada familia sintética:

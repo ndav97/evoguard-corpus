@@ -145,3 +145,28 @@ Decisión de Claude con autorización del usuario:
   - Reverificados en el entorno de Claude: el ensayo integral sintético y el ensayo semi-real de la familia de prueba S900, ambos en PASS.
   - Los ensayos de S001–S010 quedan desactualizados y hay que repetirlos en el PC (`scripts\real\ensayar-familias.cmd`); el preflight lo indica.
 
+### Segundo diagnóstico (2026-09-29 01:55 UTC, con la normalización `prose_prefix`)
+Evidencia: `.artifacts/providers/diagnose-2026-09-29T02-02-15-681Z.json`.
+
+| Proveedor | Válidas | Estado | Detalle |
+|---|---|---|---|
+| openai | 10/10 | HEALTHY | Todas sin normalizar; mediana 23 s |
+| anthropic | 6/10 | DEGRADED | Las 6 válidas llegaron con preámbulo en prosa. Los 4 rechazos son pseudo-llamadas XML (`<function_calls><invoke name="list_files">…`) |
+| google | 9/10 | HEALTHY | 8 con `markdown_fence`; 1 `INCOMPLETE_RESPONSE` (29 s) |
+
+La normalización funciona como se esperaba, pero Sonnet alterna entre JSON y el formato XML de herramientas: 1/10 en el primer diagnóstico y 4/10 en este. **No se añade una normalización para XML.** Convertir ese formato en una acción sería traducir, no quitar un envoltorio, y sería ambiguo con contenidos largos (`write_file`). La salida correcta es arreglar el transporte.
+
+Decisión: la herramienta de diagnóstico `npm run providers -- probe` (`runner/providers/probe.mjs`) prueba cinco variantes de petición a `/v1/messages` con el mismo contexto:
+
+| Variante | Qué pide |
+|---|---|
+| A | La actual: `output_config.format` |
+| B | El nombre beta `output_format` con `anthropic-beta: structured-outputs-2025-11-13` |
+| C | A sin razonamiento extendido |
+| D | Una herramienta `runner_action` con el esquema de acciones, `tool_choice: auto` y razonamiento adaptativo |
+| E | La herramienta forzada (`tool_choice: tool`), sin razonamiento extendido, porque la API no permite forzar herramienta con razonamiento extendido |
+
+Por llamada registra el estado HTTP (con el cuerpo del error recortado y redactado), los tipos de bloque, `stop_reason` y si la acción es válida. El adaptador no cambia hasta ver el resultado. Criterios para elegir la variante:
+1. La que dé ≥ 9/10 conservando el razonamiento, en el orden A, B, D.
+2. Si solo E funciona, se usará E y se documentará que Sonnet genera sin razonamiento extendido. Es una diferencia de configuración entre modelos que habría que declarar en el análisis.
+
