@@ -35,15 +35,32 @@ const MAX_FIELD = 262144;
 const fail = code => Object.assign(new Error(code), { code });
 const PATH = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))[A-Za-z0-9._@\-/ ]+$/;
 
-// Normalización acotada (documentada): solo espacios alrededor y un único bloque de código Markdown que envuelve
-// TODO el objeto. Cualquier otro texto alrededor del JSON sigue siendo inválido. Devuelve el modo aplicado.
+// Normalización acotada (documentada en docs/protocol-v1.1-actions.md). Se aceptan solo estas formas:
+//  - espacios alrededor (`whitespace`);
+//  - un único bloque de código Markdown que envuelve TODO el objeto (`markdown_fence`);
+//  - desde el 2026-09-28: un preámbulo en prosa seguido del objeto, en bloque (`prose_prefix_fence`) o suelto
+//    (`prose_prefix`). El preámbulo tiene como máximo PROSE_MAX caracteres, no contiene llaves ni bloques de código
+//    (así no puede haber otro objeto candidato) y el objeto empieza en línea propia y llega hasta el final: nada
+//    después. La prosa se descarta sin interpretarla; se registra su longitud.
+// Cualquier otra forma (texto después del JSON, varios objetos, pseudo-llamadas XML, JSON dentro de la prosa) sigue
+// siendo INVALID_ACTION_JSON.
+export const PROSE_MAX = 2000;
+const FENCE = /^```(?:json|JSON)?[ \t]*\r?\n([\s\S]*?)\r?\n?```$/;
+const PROSE = /^((?:(?!```)[^{}])+?)\r?\n[ \t]*\r?\n?[ \t]*(```(?:json|JSON)?[ \t]*\r?\n[\s\S]*?\r?\n?```|\{[\s\S]*\})$/;
 export function extractJson(text) {
   if (typeof text !== 'string') throw fail('INVALID_ACTION_JSON');
   const trimmed = text.trim();
-  const fence = trimmed.match(/^```(?:json|JSON)?[ \t]*\r?\n([\s\S]*?)\r?\n?```$/);
-  const body = fence ? fence[1].trim() : trimmed;
-  try { return { value: JSON.parse(body), normalization: fence ? 'markdown_fence' : trimmed === text ? 'none' : 'whitespace' }; }
-  catch { throw fail('INVALID_ACTION_JSON'); }
+  const parse = (body, normalization, extra = {}) => {
+    try { return { value: JSON.parse(body), normalization, ...extra }; }
+    catch { throw fail('INVALID_ACTION_JSON'); }
+  };
+  const fence = trimmed.match(FENCE);
+  if (fence) return parse(fence[1].trim(), 'markdown_fence');
+  if (trimmed.startsWith('{')) return parse(trimmed, trimmed === text ? 'none' : 'whitespace');
+  const prose = trimmed.match(PROSE);
+  if (!prose || prose[1].trim().length > PROSE_MAX) throw fail('INVALID_ACTION_JSON');
+  const inner = prose[2].match(FENCE);
+  return parse(inner ? inner[1].trim() : prose[2], inner ? 'prose_prefix_fence' : 'prose_prefix', { discarded_chars: prose[1].trim().length });
 }
 
 // Valida y reduce la acción a sus campos significativos.
@@ -82,8 +99,8 @@ export function validateAction(action) {
 }
 
 export function parseAction(text) {
-  const { value, normalization } = extractJson(text);
-  return { action: validateAction(value), normalization };
+  const { value, normalization, discarded_chars } = extractJson(text);
+  return { action: validateAction(value), normalization, ...(discarded_chars ? { discarded_chars } : {}) };
 }
 
 // Resumen seguro del texto rechazado para diagnóstico: recorte, hash y redacción de posibles secretos.

@@ -113,3 +113,35 @@ Motivación: el corpus no puede basarse solo en datos sintéticos (indicación d
 - **Ensayos sin modelos**: `npm run real:rehearse -- --mini` (familia de prueba S900, sin red; valida el pipeline completo incluidos generación, auditoría y congelamiento) y `npm run real:rehearse -- Sxxx` / `scripts\real\ensayar-familias.cmd` con la imagen real de cada familia (los parches de referencia como constructor instrumental; en V1 además rechazos por alcance, por oráculo y una reparación visible). El preflight de cada familia exige ambos ensayos vigentes con la misma imagen y el mismo código.
 - **Auditoría semi-real**: historia por hash, alcance de cada parche, suite visible, búsqueda de fugas en la historia visible y oráculo con `policy.oracle_stability_runs` ejecuciones idénticas en PASS; `--freeze` fija `generation.status: FROZEN` con la evidencia.
 - **Normalizaciones de datos**: `focus` de S010 pasó a ser relativo a la raíz del repositorio como en las demás familias; se añadió el bloque `generation` (estado, plan, referencias) a cada `family.yaml`.
+
+## Diagnóstico de proveedores y preámbulo en prosa — 2026-09-28
+Evidencia: `npm run providers:diagnose` en el PC del usuario (protocolo 1.1, 5 rondas × 2 escenarios, `.artifacts/providers/diagnose-2026-09-28T22-38-36-914Z.json`).
+
+| Proveedor | Modelo | Acciones válidas | Estado | Rechazos |
+|---|---|---|---|---|
+| openai | gpt-5.6-sol | 9/10 | HEALTHY | 1 `INVALID_ACTION`: `read_file` con `content` no vacío (error del modelo) |
+| anthropic | claude-sonnet-5 | 0/10 | FAILING | 10 `INVALID_ACTION_JSON`: siempre una o dos frases de prosa antes de la acción |
+| google | gemini-3.1-pro-preview | 9/10 | HEALTHY | 1 `INVALID_ACTION_JSON`: `write_file` grande con escapes rotos en `content` (error del modelo); 4 aceptadas con `markdown_fence` |
+
+Diagnóstico de Sonnet: las 10 acciones eran correctas (`list_files` al inicio, `read_file src/App.tsx` tras el error de tipos). Solo cambiaba el envoltorio: 6 con prosa + bloque ```json, 3 con prosa + JSON suelto y 1 con una pseudo-llamada XML `<function_calls>`. El adaptador ya pide salida estructurada (`output_config.format` con el esquema de acciones), así que una respuesta con prosa indica que **Synterolink no aplica ese parámetro** en la ruta Messages. Es un problema de transporte, no de capacidad; rechazarlo dejaría a Sonnet fuera de todas sus versiones y sesgaría la comparación, como ya pasó en F001.
+
+Decisión de Claude con autorización del usuario:
+- **Nueva normalización acotada `prose_prefix` / `prose_prefix_fence`** (`runner/protocol/actions.mjs`), igual para los cinco modelos. Se acepta un preámbulo de prosa seguido de un único objeto JSON, suelto o en bloque ```json, con estas condiciones:
+  - el preámbulo tiene como máximo 2 000 caracteres y no contiene llaves ni bloques de código;
+  - el objeto empieza en línea propia y llega hasta el final de la respuesta.
+
+  La prosa se descarta sin interpretarla y su longitud se registra (`discarded_chars` en `calls.jsonl`). El diagnóstico cuenta estas respuestas aparte (`normalized_prose`).
+- **Siguen siendo inválidos:**
+  - texto después del JSON;
+  - varios objetos;
+  - JSON dentro de la prosa;
+  - pseudo-llamadas XML (1 de las 10 respuestas de Sonnet);
+  - JSON mal escapado.
+- **Efecto esperado con las muestras reales:** anthropic pasa de 0/10 a 9/10 (HEALTHY). openai y google no cambian, porque sus rechazos son errores reales de la acción.
+- **Medición:** la normalización es parte del protocolo registrado. En el análisis se podrá informar la tasa de respuestas normalizadas por modelo como indicador de adherencia al formato, separado de la calidad del código.
+- **F001 sigue sin tocar** (FROZEN con 1.0). Se mantiene la recomendación de regenerarla como revisión 2.
+- **Pendiente con Synterolink:** preguntar si la ruta `/v1/messages` admite `output_config.format` (o el nombre anterior `output_format`) para Sonnet 5. Si lo admite, la normalización deja de hacer falta en la práctica, pero se conserva por robustez.
+- **Evidencia afectada:** `actions.mjs` y `adapter.mjs` forman parte de la huella del pipeline.
+  - Reverificados en el entorno de Claude: el ensayo integral sintético y el ensayo semi-real de la familia de prueba S900, ambos en PASS.
+  - Los ensayos de S001–S010 quedan desactualizados y hay que repetirlos en el PC (`scripts\real\ensayar-familias.cmd`); el preflight lo indica.
+

@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:86d2d2adab3eb6c7801ff8f982ca28d01821b7e201ebdfb791a93e7a752485f0",
+  "image_id": "sha256:c79b1c224dc3680797517edba3bfb4af8807e18b6454abaa9990665ea4dc3de5",
   "experimental": false,
-  "started_at": "2026-09-28T16:26:37.601Z",
+  "started_at": "2026-09-29T00:15:38.596Z",
   "versions": {
     "V1": {
-      "task_id": "e2d88272-9699-45ec-bb73-b26cf1c95c99",
+      "task_id": "3675b017-c6b3-4593-9ef5-9508c5175aa3",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "879ff2e9eaf3bb9d7a389534c383df0a03418cd5"
     },
     "V2": {
-      "task_id": "d4f8dc9d-f60b-4c45-b5aa-9f57acb674fa",
+      "task_id": "e0545888-cfad-4d30-a8c7-0e307481e4e4",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "4b23cf8991cf4273e07f32dc2ca90f996ab1f985"
     },
     "V3": {
-      "task_id": "0e177bcb-4147-4bb0-8eaa-77565baa00ab",
+      "task_id": "bf0c2575-de5d-4075-9633-d7a44d127b68",
       "outcomes": [
         {
           "provider": "google",
@@ -119,7 +119,7 @@
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-09-28T16:27:17.742Z",
+  "finished_at": "2026-09-29T00:16:18.720Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {
@@ -134,11 +134,11 @@
   },
   "sources_sha256": {
     "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
-    "runner/protocol/actions.mjs": "595ed0f0d5763d738a218607447706a3acd0ceafd99c6d598d7bbf82ad002603",
+    "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/context/policy.mjs": "5b1316beca21a60ef91c681af0d06f77e43981c3e1f74678499fb4d023c7d492",
-    "runner/providers/adapter.mjs": "f6c7616e98909eaeeaf1f9a51f34ba8b236b004dea1b1d0c88e800b845cdcf21",
+    "runner/providers/adapter.mjs": "6a60aa2a7cf446de377bc836fc217383aa8270b15e5ec6df980b72c21025b605",
     "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
     "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
     "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",

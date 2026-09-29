@@ -48,7 +48,7 @@ Commits en el PC (`evoguard-corpus`):
   - entre 15 y 27 mutantes detectados por familia;
   - estabilidad 5/5 en V3.
 - **Pruebas y entorno:**
-  - `npm test` pasa 179/179.
+  - `npm test` pasa 200/200 (2026-09-28).
   - Las calibraciones de las familias se ejecutan aparte con `npm run test:calibration` (más de 1 h con 2 núcleos).
   - Entorno reverificado y ensayo integral en PASS con la imagen `sha256:3ed948d6…`.
   - El preflight queda despejado para F002–F010.
@@ -80,7 +80,9 @@ Commits en el PC (`evoguard-corpus`):
 5. **Documentación:** registrar en `operational-decisions.md` la decisión del estrato semi-real y los criterios de calibración de ambos estratos.
 
 ### Con modelos (usuario)
-1. `npm run providers:diagnose` cuando Synterolink confirme que el servicio funciona.
+1. ~~`npm run providers:diagnose`~~ Hecho el 2026-09-28: openai y google HEALTHY (9/10). anthropic FAILING (0/10) por prosa antes del JSON, porque Synterolink no aplica la salida estructurada. Corregido con la normalización acotada `prose_prefix`; con las muestras reales pasaría a 9/10 (`operational-decisions.md`, 2026-09-28). Falta:
+   - **repetir `npm run providers:diagnose -- anthropic`** para confirmarlo;
+   - **repetir `scripts\real\ensayar-familias.cmd`**, porque el cambio del protocolo desactualiza la huella de los ensayos S001–S010. Los ensayos sintético y S900 ya están reverificados.
 2. Banco de modelos locales en Vast.ai, elección de `local_a`/`local_b`, recongelado de `config/models.json` y recalibración del contexto. Con repositorios reales, valorar una ventana mayor que 8 192 tokens.
 3. Generar y auditar cada familia sintética:
    - `npm run generation:preflight -- Fxxx`

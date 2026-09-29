@@ -28,14 +28,14 @@ async function diagnose(args) {
     const config=models[provider];
     const row=report.providers[provider]={model:config.api_model_id,calls:[],summary:null};
     if(config.transport!=='ollama'&&!credentials[provider]){row.summary={status:'CREDENTIAL_MISSING'};console.log(`${provider}: sin credencial`);continue;}
-    const adapter=createProviderAdapter({provider,config,apiKey:credentials[provider],onCall:call=>row.calls.push({status:call.status,error_code:call.error_code,observed_model:call.observed_model,duration_ms:call.duration_ms,tokens:call.tokens,normalization:call.normalization??null,action_type:call.action_type??null,rejected_output:call.rejected_output??null})});
+    const adapter=createProviderAdapter({provider,config,apiKey:credentials[provider],onCall:call=>row.calls.push({status:call.status,error_code:call.error_code,observed_model:call.observed_model,duration_ms:call.duration_ms,tokens:call.tokens,normalization:call.normalization??null,discarded_chars:call.discarded_chars??null,action_type:call.action_type??null,rejected_output:call.rejected_output??null})});
     for(let round=0;round<rounds;round++) for(const scenario of scenarios) {
       try {await adapter.next({provider,attempt:1,cycle:round+1,packet,messages:scenario.messages},{timeout:300000});} catch { /* registrado en onCall */ }
       row.calls.at(-1).scenario=scenario.name;
     }
     const ok=row.calls.filter(c=>c.status==='PASS');
     const codes={};for(const c of row.calls.filter(c=>c.status!=='PASS'))codes[c.error_code]=(codes[c.error_code]??0)+1;
-    row.summary={calls:row.calls.length,valid_actions:ok.length,valid_rate:+(ok.length/row.calls.length).toFixed(2),errors:codes,normalized_fence:ok.filter(c=>c.normalization==='markdown_fence').length,actions:ok.map(c=>c.action_type),median_ms:row.calls.map(c=>c.duration_ms).sort((a,b)=>a-b)[Math.floor(row.calls.length/2)]};
+    row.summary={calls:row.calls.length,valid_actions:ok.length,valid_rate:+(ok.length/row.calls.length).toFixed(2),errors:codes,normalized_fence:ok.filter(c=>c.normalization==='markdown_fence').length,normalized_prose:ok.filter(c=>String(c.normalization).startsWith('prose_prefix')).length,actions:ok.map(c=>c.action_type),median_ms:row.calls.map(c=>c.duration_ms).sort((a,b)=>a-b)[Math.floor(row.calls.length/2)]};
     row.summary.status=row.summary.valid_rate>=0.9?'HEALTHY':row.summary.valid_rate>=0.5?'DEGRADED':'FAILING';
     console.log(`${provider}: ${row.summary.status} — ${ok.length}/${row.calls.length} acciones válidas ${JSON.stringify(codes)}`);
     const sample=row.calls.find(c=>c.rejected_output)?.rejected_output;

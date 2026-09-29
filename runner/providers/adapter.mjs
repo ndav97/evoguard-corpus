@@ -79,7 +79,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       let parsed;
       try {parsed=parseAction(text);}
       catch(error) {metadata.rejected_output=rejectedSample(text);throw error;}
-      metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;
+      metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;if(parsed.discarded_chars)metadata.discarded_chars=parsed.discarded_chars;
       metadata.status='PASS';return parsed.action;
     } catch(error) {
       metadata.error_code=combined.aborted?'REQUEST_ABORTED':(/^[A-Z_0-9]+$/.test(error.code??'')?error.code:'INVALID_RESPONSE');

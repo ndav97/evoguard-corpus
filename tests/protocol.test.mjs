@@ -40,6 +40,25 @@ test('normalización acotada: solo espacios y un bloque ```json que envuelve tod
   for (const bad of [`Aquí está: ${json}`, `${json}\nListo.`, '```json\n' + json + '\n```\nExplicación', '']) assert.throws(() => parseAction(bad), /INVALID_ACTION_JSON/);
 });
 
+test('normalización acotada: preámbulo en prosa seguido del objeto (muestras reales de Sonnet vía Synterolink)', () => {
+  const list = '{"type":"list_files","path":"","content":"","find":"","replace":"","argv":[]}';
+  const read = '{\n  "type": "read_file",\n  "path": "src/App.tsx",\n  "content": "",\n  "find": "",\n  "replace": "",\n  "argv": []\n}';
+  const intro = "I'll build a product catalog with search and category filter functionality. Let me start by exploring the repository structure.";
+  const fenced = parseAction(`${intro}\n\n\`\`\`json\n${list}\n\`\`\``);
+  assert.deepEqual(fenced, { action: { type: 'list_files', path: '' }, normalization: 'prose_prefix_fence', discarded_chars: intro.length });
+  assert.equal(parseAction(`${intro}\n\n${list}`).normalization, 'prose_prefix');
+  assert.equal(parseAction('I need to read the current `App.tsx` file:\n\n```json\n' + read + '\n```').action.path, 'src/App.tsx');
+  for (const bad of [
+    `${intro}\n\n<function_calls>\n<invoke name="list_files">\n<parameter name="path"></parameter>\n</invoke>\n</function_calls>`,
+    `${intro} ${list}`,                                   // sin línea propia
+    `${intro}\n\n${list}\n\nListo.`,                      // texto después
+    `${intro}\n\n${list}\n${list}`,                       // dos objetos
+    `Primero ${list} y luego:\n\n${list}`,                  // JSON dentro de la prosa
+    '```js\nx\n```\n\n' + list,                           // bloque de código en el preámbulo
+    'x'.repeat(2001) + '\n\n' + list                        // preámbulo demasiado largo
+  ]) assert.throws(() => parseAction(bad), /INVALID_ACTION_JSON/, bad.slice(0, 60));
+});
+
 test('el texto rechazado se conserva recortado, con hash y sin secretos', () => {
   const sample = rejectedSample('Claro, aquí va la acción sk-abcdefghijklmnopqrstuvwx y x-api-key: 123 ' + 'z'.repeat(5000));
   assert.equal(sample.length, 5070);
