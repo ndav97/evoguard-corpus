@@ -3,11 +3,13 @@
   "family_id": "S007",
   "image_id": "sha256:266b6c29fc0a366620ed405ebccaaa8e10d18fb9055f60bb1dacab471bc4c09b",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T14:15:55.452Z",
+  "started_at": "2026-09-29T15:26:10.610Z",
   "turns": [
     {
       "turn": "T001",
-      "hidden_tests": "js/evoguard/T001.test.tsx",
+      "hidden_tests": [
+        "js/evoguard/T001.test.tsx"
+      ],
       "mutants": [
         {
           "file": "js/dashboard/components/search-input.tsx",
@@ -48,14 +50,6 @@
           "original": "aria-label=\"Clear search\"",
           "mutated": "aria-label=\"Clear search·X\"",
           "result": "KILLED"
-        },
-        {
-          "file": "js/dashboard/components/search-input.tsx",
-          "line": 96,
-          "operator": "texto",
-          "original": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200\"",
-          "mutated": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200·X\"",
-          "result": "SURVIVED"
         }
       ],
       "baseline": {
@@ -65,15 +59,18 @@
       },
       "summary": {
         "KILLED": 3,
-        "SURVIVED": 1,
+        "SURVIVED": 0,
         "COMPILE": 2,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 1
     },
     {
       "turn": "T002",
-      "hidden_tests": "js/evoguard/T002.test.tsx",
+      "hidden_tests": [
+        "js/evoguard/T001.test.tsx",
+        "js/evoguard/T002.test.tsx"
+      ],
       "mutants": [
         {
           "file": "js/dashboard/components/search-input.tsx",
@@ -81,7 +78,7 @@
           "operator": "texto",
           "original": "placeholderUnfocusedOnlyDesktop = 'Press / to search',",
           "mutated": "placeholderUnfocusedOnlyDesktop = 'Press / to search·X',",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "js/dashboard/components/search-input.tsx",
@@ -126,20 +123,24 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 4,
+        "tests": 8,
         "failed": 0
       },
       "summary": {
-        "KILLED": 4,
-        "SURVIVED": 1,
+        "KILLED": 5,
+        "SURVIVED": 0,
         "COMPILE": 1,
         "ERROR": 0
       },
-      "score": 0.8
+      "score": 1
     },
     {
       "turn": "T003",
-      "hidden_tests": "js/evoguard/T003.test.tsx",
+      "hidden_tests": [
+        "js/evoguard/T001.test.tsx",
+        "js/evoguard/T002.test.tsx",
+        "js/evoguard/T003.test.tsx"
+      ],
       "mutants": [
         {
           "file": "js/dashboard/components/search-input.tsx",
@@ -152,7 +153,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 3,
+        "tests": 11,
         "failed": 0
       },
       "summary": {
@@ -164,26 +165,7 @@
       "score": 1
     }
   ],
-  "score": 0.8,
-  "survivors": [
-    {
-      "turn": "T001",
-      "file": "js/dashboard/components/search-input.tsx",
-      "line": 96,
-      "operator": "texto",
-      "original": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200\"",
-      "mutated": "className=\"absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200·X\"",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "js/dashboard/components/search-input.tsx",
-      "line": 16,
-      "operator": "texto",
-      "original": "placeholderUnfocusedOnlyDesktop = 'Press / to search',",
-      "mutated": "placeholderUnfocusedOnlyDesktop = 'Press / to search·X',",
-      "result": "SURVIVED"
-    }
-  ],
-  "finished_at": "2026-09-29T14:17:20.004Z"
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-09-29T15:28:04.737Z"
 }

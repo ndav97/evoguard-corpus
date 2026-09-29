@@ -50,4 +50,22 @@ Descontando los equivalentes, la puntuación es 136 / (136 + 20) = **0,87**. Si 
 - Cada mutante se evalúa con los tests ocultos de **T001..T00n**, como el oráculo de esa versión, y no solo con los del turno.
 - El operador de texto ya no muta props de estilo o identificación (`className`, `size`, `variant`, `controlId`…), claves de módulos CSS ni posiciones de tipo. Los literales se detectan con un analizador que respeta comillas y escapes.
 
-**Siguiente paso (PC):** `npm run real:mutants -- S001 … S010` con la herramienta y los tests nuevos. Confirma que cada referencia pasa los tests ampliados y da las puntuaciones definitivas.
+## Segunda ejecución (2026-09-29, 10:10–10:31 hora de Lima)
+
+Con la herramienta ajustada y los tests reforzados:
+- **Referencias:** las 30 pasan los tests ocultos ampliados de T001..T00n.
+- **Resultado:** 144 eliminados, 17 sobrevivientes, 8 que no compilan y 0 errores. **Puntuación bruta 0,89**; por familia, entre 0,80 (S010) y 1,00 (S007).
+
+Los 17 sobrevivientes:
+
+| Tipo | N | Detalle |
+|---|---|---|
+| Ya clasificados como equivalentes | 7 | S002 `type` sin formulario, S003 tipo TypeScript y clamp, S005 `preventDefault` de Escape, S006 `onBlur` del llamador, S008 tipo `Promise`, S009 `return null`→`undefined` y la guarda de `watchlist` |
+| Ya clasificados como no especificados | 4 | S004 `.catch`, S005 `setHasSaved`, S008 `setPending` en éxito, S009 `title` no pedido |
+| Nuevo, equivalente | 1 | S001 `bind` del método: el `onClick` usa una función flecha |
+| Nuevo, debilidad | 1 | S001 T003: el botón se quedaba deshabilitado al terminar. Corregido: el test de éxito exige que vuelva a estar habilitado («Mientras haya peticiones pendientes, el botón queda deshabilitado») |
+| Pendiente conocido | 3 | S010 T002, cableado de `applications-list.tsx` (test de integración por hacer) |
+
+Sin contar equivalentes ni no especificados, la puntuación es 144 / (144 + 4) = **0,97**. Tras el refuerzo de S001, los únicos sobrevivientes con debilidad real son los 3 de S010 T002.
+
+**Pendiente:** `npm run real:mutants -- S001` para confirmar el test nuevo, y el test de integración de S010 T002.

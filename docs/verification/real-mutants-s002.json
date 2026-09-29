@@ -3,11 +3,13 @@
   "family_id": "S002",
   "image_id": "sha256:1f5723cd18c02ded5e5cc1a117ce6c827dc0d416ea8376679d4e2bf7caa38a7e",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T14:03:06.961Z",
+  "started_at": "2026-09-29T15:12:29.861Z",
   "turns": [
     {
       "turn": "T001",
-      "hidden_tests": "src/evoguard/T001.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
@@ -27,18 +29,18 @@
         },
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-          "line": 40,
-          "operator": "texto",
-          "original": "<Form.Group controlId=\"bulk-history-search\">",
-          "mutated": "<Form.Group controlId=\"bulk-history-search·X\">",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
           "line": 41,
           "operator": "texto",
           "original": "<Form.Label>Search uploads</Form.Label>",
           "mutated": "<Form.Label>Search uploads·X</Form.Label>",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
+          "line": 44,
+          "operator": "relacional",
+          "original": "{total > 0 && (",
+          "mutated": "{total <= 0 && (",
           "result": "KILLED"
         },
         {
@@ -67,11 +69,11 @@
         },
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-          "line": 54,
-          "operator": "texto",
-          "original": "className=\"table-striped\"",
-          "mutated": "className=\"table-striped·X\"",
-          "result": "SURVIVED"
+          "line": 59,
+          "operator": "borrado",
+          "original": ");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
         }
       ],
       "baseline": {
@@ -80,16 +82,19 @@
         "failed": 0
       },
       "summary": {
-        "KILLED": 6,
-        "SURVIVED": 2,
-        "COMPILE": 0,
+        "KILLED": 7,
+        "SURVIVED": 0,
+        "COMPILE": 1,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 1
     },
     {
       "turn": "T002",
-      "hidden_tests": "src/evoguard/T002.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
@@ -125,14 +130,6 @@
         },
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-          "line": 47,
-          "operator": "texto",
-          "original": "<Form.Group controlId=\"bulk-history-uploader\">",
-          "mutated": "<Form.Group controlId=\"bulk-history-uploader·X\">",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
           "line": 48,
           "operator": "texto",
           "original": "<Form.Label>Uploaded by</Form.Label>",
@@ -158,20 +155,24 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 5,
+        "tests": 13,
         "failed": 0
       },
       "summary": {
         "KILLED": 7,
-        "SURVIVED": 1,
+        "SURVIVED": 0,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.88
+      "score": 1
     },
     {
       "turn": "T003",
-      "hidden_tests": "src/evoguard/T003.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx",
+        "src/evoguard/T003.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
@@ -191,72 +192,29 @@
         },
         {
           "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-          "line": 22,
-          "operator": "texto",
-          "original": "className=\"btn btn-link p-0 wrap-text-in-cell\"",
-          "mutated": "className=\"btn btn-link p-0 wrap-text-in-cell·X\"",
-          "result": "KILLED"
-        },
-        {
-          "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
           "line": 23,
           "operator": "texto",
           "original": "aria-label={`Show uploads by ${user}`}",
           "mutated": "aria-label={`Show uploads by ·X${user}`}",
           "result": "KILLED"
-        },
-        {
-          "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-          "line": 28,
-          "operator": "texto",
-          "original": ") : (<span className=\"wrap-text-in-cell\">{user}</span>),",
-          "mutated": ") : (<span className=\"wrap-text-in-cell·X\">{user}</span>),",
-          "result": "SURVIVED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 4,
+        "tests": 18,
         "failed": 0
       },
       "summary": {
-        "KILLED": 3,
-        "SURVIVED": 2,
+        "KILLED": 2,
+        "SURVIVED": 1,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.6
+      "score": 0.67
     }
   ],
-  "score": 0.76,
+  "score": 0.94,
   "survivors": [
-    {
-      "turn": "T001",
-      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-      "line": 40,
-      "operator": "texto",
-      "original": "<Form.Group controlId=\"bulk-history-search\">",
-      "mutated": "<Form.Group controlId=\"bulk-history-search·X\">",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T001",
-      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-      "line": 54,
-      "operator": "texto",
-      "original": "className=\"table-striped\"",
-      "mutated": "className=\"table-striped·X\"",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-      "line": 47,
-      "operator": "texto",
-      "original": "<Form.Group controlId=\"bulk-history-uploader\">",
-      "mutated": "<Form.Group controlId=\"bulk-history-uploader·X\">",
-      "result": "SURVIVED"
-    },
     {
       "turn": "T003",
       "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
@@ -265,16 +223,7 @@
       "original": "type=\"button\"",
       "mutated": "type=\"button·X\"",
       "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/components/BulkManagementHistoryView/HistoryTable.jsx",
-      "line": 28,
-      "operator": "texto",
-      "original": ") : (<span className=\"wrap-text-in-cell\">{user}</span>),",
-      "mutated": ") : (<span className=\"wrap-text-in-cell·X\">{user}</span>),",
-      "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T14:06:05.157Z"
+  "finished_at": "2026-09-29T15:15:56.256Z"
 }

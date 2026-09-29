@@ -102,6 +102,8 @@ describe("T003 · «Cancel all running tasks»", () => {
     await waitFor(() => expect(screen.getByText("Requested cancellation of 2 tasks.")).toBeInTheDocument());
     expect(cancelUrls()).toEqual(["/api/v1/tasks/t2/cancel", "/api/v1/tasks/t4/cancel"]);
     await waitFor(() => expect(taskFetches()).toBeGreaterThan(before));
+    // Añadido tras la segunda prueba de mutantes (2026-09-29): terminadas las peticiones, el botón vuelve a estar habilitado.
+    await waitFor(() => expect(cancelAll()).toBeEnabled());
   });
 
   test("respeta los filtros: solo cancela las tareas visibles", async () => {

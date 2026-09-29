@@ -3,11 +3,13 @@
   "family_id": "S004",
   "image_id": "sha256:0d9c1a9ec1ce8e5ed3bc67164d5b7111cf0a72f8c0ebff7e62a3a09cfb0a15d5",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T14:08:42.719Z",
+  "started_at": "2026-09-29T15:18:37.757Z",
   "turns": [
     {
       "turn": "T001",
-      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -35,6 +37,14 @@
         },
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 72,
+          "operator": "igualdad",
+          "original": "selectivityOverride === DEFAULTS.selectivityOverride;",
+          "mutated": "selectivityOverride !== DEFAULTS.selectivityOverride;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
           "line": 75,
           "operator": "borrado",
           "original": "setStatisticsTarget(DEFAULTS.statisticsTarget);",
@@ -47,7 +57,7 @@
           "operator": "borrado",
           "original": "setElemsPerRow(DEFAULTS.elemsPerRow);",
           "mutated": "/* evoguard-mutant */ void 0;",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -59,37 +69,32 @@
         },
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 97,
-          "operator": "texto",
-          "original": "<Group justify=\"space-between\" mb=\"md\">",
-          "mutated": "<Group justify=\"space-between·X\" mb=\"md\">",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 98,
-          "operator": "texto",
-          "original": "<Title order={4}>Inputs</Title>",
-          "mutated": "<Title order={4}>Inputs·X</Title>",
-          "result": "SURVIVED"
+          "line": 78,
+          "operator": "borrado",
+          "original": "setSelectivityOverride(DEFAULTS.selectivityOverride);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 4,
+        "tests": 5,
         "failed": 0
       },
       "summary": {
-        "KILLED": 5,
-        "SURVIVED": 3,
+        "KILLED": 8,
+        "SURVIVED": 0,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.63
+      "score": 1
     },
     {
       "turn": "T002",
-      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -158,7 +163,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 5,
+        "tests": 10,
         "failed": 0
       },
       "summary": {
@@ -171,7 +176,11 @@
     },
     {
       "turn": "T003",
-      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -179,23 +188,7 @@
           "operator": "booleano",
           "original": "const [copied, setCopied] = useState(false);",
           "mutated": "const [copied, setCopied] = useState(true);",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 206,
-          "operator": "texto",
-          "original": "<Paper withBorder p=\"md\">",
-          "mutated": "<Paper withBorder p=\"md·X\">",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 207,
-          "operator": "texto",
-          "original": "<Group justify=\"space-between\">",
-          "mutated": "<Group justify=\"space-between·X\">",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -204,22 +197,6 @@
           "original": "<Text fw={700}>{`Recommended M: ${Math.ceil(results.targetM)}`}</Text>",
           "mutated": "<Text fw={700}>{`Recommended M: ·X${Math.ceil(results.targetM)}`}</Text>",
           "result": "KILLED"
-        },
-        {
-          "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 210,
-          "operator": "texto",
-          "original": "size=\"xs\"",
-          "mutated": "size=\"xs·X\"",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/admin/db/ArrayColumnPadding.tsx",
-          "line": 211,
-          "operator": "texto",
-          "original": "variant=\"default\"",
-          "mutated": "variant=\"default·X\"",
-          "result": "SURVIVED"
         },
         {
           "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -236,96 +213,32 @@
           "original": ".catch(() => setCopied(false));",
           "mutated": ".catch(() => setCopied(true));",
           "result": "SURVIVED"
+        },
+        {
+          "file": "src/admin/db/ArrayColumnPadding.tsx",
+          "line": 222,
+          "operator": "lógico",
+          "original": "{copied && <Text size=\"sm\">Copied to clipboard</Text>}",
+          "mutated": "{copied || <Text size=\"sm\">Copied to clipboard</Text>}",
+          "result": "KILLED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 4,
+        "tests": 14,
         "failed": 0
       },
       "summary": {
-        "KILLED": 2,
-        "SURVIVED": 6,
+        "KILLED": 4,
+        "SURVIVED": 1,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.25
+      "score": 0.8
     }
   ],
-  "score": 0.63,
+  "score": 0.95,
   "survivors": [
-    {
-      "turn": "T001",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 76,
-      "operator": "borrado",
-      "original": "setElemsPerRow(DEFAULTS.elemsPerRow);",
-      "mutated": "/* evoguard-mutant */ void 0;",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T001",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 97,
-      "operator": "texto",
-      "original": "<Group justify=\"space-between\" mb=\"md\">",
-      "mutated": "<Group justify=\"space-between·X\" mb=\"md\">",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T001",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 98,
-      "operator": "texto",
-      "original": "<Title order={4}>Inputs</Title>",
-      "mutated": "<Title order={4}>Inputs·X</Title>",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 74,
-      "operator": "booleano",
-      "original": "const [copied, setCopied] = useState(false);",
-      "mutated": "const [copied, setCopied] = useState(true);",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 206,
-      "operator": "texto",
-      "original": "<Paper withBorder p=\"md\">",
-      "mutated": "<Paper withBorder p=\"md·X\">",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 207,
-      "operator": "texto",
-      "original": "<Group justify=\"space-between\">",
-      "mutated": "<Group justify=\"space-between·X\">",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 210,
-      "operator": "texto",
-      "original": "size=\"xs\"",
-      "mutated": "size=\"xs·X\"",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/admin/db/ArrayColumnPadding.tsx",
-      "line": 211,
-      "operator": "texto",
-      "original": "variant=\"default\"",
-      "mutated": "variant=\"default·X\"",
-      "result": "SURVIVED"
-    },
     {
       "turn": "T003",
       "file": "src/admin/db/ArrayColumnPadding.tsx",
@@ -336,5 +249,5 @@
       "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T14:11:52.596Z"
+  "finished_at": "2026-09-29T15:21:56.595Z"
 }

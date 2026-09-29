@@ -3,11 +3,13 @@
   "family_id": "S005",
   "image_id": "sha256:102f38a0132b91010bfcce0617fdab23e401eca9c261c96c29efd60a85aeb4e0",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T14:11:52.740Z",
+  "started_at": "2026-09-29T15:21:56.607Z",
   "turns": [
     {
       "turn": "T001",
-      "hidden_tests": "src/evoguard/T001.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -16,14 +18,6 @@
           "original": "{50 - inputValue.length <= 10 && (",
           "mutated": "{50 - inputValue.length > 10 && (",
           "result": "KILLED"
-        },
-        {
-          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-          "line": 75,
-          "operator": "texto",
-          "original": "<span className={styles[\"characters-remaining\"]} aria-live=\"polite\">",
-          "mutated": "<span className={styles[\"characters-remaining·X\"]} aria-live=\"polite\">",
-          "result": "SURVIVED"
         },
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -49,15 +43,18 @@
       },
       "summary": {
         "KILLED": 3,
-        "SURVIVED": 1,
+        "SURVIVED": 0,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 1
     },
     {
       "turn": "T002",
-      "hidden_tests": "src/evoguard/T002.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -81,7 +78,7 @@
           "operator": "booleano",
           "original": "cancelledRef.current = false;",
           "mutated": "cancelledRef.current = true;",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -126,20 +123,24 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 5,
+        "tests": 11,
         "failed": 0
       },
       "summary": {
-        "KILLED": 6,
-        "SURVIVED": 2,
+        "KILLED": 7,
+        "SURVIVED": 1,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 0.88
     },
     {
       "turn": "T003",
-      "hidden_tests": "src/evoguard/T003.test.tsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
       "mutants": [
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -179,15 +180,7 @@
           "operator": "texto",
           "original": "type=\"button\"",
           "mutated": "type=\"button·X\"",
-          "result": "SURVIVED"
-        },
-        {
-          "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-          "line": 98,
-          "operator": "texto",
-          "original": "className={styles[\"remove-button\"]}",
-          "mutated": "className={styles[\"remove-button·X\"]}",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -200,38 +193,20 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 4,
+        "tests": 15,
         "failed": 0
       },
       "summary": {
-        "KILLED": 4,
-        "SURVIVED": 3,
+        "KILLED": 5,
+        "SURVIVED": 1,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.57
+      "score": 0.83
     }
   ],
-  "score": 0.68,
+  "score": 0.88,
   "survivors": [
-    {
-      "turn": "T001",
-      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-      "line": 75,
-      "operator": "texto",
-      "original": "<span className={styles[\"characters-remaining\"]} aria-live=\"polite\">",
-      "mutated": "<span className={styles[\"characters-remaining·X\"]} aria-live=\"polite\">",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-      "line": 47,
-      "operator": "booleano",
-      "original": "cancelledRef.current = false;",
-      "mutated": "cancelledRef.current = true;",
-      "result": "SURVIVED"
-    },
     {
       "turn": "T002",
       "file": "src/components/dashboard/aliases/LabelEditor.tsx",
@@ -249,25 +224,7 @@
       "original": "setHasSaved(true);",
       "mutated": "setHasSaved(false);",
       "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-      "line": 97,
-      "operator": "texto",
-      "original": "type=\"button\"",
-      "mutated": "type=\"button·X\"",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/components/dashboard/aliases/LabelEditor.tsx",
-      "line": 98,
-      "operator": "texto",
-      "original": "className={styles[\"remove-button\"]}",
-      "mutated": "className={styles[\"remove-button·X\"]}",
-      "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T14:13:56.205Z"
+  "finished_at": "2026-09-29T15:24:00.371Z"
 }

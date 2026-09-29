@@ -3,11 +3,13 @@
   "family_id": "S009",
   "image_id": "sha256:89f4e0423ea070e47c4d7c29f2faf8b3aef572e58243a109c36f80ba32c8f6df",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T14:18:59.816Z",
+  "started_at": "2026-09-29T15:29:53.216Z",
   "turns": [
     {
       "turn": "T001",
-      "hidden_tests": "src/evoguard/T001.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/widgets/stocks/stocks.jsx",
@@ -41,7 +43,10 @@
     },
     {
       "turn": "T002",
-      "hidden_tests": "src/evoguard/T002.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/widgets/stocks/stocks.jsx",
@@ -49,14 +54,6 @@
           "operator": "igualdad",
           "original": "if (sort === \"ticker\") {",
           "mutated": "if (sort !== \"ticker\") {",
-          "result": "KILLED"
-        },
-        {
-          "file": "src/components/widgets/stocks/stocks.jsx",
-          "line": 20,
-          "operator": "texto",
-          "original": "displayTicker(a).localeCompare(displayTicker(b), undefined, { sensitivity: \"base\" }),",
-          "mutated": "displayTicker(a).localeCompare(displayTicker(b), undefined, { sensitivity: \"base·X\" }),",
           "result": "KILLED"
         },
         {
@@ -106,11 +103,19 @@
           "original": "return b.percentChange - a.percentChange;",
           "mutated": "return b.percentChange + a.percentChange;",
           "result": "KILLED"
+        },
+        {
+          "file": "src/components/widgets/stocks/stocks.jsx",
+          "line": 31,
+          "operator": "retorno",
+          "original": "return list;",
+          "mutated": "return undefined;",
+          "result": "KILLED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 5,
+        "tests": 9,
         "failed": 0
       },
       "summary": {
@@ -123,7 +128,11 @@
     },
     {
       "turn": "T003",
-      "hidden_tests": "src/evoguard/T003.test.jsx",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx",
+        "src/evoguard/T003.test.jsx"
+      ],
       "mutants": [
         {
           "file": "src/components/widgets/stocks/stocks.jsx",
@@ -192,7 +201,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 6,
+        "tests": 15,
         "failed": 0
       },
       "summary": {
@@ -234,5 +243,5 @@
       "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T14:19:54.909Z"
+  "finished_at": "2026-09-29T15:31:01.678Z"
 }
