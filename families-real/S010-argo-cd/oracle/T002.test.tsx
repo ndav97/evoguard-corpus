@@ -5,12 +5,49 @@ import * as React from 'react';
 import {ClusterCtx} from '../shared/components';
 import * as models from '../shared/models';
 import {ApplicationsSummary} from '../applications/components/applications-list/applications-summary';
+import {ApplicationsList} from '../applications/components/applications-list/applications-list';
+import {Context} from '../shared/context';
+import {services} from '../shared/services';
+import {BehaviorSubject, NEVER} from 'rxjs';
+
+const mockServices = services as unknown as {
+    clusters: {list: jest.Mock};
+    viewPreferences: {getPreferences: jest.Mock; updatePreferences: jest.Mock};
+    applications: {list: jest.Mock; watch: jest.Mock; get: jest.Mock};
+};
 
 jest.mock('react-svg-piechart', () => ({default: () => null}));
 jest.mock('../applications/components/utils', () => ({
+    ...jest.requireActual('../applications/components/utils'),
     ComparisonStatusIcon: () => null,
     HealthStatusIcon: () => null,
     HydrateOperationPhaseIcon: () => null
+}));
+
+// Integración con la lista (punto 6), añadida tras la prueba de mutantes (2026-09-29). Se sustituyen solo las
+// piezas de la página ajenas al resumen (marco, barra superior, paginación, filtros laterales) y los servicios.
+jest.mock('../shared/components', () => ({
+    ...jest.requireActual('../shared/components'),
+    Page: ({children}: any) => children,
+    FlexTopBar: () => null,
+    Paginate: () => null
+}));
+jest.mock('../applications/components/applications-list/applications-filter', () => ({
+    ...jest.requireActual('../applications/components/applications-list/applications-filter'),
+    ApplicationsFilter: () => null
+}));
+jest.mock('../applications/components/applications-list/view-type-switcher', () => ({ViewTypeSwitcher: () => null}));
+jest.mock('../sidebar/sidebar', () => ({
+    ...jest.requireActual('../sidebar/sidebar'),
+    useSidebarTarget: () => ({current: document.createElement('div')})
+}));
+jest.mock('../shared/services', () => ({
+    ...jest.requireActual('../shared/services'),
+    services: {
+        clusters: {list: jest.fn()},
+        viewPreferences: {getPreferences: jest.fn(), updatePreferences: jest.fn()},
+        applications: {list: jest.fn(), watch: jest.fn(), get: jest.fn()}
+    }
 }));
 
 const app = (name: string, sync: string, health: string, phase?: string) =>
@@ -94,5 +131,77 @@ describe('evoguard S010 T002 — legend filters', () => {
 
         expect(screen.queryAllByRole('button')).toHaveLength(0);
         expect(screen.getByText(/Synced \(3\)/)).toBeInTheDocument();
+    });
+});
+
+describe('evoguard S010 T002 — the list replaces its filter from the summary legend', () => {
+    const listApp = (name: string, sync: string, health: string) =>
+        ({
+            metadata: {name, namespace: 'argocd', labels: {}, annotations: {}, creationTimestamp: '2025-01-01T00:00:00Z'},
+            spec: {
+                project: 'default',
+                source: {repoURL: 'https://example.com/repo.git', path: '.', targetRevision: 'HEAD'},
+                destination: {server: 'https://kubernetes.default.svc', namespace: 'default'}
+            },
+            status: {sync: {status: sync}, health: {status: health}, summary: {}, resources: []}
+        }) as unknown as models.Application;
+    const appList = {
+        view: 'summary',
+        labelsFilter: [],
+        annotationsFilter: [],
+        projectsFilter: [],
+        namespacesFilter: [],
+        reposFilter: [],
+        targetRevisionFilter: [],
+        clustersFilter: [],
+        syncFilter: [],
+        autoSyncFilter: [],
+        healthFilter: [],
+        operationFilter: [],
+        favoritesAppList: [],
+        showFavorites: false,
+        hideFilters: false,
+        statusBarView: {showHealthStatusBar: true},
+        annotations: []
+    };
+
+    beforeEach(() => {
+        mockServices.clusters.list.mockReturnValue(Promise.resolve([]));
+        mockServices.viewPreferences.getPreferences.mockReturnValue(new BehaviorSubject({appList, hideSidebar: false}));
+        mockServices.viewPreferences.updatePreferences.mockReset();
+        mockServices.applications.list.mockReturnValue(
+            Promise.resolve({items: [listApp('a', 'Synced', 'Healthy'), listApp('b', 'OutOfSync', 'Healthy'), listApp('c', 'Synced', 'Degraded')], metadata: {resourceVersion: '1'}})
+        );
+        mockServices.applications.watch.mockReturnValue(NEVER);
+    });
+
+    const renderList = () =>
+        render(
+            <Context.Provider
+                value={
+                    {
+                        history: {location: {search: '?view=summary'}, listen: () => () => undefined},
+                        navigation: {goto: jest.fn()},
+                        popup: {confirm: jest.fn()},
+                        notifications: {show: jest.fn()}
+                    } as any
+                }>
+                <ApplicationsList {...({match: {url: '/applications'}, location: {search: '?view=summary'}, history: {}} as any)} />
+            </Context.Provider>
+        );
+    const lastAppList = () => mockServices.viewPreferences.updatePreferences.mock.calls.slice(-1)[0][0].appList;
+
+    it('a Sync legend entry replaces only the sync filter', async () => {
+        renderList();
+        fireEvent.click(await screen.findByRole('button', {name: 'OutOfSync (1)'}, {timeout: 4000}));
+        expect(lastAppList().syncFilter).toEqual(['OutOfSync']);
+        expect(lastAppList().healthFilter).toEqual([]);
+    });
+
+    it('a Health legend entry replaces only the health filter', async () => {
+        renderList();
+        fireEvent.click(await screen.findByRole('button', {name: 'Degraded (1)'}, {timeout: 4000}));
+        expect(lastAppList().healthFilter).toEqual(['Degraded']);
+        expect(lastAppList().syncFilter).toEqual([]);
     });
 });

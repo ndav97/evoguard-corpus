@@ -68,4 +68,6 @@ Los 17 sobrevivientes:
 
 Sin contar equivalentes ni no especificados, la puntuación es 144 / (144 + 4) = **0,97**. Tras el refuerzo de S001, los únicos sobrevivientes con debilidad real son los 3 de S010 T002.
 
-**Pendiente:** `npm run real:mutants -- S001` para confirmar el test nuevo, y el test de integración de S010 T002.
+**S001 verificado** (22:23 UTC): la referencia pasa los 20 tests ocultos, el mutante de la línea 121 se elimina y S001 queda en 0,93. Solo sobrevive el `bind`, que es equivalente. La escritura del informe falló con EPERM en Windows, así que el resultado se transcribió de la consola (campo `rerun_2026_09_29`).
+
+**S010 T002, test de integración escrito:** el código de `ui/src` se extrajo de la imagen. El test monta `ApplicationsList` en la vista Summary con los servicios simulados y sustituye solo el marco de la página, la barra superior, la paginación y los filtros laterales. Después pulsa `OutOfSync (1)` y `Degraded (1)` y comprueba que `updatePreferences` recibe el filtro correspondiente sustituido por `[status]` y el otro sin cambios. Pendiente de verificar con `npm run real:mutants -- S010`.

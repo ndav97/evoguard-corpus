@@ -148,7 +148,7 @@
           "operator": "booleano",
           "original": "cancelling: false,",
           "mutated": "cancelling: true,",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/pages/Tasks.jsx",
@@ -181,15 +181,15 @@
         "failed": 0
       },
       "summary": {
-        "KILLED": 6,
-        "SURVIVED": 2,
+        "KILLED": 7,
+        "SURVIVED": 1,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 0.88
     }
   ],
-  "score": 0.87,
+  "score": 0.93,
   "survivors": [
     {
       "turn": "T003",
@@ -199,16 +199,11 @@
       "original": "this.cancelAllRunning = this.cancelAllRunning.bind(this);",
       "mutated": "/* evoguard-mutant */ void 0;",
       "result": "SURVIVED"
-    },
-    {
-      "turn": "T003",
-      "file": "src/pages/Tasks.jsx",
-      "line": 121,
-      "operator": "booleano",
-      "original": "cancelling: false,",
-      "mutated": "cancelling: true,",
-      "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T15:12:29.848Z"
+  "finished_at": "2026-09-29T15:12:29.848Z",
+  "rerun_2026_09_29": {
+    "started_at": "2026-09-29T22:23:41Z",
+    "note": "Resultado transcrito de la salida de consola: la escritura del informe falló con EPERM (archivo bloqueado en Windows). Referencias T001–T003 PASAN (8, 14 y 20 tests ocultos); en T003 sobrevive solo la línea 37 (bind, equivalente) y la línea 121 pasa a KILLED."
+  }
 }
