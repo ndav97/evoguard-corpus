@@ -10,7 +10,7 @@
 // Puntuación = KILLED / (KILLED + SURVIVED). Los SURVIVED se listan para revisión humana.
 // Evidencia: docs/verification/real-mutants-sxxx.json. No modifica la familia ni el corpus.
 // No ejecutar a la vez que scripts\real\ensayar-familias.cmd: ambos limpian contenedores del estrato semi-real.
-import { writeFileSync, mkdtempSync, cpSync, mkdirSync, rmSync } from 'node:fs';
+import { writeFileSync, mkdtempSync, cpSync, mkdirSync, rmSync, chmodSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadRealFamily, inPackage, TURN_OF, REAL_VERSIONS } from './families.mjs';
@@ -124,9 +124,12 @@ async function hidden(session, m, rels) {
   if (!result.run) return { status: 'ERROR', detail: result.error };
   const mine = k => rels.some(rel => k.startsWith(`${rel} ›`));
   const tests = Object.keys(result.run.results).filter(mine);
-  if (rels.some(rel => result.run.suiteFailedFiles.includes(rel))) return { status: 'COMPILE', tests: tests.length };
+  if (rels.some(rel => result.run.suiteFailedFiles.includes(rel))) {
+    const errors = (result.run.suiteErrors ?? []).filter(e => rels.some(rel => e.startsWith(rel))).map(e => e.slice(0, 1500));
+    return { status: 'COMPILE', tests: tests.length, errors };
+  }
   const failed = failing(result.run, mine);
-  return { status: failed.length ? 'KILLED' : 'SURVIVED', tests: tests.length, failed: failed.length };
+  return { status: failed.length ? 'KILLED' : 'SURVIVED', tests: tests.length, failed: failed.length, failing: failed.slice(0, 10) };
 }
 
 export async function mutateFamily(root, familyId, { max = 8 } = {}) {
@@ -150,7 +153,12 @@ export async function mutateFamily(root, familyId, { max = 8 } = {}) {
       execReal(session, ['node', '-e', WRITE], { input: JSON.stringify(Object.fromEntries(turnsSoFar.map((t, i) => [inPackage(m, rels[i]), t.hiddenTestsText]))) });
       entry.baseline = await hidden(session, m, rels);
       log(`${familyId} ${entry.turn}: referencia ${entry.baseline.status === 'SURVIVED' ? 'PASA' : entry.baseline.status} (${entry.baseline.tests ?? 0} tests ocultos)`);
-      if (entry.baseline.status !== 'SURVIVED') { entry.error = 'la referencia no pasa sus tests ocultos'; continue; }
+      if (entry.baseline.status !== 'SURVIVED') {
+        entry.error = 'la referencia no pasa sus tests ocultos';
+        for (const detail of entry.baseline.errors ?? []) log(`  ${detail.replace(/\n/g, '\n    ')}`);
+        for (const name of entry.baseline.failing ?? []) log(`  falla con la referencia: ${name}`);
+        continue;
+      }
       for (const mutant of selectMutants(addedLines(turn.patchText), max)) {
         const file = `/workspace/repo/${inPackage(m, mutant.file)}`;
         execReal(session, ['node', '-e', EDIT], { input: JSON.stringify([file, mutant.line, mutant.text, mutant.mutated]) });
@@ -172,6 +180,18 @@ export async function mutateFamily(root, familyId, { max = 8 } = {}) {
   return report;
 }
 
+// En Windows un archivo con el atributo de solo lectura da EPERM al escribir; chmod lo quita. Si aun así falla,
+// el informe se guarda en .artifacts/ para no perder la ejecución.
+function writeReport(path, report) {
+  const text = JSON.stringify(report, null, 2) + '\n';
+  try { writeFileSync(path, text); return; } catch (error) { if (error.code !== 'EPERM' && error.code !== 'EACCES') throw error; }
+  try { chmodSync(path, 0o666); writeFileSync(path, text); return; } catch { /* sigue abajo */ }
+  const fallback = join(repoRoot, '.artifacts', basename(path));
+  mkdirSync(join(repoRoot, '.artifacts'), { recursive: true });
+  writeFileSync(fallback, text);
+  log(`AVISO: no se pudo escribir ${path}; informe guardado en ${fallback}`);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const max = Number(args.find(a => a.startsWith('--max='))?.split('=')[1] ?? 8);
@@ -184,7 +204,7 @@ async function main() {
       cpSync(join(repoRoot, 'tests/fixtures/real-mini/family'), join(root, 'families-real/S900-mini-cart'), { recursive: true });
       await prepare(root, 'S900', { base: RUNTIME_IMAGE, source: 'dir', srcDir: join(repoRoot, 'tests/fixtures/real-mini/repo'), installCmd: 'ln -s /opt/deps/node_modules node_modules' });
       const report = await mutateFamily(root, 'S900', { max });
-      writeFileSync(join(repoRoot, 'docs/verification/real-mutants-s900.json'), JSON.stringify(report, null, 2) + '\n');
+      writeReport(join(repoRoot, 'docs/verification/real-mutants-s900.json'), report);
       log(`S900: puntuación ${report.score}`);
     } finally { rmSync(root, { recursive: true, force: true }); }
     return;
@@ -193,7 +213,7 @@ async function main() {
   if (!families.length) throw new Error('Uso: npm run real:mutants -- Sxxx [Sxxx...] [--max=N] | --mini');
   for (const id of families) {
     const report = await mutateFamily(repoRoot, id, { max });
-    writeFileSync(join(repoRoot, `docs/verification/real-mutants-${id.toLowerCase()}.json`), JSON.stringify(report, null, 2) + '\n');
+    writeReport(join(repoRoot, `docs/verification/real-mutants-${id.toLowerCase()}.json`), report);
     log(`${id}: puntuación ${report.score}; sobrevivientes ${report.survivors.length} → docs/verification/real-mutants-${id.toLowerCase()}.json`);
   }
 }
