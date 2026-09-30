@@ -37,6 +37,21 @@ jest.mock('../applications/components/applications-list/applications-filter', ()
     ApplicationsFilter: () => null
 }));
 jest.mock('../applications/components/applications-list/view-type-switcher', () => ({ViewTypeSwitcher: () => null}));
+// Paneles de sincronización y refresco (no intervienen): se sustituyen para no cargar su cadena de dependencias.
+jest.mock('../applications/components/application-sync-panel/application-sync-panel', () => ({ApplicationSyncPanel: () => null}));
+jest.mock('../applications/components/applications-sync-panel/applications-sync-panel', () => ({ApplicationsSyncPanel: () => null}));
+jest.mock('../applications/components/applications-refresh-panel/applications-refresh-panel', () => ({ApplicationsRefreshPanel: () => null}));
+// lodash-es se publica como ESM sin transformar; mismo apaño que los tests del proyecto (application-parameters.test.tsx).
+jest.mock('lodash-es', () => ({
+    __esModule: true,
+    cloneDeep: (value: any) => (value == null ? value : JSON.parse(JSON.stringify(value))),
+    debounce: (fn: any) => fn,
+    omit: (obj: any, ...keys: any[]) => {
+        const copy = {...obj};
+        keys.flat().forEach((key: string) => delete copy[key]);
+        return copy;
+    }
+}));
 jest.mock('../sidebar/sidebar', () => ({
     ...jest.requireActual('../sidebar/sidebar'),
     useSidebarTarget: () => ({current: document.createElement('div')})
