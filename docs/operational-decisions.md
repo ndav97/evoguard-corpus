@@ -228,3 +228,12 @@ Decisión de Claude con autorización del usuario. Detalle en `docs/fuerza-tests
 - **`real:mutants` ajustado:** usa los tests ocultos T001..T00n y excluye mutaciones de estilo y de tipos.
 - **Verificación:** se hace repitiendo `real:mutants` en el PC, que comprueba primero que cada referencia pasa los tests ampliados. No se repiten los ensayos de familia: los tests ocultos no forman parte de su huella y los escenarios de rechazo no dependen de su contenido.
 
+## Métricas de análisis — 2026-09-29
+Decisión de Claude con autorización del usuario. El script es `npm run analysis` (`runner/analysis/analyze.mjs`); solo lee registros públicos, nunca los privados del evaluador. Métricas por modelo, para el conjunto y para cada estrato:
+- **Éxito al primer intento:** entre las tareas en las que el modelo era el proveedor inicial del plan de rotación, la proporción aceptada en el primer intento.
+- **Asignaciones con éxito:** una asignación es la secuencia de intentos de un modelo en una tarea, el inicial y sus reparaciones, hasta que se acepta o se reasigna. Esta métrica compara modelos aunque entren como segundo o tercer proveedor.
+- **Oráculo superado cuando se alcanza:** mide la calidad funcional separada de los fallos de formato o de ciclos.
+- **Salidas inválidas por llamada:** con sus códigos de error, y las respuestas normalizadas (bloque o prosa) contadas aparte como indicador de adherencia al formato.
+- **Recursos:** mediana de ciclos y de duración por intento, y tokens de entrada, salida y razonamiento sumados desde las llamadas.
+- **Incertidumbre:** todas las proporciones llevan intervalo de Wilson al 95 %, porque hay pocas tareas por modelo (8 sintéticas y 6 semi-reales).
+

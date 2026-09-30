@@ -29,8 +29,8 @@ Pendiente humano: revisión de los enunciados T001–T003 del estrato semi-real.
 | # | Tarea | Estado | Commit PC | Notas |
 |---|---|---|---|---|
 | 7 | Revisión sistemática de las 30 peticiones semi-reales (petición ↔ referencia ↔ tests ocultos) | HECHA (falta verificar en el PC) | | 0 altos, 11 medios y 10 bajos; 21 correcciones. `docs/revision-peticiones-semi-reales-2026-09-29.md`. Verificar con `real:mutants -- S005 S007 S010` y el ensayo de S005 |
-| 8 | Scripts de análisis de la tesis (métricas por modelo y estrato) | EN CURSO | | Probar con registros de ensayos |
-| 9 | Banco de modelos locales con tarea semi-real y contexto > 8 192 | PENDIENTE | | |
+| 8 | Scripts de análisis de la tesis (métricas por modelo y estrato) | HECHA | | `npm run analysis` → `analysis/` (tasks, attempts y calls en CSV; summary.json/.md; report.html con gráficos e intervalos de Wilson). Probado con los registros reales de F001 y con pruebas unitarias |
+| 9 | Banco de modelos locales con tarea semi-real y contexto > 8 192 | EN CURSO | | |
 | 10 | Mecanismo de revisión 2 de F001 (protocolo 1.1) | PENDIENTE | | Sin tocar la versión congelada |
 | 11 | Borrador del capítulo de metodología | PENDIENTE | | |
 

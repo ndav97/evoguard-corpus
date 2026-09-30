@@ -29,7 +29,8 @@
     "test:calibration": "node --test tests/calibration/*.test.mjs",
     "real:prepare": "node runner/real/prepare.mjs",
     "real:rehearse": "node runner/real/rehearse.mjs",
-    "real:mutants": "node runner/real/mutants.mjs"
+    "real:mutants": "node runner/real/mutants.mjs",
+    "analysis": "node runner/analysis/analyze.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
