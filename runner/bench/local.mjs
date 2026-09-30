@@ -5,7 +5,7 @@
 // comandos visibles, oráculo en contenedor propio, arquitectura — con UN solo modelo (sin reasignación) y hasta
 // 3 intentos con reparación visible. Nada de esto entra al corpus: todo queda en .artifacts/bench/ y un resumen
 // en docs/verification/local-bench/. Ollama se alcanza en 127.0.0.1 (EVOGUARD_OLLAMA_PORT para el túnel).
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { randomUUID } from 'node:crypto';
@@ -25,6 +25,7 @@ import { loadRealFamily, makeRealPacket } from '../real/families.mjs';
 import { readBases } from '../real/prepare.mjs';
 import { realWorkspaces, createRealEvaluator } from '../real/pipeline.mjs';
 import { hiddenTestsOf } from '../real/generate.mjs';
+import { archivedReferences } from '../pipeline/revision.mjs';
 
 // Tareas semi-reales del banco (2026-09-29): «Sxxx:V1», el primer turno de una familia sobre su imagen V0 (no
 // necesita referencias previas). Miden si el candidato trabaja con un repositorio real y su contexto.
@@ -103,7 +104,12 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
   const candidates = config.candidates.filter(c => !models || models.includes(c.id)).map(c => ({ ...config.defaults, ...c }));
   const selectedTasks = (tasks ?? config.tasks).filter(v => VERSIONS.includes(v) || REAL_TASK.test(v));
   if (!candidates.length || !selectedTasks.length) throw new Error('Sin candidatos o tareas seleccionados');
-  for (const v of selectedTasks) if (VERSIONS.includes(v) && v !== 'V0' && !data.family.reference_versions[VERSIONS[VERSIONS.indexOf(v) - 1]]) throw new Error(`${v} requiere la referencia congelada previa`);
+  // Referencias de F001: las de la familia si está congelada; si se abrió una revisión nueva (DRAFT), las de la última
+  // revisión archivada, para que el banco siga midiendo sobre las mismas tareas.
+  const archived = data.family.status === 'FROZEN' ? null : archivedReferences(root, 'F001');
+  const referencesDir = archived ?? CORPUS_REFERENCES(root);
+  const hasReference = version => (archived ? existsSync(join(archived, version, 'reference.json')) : Boolean(data.family.reference_versions[version]));
+  for (const v of selectedTasks) if (VERSIONS.includes(v) && v !== 'V0' && !hasReference(VERSIONS[VERSIONS.indexOf(v) - 1])) throw new Error(`${v} requiere la referencia congelada previa`);
   const runId = `${new Date().toISOString().slice(0, 10)}-${randomUUID().slice(0, 8)}`;
   const report = { artifact_type: 'local_model_bench', experimental: false, run_id: runId, protocol_version: PROTOCOL_VERSION, image_id: lock.image_id, ollama: ollamaBase(), started_at: new Date().toISOString(), candidates: [] };
   const tags = adapterFactory ? null : await ollama('/api/tags');
@@ -134,7 +140,7 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
         result = await runTask({
           mode: 'rehearsal', singleProvider: true, initialProvider: 'local_a', packet: real ? real.packet : makePacket(data, version), policy: real ? real.policy : data.policy,
           adapter: withRetries(adapter, { delays: [2000, 10000, 30000], before: context => store.track(context), onRetry: ({ context, code, wait }) => log(`  ${candidate.id} c${context.cycle}: ${code}; reintento en ${wait / 1000}s`) }),
-          workspaces: real ? real.workspaces : sandboxWorkspaces(root, { seed: evolutionSeed(root, version, CORPUS_REFERENCES(root)) }),
+          workspaces: real ? real.workspaces : sandboxWorkspaces(root, { seed: evolutionSeed(root, version, referencesDir) }),
           evaluator: real ? real.evaluator(record => { privateRecords.push(record); store.private(record); }) : createPipelineEvaluator({ root, version, privateSink: record => { privateRecords.push(record); store.private(record); } }),
           emit: event => store.event(event)
         });

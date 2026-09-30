@@ -27,12 +27,28 @@ function scriptedAdapter(files, seen) {
   };
 }
 
+// Constructor guionado que aplica un parche completo (referencia archivada) y entrega.
+function patchAdapter(patch) {
+  return {
+    async next(context) {
+      const steps = [{ type: 'list_files', path: '' }, { type: 'tool', argv: ['sh', '-c', `git apply --whitespace=nowarn - <<'EVOGUARD_PATCH'\n${patch.replace(/\n+$/, '')}\nEVOGUARD_PATCH`] }, { type: 'run_checks' }, { type: 'deliver' }];
+      return steps[Math.min(context.cycle, steps.length) - 1];
+    }
+  };
+}
+
 async function main() {
   const familyId = process.argv[2];
-  if (!/^F\d{3}$/.test(familyId ?? '') || familyId === 'F001') throw new Error('Uso: npm run pipeline:rehearse-family -- Fxxx (familia sintética nueva)');
-  const candidates = join(root, 'tests/fixtures/rehearsal-family', `${familyId}.mjs`);
-  if (!existsSync(candidates)) throw new Error(`Faltan los candidatos instrumentales ${candidates}`);
-  const { candidate } = await import(pathToFileURL(candidates).href);
+  // --revision: ensayo de una nueva revisión de una familia congelada (F001). En la copia se abre la revisión y los
+  // candidatos son los parches de las referencias archivadas, aplicados con git apply por el constructor guionado.
+  const revisionMode = process.argv.includes('--revision');
+  if (!/^F\d{3}$/.test(familyId ?? '') || (familyId === 'F001') !== revisionMode) throw new Error('Uso: npm run pipeline:rehearse-family -- Fxxx (familia sintética nueva) | F001 --revision');
+  let candidate = null;
+  if (!revisionMode) {
+    const candidates = join(root, 'tests/fixtures/rehearsal-family', `${familyId}.mjs`);
+    if (!existsSync(candidates)) throw new Error(`Faltan los candidatos instrumentales ${candidates}`);
+    ({ candidate } = await import(pathToFileURL(candidates).href));
+  }
 
   const copy = mkdtempSync(join(tmpdir(), `evoguard-${familyId.toLowerCase()}-`));
   const git = args => execFileSync('git', args, { cwd: copy, encoding: 'utf8' }).trim();
@@ -46,11 +62,19 @@ async function main() {
     const { generate } = await load('runner/pipeline/generate.mjs');
     const { auditCorpus } = await load('runner/pipeline/audit.mjs');
     const { loadCorpus } = await load('runner/validation/corpus.mjs');
+    let archived = null;
+    if (revisionMode) {
+      const { openRevision, archivedReferences } = await load('runner/pipeline/revision.mjs');
+      openRevision(copy, familyId, { reason: 'Ensayo: regenerar con el protocolo de acciones 1.1' });
+      archived = archivedReferences(copy, familyId);
+      git(['add', '-A']);
+      git(['-c', 'user.name=EvoGuard Rehearsal', '-c', 'user.email=rehearsal@invalid', 'commit', '-q', '-m', 'rehearsal: revision opened']);
+    }
+    const builder = version => (revisionMode ? patchAdapter(readFileSync(join(archived, version, 'reference.patch'), 'utf8')) : scriptedAdapter(candidate(version), []));
 
     const outcomes = [];
     for (const version of VERSIONS) {
-      const seen = [];
-      const status = await generate(version, { familyId, repoRoot: copy, adapterFactory: () => scriptedAdapter(candidate(version), seen) });
+      const status = await generate(version, { familyId, repoRoot: copy, adapterFactory: () => builder(version) });
       assert.equal(status, 'ACCEPTED', `${familyId} ${version}: ${status}`);
       const family = loadCorpus(copy, familyId).family;
       outcomes.push({ version, status, provider: family.generation_plan[version], reference: family.reference_versions[version] });
@@ -60,13 +84,13 @@ async function main() {
     const family = loadCorpus(copy, familyId).family;
     assert.equal(family.status, 'FROZEN', `${familyId} no quedó FROZEN`);
     const evidence = {
-      artifact_type: 'family_generation_rehearsal', status: 'PASS', experimental: false, family_id: familyId,
+      artifact_type: revisionMode ? 'family_revision_rehearsal' : 'family_generation_rehearsal', status: 'PASS', experimental: false, family_id: familyId,
       note: 'Constructores guionados en una copia desechable; el corpus real no cambia.',
       started_at: started, finished_at: new Date().toISOString(),
       versions: outcomes, audit: { status: audit.status, stability_runs: audit.stability_runs, findings: audit.findings, frozen: Boolean(audit.frozen) }, final_status: family.status,
       commits_in_copy: git(['log', '--format=%s', 'HEAD~12..HEAD']).split('\n')
     };
-    writeFileSync(join(root, `docs/verification/family-rehearsal-${familyId.toLowerCase()}.json`), JSON.stringify(evidence, null, 2) + '\n');
+    writeFileSync(join(root, `docs/verification/family-rehearsal-${familyId.toLowerCase()}${revisionMode ? '-revision' : ''}.json`), JSON.stringify(evidence, null, 2) + '\n');
     console.log(`PASS: ${familyId} V0→V3 aceptadas, auditoría y congelamiento en la copia ${copy}`);
   } finally {
     if (!process.env.EVOGUARD_KEEP_COPY) rmSync(copy, { recursive: true, force: true });

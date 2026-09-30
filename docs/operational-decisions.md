@@ -260,3 +260,14 @@ Los modelos locales no podían ni empezar en los repositorios grandes. Con 32 76
 - **Banco de modelos locales:** incluye las tareas semi-reales `S001:V1` y `S005:V1`.
 - **Recomendación para el congelamiento de modelos:** fijar los locales con una ventana de 32 768 (o al menos 16 384) si el hardware lo permite. A 8 192 el estrato semi-real queda casi fuera de su alcance, lo que sesgaría la comparación. Requiere recalibrar `config/context.json` para la nueva ventana.
 
+## Revisión 2 de F001 — mecanismo preparado (2026-09-29)
+F001 se generó y congeló con el protocolo de acciones 1.0 y con los problemas de transporte de Synterolink (Sonnet no aceptó ninguna versión). Para que sea comparable con F002–F010 se regenerará como revisión 2. Decisiones de Claude con autorización del usuario:
+- **Herramienta:** `npm run corpus:revision -- F001 --reason "…"` (`runner/pipeline/revision.mjs`).
+  - Archiva íntegra la revisión congelada en `families/F001-product-catalog/revisions/r1/`: referencias, `family.yaml`, `provenance.yaml`, `turns/`, la auditoría y un `manifest.json` con hashes y el motivo.
+  - Mueve los registros de generación a `runs/archive/F001-r1/` y `evaluator/archive/F001-r1/`.
+  - Devuelve la familia a DRAFT con la misma especificación, fixture, oráculo y plan de rotación.
+  - Nada se borra y la validación del corpus pasa tras abrir la revisión.
+- **Cuándo aplicarla:** solo cuando los modelos estén listos. Hasta entonces F001 sigue FROZEN tal cual. El banco de modelos locales lee las referencias archivadas si la familia ya no las tiene.
+- **Ensayo:** `npm run pipeline:rehearse-family -- F001 --revision`, en una copia desechable. Abre la revisión y regenera V0→V3 con constructores que aplican los parches archivados: las cuatro versiones se aceptan, la auditoría da PASS 5/5 y la familia vuelve a FROZEN. Evidencia en `docs/verification/family-rehearsal-f001-revision.json`.
+- **Análisis:** como los registros de la revisión 1 se mueven a `runs/archive/`, `npm run analysis` mide solo la revisión vigente.
+

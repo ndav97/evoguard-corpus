@@ -21,6 +21,7 @@
     "context:calibrate": "node runner/context/calibrate.mjs",
     "pipeline:rehearse": "node runner/pipeline/rehearse.mjs",
     "pipeline:rehearse-family": "node runner/pipeline/rehearse-family.mjs",
+    "corpus:revision": "node runner/pipeline/revision.mjs",
     "corpus:generate": "node --env-file-if-exists=.env runner/pipeline/generate.mjs",
     "corpus:audit": "node runner/pipeline/audit.mjs",
     "bench:local": "node runner/bench/local.mjs",
