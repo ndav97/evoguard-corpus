@@ -237,3 +237,26 @@ Decisión de Claude con autorización del usuario. El script es `npm run analysi
 - **Recursos:** mediana de ciclos y de duración por intento, y tokens de entrada, salida y razonamiento sumados desde las llamadas.
 - **Incertidumbre:** todas las proporciones llevan intervalo de Wilson al 95 %, porque hay pocas tareas por modelo (8 sintéticas y 6 semi-reales).
 
+## Contexto de los modelos locales en el estrato semi-real — 2026-09-29
+**Hallazgo.** Se simuló el primer mensaje de V1 con la política de contexto de los modelos locales (8 192 tokens, 6 656 de entrada), usando copias locales de cuatro repositorios:
+
+| Familia | Archivos del paquete | Árbol | Resultado a 8 192 |
+|---|---|---|---|
+| S001 | 152 | 5 KB | Cabe, con 244 tokens de margen |
+| S002 | 235 | 10 KB | Cabe sin contenidos |
+| S003 | 388 | 18 KB | No cabía (`CONTEXT_CORE_TOO_LARGE`) |
+| S005 | 635 | 36 KB | No cabía (`CONTEXT_CORE_TOO_LARGE`) |
+
+Los modelos locales no podían ni empezar en los repositorios grandes. Con 32 768 tokens, la vista completa cabe en los cuatro (6 000–17 000 tokens) y queda margen para el historial.
+
+**Decisiones de Claude con autorización del usuario:**
+- **Dos niveles más de degradación en la política de contexto** (`runner/context/policy.mjs`), que solo se usan cuando no cabe ni el árbol completo:
+  1. «directorio de la zona del cambio y su archivo recortado»;
+  2. «solo ese directorio».
+
+  El mensaje indica cuántos archivos se omitieron y que `list_files` permite ver el resto. En todo lo que ya cabía el comportamiento no cambia (calibraciones y ensayos siguen igual).
+- **Huella de los ensayos:** `runner/context/policy.mjs` sale de la huella, por el mismo motivo que el transporte de proveedores: los ensayos usan constructores guionados y no construyen contexto gestionado. Lo verifican sus pruebas unitarias y `npm run real:context`.
+- **Nueva herramienta `npm run real:context`:** mide, con las imágenes reales y sin modelos, el nivel de vista y el margen de cada familia para varias ventanas. Genera `docs/verification/real-context.json`.
+- **Banco de modelos locales:** incluye las tareas semi-reales `S001:V1` y `S005:V1`.
+- **Recomendación para el congelamiento de modelos:** fijar los locales con una ventana de 32 768 (o al menos 16 384) si el hardware lo permite. A 8 192 el estrato semi-real queda casi fuera de su alcance, lo que sesgaría la comparación. Requiere recalibrar `config/context.json` para la nueva ventana.
+

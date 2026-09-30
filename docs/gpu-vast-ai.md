@@ -37,7 +37,12 @@ Con Docker Desktop abierto:
 # Completo para los mejores
 .\scripts\vast\bench.ps1 -Models qwen3coder30-32k,devstral24-32k -Tasks V0,V1,V2,V3
 ```
-Lista de candidatos: `npm run bench:local -- --list`. Antes de alquilar puedes comprobar el cableado con `npm run bench:selftest` (Ollama simulado; no usa GPU).
+Lista de candidatos: `npm run bench:local -- --list`.
+
+**Tareas semi-reales (desde el 2026-09-29).** El banco incluye `S001:V1` (repositorio pequeño) y `S005:V1` (grande: 635 archivos en el paquete). Son el primer turno sobre la imagen V0 de la familia, con sus tests ocultos, y requieren las imágenes preparadas en el PC (`scripts\real\preparar-imagenes.cmd`).
+- **Antes de alquilar:** `npm run real:context` mide, sin modelos, cuánto ocupa el primer mensaje de cada familia a 8k, 16k y 32k.
+- **Qué indica la simulación:** con 8 192 tokens, en los repositorios grandes solo cabe el directorio de la zona del cambio y apenas queda margen para el historial. Con 32 768 cabe la vista completa de todos los simulados y quedan más de 10 000 tokens.
+- **Para elegir `local_a` y `local_b`:** pesan las tareas `Sxxx:V1` además de las de F001. Antes de alquilar puedes comprobar el cableado con `npm run bench:selftest` (Ollama simulado; no usa GPU).
 
 El banco repite las tareas de F001 partiendo de sus **referencias congeladas** (V0 desde el scaffold; V1–V3 desde la referencia anterior), con el mismo pipeline de la generación real: contenedor aislado, protocolo 1.1, hasta 3 intentos con reparación visible, oráculo en contenedor propio y control de arquitectura. Un solo modelo por tarea, sin reasignación. Antes de cada candidato mide su tokenizador para fijar el estimador de contexto. Los resultados **no** entran al corpus: registros en `.artifacts/bench/`, resumen versionado en `docs/verification/local-bench/` (commit automático) y log en `.artifacts/bench-*.log`.
 

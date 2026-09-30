@@ -30,6 +30,7 @@
     "real:prepare": "node runner/real/prepare.mjs",
     "real:rehearse": "node runner/real/rehearse.mjs",
     "real:mutants": "node runner/real/mutants.mjs",
+    "real:context": "node runner/real/context-check.mjs",
     "analysis": "node runner/analysis/analyze.mjs"
   },
   "devDependencies": {

@@ -1,7 +1,8 @@
 {
   "schema_version": "1.0.0",
   "purpose": "Banco de prueba de modelos locales (paso 3). Solo ensayo: los resultados nunca son referencias del corpus.",
-  "tasks": ["V0", "V1", "V2", "V3"],
+  "tasks": ["V0", "V1", "V2", "V3", "S001:V1", "S005:V1"],
+  "tasks_note": "V0–V3: F001 desde sus referencias congeladas. Sxxx:V1: primer turno semi-real sobre la imagen V0 (S001, repositorio pequeño; S005, grande: 635 archivos en el paquete). La ventana de 8 192 solo deja ver el directorio de la zona del cambio en repositorios grandes (npm run real:context).",
   "defaults": { "temperature": 0, "seed": 42, "keep_alive": "30m" },
   "candidates": [
     { "id": "qwen25c7-8k", "model": "qwen2.5-coder:7b", "context": 8192, "max_output_tokens": 1024, "note": "Línea base del pool congelado (local_a)" },

@@ -119,6 +119,22 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   const workspaceLevel = level => workspaceItems.map(item => {
     const overview = item.message.content.overview ?? {};
     if (level === 'tree') return { index: item.index, messages: [{ role: 'user', content: { source: 'workspace', overview: { note: overview.note, files: overview.files, contents: {}, omitted: 'contenidos omitidos por la política de contexto; usa read_file' } } }] };
+    // Niveles para repositorios grandes (estrato semi-real, 2026-09-29): el árbol se reduce a los directorios de los
+    // archivos mostrados (la zona del cambio). «focus» conserva el primero de ellos recortado; «focus-tree», ninguno.
+    if (level === 'focus' || level === 'focus-tree') {
+      const shownPaths = Object.keys(overview.contents ?? {});
+      const dirsShown = [...new Set(shownPaths.map(path => path.slice(0, path.lastIndexOf('/') + 1)))];
+      const files = (overview.files ?? []).filter(path => dirsShown.some(dir => path.startsWith(dir)));
+      const contents = {};
+      if (level === 'focus' && shownPaths.length) {
+        const [path] = shownPaths;
+        const text = overview.contents[path];
+        const limit = h.workspace_bytes ?? 6000;
+        contents[path] = Buffer.byteLength(text) > limit ? `${Buffer.from(text).subarray(0, limit).toString('utf8')}\n[… recortado por la política de contexto: usa read_file]` : text;
+      }
+      const omitted = `árbol reducido a ${files.length} de ${(overview.files ?? []).length} archivos (directorio de la zona del cambio); usa list_files para ver el resto${level === 'focus' ? '' : ' y read_file para los contenidos'}`;
+      return { index: item.index, messages: [{ role: 'user', content: { source: 'workspace', overview: { note: overview.note, files, contents, omitted } } }] };
+    }
     let used = 0;
     const contents = {};
     for (const [path, text] of Object.entries(overview.contents ?? {})) {
@@ -150,7 +166,9 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   const feedbackLevels = [
     [...workspaceLevel('full'), ...latest],
     [...workspaceLevel('full'), ...compressed],
-    [...workspaceLevel('tree'), ...compressed]
+    [...workspaceLevel('tree'), ...compressed],
+    [...workspaceLevel('focus'), ...compressed],
+    [...workspaceLevel('focus-tree'), ...compressed]
   ];
   // Ventana: del paso más reciente al más antiguo; recientes con límites amplios, luego comprimidos.
   const windowFor = feedbackItems => {

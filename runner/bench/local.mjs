@@ -1,5 +1,5 @@
 // Banco de prueba de modelos locales (paso 3). Uso:
-//   npm run bench:local -- [--models=id,id] [--tasks=V1,V3] [--list]
+//   npm run bench:local -- [--models=id,id] [--tasks=V1,V3,S005:V1] [--list]
 // Para cada candidato de config/local-bench.json y cada tarea (V0 desde el scaffold; Vn desde las referencias
 // congeladas de F001), ejecuta el mismo pipeline que la generación real — contenedor aislado, protocolo 1.1,
 // comandos visibles, oráculo en contenedor propio, arquitectura — con UN solo modelo (sin reasignación) y hasta
@@ -21,6 +21,26 @@ import { sandboxWorkspaces } from '../pipeline/workspace.mjs';
 import { createPipelineEvaluator } from '../pipeline/evaluator.mjs';
 import { createTaskStore, CORPUS_REFERENCES } from '../pipeline/store.mjs';
 import { withRetries } from '../providers/retry.mjs';
+import { loadRealFamily, makeRealPacket } from '../real/families.mjs';
+import { readBases } from '../real/prepare.mjs';
+import { realWorkspaces, createRealEvaluator } from '../real/pipeline.mjs';
+import { hiddenTestsOf } from '../real/generate.mjs';
+
+// Tareas semi-reales del banco (2026-09-29): «Sxxx:V1», el primer turno de una familia sobre su imagen V0 (no
+// necesita referencias previas). Miden si el candidato trabaja con un repositorio real y su contexto.
+const REAL_TASK = /^(S\d{3}):V1$/;
+function realTask(root, id) {
+  const data = loadRealFamily(root, id);
+  const base = readBases(root).bases[id];
+  if (base?.status !== 'VERIFIED') throw new Error(`${id}: imagen sin verificar (npm run real:prepare)`);
+  const m = data.manifest;
+  return {
+    packet: makeRealPacket(data, 'V1'), policy: data.policy, familyId: id,
+    workspaces: realWorkspaces({ image: base.image_id, manifest: m, steps: [], v0Commit: base.v0_repo_commit }),
+    evaluator: privateSink => createRealEvaluator({ image: base.image_id, manifest: m, steps: [], v0Commit: base.v0_repo_commit, version: 'V1', hiddenTests: hiddenTestsOf(data), privateSink }),
+    finalize: { stackText: JSON.stringify(base), fixtureSha256: base.image_id.slice(7) }
+  };
+}
 
 const VERSIONS = ['V0', 'V1', 'V2', 'V3'];
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
@@ -58,7 +78,7 @@ function summarize(result, privateRecords, calls) {
   const events = result.events;
   const actions = {};
   for (const event of events.filter(e => e.type === 'response')) actions[event.response.type] = (actions[event.response.type] ?? 0) + 1;
-  const oracle = privateRecords.filter(r => r.stage === 'independent_oracle' && r.report).map(r => `${r.report.passed}/${r.report.total}`);
+  const oracle = privateRecords.filter(r => r.stage === 'independent_oracle' && r.report).map(r => (r.report.passed !== undefined ? `${r.report.passed}/${r.report.total}` : r.report.status ?? r.status));
   const sum = key => calls.reduce((total, call) => total + (Number.isFinite(call.tokens?.[key]) ? call.tokens[key] : 0), 0);
   return {
     status: result.status,
@@ -81,9 +101,9 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
   const data = loadCorpus(root);
   const lock = readContainerLock(root);
   const candidates = config.candidates.filter(c => !models || models.includes(c.id)).map(c => ({ ...config.defaults, ...c }));
-  const selectedTasks = (tasks ?? config.tasks).filter(v => VERSIONS.includes(v));
+  const selectedTasks = (tasks ?? config.tasks).filter(v => VERSIONS.includes(v) || REAL_TASK.test(v));
   if (!candidates.length || !selectedTasks.length) throw new Error('Sin candidatos o tareas seleccionados');
-  for (const v of selectedTasks) if (v !== 'V0' && !data.family.reference_versions[VERSIONS[VERSIONS.indexOf(v) - 1]]) throw new Error(`${v} requiere la referencia congelada previa`);
+  for (const v of selectedTasks) if (VERSIONS.includes(v) && v !== 'V0' && !data.family.reference_versions[VERSIONS[VERSIONS.indexOf(v) - 1]]) throw new Error(`${v} requiere la referencia congelada previa`);
   const runId = `${new Date().toISOString().slice(0, 10)}-${randomUUID().slice(0, 8)}`;
   const report = { artifact_type: 'local_model_bench', experimental: false, run_id: runId, protocol_version: PROTOCOL_VERSION, image_id: lock.image_id, ollama: ollamaBase(), started_at: new Date().toISOString(), candidates: [] };
   const tags = adapterFactory ? null : await ollama('/api/tags');
@@ -103,7 +123,8 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
     } catch (error) { entry.error = error.message; log(`${candidate.id}: ${error.message}`); continue; }
     const modelConfig = { display_name: candidate.model, api_model_id: candidate.model, transport: 'ollama', context: candidate.context, max_output_tokens: candidate.max_output_tokens, reasoning: null, temperature: candidate.temperature, seed: candidate.seed, digest: entry.digest, keep_alive: candidate.keep_alive };
     for (const version of selectedTasks) {
-      const store = createTaskStore(root, { mode: 'bench', version, taskId: `${runId}-${candidate.id}-${version}` });
+      const real = REAL_TASK.test(version) ? realTask(root, version.match(REAL_TASK)[1]) : null;
+      const store = createTaskStore(root, { mode: 'bench', version: real ? 'V1' : version, ...(real ? { familyId: real.familyId } : {}), taskId: `${runId}-${candidate.id}-${version.replace(':', '-')}` });
       const calls = [], privateRecords = [];
       const adapter = adapterFactory ? adapterFactory({ candidate, version, store, calls }) : createProviderAdapter({ provider: 'local_a', config: modelConfig, contextPolicy: policy, onCall: call => { calls.push(call); store.call(call); } });
       log(`${candidate.id} ${version}: inicio`);
@@ -111,14 +132,16 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
       let result;
       try {
         result = await runTask({
-          mode: 'rehearsal', singleProvider: true, initialProvider: 'local_a', packet: makePacket(data, version), policy: data.policy,
+          mode: 'rehearsal', singleProvider: true, initialProvider: 'local_a', packet: real ? real.packet : makePacket(data, version), policy: real ? real.policy : data.policy,
           adapter: withRetries(adapter, { delays: [2000, 10000, 30000], before: context => store.track(context), onRetry: ({ context, code, wait }) => log(`  ${candidate.id} c${context.cycle}: ${code}; reintento en ${wait / 1000}s`) }),
-          workspaces: sandboxWorkspaces(root, { seed: evolutionSeed(root, version, CORPUS_REFERENCES(root)) }),
-          evaluator: createPipelineEvaluator({ root, version, privateSink: record => { privateRecords.push(record); store.private(record); } }),
+          workspaces: real ? real.workspaces : sandboxWorkspaces(root, { seed: evolutionSeed(root, version, CORPUS_REFERENCES(root)) }),
+          evaluator: real ? real.evaluator(record => { privateRecords.push(record); store.private(record); }) : createPipelineEvaluator({ root, version, privateSink: record => { privateRecords.push(record); store.private(record); } }),
           emit: event => store.event(event)
         });
       } catch (error) { entry.tasks[version] = { status: 'INFRA_ERROR', error: error.message }; log(`${candidate.id} ${version}: INFRA_ERROR ${error.message}`); continue; }
-      store.finalize(result, { packet: makePacket(data, version), models: { local_a: modelConfig }, stackText: readFileSync(join(root, 'config/stack.json'), 'utf8'), fixtureSha256: data.family.fixture.sha256 });
+      store.finalize(result, real
+        ? { packet: real.packet, models: { local_a: modelConfig }, ...real.finalize }
+        : { packet: makePacket(data, version), models: { local_a: modelConfig }, stackText: readFileSync(join(root, 'config/stack.json'), 'utf8'), fixtureSha256: data.family.fixture.sha256 });
       entry.tasks[version] = { ...summarize(result, privateRecords, calls), wall_s: Math.round((Date.now() - started) / 1000), logs: store.dir.slice(root.length + 1).split('\\').join('/') };
       const t = entry.tasks[version];
       log(`${candidate.id} ${version}: ${t.status} — ${t.attempts.map(a => `${a.outcome}${a.reason ? `(${a.reason})` : ''}`).join(', ')}; oráculo ${t.oracle_results.join(', ') || '—'}; acciones ${JSON.stringify(t.actions)}`);
@@ -146,7 +169,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const config = JSON.parse(readFileSync(join(root, 'config/local-bench.json'), 'utf8'));
     for (const c of config.candidates) console.log(`${c.id.padEnd(18)} ${c.model.padEnd(20)} ctx ${c.context}  out ${c.max_output_tokens}  ${c.note ?? ''}`);
   } else if (args.some(a => !/^--(models|tasks)=/.test(a))) {
-    console.error('Uso: npm run bench:local -- [--models=id,id] [--tasks=V0,V1,V2,V3] | --list');
+    console.error('Uso: npm run bench:local -- [--models=id,id] [--tasks=V0,V1,V2,V3,S005:V1] | --list');
     process.exitCode = 1;
   } else {
     runBench(root, { models: value('models'), tasks: value('tasks') }).catch(error => { console.error(error.stack); process.exitCode = 1; });
