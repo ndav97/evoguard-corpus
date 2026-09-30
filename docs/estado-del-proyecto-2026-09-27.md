@@ -74,7 +74,7 @@ Commits en el PC (`evoguard-corpus`):
    - hecho: ensayo de generación y auditoría de F002 hasta FROZEN;
    - hecho: calibración conjunta F002–F010, 72/72.
 3. **Estrato semi-real:**
-   - prueba de fuerza de los tests ocultos: herramienta lista (`npm run real:mutants`), la ejecuta el usuario después del ensayo;
+   - hecho: prueba de fuerza de los tests ocultos. Puntuación bruta 0,92 y ninguna debilidad conocida tras reforzar los tests (`docs/fuerza-tests-ocultos-semi-reales-2026-09-29.md`);
    - revisión humana de los enunciados T001–T003.
 4. ~~Coherencia de nombres~~: hecho. Los productos de F003 pasan a `A001–A016`.
 5. **Documentación:** registrar en `operational-decisions.md` la decisión del estrato semi-real y los criterios de calibración de ambos estratos.

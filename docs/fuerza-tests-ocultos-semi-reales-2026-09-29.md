@@ -70,4 +70,19 @@ Sin contar equivalentes ni no especificados, la puntuación es 144 / (144 + 4) =
 
 **S001 verificado** (22:23 UTC): la referencia pasa los 20 tests ocultos, el mutante de la línea 121 se elimina y S001 queda en 0,93. Solo sobrevive el `bind`, que es equivalente. La escritura del informe falló con EPERM en Windows, así que el resultado se transcribió de la consola (campo `rerun_2026_09_29`).
 
-**S010 T002, test de integración escrito:** el código de `ui/src` se extrajo de la imagen. El test monta `ApplicationsList` en la vista Summary con los servicios simulados y sustituye solo el marco de la página, la barra superior, la paginación y los filtros laterales. Después pulsa `OutOfSync (1)` y `Degraded (1)` y comprueba que `updatePreferences` recibe el filtro correspondiente sustituido por `[status]` y el otro sin cambios. Pendiente de verificar con `npm run real:mutants -- S010`.
+**S010 T002, test de integración verificado** (2026-09-30 00:42 UTC):
+- **Qué hace el test:** monta `ApplicationsList` en la vista Summary con los servicios simulados y sustituye solo las piezas de la página que no intervienen: marco, barra superior, paginación, filtros laterales y paneles de sincronización. Sustituye además `lodash-es` como hacen los propios tests del proyecto. Después pulsa `OutOfSync (1)` y `Degraded (1)` y comprueba que `updatePreferences` recibe el filtro correspondiente sustituido por `[status]` y el otro sin cambios.
+- **Referencias:** T002 y T003 pasan con 12 y 17 tests ocultos.
+- **Mutantes:** los tres de `applications-list.tsx` (líneas 521, 525 y 528) se eliminan. S010 queda en **1,00**.
+
+## Resultado final
+
+| Familia | S001 | S002 | S003 | S004 | S005 | S006 | S007 | S008 | S009 | S010 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Puntuación | 0,93 | 0,94 | 0,90 | 0,95 | 0,88 | 0,94 | 1,00 | 0,85 | 0,82 | 1,00 |
+
+**Global:** 148 mutantes eliminados, 13 sobrevivientes y 8 que no compilan. **Puntuación bruta 0,92.**
+
+Los 13 sobrevivientes ya están clasificados: 9 equivalentes y 4 con un comportamiento que la petición no exige, que por equidad no deben comprobarse. **No queda ninguna debilidad conocida:** sin contar esos casos, la puntuación es 148 / 148 = 1,00.
+
+**Herramienta:** si la referencia no pasa sus tests ocultos, `real:mutants` muestra ahora el error de la suite o los tests que fallan. Si Windows impide escribir el informe (EPERM por el atributo de solo lectura), quita ese atributo y, si aun así no puede, guarda el informe en `.artifacts/`.

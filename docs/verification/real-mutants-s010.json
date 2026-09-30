@@ -3,7 +3,7 @@
   "family_id": "S010",
   "image_id": "sha256:f2af9c6c3f803392ee9ce44da410f01a9c135f58e0cdf169f39276f1ba6631fd",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T15:31:01.692Z",
+  "started_at": "2026-09-30T00:42:58.941Z",
   "turns": [
     {
       "turn": "T001",
@@ -47,7 +47,8 @@
       "baseline": {
         "status": "SURVIVED",
         "tests": 5,
-        "failed": 0
+        "failed": 0,
+        "failing": []
       },
       "summary": {
         "KILLED": 4,
@@ -70,7 +71,7 @@
           "operator": "igualdad",
           "original": "{(pref.view === 'summary' && (",
           "mutated": "{(pref.view !== 'summary' && (",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/app/applications/components/applications-list/applications-list.tsx",
@@ -78,7 +79,7 @@
           "operator": "igualdad",
           "original": "onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
           "mutated": "onAppFilterPrefChanged(ctx, {...pref, [type !== 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/app/applications/components/applications-list/applications-list.tsx",
@@ -86,7 +87,7 @@
           "operator": "lógico",
           "original": ")) || (",
           "mutated": ")) && (",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/app/applications/components/applications-list/applications-summary.tsx",
@@ -131,16 +132,17 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 10,
-        "failed": 0
+        "tests": 12,
+        "failed": 0,
+        "failing": []
       },
       "summary": {
-        "KILLED": 3,
-        "SURVIVED": 3,
+        "KILLED": 6,
+        "SURVIVED": 0,
         "COMPILE": 2,
         "ERROR": 0
       },
-      "score": 0.5
+      "score": 1
     },
     {
       "turn": "T003",
@@ -193,8 +195,9 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 15,
-        "failed": 0
+        "tests": 17,
+        "failed": 0,
+        "failing": []
       },
       "summary": {
         "KILLED": 5,
@@ -205,35 +208,7 @@
       "score": 1
     }
   ],
-  "score": 0.8,
-  "survivors": [
-    {
-      "turn": "T002",
-      "file": "src/app/applications/components/applications-list/applications-list.tsx",
-      "line": 521,
-      "operator": "igualdad",
-      "original": "{(pref.view === 'summary' && (",
-      "mutated": "{(pref.view !== 'summary' && (",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "src/app/applications/components/applications-list/applications-list.tsx",
-      "line": 525,
-      "operator": "igualdad",
-      "original": "onAppFilterPrefChanged(ctx, {...pref, [type === 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
-      "mutated": "onAppFilterPrefChanged(ctx, {...pref, [type !== 'sync' ? 'syncFilter' : 'healthFilter']: [status]})",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "src/app/applications/components/applications-list/applications-list.tsx",
-      "line": 528,
-      "operator": "lógico",
-      "original": ")) || (",
-      "mutated": ")) && (",
-      "result": "SURVIVED"
-    }
-  ],
-  "finished_at": "2026-09-29T15:32:29.122Z"
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-09-30T00:45:12.179Z"
 }
