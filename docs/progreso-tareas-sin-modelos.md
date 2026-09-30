@@ -32,5 +32,9 @@ Pendiente humano: revisión de los enunciados T001–T003 del estrato semi-real.
 | 8 | Scripts de análisis de la tesis (métricas por modelo y estrato) | HECHA | | `npm run analysis` → `analysis/` (tasks, attempts y calls en CSV; summary.json/.md; report.html con gráficos e intervalos de Wilson). Probado con los registros reales de F001 y con pruebas unitarias |
 | 9 | Banco de modelos locales con tarea semi-real y contexto > 8 192 | HECHA (medición en el PC) | | Banco con `S001:V1` y `S005:V1`; niveles de contexto «directorio de la zona»; `npm run real:context` para medir en el PC. A 8k los repositorios grandes no cabían: se recomienda 32k |
 | 10 | Mecanismo de revisión 2 de F001 (protocolo 1.1) | HECHA | | `npm run corpus:revision -- F001 --reason …` (aplicar cuando haya modelos). Ensayo en copia: revisión abierta, V0→V3 aceptadas, auditoría PASS y FROZEN |
-| 11 | Borrador del capítulo de metodología | EN CURSO | | |
+| 11 | Borrador del capítulo de metodología | HECHA | | Documento vivo «Metodología — borrador» en Claude Docs (9 secciones, diagrama del flujo de evaluación y lista de pendientes para cerrar el capítulo) |
 
+
+## Resultado de la segunda tanda (2026-09-29)
+
+Tareas 7–11 terminadas. `npm test`: 207/207. Pendiente solo con modelos: intermediario de Sonnet, banco de locales (medir antes con `npm run real:context`), congelar modelos y contexto, revisión 2 de F001, generación y análisis.
