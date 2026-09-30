@@ -25,7 +25,7 @@ index a19cba0..e6580ad 100644
    const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
      if (event.key === "Escape") {
        event.preventDefault();
-@@ -87,6 +92,16 @@ export const LabelEditor = (props: Props) => {
+@@ -87,6 +92,17 @@ export const LabelEditor = (props: Props) => {
          // Require at least one non-whitespace character:
          pattern=".*\S.*"
        />
@@ -34,6 +34,7 @@ index a19cba0..e6580ad 100644
 +          type="button"
 +          className={styles["remove-button"]}
 +          aria-label={l10n.getString("profile-label-remove")}
++          onMouseDown={(event) => event.preventDefault()}
 +          onClick={removeLabel}
 +        >
 +          ×

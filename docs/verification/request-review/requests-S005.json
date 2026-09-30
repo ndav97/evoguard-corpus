@@ -1,0 +1,46 @@
+{
+  "family": "S005",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Id de Fluent `profile-label-characters-remaining`, variable `remaining` como número y umbral ≤10 explícitos; el mock de l10n serializa vars con JSON.stringify, así que '\"remaining\":10' exige número, y la petición lo dice en negrita.",
+        "Se indica usar useL10n().getString (el mock global de jest.setup.ts lo cubre).",
+        "pendingTranslations.ftl existe solo en frontend/ (raíz del paquete), así que la ubicación no es ambigua; la regex del test acepta la cadena citada.",
+        "Se cuenta la etiqueta inicial (explícito) y el input ya tiene maxLength={50}."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Restaurar props.label, quitar el foco y no llamar a onSubmit ni por el blur provocado por Escape: explícito, incluida la trampa del cierre obsoleto en onBlur→submit.",
+        "Enter/blur siguen guardando el valor recortado (comportamiento existente); el test añadido tras la prueba de mutantes (nueva edición después de Escape) se deduce de «Enter y salir del campo sin pulsar Escape siguen guardando».",
+        "Contador tras Escape: explícito (punto 3) y coherente con T001."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Id `profile-label-remove`, `type=\"button\"`, visibilidad según props.label y onSubmit(\"\") una sola vez: explícitos y probados.",
+        "La cadena FTL citada coincide con la regex /^profile-label-remove = \\S/m.",
+        "Cualquier forma de nombre accesible (aria-label o texto visible con getString) supera byMsgId."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "se llama **una sola vez** a `onSubmit(\"\")`, también cuando el campo tenía el foco justo antes (la pérdida de foco no debe provocar un guardado adicional);",
+          "evidence": "test 'no guarda dos veces si el campo tenía el foco': await userEvent.click(input()); await userEvent.click(removeButton()!); expect(onSubmit).toHaveBeenCalledTimes(1). Parche de referencia: removeLabel() no evita el submit del blur.",
+          "problem": "El test solo enfoca el campo sin editarlo; en ese caso el blur→submit existente ya no guarda (inputValue.trim() === props.label), así que el requisito no se comprueba: cualquier implementación ingenua pasa. Además, la propia referencia lo incumple si el campo se había editado (escribir '2' y pulsar el botón llama a onSubmit('Work2') y luego a onSubmit('')). No hace fallar a un modelo correcto, pero deja pasar uno que no cumple lo pedido.",
+          "fix": {
+            "target": "oracle/T003.test.tsx",
+            "old": "    await userEvent.click(input());\n    await userEvent.click(removeButton()!);\n    expect(onSubmit).toHaveBeenCalledTimes(1);\n    expect(onSubmit).toHaveBeenCalledWith(\"\");",
+            "new": "    await userEvent.type(input(), \"2\");\n    await userEvent.click(removeButton()!);\n    expect(onSubmit).toHaveBeenCalledTimes(1);\n    expect(onSubmit).toHaveBeenCalledWith(\"\");\n    // Requiere corregir también reference/T003.patch, p. ej. añadiendo al botón onMouseDown={(e) => e.preventDefault()} (o marcando cancelledRef antes del blur). Alternativa sin cambiar tests: acotar la petición a «también cuando el campo tenía el foco justo antes sin cambios»."
+          }
+        }
+      ]
+    }
+  ]
+}

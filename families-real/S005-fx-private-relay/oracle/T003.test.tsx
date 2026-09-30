@@ -37,7 +37,7 @@ describe("T003 · quitar la etiqueta", () => {
   it("no guarda dos veces si el campo tenía el foco", async () => {
     const onSubmit = jest.fn();
     render(<LabelEditor label="Work" onSubmit={onSubmit} />);
-    await userEvent.click(input());
+    await userEvent.type(input(), "2");
     await userEvent.click(removeButton()!);
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith("");

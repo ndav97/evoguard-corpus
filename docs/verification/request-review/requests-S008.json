@@ -1,0 +1,26 @@
+{"family":"S008","turns":[
+{"turn":"T001","ok":[
+"Nombre accesible del botón: la solicitud pide `IconButton` con nombre accesible = t('closeDialog') y avisa de que en los tests t devuelve la clave; el test busca getByRole('button', {name: 'closeDialog'}). Coherente.",
+"Ids `modal-modal-title` / `modal-modal-description`: el test usa toHaveTextContent (coincidencia por subcadena), así que también pasa si el modelo pone el id en la raíz del CardHeader (título + subtítulo) o en un Typography propio.",
+"Traducción `closeDialog: \"Close dialog\"` en public/locales/en/translation.json: citada literalmente; el test la importa vía alias @/locales (la calibración confirma que resuelve).",
+"El test comprueba además que deleteFn no se llama al cerrar: se deduce de 'se llama a closeFn, igual que ahora'."
+],"findings":[]},
+{"turn":"T002","ok":[
+"Prop `confirmationText?: string`, recorte de espacios de los extremos y comparación sensible a mayúsculas: explícitos y exactamente lo que comprueba el test ('push day' deshabilitado, '  Push day ' habilitado).",
+"Reinicio al cerrar: la solicitud precisa 'isOpen pasa a false', que es justo lo que hace el test con rerender (un reinicio solo dentro del handler de cierre fallaría, pero la solicitud lo descarta).",
+"Sin confirmationText: no hay campo y el botón está habilitado; la solicitud lo cubre con 'funciona como hasta ahora'.",
+"Clave `deleteConfirmationPrompt` con {{text}}: citada literalmente.",
+"Conservación de T001 (botón de cierre, ids): enunciada en las restricciones; los tests de T001 siguen siendo compatibles."
+],"findings":[
+{"severity":"low","type":"ambiguity","request_quote":"debajo del mensaje aparece un campo de texto cuya etiqueta es `t('deleteConfirmationPrompt', { text: confirmationText })`","evidence":"oracle/T002.test.tsx:27,35,55 — screen.getByLabelText(\"deleteConfirmationPrompt\")","problem":"El test necesita que el texto sea la etiqueta asociada programáticamente al input (label con for/id o aria-label). Si el modelo pone el texto como placeholder, helperText o un Typography encima del campo, 'etiqueta' se cumple en sentido visual pero getByLabelText falla. Con TextField + label (lo natural en MUI) funciona.","fix":{"target":"turns/T002.md","old":"aparece un campo de texto cuya etiqueta es `t('deleteConfirmationPrompt', { text: confirmationText })`.","new":"aparece un campo de texto cuya etiqueta accesible (por ejemplo, la prop `label` de `TextField`) es `t('deleteConfirmationPrompt', { text: confirmationText })`."}}
+]},
+{"turn":"T003","ok":[
+"Tipo `() => void | Promise<unknown>`, estado pendiente con t('deleting') deshabilitado, cierre al resolver y error con rol alert al rechazar: todo explícito y alineado con los tests.",
+"Caso síncrono ('se cierra en el acto'): el test comprueba closeFn tras user.click; una implementación que siempre haga await también pasaría, lo cual es aceptable.",
+"Reinicio del aviso al reabrir: la solicitud precisa cerrar y volver a abrir (isOpen), igual que el test.",
+"Traducciones: solo se exige que existan (toBeTruthy); los textos se dan como 'por ejemplo', coherente.",
+"Conservación de T001/T002: no hay conflicto; el botón de borrado sigue llamándose 'delete' fuera del estado pendiente."
+],"findings":[
+{"severity":"low","type":"hidden_requirement","request_quote":"muestra un elemento con rol `alert` con el texto `t('deleteFailed')`","evidence":"oracle/T003.test.tsx:46 — expect(screen.getByRole(\"alert\")).toHaveTextContent(/^deleteFailed$/)","problem":"El test exige que el elemento alert contenga exactamente ese texto y nada más. Un Alert de MUI con AlertTitle (p. ej. 'Error'), un botón 'Retry' dentro del aviso o el mensaje del error concatenado harían fallar el test, aunque cumplen la redacción. Riesgo bajo: 'con el texto' se lee de forma natural como texto único.","fix":{"target":"turns/T003.md","old":"muestra un elemento con rol `alert` con el texto `t('deleteFailed')`","new":"muestra un elemento con rol `alert` cuyo único texto es `t('deleteFailed')`"}}
+]}
+]}

@@ -32,11 +32,10 @@ describe('T002 · número de resultados', () => {
   })
 
   it('con texto anuncia el número en plural, singular o «No results»', () => {
-    const { input, view } = setup({ resultCount: 5 })
+    const { input, view, searchRef } = setup({ resultCount: 5 })
     typeText(input, 'blog')
     expect(status()).toHaveTextContent(/^5 results$/)
 
-    const searchRef = createRef<HTMLInputElement>()
     view.rerender(
       <SearchInput searchRef={searchRef} onSearch={jest.fn()} resultCount={1} />
     )

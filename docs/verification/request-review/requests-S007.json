@@ -1,0 +1,68 @@
+{
+  "family": "S007",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Nombre accesible `Clear search`, `type=\"button\"`, visibilidad según haya texto, onSearch('') inmediato, foco devuelto y textos de ayuda: todo explícito.",
+        "Sobre la búsqueda pendiente se exige solo que la última llamada sea '' y que no llegue 'abc'; tanto cancelar el debounce como dejar que lea el valor ya vacío lo cumplen.",
+        "Se conserva data-testid=\"search-input\" (restricción explícita)."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Prop `resultCount?: number`, rol `status` y textos `No results` / `1 result` / `N results` explícitos y exactos.",
+        "Retirada al vaciar con Clear search explícita y probada."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "ambiguity",
+          "request_quote": "3. Sin texto en el campo, o sin `resultCount`, no se muestra ese elemento.",
+          "evidence": "it('sin texto no anuncia nada'): expect(screen.queryByRole('status')).not.toBeInTheDocument();",
+          "problem": "En accesibilidad es buena práctica mantener montada la región viva (role=status) y solo vaciar su texto, para que los lectores de pantalla anuncien los cambios. «No se muestra» admite esa lectura (un elemento vacío o oculto con sr-only no «se muestra»), pero el test exige que el elemento no exista en el DOM.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "3. Sin texto en el campo, o sin `resultCount`, no se muestra ese elemento. Vaciar con `Clear search` también lo retira.",
+            "new": "3. Sin texto en el campo, o sin `resultCount`, no se renderiza ningún elemento con rol `status` (tampoco vacío). Vaciar con `Clear search` también lo retira del DOM."
+          }
+        },
+        {
+          "severity": "low",
+          "type": "hidden_requirement",
+          "request_quote": "Cuando se pasa `resultCount` y el campo tiene texto",
+          "evidence": "const searchRef = createRef<HTMLInputElement>(); view.rerender(<SearchInput searchRef={searchRef} ... resultCount={1} />)",
+          "problem": "El test cambia searchRef por uno nuevo (sin current) en el rerender. Una implementación que calcule «tiene texto» leyendo searchRef.current.value durante el render (en lugar del estado hasValue existente) fallaría. Es un artefacto del test, no algo pedido.",
+          "fix": {
+            "target": "oracle/T002.test.tsx",
+            "old": "    const { input, view } = setup({ resultCount: 5 })\n    typeText(input, 'blog')\n    expect(status()).toHaveTextContent(/^5 results$/)\n\n    const searchRef = createRef<HTMLInputElement>()",
+            "new": "    const { input, view, searchRef } = setup({ resultCount: 5 })\n    typeText(input, 'blog')\n    expect(status()).toHaveTextContent(/^5 results$/)\n"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Con texto: vaciar, onSearch('') y mantener el foco; vacío: quitar el foco. Explícito y probado.",
+        "Reutilizar la lógica de Clear search: explícito («hace lo mismo que el botón»)."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "Si el campo está enfocado y tiene texto, pulsar `Escape` hace lo mismo que el botón `Clear search`",
+          "evidence": "fireEvent.keyUp(input, { key: 'Escape' }) (solo keyup, sin keydown); la referencia modifica únicamente blurSearchBox, el manejador existente de Escape (keybind en keyup).",
+          "problem": "Los tests solo disparan keyup. Un modelo que añada un onKeyDown al <input> para Escape (lo más habitual) no se ejecuta nunca en el test: el campo no se vacía y el keybind existente le quita el foco. Una implementación correcta en un navegador real fallaría. Se puede deducir leyendo el keybind existente, pero la petición no lo pide.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "2. Si el campo está enfocado y vacío, `Escape` le quita el foco, como ahora.",
+            "new": "2. Si el campo está enfocado y vacío, `Escape` le quita el foco, como ahora.\n\nImplementa ambos casos en el manejador de `Escape` que ya existe en el componente (el que hoy quita el foco, que actúa al soltar la tecla), no con un nuevo manejador de teclado."
+          }
+        }
+      ]
+    }
+  ]
+}

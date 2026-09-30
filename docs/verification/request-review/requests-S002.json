@@ -1,0 +1,87 @@
+{
+  "family": "S002",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Etiqueta `Search uploads` asociada al campo (getByLabelText), explícito.",
+        "Búsqueda insensible a mayúsculas, con trim, en originalFilename o user: explícito y coincide con el test ('MIDTERM', '   quiz1  ', 'bob').",
+        "Textos `Showing N of M uploads`, singular por M, `No uploads match your search.` y ausencia de la tabla con 0 coincidencias: literales.",
+        "Caso sin cargas: tabla vacía con itemCount 0 y sin resumen, explícito.",
+        "El mock de DataTable del test oculto es idéntico al del test visible HistoryTable.test.jsx, así que la forma de las filas (row.filename/row.user) es deducible."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "La tabla muestra solo las cargas cuyo nombre de archivo (`originalFilename`) o usuario (`user`) contiene el texto buscado",
+          "evidence": "jest.mock('@openedx/paragon', ...) DataTable: ({ data, itemCount }) => ... data.map(row => <div data-testid=\"row\">...) ; expect(rows()).toEqual(['midterm-grades.csvalice', 'Midterm-retake.csvcarol'])",
+          "problem": "El test sustituye DataTable por un mock que pinta todo `data`. Si el modelo usa el filtrado propio de Paragon DataTable (isFilterable/globalFilter/TextFilter, initialState) y le pasa todas las filas, en producción funcionaría pero el test vería 4 filas. El request no dice que el filtrado deba hacerse antes de pasar `data`.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "   El `itemCount` de la tabla debe coincidir con el número de filas que se muestran.",
+            "new": "   Filtra las cargas en el propio `HistoryTable` y pasa a `DataTable` solo las filas filtradas (en `data`), con `itemCount` igual a su número; no uses los filtros internos de `DataTable`."
+          }
+        },
+        {
+          "severity": "medium",
+          "type": "ambiguity",
+          "request_quote": "Añade encima de la tabla un campo de texto con la etiqueta visible `Search uploads`",
+          "evidence": "Test visible existente: render(<HistoryTable bulkManagementHistory={mockHistory} />) sin IntlProvider; la carpeta usa messages.js + FormattedMessage (index.jsx).",
+          "problem": "La convención del repo (textos vía messages.js/FormattedMessage/useIntl) hace que una implementación fiel al estilo rompa los tests visibles existentes de HistoryTable, que renderizan sin IntlProvider y no se pueden modificar. El modelo lo descubre con run_checks, pero gasta ciclos y puede acabar en fallo; el request no resuelve el conflicto entre 'respeta convenciones' y 'no cambies tests'.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "- `mapHistoryRows` y los componentes exportados deben seguir funcionando como hasta ahora.",
+            "new": "- `mapHistoryRows` y los componentes exportados deben seguir funcionando como hasta ahora. `HistoryTable` debe seguir renderizándose sin `IntlProvider`, como en sus tests existentes: escribe los textos nuevos literalmente, sin `messages.js`."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Etiqueta `Uploaded by` asociada, primera opción `All users` con valor vacío y seleccionada por defecto: explícito.",
+        "Usuarios únicos y en orden alfabético (alice, bob, carol): explícito.",
+        "Combinación con la búsqueda y reflejo en resumen/aviso: explícito.",
+        "Los tests de T001 siguen pasando con el selector añadido (no hay otra etiqueta 'Search uploads')."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "después, cada usuario que aparece en el historial, una sola vez y en orden alfabético.",
+          "evidence": "const pickUser = (value) => fireEvent.change(screen.getByLabelText('Uploaded by'), { target: { value } }); pickUser('alice');",
+          "problem": "El test selecciona por el atributo value de la opción = nombre de usuario, y requiere un <select> nativo (fireEvent.change + getAllByRole('option')). El request no dice que el valor de cada opción sea el nombre del usuario (podría ser un índice o id) ni que sea un selector nativo (Paragon ofrece Dropdown/Autosuggest).",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "   - después, cada usuario que aparece en el historial, una sola vez y en orden alfabético.",
+            "new": "   - después, cada usuario que aparece en el historial, una sola vez y en orden alfabético, con el nombre de usuario como texto y como valor de la opción.\n\n   Usa un `<select>` nativo (por ejemplo `Form.Control as=\"select\"` de Paragon)."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Nombre accesible `Show uploads by <usuario>` y texto visible = nombre: explícito.",
+        "Conserva la búsqueda al pulsar y `All users` deshace el filtro: explícito.",
+        "mapHistoryRows llamado solo con la fila sigue devolviendo <span class=\"wrap-text-in-cell\">: explícito y coherente con el test visible existente.",
+        "Tests de T001/T002 (rows() por textContent, opciones del select) no se ven afectados por el botón."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "ambiguity",
+          "request_quote": "conserva la clase CSS `wrap-text-in-cell`.",
+          "evidence": "expect(buttons[0]).toHaveClass('wrap-text-in-cell');",
+          "problem": "«Conserva la clase» admite envolver el botón en el <span class=\"wrap-text-in-cell\"> existente (la lectura más conservadora); el test exige la clase en el propio <button>, así que esa alternativa fallaría.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "   - conserva la clase CSS `wrap-text-in-cell`.",
+            "new": "   - el propio botón lleva la clase CSS `wrap-text-in-cell`."
+          }
+        }
+      ]
+    }
+  ]
+}

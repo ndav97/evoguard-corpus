@@ -1,0 +1,28 @@
+{"family":"S010","turns":[
+{"turn":"T001","ok":[
+"Formato `N (P%)` con redondeo al entero más cercano y ejemplo `2 (67%)`: coincide con los tests (3 (75%), 2 (67%), 1 (33%), 2 (100%)).",
+"Con aplicaciones pero 0 coincidencias se muestra `0 (0%)`: se deduce de la regla general (solo el caso sin aplicaciones muestra `0`).",
+"Sin aplicaciones: `0` sin porcentaje, explícito.",
+"APPLICATIONS, CLUSTERS y NAMESPACES sin cambios: explícito; el test visible existente (applications-summary.test.tsx) sigue siendo compatible (toHaveTextContent por subcadena).",
+"El test lee `getByText(title).nextElementSibling`, que coincide con la estructura existente (div título + div valor) del archivo original.",
+"El mock de '../utils' sin requireActual (solo los 3 iconos) también está en el test visible del proyecto, así que cualquier import adicional de utils se detectaría ya con la suite visible."
+],"findings":[]},
+{"turn":"T002","ok":[
+"Firma `onFilter?: (type: 'sync' | 'health', status: string) => void`, `<button type=\"button\">` con el texto de siempre y llamadas `onFilter('sync','Synced')`/`onFilter('health','Degraded')`: explícitos y comprobados.",
+"Entradas con 0 aplicaciones deshabilitadas (incluidos los dos `Unknown (0)` de Sync y Health), leyenda de Hydrator como texto y ninguna entrada como botón sin onFilter: explícitos.",
+"Integración en applications-list.tsx: el punto 6 nombra `syncFilter`, `healthFilter`, `[status]` y `onAppFilterPrefChanged`, que existen en el archivo original (onAppFilterPrefChanged llama a services.viewPreferences.updatePreferences({appList})), justo lo que observa el test. La especificación dicta la implementación, pero está justificada por la prueba de integración.",
+"Los iconos se simulan como null, así que el nombre accesible es 'Synced (3)' tanto si el icono queda dentro como fuera del botón.",
+"Estilos del punto 7: no se comprueban; la clase concreta queda libre.",
+"Conservación de T001: los porcentajes se mantienen; los tests de T001 no pasan onFilter."
+],"findings":[
+{"severity":"low","type":"hidden_requirement","request_quote":"En `applications-list.tsx`, pasa `onFilter` al resumen de modo que se sustituya el filtro de sincronización (`syncFilter`) o de salud (`healthFilter`) de las preferencias por `[status]`, usando el mismo mecanismo con el que ya se cambian los filtros (`onAppFilterPrefChanged`).","evidence":"oracle/T002.test.tsx:45-66 — jest.mock('lodash-es', ...) solo con cloneDeep, debounce y omit; jest.mock('../shared/services') solo con clusters, viewPreferences y applications","problem":"La prueba de integración oculta sustituye lodash-es y services por versiones parciales. Si el modelo, al tocar applications-list.tsx (o algo que este importe), usa otra función de lodash-es (p. ej. isEqual) u otro servicio, la prueba oculta fallaría sin que la suite visible lo detecte. El riesgo es bajo porque el cambio pedido es una línea, pero es una restricción oculta.","fix":{"target":"oracle/T002.test.tsx","old":"    omit: (obj: any, ...keys: any[]) => {","new":"    isEqual: (a: any, b: any) => JSON.stringify(a) === JSON.stringify(b),\n    omit: (obj: any, ...keys: any[]) => {"}}
+]},
+{"turn":"T003","ok":[
+"Fila `NEEDS ATTENTION` después de NAMESPACES, sin porcentaje, que cuenta OutOfSync ∪ Degraded ∪ Missing una sola vez: explícito y comprobado (zeta, alpha, mid → 3).",
+"El atributo `title` en la celda del valor, con los nombres ordenados, separados por ', ', un máximo de 5 y ', +K more', con el ejemplo literal: coincide con el test ('app-1, …, app-5, +2 more').",
+"La clase `white-box__details-row--attention` en la fila (el test mira parentElement del título, que es la fila): explícito.",
+"Con 0: sin title y sin la clase. Un title=\"\" fallaría (el atributo existe), pero 'la celda no lleva title' lo excluye con claridad.",
+"`$argo-failed-color` existe en el SCSS del repositorio (el estilo no se comprueba).",
+"Conservación de T001/T002: no se añaden botones (el test de T002 'renders no buttons' se mantiene) y SYNCED conserva el porcentaje (comprobado en el propio T003)."
+],"findings":[]}
+]}

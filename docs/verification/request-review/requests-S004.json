@@ -1,0 +1,74 @@
+{
+  "family": "S004",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Texto del botón `Reset to defaults` citado literalmente; coincide con getByRole('button',{name:'Reset to defaults'}).",
+        "Los cuatro valores por defecto (1000, 3, 0.999999, vacío) están explícitos y coinciden con DEFAULTS del parche y con toHaveValue('1000'/'3'/'0.999999'/'').",
+        "Estado deshabilitado/habilitado explícito (punto 3) y cubierto por los tests; tras la prueba de mutantes se añadió el caso de Elements Per Row.",
+        "«si estaban ocultos porque un campo se había vaciado, vuelven a mostrarse» cubre el test de 'Intermediate Values'."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "hidden_requirement",
+          "request_quote": "Añade en la sección «Inputs» un botón con el texto `Reset to defaults`.",
+          "evidence": "expect(screen.getByRole('heading', { name: 'Inputs' })).toBeInTheDocument();",
+          "problem": "El test exige que el encabezado siga teniendo nombre accesible exactamente 'Inputs'. Si el modelo coloca el botón dentro del <Title> (h4), el nombre pasa a ser 'Inputs Reset to defaults' y falla. Poco probable, y la restricción «Las etiquetas ... no cambian» lo sugiere, pero no se dice del título.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "1. Añade en la sección «Inputs» un botón con el texto `Reset to defaults`.",
+            "new": "1. Añade en la sección «Inputs» (junto al título `Inputs`, que no cambia) un botón con el texto `Reset to defaults`."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Los cuatro mensajes de error están citados literalmente con backticks y coinciden con getByText.",
+        "Rangos e inclusividad (100–10000 y 1–1000 inclusivos; Confidence estrictamente (0,1); selectividad (0,1]) explícitos y coherentes con el parche.",
+        "Ocultar resultados con error y limpiar errores con Reset están explícitos.",
+        "Preservación: los valores usados en T001 (500, 7, 0.001, vacío) son válidos, así que los tests de T001 siguen pasando."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "ambiguity",
+          "request_quote": "Cuando una entrada tenga un número fuera de rango, muestra un mensaje de error en ese mismo campo",
+          "evidence": "await setValue('Statistics Target', '50'); expect(screen.getByText('Must be between 100 and 10000')).toBeInTheDocument(); (fireEvent.change sin blur)",
+          "problem": "Los tests exigen validación inmediata (en onChange). Un modelo podría validar al perder el foco (patrón habitual con @mantine/form o clampBehavior) y fallaría, aunque «cuando una entrada tenga» sugiere inmediatez.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "1. Cuando una entrada tenga un número fuera de rango, muestra un mensaje de error en ese mismo campo (propiedad `error` del `NumberInput`):",
+            "new": "1. En cuanto una entrada tenga un número fuera de rango (mientras se escribe, sin esperar a que el campo pierda el foco), muestra un mensaje de error en ese mismo campo (propiedad `error` del `NumberInput`):"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Fórmula del valor explícita (`Math.ceil(targetM)` de `calculate`), igual que en el test, que importa `calculate` del repo.",
+        "Botón `Copy recommended M`, `navigator.clipboard.writeText` con solo el número y texto `Copied to clipboard` explícitos; también funcionan useClipboard/CopyButton de Mantine.",
+        "Ocultación sin resultados explícita y probada.",
+        "Preservación: el texto 'Recommended M: N' en un único nodo no colisiona con getByText('150000'/'300000') de T001."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "Cuando haya resultados, muestra el texto `Recommended M: <valor>`.",
+          "evidence": "expect(screen.getByText(expected(1000, 3, 0.999999))).toBeInTheDocument(); // expected = `Recommended M: ${Math.ceil(...)}`",
+          "problem": "getByText con cadena exacta exige que 'Recommended M: N' sea el texto completo de un único elemento. Una implementación razonable que resalte el número en otro elemento (p. ej. <Text>Recommended M: <b>{m}</b></Text> o una etiqueta y un valor en elementos separados) fallaría.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "1. Cuando haya resultados, muestra el texto `Recommended M: <valor>`.",
+            "new": "1. Cuando haya resultados, muestra el texto `Recommended M: <valor>` completo dentro de un mismo elemento (sin separar el número en otro elemento)."
+          }
+        }
+      ]
+    }
+  ]
+}

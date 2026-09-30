@@ -46,6 +46,7 @@ jest.mock('lodash-es', () => ({
     __esModule: true,
     cloneDeep: (value: any) => (value == null ? value : JSON.parse(JSON.stringify(value))),
     debounce: (fn: any) => fn,
+    isEqual: (a: any, b: any) => JSON.stringify(a) === JSON.stringify(b),
     omit: (obj: any, ...keys: any[]) => {
         const copy = {...obj};
         keys.flat().forEach((key: string) => delete copy[key]);

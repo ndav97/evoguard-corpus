@@ -1,0 +1,47 @@
+{
+  "family": "S006",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Nombres accesibles `Shift later` / `Shift earlier` según el sentido, citados y coherentes con el estado inicial positivo.",
+        "Formato del resumen (signo, 2/2/2/3 dígitos, reparto del total con el ejemplo de 75 min) explícito y cubierto por los tests.",
+        "Ocultación con todos los campos a 0 explícita."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "muestra debajo de los campos el texto `Offset: <signo><HH>:<MM>:<SS>.<mmm>`",
+          "evidence": "expect(screen.getByText(\"Offset: +01:05:00.000\")).toBeInTheDocument();",
+          "problem": "getByText con cadena exacta exige que todo el resumen esté en un único elemento. Separar la etiqueta y el valor (p. ej. <Text>Offset: <Code>+01:05:00.000</Code></Text>, habitual en Mantine) haría fallar los tres tests del resumen.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "muestra debajo de los campos el texto `Offset: <signo><HH>:<MM>:<SS>.<mmm>`:",
+            "new": "muestra debajo de los campos, en un único elemento de texto, `Offset: <signo><HH>:<MM>:<SS>.<mmm>`:"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Textos `+100 ms`, `+1 s`, `+1 min` citados; el orden (el botón de dirección sigue siendo el primero) explícito y comprobado con getAllByRole('button')[0].",
+        "Reglas de reparto (ms 0–999, s/min 0–59, resto en horas) con ejemplo; coinciden con los tests.",
+        "Habilitar Start y el envío resultante se deducen del comportamiento existente.",
+        "Preservación: el resumen de T001 se sigue mostrando en un único <Text>."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Normalizar al salir del campo y al enviar: explícito con ejemplos (2500 ms, 1500 ms, 90 s hacia atrás) que coinciden literalmente con los tests.",
+        "Negación de valores normalizados explícita; -0 se interpola como '0', así que el ejemplo es alcanzable.",
+        "Horas sin tope explícito; el test añadido (hour=1 + min=90) se deduce de «el total se reparte».",
+        "Preservación: normalizar al perder el foco no altera los tests de T001/T002 (min=75 y min=59 se comprueban sin blur o no cambian)."
+      ],
+      "findings": []
+    }
+  ]
+}

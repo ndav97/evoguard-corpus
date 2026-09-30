@@ -1,0 +1,63 @@
+{
+  "family": "S001",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Los textos `Showing N of M tasks`, `Showing 1 of 1 task` y `No tasks match the current filters.` coinciden literalmente con los tests y el parche.",
+        "La regla de singular depende de M, como en el test (`Showing 0 of 3 tasks`, `Showing 1 of 1 task`).",
+        "La ocultación de la tabla con N=0 está pedida explícitamente (test: queryByRole('table') ausente).",
+        "El refresco periódico (triggerIntervals) usa la lógica existente de fetchTasks; el requisito está explícito.",
+        "Los filtros existentes (Running/Failed, Kind, búsqueda sensible a mayúsculas) no cambian y los tests los usan tal cual."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "hidden_requirement",
+          "request_quote": "muestra encima de la tabla el texto `Showing N of M tasks`",
+          "evidence": "expect(screen.getByText(\"Showing 3 of 3 tasks\")).toBeInTheDocument();",
+          "problem": "getByText exige que el resumen sea el texto completo de un único elemento; un resumen con texto adicional en el mismo nodo (p. ej. «Showing 3 of 3 tasks (filtered)») o partido en varios elementos (<b>3</b>) fallaría. El prompt general dice que el texto entre comillas invertidas es exacto, por lo que el riesgo es bajo.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "1. Cuando haya al menos una tarea, muestra encima de la tabla el texto `Showing N of M tasks`:",
+            "new": "1. Cuando haya al menos una tarea, muestra encima de la tabla, en un elemento propio y sin texto adicional, el texto `Showing N of M tasks`:"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "`Success`/`Canceled` casan con taskMatches existente (comparación en minúsculas con el status); `CANCELING` queda excluido, como pide el request.",
+        "`Clear filters` se localiza por rol button y nombre exacto; visibilidad y reseteo coinciden con lo pedido.",
+        "El campo de búsqueda ya es controlado (value={this.state.searchDescription}), así que toHaveValue('') es deducible.",
+        "El orden 'después de Failed' no se comprueba; no genera falsos negativos."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "URL `POST /api/v1/tasks/{id}/cancel` coincide con cancelTask de src/utils/taskutil.jsx; el cuerpo {} no se comprueba.",
+        "Mensajes de éxito/error, singular y rol `alert` están literalmente en el request.",
+        "Solo se cancelan las RUNNING visibles con filtros (test Kind=Snapshot → solo t4): explícito.",
+        "El botón por fila tiene nombre accesible `Cancel task` (title del icono), no choca con el nombre exacto `Cancel all running tasks`.",
+        "Tests anteriores (T001/T002) no se ven afectados por el nuevo botón ni por la alerta (solo aparece tras un fallo)."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "ambiguity",
+          "request_quote": "Mientras haya peticiones pendientes, el botón queda deshabilitado.",
+          "evidence": "await waitFor(() => expect(cancelAll()).toBeEnabled());  // tras el refresco, las tareas siguen RUNNING",
+          "problem": "El test exige que el botón vuelva a estar habilitado aunque las tareas sigan RUNNING tras el refresco. Una implementación razonable que lo mantenga deshabilitado para no repetir cancelaciones ya solicitadas (hasta que dejen de estar RUNNING) fallaría. Se deduce de «mientras haya peticiones pendientes», pero conviene decirlo.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "   - Mientras haya peticiones pendientes, el botón queda deshabilitado.",
+            "new": "   - Mientras haya peticiones pendientes, el botón queda deshabilitado. Cuando terminan todas vuelve a estar habilitado, aunque las tareas sigan apareciendo como `RUNNING`."
+          }
+        }
+      ]
+    }
+  ]
+}

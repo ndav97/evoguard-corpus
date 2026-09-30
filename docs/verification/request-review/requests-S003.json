@@ -1,0 +1,73 @@
+{
+  "family": "S003",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Rol progressbar, nombre `Password strength`, aria-valuemin/max/now y valores 3/4: explícitos.",
+        "Nombres de nivel por modo y condición de visibilidad (política Standard/ZXCVBN + valor no vacío): explícitos; las puntuaciones del test coinciden con el cálculo existente (abcdefgh con lower+upper → 2 → Fair).",
+        "Sin política: con React 19.3 defaultProps no se aplica a componentes función, así que policy es undefined y maxScore=3, como pide el request.",
+        "La nota sobre `:` y `.` en claves evita el problema de separadores de i18next."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "El texto visible pasa por `i18next` como el resto del componente.",
+          "evidence": "src/setupTests.ts inicializa i18next con resources: { en: { testNS: {} } } (no carga locales); expect(screen.getByText(\"Strength: Strong\"))",
+          "problem": "En los tests no hay traducciones cargadas: translate devuelve la clave. Solo pasa si la clave es el propio texto inglés (convención del componente, p. ej. \"Must be at least {{len}} characters in length\"). Un modelo que use claves simbólicas (p. ej. `password_strength_strong`) y añada su traducción en locales/en/portal.json vería el texto correcto en la app pero fallaría los tests. Se puede deducir del código, pero no se dice.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "- El texto visible pasa por `i18next` como el resto del componente. Evita `:` y `.` dentro de las claves de traducción, porque i18next los interpreta como separadores.",
+            "new": "- El texto visible pasa por `i18next` como el resto del componente, usando como clave el propio texto en inglés (en los tests no se cargan traducciones y se muestra la clave). Evita `:` y `.` dentro de las claves de traducción, porque i18next los interpreta como separadores."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Rol list con nombre `Password requirements`, orden y textos de los requisitos: explícitos y coinciden con el test.",
+        "Definición de carácter especial = regex existente /[^a-z0-9]/i.",
+        "Visible sin texto escrito; oculta en ZXCVBN, sin requisitos o sin política: explícito.",
+        "Coexiste con `Strength: <nivel>` de T001 (test lo comprueba) sin conflicto de getByText."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "Cada elemento empieza por `✓ ` si el requisito se cumple y por `✗ ` si no (por ejemplo, `✗ One number`).",
+          "evidence": "expect(items()).toEqual([\"✗ At least 8 characters\", \"✓ One lowercase letter\", ...]) sobre li.textContent",
+          "problem": "«Empieza por» sugiere que puede haber más texto; el test compara el textContent completo del <li>. Una implementación accesible que añada texto solo para lectores de pantalla (p. ej. <span class=\"sr-only\">met</span>) o que pinte el símbolo con CSS ::before fallaría.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "2. Cada elemento empieza por `✓ ` si el requisito se cumple y por `✗ ` si no (por ejemplo, `✗ One number`).",
+            "new": "2. El texto de cada elemento es exactamente `✓ <requisito>` si se cumple o `✗ <requisito>` si no (por ejemplo, `✗ One number`), sin texto adicional (tampoco oculto) y con el símbolo como texto, no como estilo CSS."
+          }
+        },
+        {
+          "severity": "low",
+          "type": "clarity",
+          "request_quote": "`At least N characters`, si `min_length` > 0;",
+          "evidence": "Tests solo con N=4, 6 y 8.",
+          "problem": "Con N=1 el texto sería «At least 1 characters». No afecta a los tests; cosmético.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "   - `At least N characters`, si `min_length` > 0;",
+            "new": "   - `At least N characters`, si `min_length` > 0 (el mismo texto también si N es 1);"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Firma de onValidityChange, llamada al montar y al cambiar, y reglas de validez por modo: explícitas; los tests usan waitFor + toHaveBeenLastCalledWith (toleran llamadas extra).",
+        "`Minimum strength required: <nivel>` con nombre ZXCVBN de min_score y solo con valor no vacío: explícito.",
+        "Sin política siempre válida: con React 19 policy es undefined; coherente con el test.",
+        "Nunca en modo estándar: explícito; la lista de T002 sigue presente (comprobado en el test)."
+      ],
+      "findings": []
+    }
+  ]
+}

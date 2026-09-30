@@ -1,0 +1,22 @@
+{"family":"S009","turns":[
+{"turn":"T001","ok":[
+"Claves `stocks.show_percent_change` / `stocks.show_price`, sus textos en inglés y su ubicación en la sección `stocks` de public/locales/en/common.json: citados literalmente y comprobados por el test.",
+"`aria-pressed` false/true según la vista: explícito y comprobado tal cual.",
+"El resto del formato (123.45, 1.23%) no cambia; los tests usan el formato existente."
+],"findings":[
+{"severity":"medium","type":"ambiguity","request_quote":"El botón de alternancia debe tener un nombre accesible que describa la acción que realizará al pulsarlo: mostrando precios: `t(\"stocks.show_percent_change\")`","evidence":"oracle/T001.test.jsx:33 — screen.getByRole(\"button\", { name: \"stocks.show_percent_change\" }); oracle/T001.test.jsx:43 — { name: \"stocks.show_price\" }","problem":"El botón contiene texto visible (tickers y precios), así que el nombre accesible por contenido sería 'AAPL 123.45 MSFT 99.99'. Si el modelo añade el texto como span oculto visualmente (sr-only) o como `title`, el nombre calculado incluye también el contenido (o no lo sustituye) y no coincide exactamente con la clave; solo `aria-label` (o aria-labelledby) lo sustituye. La solicitud no dice que el nombre deba ser exactamente esa cadena ni cómo conseguirlo.","fix":{"target":"turns/T001.md","old":"1. El botón de alternancia debe tener un nombre accesible que describa la acción que realizará al pulsarlo:","new":"1. El botón de alternancia debe tener como nombre accesible exactamente la acción que realizará al pulsarlo (el contenido visible del botón no debe formar parte del nombre, p. ej. usando `aria-label`):"}}
+]},
+{"turn":"T002","ok":[
+"Orden `ticker`: sin prefijo de mercado y sin distinguir mayúsculas; el test (AAPL, GOOG, msft, NVDA, TSLA) coincide con cualquier implementación razonable (localeCompare o toLowerCase).",
+"Orden `change`: descendente, nulos al final, empates en orden de la API; el test lo cubre (NVDA antes que GOOG con 0.5) y Array.prototype.sort es estable.",
+"Valores desconocidos y ausencia de `sort`: orden de la API, explícito.",
+"Entradas nulas ignoradas y no mutar los datos (ordenar una copia): explícitos y comprobados.",
+"Conservación de T001: los tests de T001 no pasan `sort`; no hay conflicto."
+],"findings":[]},
+{"turn":"T003","ok":[
+"Clave `homepage-stocks-view:<watchlist>` con el valor tal cual y valores \"percent\"/\"price\": explícitos y comprobados literalmente.",
+"Otra watchlist o valor desconocido muestran precios; sin watchlist no se guarda nada (localStorage.length 0); localStorage que lanza excepción: todo explícito.",
+"Lectura tras el montaje: el test no la distingue de un inicializador perezoso (ambas pasan), así que la restricción es de calidad y no de aceptación; es aceptable.",
+"Conservación de T001/T002: los tests anteriores no tienen watchlist y limpian localStorage en beforeEach; una implementación correcta de T003 no los rompe. Una persistencia mediante useEffect que escriba 'price' al montar antes de leer sí rompería 'restores the percent view', pero sería un error del modelo, no de la especificación."
+],"findings":[]}
+]}
