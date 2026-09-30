@@ -3,7 +3,7 @@
   "family_id": "S010",
   "image_id": "sha256:f2af9c6c3f803392ee9ce44da410f01a9c135f58e0cdf169f39276f1ba6631fd",
   "max_per_turn": 8,
-  "started_at": "2026-09-30T00:42:58.941Z",
+  "started_at": "2026-09-30T01:10:17.301Z",
   "turns": [
     {
       "turn": "T001",
@@ -210,5 +210,5 @@
   ],
   "score": 1,
   "survivors": [],
-  "finished_at": "2026-09-30T00:45:12.179Z"
+  "finished_at": "2026-09-30T01:12:50.195Z"
 }

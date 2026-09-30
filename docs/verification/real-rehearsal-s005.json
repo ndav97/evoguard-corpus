@@ -3,10 +3,10 @@
   "family_id": "S005",
   "image_id": "sha256:102f38a0132b91010bfcce0617fdab23e401eca9c261c96c29efd60a85aeb4e0",
   "experimental": false,
-  "started_at": "2026-09-29T05:14:27.137Z",
+  "started_at": "2026-09-30T01:17:00.050Z",
   "versions": {
     "V1": {
-      "task_id": "7be96a8d-e274-4692-a699-af05587da0b1",
+      "task_id": "29800706-f471-4433-8397-a0b87d80f432",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "6785c374802cabba95e097d6f0302b8a6cb29ea7"
     },
     "V2": {
-      "task_id": "844a3384-d92b-4084-bf5b-5ee809a2f86d",
+      "task_id": "ab25b8f5-79eb-481c-b07b-7e5af16a06a2",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "a851895eceb6a8c116908aa878d56d7955020d2e"
     },
     "V3": {
-      "task_id": "6e1a08b0-b19c-4f4b-b927-de157adffcb4",
+      "task_id": "9636c7e9-8a0a-422e-8f47-f9155f8731c6",
       "outcomes": [
         {
           "provider": "google",
@@ -99,7 +99,7 @@
           }
         }
       ],
-      "candidate_commit": "05c2440b2880b35e0586ede47c4ff5d780705072"
+      "candidate_commit": "d4712c665d95b264c6df357ca49e6f548fc300ae"
     }
   },
   "v3_oracle_stability": {
@@ -108,18 +108,18 @@
     "runs": [
       {
         "status": "PASS",
-        "total": 540,
-        "seconds": 22
+        "total": 541,
+        "seconds": 27
       },
       {
         "status": "PASS",
-        "total": 540,
-        "seconds": 22
+        "total": 541,
+        "seconds": 27
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-09-29T05:20:57.071Z",
+  "finished_at": "2026-09-30T01:25:14.419Z",
   "sources_sha256": {
     "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",

@@ -3,7 +3,7 @@
   "family_id": "S005",
   "image_id": "sha256:102f38a0132b91010bfcce0617fdab23e401eca9c261c96c29efd60a85aeb4e0",
   "max_per_turn": 8,
-  "started_at": "2026-09-29T15:21:56.607Z",
+  "started_at": "2026-09-30T01:04:43.616Z",
   "turns": [
     {
       "turn": "T001",
@@ -39,7 +39,8 @@
       "baseline": {
         "status": "SURVIVED",
         "tests": 5,
-        "failed": 0
+        "failed": 0,
+        "failing": []
       },
       "summary": {
         "KILLED": 3,
@@ -124,7 +125,8 @@
       "baseline": {
         "status": "SURVIVED",
         "tests": 11,
-        "failed": 0
+        "failed": 0,
+        "failing": []
       },
       "summary": {
         "KILLED": 7,
@@ -194,7 +196,8 @@
       "baseline": {
         "status": "SURVIVED",
         "tests": 15,
-        "failed": 0
+        "failed": 0,
+        "failing": []
       },
       "summary": {
         "KILLED": 5,
@@ -226,5 +229,5 @@
       "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-09-29T15:24:00.371Z"
+  "finished_at": "2026-09-30T01:07:28.690Z"
 }
