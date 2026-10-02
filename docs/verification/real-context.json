@@ -1,0 +1,371 @@
+{
+  "artifact_type": "real_context_fit",
+  "created_at": "2026-10-02T16:24:39.002Z",
+  "estimator": {
+    "method": "utf8_bytes_per_token_lower_bound",
+    "bytes_per_token": 3.31,
+    "safety_factor": 0.8,
+    "calibration": {
+      "evidence": "docs/verification/context-calibration.json",
+      "measured_at": "2026-09-25T02:49:20.395Z",
+      "minimum_bytes_per_token": 3.3149,
+      "samples": 16
+    }
+  },
+  "windows": [
+    [
+      8192,
+      1024
+    ],
+    [
+      16384,
+      4096
+    ],
+    [
+      32768,
+      4096
+    ]
+  ],
+  "families": {
+    "S001": {
+      "files": 152,
+      "tree_bytes": 5419,
+      "contents_bytes": 21822,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 6476,
+          "history_margin": 180
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 6476,
+          "history_margin": 5300
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 6476,
+          "history_margin": 21684
+        }
+      ]
+    },
+    "S002": {
+      "files": 235,
+      "tree_bytes": 10299,
+      "contents_bytes": 9250,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 6286,
+          "history_margin": 370
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8655,
+          "history_margin": 3121
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8655,
+          "history_margin": 19505
+        }
+      ]
+    },
+    "S003": {
+      "files": 388,
+      "tree_bytes": 18626,
+      "contents_bytes": 24878,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 5930,
+          "history_margin": 726
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 11394,
+          "history_margin": 382
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 11394,
+          "history_margin": 16766
+        }
+      ]
+    },
+    "S004": {
+      "files": 198,
+      "tree_bytes": 8780,
+      "contents_bytes": 13085,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 5530,
+          "history_margin": 1126
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 7851,
+          "history_margin": 3925
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 7851,
+          "history_margin": 20309
+        }
+      ]
+    },
+    "S005": {
+      "files": 635,
+      "tree_bytes": 36827,
+      "contents_bytes": 20630,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4161,
+          "history_margin": 2495
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4161,
+          "history_margin": 7615
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 18255,
+          "history_margin": 9905
+        }
+      ]
+    },
+    "S006": {
+      "files": 441,
+      "tree_bytes": 20181,
+      "contents_bytes": 25638,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4117,
+          "history_margin": 2539
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 9888,
+          "history_margin": 1888
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 12172,
+          "history_margin": 15988
+        }
+      ]
+    },
+    "S007": {
+      "files": 233,
+      "tree_bytes": 11133,
+      "contents_bytes": 22382,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 6376,
+          "history_margin": 280
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8682,
+          "history_margin": 3094
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8682,
+          "history_margin": 19478
+        }
+      ]
+    },
+    "S008": {
+      "files": 659,
+      "tree_bytes": 31299,
+      "contents_bytes": 7730,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3129,
+          "history_margin": 3527
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3129,
+          "history_margin": 8647
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 15602,
+          "history_margin": 12558
+        }
+      ]
+    },
+    "S009": {
+      "files": 954,
+      "tree_bytes": 32679,
+      "contents_bytes": 6225,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3615,
+          "history_margin": 3041
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3615,
+          "history_margin": 8161
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 16870,
+          "history_margin": 11290
+        }
+      ]
+    },
+    "S010": {
+      "files": 449,
+      "tree_bytes": 28214,
+      "contents_bytes": 10802,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 5359,
+          "history_margin": 1297
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 5359,
+          "history_margin": 6417
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 13534,
+          "history_margin": 14626
+        }
+      ]
+    }
+  }
+}

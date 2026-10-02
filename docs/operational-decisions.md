@@ -260,6 +260,31 @@ Los modelos locales no podían ni empezar en los repositorios grandes. Con 32 76
 - **Banco de modelos locales:** incluye las tareas semi-reales `S001:V1` y `S005:V1`.
 - **Recomendación para el congelamiento de modelos:** fijar los locales con una ventana de 32 768 (o al menos 16 384) si el hardware lo permite. A 8 192 el estrato semi-real queda casi fuera de su alcance, lo que sesgaría la comparación. Requiere recalibrar `config/context.json` para la nueva ventana.
 
+### Medición completa de las diez familias (2026-10-02)
+`npm run real:context` en el PC (Windows, imágenes reales, sin modelos). Evidencia: `docs/verification/real-context.json`. Se usa el presupuesto de entrada que queda tras reservar la salida y la plantilla. «Margen» = tokens que quedan para el historial del turno.
+
+| Familia | Archivos | 8 192 (salida 1 024) | 16 384 (salida 4 096) | 32 768 (salida 4 096) |
+|---|---|---|---|---|
+| S001 | 152 | completa, margen 180 | completa, 5 300 | completa, 21 684 |
+| S002 | 235 | solo árbol, 370 | completa, 3 121 | completa, 19 505 |
+| S003 | 388 | directorio de la zona, 726 | completa, 382 | completa, 16 766 |
+| S004 | 198 | solo árbol, 1 126 | completa, 3 925 | completa, 20 309 |
+| S005 | 635 | directorio de la zona, 2 495 | directorio de la zona, 7 615 | completa, 9 905 |
+| S006 | 441 | directorio de la zona, 2 539 | solo árbol, 1 888 | completa, 15 988 |
+| S007 | 233 | solo árbol, 280 | completa, 3 094 | completa, 19 478 |
+| S008 | 659 | directorio de la zona, 3 527 | directorio de la zona, 8 647 | completa, 12 558 |
+| S009 | 954 | directorio de la zona, 3 041 | directorio de la zona, 8 161 | completa, 11 290 |
+| S010 | 449 | directorio de la zona, 1 297 | directorio de la zona, 6 417 | completa, 14 626 |
+
+Lectura:
+- **8 192:** ninguna familia salvo S001 recibe la vista completa, y en S001, S002, S003 y S007 quedan menos de 800 tokens para el historial: un turno con varios ciclos de acciones no cabe.
+- **16 384:** 5 de 10 familias siguen recortadas y S003 queda con 382 tokens de margen.
+- **32 768:** las diez reciben la vista completa (12 000–18 300 tokens) con 9 900–21 700 tokens de margen.
+
+**Decisión de Claude con autorización del usuario:** la recomendación pasa a ser firme. Los modelos locales se congelan con una ventana de **32 768 tokens y 4 096 de salida**, y se recalibra `config/context.json` para esa ventana. Si el hardware elegido en Vast.ai no lo permite, se documentará como limitación y no se usará 8 192 en el estrato semi-real. `config/models.json` no cambia todavía: se congela junto con la elección de modelos.
+
+**Corrección de la herramienta:** en Windows la primera orden en un contenedor nuevo de un repositorio grande puede superar el límite de 60 s de `docker exec` (falló S006 en la primera corrida). `context-check.mjs` reintenta cada familia una vez, sigue con la siguiente si falla, guarda el informe tras cada familia y conserva los resultados anteriores. En la segunda corrida se midieron las diez.
+
 ## Revisión 2 de F001 — mecanismo preparado (2026-09-29)
 F001 se generó y congeló con el protocolo de acciones 1.0 y con los problemas de transporte de Synterolink (Sonnet no aceptó ninguna versión). Para que sea comparable con F002–F010 se regenerará como revisión 2. Decisiones de Claude con autorización del usuario:
 - **Herramienta:** `npm run corpus:revision -- F001 --reason "…"` (`runner/pipeline/revision.mjs`).
