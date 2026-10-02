@@ -5,7 +5,7 @@
 // con la política de contexto de los modelos locales para cada ventana. Informa el nivel de la vista que cabe
 // (completa, solo árbol, directorio de la zona, …), los tokens estimados y el margen que queda para el historial.
 // Evidencia: docs/verification/real-context.json. No usa modelos.
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { listRealFamilies, loadRealFamily, makeRealPacket } from './families.mjs';
@@ -47,19 +47,34 @@ async function main() {
   const policy = loadContextPolicy(pathToFileURL(join(root, '/')));
   const bases = readBases(root).bases;
   const report = { artifact_type: 'real_context_fit', created_at: new Date().toISOString(), estimator: policy.estimator, windows, families: {} };
+  // Resultados anteriores de otras familias se conservan (permite repetir solo las que fallaron).
+  const out = join(root, 'docs/verification/real-context.json');
+  if (existsSync(out)) { try { const previous = JSON.parse(readFileSync(out, 'utf8')); for (const [id, entry] of Object.entries(previous.families ?? {})) if (!families.includes(id) && !entry.error) report.families[id] = entry; } catch { /* informe anterior ilegible: se rehace */ } }
   for (const id of families) {
     const data = loadRealFamily(root, id);
     const base = bases[id];
-    const workspace = await realWorkspaces({ image: base.image_id, manifest: data.manifest, steps: [], v0Commit: base.v0_repo_commit }).open();
-    try {
-      const overview = await workspace.overview();
-      const packet = makeRealPacket(data, 'V1');
-      const results = measure(overview, packet, policy, windows);
-      report.families[id] = { files: overview.files.length, tree_bytes: Buffer.byteLength(JSON.stringify(overview.files)), contents_bytes: Buffer.byteLength(JSON.stringify(overview.contents)), results };
-      log(`${id}: ${overview.files.length} archivos; ${results.map(r => `${r.context}: ${r.fits ? `${r.level}, ${r.estimated_tokens} tokens, margen ${r.history_margin}` : r.error}`).join(' | ')}`);
-    } finally { await workspace.close(); }
+    // En Windows la primera orden en un contenedor nuevo de un repositorio grande puede superar el límite de 60 s
+    // (git update-index): se reintenta una vez y, si vuelve a fallar, se anota y se sigue con la siguiente familia.
+    let done = false;
+    for (let attempt = 1; attempt <= 2 && !done; attempt++) {
+      let workspace = null;
+      try {
+        workspace = await realWorkspaces({ image: base.image_id, manifest: data.manifest, steps: [], v0Commit: base.v0_repo_commit }).open();
+        const overview = await workspace.overview();
+        const packet = makeRealPacket(data, 'V1');
+        const results = measure(overview, packet, policy, windows);
+        report.families[id] = { files: overview.files.length, tree_bytes: Buffer.byteLength(JSON.stringify(overview.files)), contents_bytes: Buffer.byteLength(JSON.stringify(overview.contents)), results };
+        log(`${id}: ${overview.files.length} archivos; ${results.map(r => `${r.context}: ${r.fits ? `${r.level}, ${r.estimated_tokens} tokens, margen ${r.history_margin}` : r.error}`).join(' | ')}`);
+        done = true;
+      } catch (error) {
+        log(`${id}: intento ${attempt} falló (${String(error.message).split('\n')[0]})`);
+        if (attempt === 2) report.families[id] = { error: String(error.message).split('\n')[0] };
+      } finally { if (workspace) await workspace.close(); }
+    }
+    writeFileSync(out, JSON.stringify(report, null, 2) + '\n');
   }
-  writeFileSync(join(root, 'docs/verification/real-context.json'), JSON.stringify(report, null, 2) + '\n');
+  const failed = Object.entries(report.families).filter(([, e]) => e.error).map(([id]) => id);
+  if (failed.length) log(`Sin medir: ${failed.join(' ')}. Repetir con: npm run real:context -- ${failed.join(' ')}`);
   log('→ docs/verification/real-context.json');
 }
 
