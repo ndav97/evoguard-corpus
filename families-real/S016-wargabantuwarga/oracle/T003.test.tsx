@@ -71,7 +71,7 @@ describe("T003 · mínimo de dos caracteres en la búsqueda automática", () => 
     const onSubmit = jest.fn();
     render(<SearchForm autoSearch checkDocSize itemName="provinsi" onSubmitKeywords={onSubmit} />);
     type("ab");
-    fireEvent.click(screen.getByRole("button", { name: "Hapus pencarian" }));
+    fireEvent.click(screen.getByRole("button", { name: "Kosongkan kata kunci" }));
     expect(input()).toHaveValue("");
     expect(onSubmit).toHaveBeenLastCalledWith("", {}, "");
   });

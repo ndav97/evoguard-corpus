@@ -17,7 +17,12 @@ runner: vitest
 node: "24"
 workspace: github__traefik__traefik          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+# tests que ya fallaban en V0 (excluidos del pass-to-pass). Calibración 2026-10-03: fallan igual en V0 y tras T001–T003; ajenos al componente.
+known_failures:
+  - "src/hooks/use-fetch-with-pagination.spec.tsx › useFetchWithPagination Hook should work as expected passing rowsPerPage property"
+  - "src/hooks/use-fetch-with-pagination.spec.tsx › useFetchWithPagination Hook should work as expected requesting page 2"
+  - "src/hooks/use-fetch-with-pagination.spec.tsx › useFetchWithPagination Hook should work as expected requesting an empty page"
+  - "src/hooks/use-resource-detail.spec.tsx › useResourceDetail should fetch information about entrypoints and middlewares"
 focus: webui/src/components/resources/TraefikResourceStatsCard.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001

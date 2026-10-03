@@ -12,7 +12,7 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-const clearButton = () => screen.queryByRole("button", { name: "Hapus pencarian" });
+const clearButton = () => screen.queryByRole("button", { name: "Kosongkan kata kunci" });
 
 // T002 — Botón para borrar la búsqueda.
 describe("T002 · borrar la búsqueda", () => {

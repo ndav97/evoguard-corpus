@@ -29,7 +29,7 @@ index cf32e04..0fe93fb 100644
                />
 +              {keywords !== "" && (
 +                <button
-+                  aria-label="Hapus pencarian"
++                  aria-label="Kosongkan kata kunci"
 +                  className="-ml-px relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm text-gray-500 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
 +                  onClick={handleClear}
 +                  type="button"

@@ -64,15 +64,20 @@ async function runTests(fam, wt, files) {
   try { j = JSON.parse(await fs.readFile(report, 'utf8')); } catch { /* sin informe */ }
   if (!j) return { error: r.timedOut ? 'TIMEOUT' : 'SIN_INFORME', tail: r.out, results: {}, suiteFailedFiles: [] };
   const results = {};
+  const messages = {};
   let suitesFailed = 0;
   const suiteErrors = [];
   const suiteFailedFiles = [];
   for (const s of j.testResults ?? []) {
     const file = path.relative(cwd, s.name ?? s.testFilePath ?? '');
     if (s.status === 'failed' && !(s.assertionResults ?? []).length) { suitesFailed++; suiteFailedFiles.push(file); suiteErrors.push(`${file}: ${String(s.message ?? s.failureMessage ?? '').slice(0, 1500)}`); }
-    for (const a of s.assertionResults ?? []) results[`${file} › ${a.fullName ?? a.title}`] = a.status;
+    for (const a of s.assertionResults ?? []) {
+      const key = `${file} › ${a.fullName ?? a.title}`;
+      results[key] = a.status;
+      if (a.status === 'failed') messages[key] = String((a.failureMessages ?? []).join('\n')).slice(0, 1200);
+    }
   }
-  return { results, suitesFailed, suiteErrors, suiteFailedFiles, total: j.numTotalTests, failed: j.numFailedTests, ms: r.ms, tail: j.numFailedTests || suitesFailed ? r.out : undefined };
+  return { results, messages, suitesFailed, suiteErrors, suiteFailedFiles, total: j.numTotalTests, failed: j.numFailedTests, ms: r.ms, tail: j.numFailedTests || suitesFailed ? r.out : undefined };
 }
 
 const passed = (res, filter = () => true) => Object.entries(res.results).filter(([k, v]) => filter(k) && v === 'passed').map(([k]) => k);
@@ -138,10 +143,12 @@ async function calibrateFamily(dir) {
       const hiddenFailing = failed(a, (k) => isTurn(k) || isPrev(k));
       const suiteFailing = failed(a, (k) => !k.startsWith(fam.hidden_tests_dir) && !known.has(k));
       const hiddenCount = Object.keys(a.results).filter((k) => isTurn(k)).length;
-      r.after = { error: a.error, hidden_tests: hiddenCount, hidden_failing: hiddenFailing, suite_total: a.total, suite_failing: suiteFailing,
-        suites_failed: a.suitesFailed, suite_errors: a.suiteErrors, seconds: Math.round((a.ms ?? 0) / 1000), tail: hiddenFailing.length || suiteFailing.length || a.suitesFailed || a.error ? a.tail : undefined };
+      // known_failures admite archivos completos (entrada sin « › »): suites que ya no se ejecutaban en V0.
+      const suitesBroken = (a.suiteFailedFiles ?? []).filter((f) => !known.has(f));
+      r.after = { error: a.error, hidden_tests: hiddenCount, hidden_failing: hiddenFailing, hidden_messages: Object.fromEntries(hiddenFailing.map((k) => [k, a.messages?.[k]])), suite_total: a.total, suite_failing: suiteFailing,
+        suites_failed: suitesBroken.length, suites_known: (a.suiteFailedFiles ?? []).filter((f) => known.has(f)), suite_errors: a.suiteErrors, seconds: Math.round((a.ms ?? 0) / 1000), tail: hiddenFailing.length || suiteFailing.length || suitesBroken.length || a.error ? a.tail : undefined };
       r.checks.tests_pasan_despues = !a.error && hiddenCount > 0 && hiddenFailing.length === 0;
-      r.checks.suite_sin_regresiones = !a.error && suiteFailing.length === 0 && !a.suitesFailed;
+      r.checks.suite_sin_regresiones = !a.error && suiteFailing.length === 0 && suitesBroken.length === 0;
       const sig = (x) => JSON.stringify(Object.entries(x.results).sort(([p], [q]) => (p < q ? -1 : 1)));
       r.checks.estable = after.every((x) => sig(x) === sig(a));
       r.ok = Object.values(r.checks).every(Boolean);

@@ -64,7 +64,7 @@ export async function auditReal(root, familyId, { freeze = false, runs } = {}) {
       const visible = execReal(session, ['git', 'log', '-p', '--format=%H %s', `${base.v0_repo_commit}..HEAD`], { raw: true, timeout: 120000 });
       if (LEAK.test(visible)) finding(version, `posible fuga en la historia visible: ${visible.match(LEAK)[0]}`);
       const suite = await runSuiteIn(session, m);
-      const bad = suite.run ? [...suite.run.suiteFailedFiles, ...failing(suite.run, k => !known.has(k))] : [suite.error];
+      const bad = suite.run ? [...suite.run.suiteFailedFiles.filter(f => !known.has(f)), ...failing(suite.run, k => !known.has(k))] : [suite.error];
       entry.visible_suite = { total: suite.run?.total ?? null, problems: bad.length, seconds: Math.round(suite.ms / 1000) };
       if (bad.length) finding(version, `suite visible con ${bad.length} problemas`);
     } finally { closeReal(session); }

@@ -17,7 +17,16 @@ runner: jest
 node: "24"
 workspace: github__processing__p5.js-web-editor          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: client/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+# tests que ya fallaban en V0 (excluidos del pass-to-pass). Calibración 2026-10-03: mongodb-memory-server necesita descargar un binario y el entorno no tiene red.
+known_failures:
+  - "server/models/__test__/user.test.ts › User model should hash password before saving"
+  - "server/models/__test__/user.test.ts › User model should compare passwords correctly"
+  - "server/models/__test__/user.test.ts › User model should expose virtual id as string"
+  - "server/models/__test__/user.test.ts › User model should include virtuals in toJSON output"
+  - "server/models/__test__/user.test.ts › User model should find user by email (case insensitive)"
+  - "server/models/__test__/user.test.ts › User model should find user by username (case insensitive)"
+  - "server/models/__test__/user.test.ts › User model should return null for wrong username/email"
+  - "server/models/__test__/user.test.ts › User model should hash apiKeys on save and find matching key"
 focus: client/modules/IDE/components/Toast.jsx                 # zona que tocan los tres cambios
 turns:
   - id: T001

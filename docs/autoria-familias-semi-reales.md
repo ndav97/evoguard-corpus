@@ -67,3 +67,16 @@ scripts\real\calibrar-familias-reales.cmd -Familia S011   # usa la base instalad
 3. Pedir una revisión independiente de las peticiones, como en `docs/revision-peticiones-semi-reales-2026-09-29.md`.
 
 Mientras una familia está en DRAFT, `npm run corpus:validate` la lista como «pendiente de calibrar» y el preflight bloquea su generación.
+
+## Correcciones tras la primera calibración de S011–S020 (2026-10-03)
+
+Seis familias pasaron a la primera (S011, S012, S014, S017, S019, S020). Las cuatro que fallaron se corrigieron así:
+
+| Familia | Causa | Corrección |
+|---|---|---|
+| S013 traefik | 4 tests de hooks (`use-fetch-with-pagination`, `use-resource-detail`) fallan ya en V0, igual en los tres turnos | Añadidos a `known_failures` |
+| S015 viewer-for-reddit | T003: los tests ocultos buscaban las opciones del `Select` de Mantine con `findByRole('option')`, que en jsdom no las encuentra | Se buscan por texto (`findByText`), como el test existente del repositorio |
+| S016 wargabantuwarga | (1) `lib/data/__tests__/provinces.test.ts` no llega a ejecutarse: importa `data/wbw-database.json`, generado con red por `yarn fetch-wbw` e ignorado por git. (2) Regresión real de la referencia: el botón «Hapus pencarian» coincidía con `getByRole("button", {name: /cari/i})` de los tests de FAQ y LBH | (1) El archivo entero va a `known_failures`. (2) El botón pasa a llamarse «Kosongkan kata kunci» (petición, tests ocultos y parche de referencia) |
+| S018 p5.js-web-editor | 8 tests de `server/models/__test__/user.test.ts` necesitan descargar el binario de mongodb-memory-server y no hay red | Añadidos a `known_failures` |
+
+`known_failures` admite ahora dos formas de entrada: la clave de un test (`archivo › nombre completo`) o la ruta de un archivo de test entero (sin « › ») que no llega a ejecutarse en V0. El calibrador y el pipeline (`runner/real/prepare.mjs`, `pipeline.mjs`, `audit.mjs`) excluyen esos archivos de las suites rotas. Como cambian fuentes del pipeline, los ensayos de S001–S010 deben repetirse junto con los de S011–S020. El calibrador guarda además el mensaje de error de cada test oculto que falla (`hidden_messages`) para diagnosticar sin volver a ejecutar.

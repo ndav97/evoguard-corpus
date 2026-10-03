@@ -14,7 +14,7 @@ const search = () => screen.getByLabelText('Search subscriptions')
 
 const sortBy = async (user: ReturnType<typeof userEvent.setup>, label: string) => {
   await user.click(screen.getByRole('combobox', {name: 'Sort subscriptions'}))
-  await user.click(await screen.findByRole('option', {name: label}))
+  await user.click(await screen.findByText(label))
 }
 
 // T003 — Orden por número de suscriptores.
@@ -23,7 +23,7 @@ describe('T003 · ordenar por suscriptores', () => {
     const user = userEvent.setup()
     render(<SubscriptionFilterList subscriptions={subscriptions} />)
     await user.click(screen.getByRole('combobox', {name: 'Sort subscriptions'}))
-    expect(await screen.findByRole('option', {name: 'Most subscribers'})).toBeInTheDocument()
+    expect(await screen.findByText('Most subscribers')).toBeInTheDocument()
   })
 
   it('ordena de más a menos, empates A-Z y sin dato al final', async () => {

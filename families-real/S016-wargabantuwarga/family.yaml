@@ -17,7 +17,10 @@ runner: jest
 node: "24"
 workspace: github__kawalcovid19__wargabantuwarga.com          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: components/evoguard/__tests__           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+# tests que ya fallaban en V0 (excluidos del pass-to-pass). Una entrada sin « › » es un archivo de test entero que no llega a ejecutarse en V0:
+# lib/data/provinces.ts importa data/wbw-database.json, generado por `yarn fetch-wbw` (con red) e ignorado por git.
+known_failures:
+  - "lib/data/__tests__/provinces.test.ts"
 focus: components/search-form.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001

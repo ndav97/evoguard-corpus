@@ -136,7 +136,7 @@ export async function runRealOracle({ image, manifest, steps, v0Commit, patch, h
         return [turn, { tests: keys.length, failing: failing(result.run, k => k.startsWith(`${rel} ›`)), compile_error: result.run.suiteFailedFiles.includes(rel) }];
       }));
       const suiteFailing = failing(result.run, k => !isHidden(k) && !known.has(k));
-      const suiteBroken = result.run.suiteFailedFiles.filter(f => !f.startsWith(`${manifest.hidden_tests_dir}/`));
+      const suiteBroken = result.run.suiteFailedFiles.filter(f => !f.startsWith(`${manifest.hidden_tests_dir}/`) && !known.has(f));
       const pass = Object.values(perTurn).every(t => t.tests > 0 && !t.failing.length && !t.compile_error) && !suiteFailing.length && !suiteBroken.length;
       report.runs.push({ status: pass ? 'PASS' : 'FAIL', seconds: Math.round(result.ms / 1000), total: result.run.total, hidden: perTurn, suite_failing: suiteFailing, suite_broken: suiteBroken, tail: pass ? undefined : result.tail });
       signatures.push(signature(result.run));
@@ -167,7 +167,7 @@ export function createRealEvaluator({ image, manifest, steps, v0Commit, version,
         const command = `$ (en ${manifest.package_path}) ${suiteCommand(manifest).replace(/ --(reporter=json|json) --outputFile=\S+/, '')}`;
         if (!result.run) return { status: 'FAIL', feedback: `${command}\nLa suite no produjo informe (¿error de configuración o de compilación?).\n${tail(result.tail ?? '')}` };
         const known = new Set(manifest.known_failures);
-        const problems = [...result.run.suiteFailedFiles.map(f => `NO COMPILA / NO EJECUTA: ${f}`), ...failing(result.run, k => !known.has(k)).map(k => `FALLA: ${k}`)];
+        const problems = [...result.run.suiteFailedFiles.filter(f => !known.has(f)).map(f => `NO COMPILA / NO EJECUTA: ${f}`), ...failing(result.run, k => !known.has(k)).map(k => `FALLA: ${k}`)];
         const status = problems.length || !result.run.total ? 'FAIL' : 'PASS';
         return { status, feedback: `${command}\n${result.run.total} tests; ${problems.length} problemas${problems.length ? `:\n${problems.slice(0, 60).join('\n')}` : ''}\n${tail(result.tail ?? '', 12000)}` };
       }

@@ -71,7 +71,8 @@ export function buildImage(root, data, { base, source = 'git', srcDir, installCm
 }
 
 // Verificación sin red: estado del repositorio, zona del cambio, parches de referencia aplicables en orden,
-// y dos ejecuciones completas de la suite con el mismo resultado y sin fallos fuera de known_failures.
+// y dos ejecuciones completas de la suite con el mismo resultado y sin fallos fuera de known_failures
+// (una entrada sin « › » de known_failures es un archivo de test entero que ya no se ejecutaba en V0).
 export async function verifyBase(root, data, image, { runs = 2 } = {}) {
   const m = data.manifest;
   const report = { image_id: image, checks: {} };
@@ -103,7 +104,7 @@ export async function verifyBase(root, data, image, { runs = 2 } = {}) {
       log(`  ${m.id}: suite sin red ${run + 1}/${runs}…`);
       const result = await runSuiteIn(session, m);
       const bad = result.run ? failing(result.run).filter(k => !known.has(k)) : null;
-      report.suite_runs.push({ error: result.error, seconds: Math.round(result.ms / 1000), total: result.run?.total ?? null, failing: bad, suites_failed: result.run?.suiteFailedFiles ?? null, tail: result.error || bad?.length || result.run?.suiteFailedFiles.length ? result.tail : undefined });
+      report.suite_runs.push({ error: result.error, seconds: Math.round(result.ms / 1000), total: result.run?.total ?? null, failing: bad, suites_failed: result.run?.suiteFailedFiles.filter(f => !known.has(f)) ?? null, tail: result.error || bad?.length || result.run?.suiteFailedFiles.some(f => !known.has(f)) ? result.tail : undefined });
       if (result.run) signatures.push(signature(result.run));
     } finally { closeReal(session); }
   }
