@@ -29,7 +29,7 @@ function sampleHistories() {
     code: steps(['sh', '-lc', `cat > src/App.tsx <<'EOF'\n${code}\nEOF`], vite),
     tsc: steps(['npx', 'tsc', '--noEmit'], npmLog),
     spanish: [{ role: 'user', content: { source: 'development_tests', feedback: spanish, attempt: 2 } }, ...steps(['sh', '-lc', 'npm test'], spanish)],
-    json: steps(['cat', 'fixtures/products.json'], readFileSync(new URL('families/F001-product-catalog/fixtures/products.json', root), 'utf8'))
+    json: steps(['cat', 'fixtures/products.json'], readFileSync(new URL('archive/sintetico/families/F001-product-catalog/fixtures/products.json', root), 'utf8'))
   };
 }
 

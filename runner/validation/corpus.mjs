@@ -10,7 +10,7 @@ import { listFamilies, familyDir, expectedPlan } from '../families.mjs';
 import { FAMILY_ORACLES } from '../oracle/families/index.mjs';
 
 // Compatibilidad: ruta de F001. El resto del código usa familyDir(root, id).
-export const FAMILY_PATH = 'families/F001-product-catalog';
+export const FAMILY_PATH = 'archive/sintetico/families/F001-product-catalog';
 export const read = path => YAML.parse(readFileSync(path, 'utf8'));
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const yamlFiles = path => existsSync(path) ? readdirSync(path).filter(p => p.endsWith('.yaml')).sort() : [];
@@ -26,7 +26,7 @@ export function loadCorpus(root, familyId = 'F001') {
   const turnFiles = yamlFiles(join(familyRoot, 'turns'));
   const fixturePath = family.fixture?.path;
   const fixture = typeof fixturePath === 'string' && /^fixtures\/[a-z0-9-]+\.json$/.test(fixturePath) ? read(join(familyRoot, fixturePath)) : null;
-  const oracleDir = join(root, 'oracle', familyId);
+  const oracleDir = join(root, 'archive/sintetico/oracle', familyId);
   return {
     familyId, familyDir: dir,
     family,
@@ -108,7 +108,7 @@ export function validateCorpus(data, root) {
   const dir = data.familyDir;
   const reqIds = ['R001','R002','R003','R004','R005'];
   demand(f.family_id === id && p.family_id === id, 'Familia/procedencia inválida');
-  demand(dir === `families/${id}-${f.slug}`, `Directorio ${dir} no coincide con family_id y slug`);
+  demand(dir === `archive/sintetico/families/${id}-${f.slug}`, `Directorio ${dir} no coincide con family_id y slug`);
   equal(rs.map(r=>r.id), reqIds, 'Requisitos R001–R005 completos, únicos y ordenados');
   equal(ts.map(t=>t.id), ['T001','T002','T003'], 'Turnos T001–T003 completos y únicos');
   equal(data.requirementFiles, reqIds.map(r=>`${r}.yaml`), 'Nombres de archivos de requisitos inválidos');
@@ -188,7 +188,7 @@ export function validateCorpus(data, root) {
   for (const c of Object.values(oracle.CONTROL ?? {})) (byRole[c.role] ??= []).push(c.name.toLowerCase());
   for (const [role, names] of Object.entries(byRole)) for (const a of names) for (const b of names) if (a !== b && b.includes(a)) errors.push(`${id}: nombre ambiguo en ${role}: «${a}» está contenido en «${b}»`);
   const required = ['README.md','templates/react-vite/package-lock.json','templates/react-vite/src/App.tsx','runner/agents/contracts.ts','runs/corpus-generation','runs/pi0',
-    `${dir}/prompts/architecture.md`, `${dir}/prompts/generate-v0.md`, ...(id === 'F001' ? ['oracle/F001/adapter.ts', ...versions.map(v=>`${dir}/generation/${v}`)] : [])];
+    `${dir}/prompts/architecture.md`, `${dir}/prompts/generate-v0.md`, ...(id === 'F001' ? ['archive/sintetico/oracle/F001/adapter.ts', ...versions.map(v=>`${dir}/generation/${v}`)] : [])];
   for (const path of required) demand(existsSync(join(root,path)), `Falta ${path}`);
   for (const pkgDir of ['', 'templates/react-vite']) {
     const packagePath = join(root,pkgDir,'package.json');

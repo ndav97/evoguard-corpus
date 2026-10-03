@@ -1,0 +1,29 @@
+diff --git a/src/components/UI/Timer/Timer.tsx b/src/components/UI/Timer/Timer.tsx
+index daac97d57..bd0ccb8ef 100644
+--- a/src/components/UI/Timer/Timer.tsx
++++ b/src/components/UI/Timer/Timer.tsx
+@@ -94,6 +94,11 @@ export const Timer = (props: TimerProps) => {
+     tooltip = createTooltip(t('Your message window is about to expire!'));
+   }
+ 
++  const remainingLabel =
++    hours === 0
++      ? 'Session window expired'
++      : `${hours} ${hours === 1 ? 'hour' : 'hours'} left in the session window`;
++
+   if (hours < 10 && hours > 0) {
+     hours = `0${hours.toString()}`;
+   }
+@@ -106,7 +111,11 @@ export const Timer = (props: TimerProps) => {
+       placement="bottom"
+       interactive
+     >
+-      <div className={timerStyle + ' ' + (variant === 'secondary' && styles.SecondaryTimer)} data-testid="timerCount">
++      <div
++        className={timerStyle + ' ' + (variant === 'secondary' && styles.SecondaryTimer)}
++        data-testid="timerCount"
++        aria-label={remainingLabel}
++      >
+         {hours} hrs
+       </div>
+     </Tooltip>

@@ -1,0 +1,22 @@
+diff --git a/lib/hooks/useSubscriptionsFilterSort.ts b/lib/hooks/useSubscriptionsFilterSort.ts
+index 04a0d0b..5ba1dbb 100644
+--- a/lib/hooks/useSubscriptionsFilterSort.ts
++++ b/lib/hooks/useSubscriptionsFilterSort.ts
+@@ -43,10 +43,13 @@ export function useSubscriptionsFilterSort({
+   const [searchQuery, setSearchQuery] = useState('')
+   const [sortBy, setSortBy] = useState<SortOption>('default')
+ 
+-  // Client-side filtering
+-  const filtered = searchQuery
+-    ? initialSubscriptions.filter((sub) =>
+-        sub.name.toLowerCase().includes(searchQuery.toLowerCase())
++  // Client-side filtering: case-insensitive, ignoring surrounding spaces, against the name or the display name
++  const query = searchQuery.trim().toLowerCase()
++  const filtered = query
++    ? initialSubscriptions.filter(
++        (sub) =>
++          sub.name.toLowerCase().includes(query) ||
++          sub.displayName.toLowerCase().includes(query)
+       )
+     : initialSubscriptions
+ 

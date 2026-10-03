@@ -24,7 +24,7 @@ function candidateTree(app = 'App.tsx', catalog = 'catalog.ts') {
   return {
     'package.json': Buffer.from(baseline.packageJson),
     'package-lock.json': Buffer.from(baseline.packageLock),
-    'fixtures/products.json': readFileSync(join(root, 'families/F001-product-catalog/fixtures/products.json')),
+    'fixtures/products.json': readFileSync(join(root, 'archive/sintetico/families/F001-product-catalog/fixtures/products.json')),
     'src/App.tsx': rehearsal(app),
     'src/catalog.ts': rehearsal(catalog),
     'src/catalog.test.ts': rehearsal('catalog.test.ts'),

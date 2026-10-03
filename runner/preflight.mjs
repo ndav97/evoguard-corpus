@@ -8,11 +8,13 @@ import { readContainerLock } from './sandbox/lock.mjs';
 import { pipelineFingerprint } from './pipeline/sources.mjs';
 
 import { modelBlockers } from './preflight-models.mjs';
+import { syntheticArchived } from './strata.mjs';
 export { modelBlockers };
 
 export function generationBlockers(root, familyId = 'F001') {
   const data = loadCorpus(root, familyId);
   const blockers = validateCorpus(data, root);
+  if (syntheticArchived(root)) blockers.push('Estrato sintético archivado (config/strata.json, decisión 2026-10-02): el corpus solo usa familias semi-reales (Sxxx); no se generan familias Fxxx.');
   let lock = null;
   try {
     lock = readContainerLock(root);
@@ -36,7 +38,8 @@ export function generationBlockers(root, familyId = 'F001') {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const familyId = process.argv[2] ?? 'F001';
+    const familyId = process.argv[2];
+    if (!/^[FS]\d{3}$/.test(familyId ?? '')) throw new Error('Uso: npm run generation:preflight -- Sxxx');
     const root = fileURLToPath(new URL('../', import.meta.url));
     const blockers = /^S\d{3}$/.test(familyId) ? (await import('./real/preflight.mjs')).realBlockers(root, familyId) : generationBlockers(root, familyId);
     if (blockers.length) { console.error(`${familyId}: generación no autorizada por preflight:\n` + blockers.map(b => `- ${b}`).join('\n')); process.exitCode = 1; }

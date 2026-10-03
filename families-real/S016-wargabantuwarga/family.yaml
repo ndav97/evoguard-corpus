@@ -1,0 +1,53 @@
+# Familia semi-real S016 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S016
+slug: wargabantuwarga
+stratum: semi-real
+repo: kawalcovid19/wargabantuwarga.com
+url: https://github.com/kawalcovid19/wargabantuwarga.com
+license: MIT
+domain: Información ciudadana de salud pública (directorio de contactos)
+v0:
+  commit: 28efab953964d377cb7847b3207647b50700e666
+  date: 2026-09-13
+  verified: 2026-09-27 GREEN (363 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: jest
+node: "24"
+workspace: github__kawalcovid19__wargabantuwarga.com          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: components/evoguard/__tests__           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: components/search-form.tsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Buscar sin espacios sobrantes
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Botón para borrar la búsqueda
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Búsqueda automática a partir de dos caracteres
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: anthropic
+    V2: google
+    V3: local_a
+  references:
+    V1: null
+    V2: null
+    V3: null

@@ -1,0 +1,19 @@
+diff --git a/src/utils/format.ts b/src/utils/format.ts
+index 41f7a326..0a756057 100644
+--- a/src/utils/format.ts
++++ b/src/utils/format.ts
+@@ -34,6 +34,14 @@ export function getFileTypeLabel(mimeType: string): string {
+     "text/css": "CSS",
+     "text/javascript": "JS",
+     "application/javascript": "JS",
++    "application/msword": "DOC",
++    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "DOCX",
++    "application/vnd.ms-excel": "XLS",
++    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "XLSX",
++    "application/vnd.ms-powerpoint": "PPT",
++    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "PPTX",
++    "text/markdown": "MD",
++    "text/csv": "CSV",
+   };
+ 
+   if (specialCases[normalizedMimeType]) {

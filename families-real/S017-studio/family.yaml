@@ -1,0 +1,53 @@
+# Familia semi-real S017 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S017
+slug: studio
+stratum: semi-real
+repo: Automattic/studio
+url: https://github.com/Automattic/studio
+license: GPL-2.0
+domain: Desarrollo local de sitios WordPress
+v0:
+  commit: 673311d4f5fea76172f3ad8b7fe4601afae6b1c4
+  date: 2026-09-25
+  verified: 2026-09-27 GREEN (921 tests, 2 ejecuciones idénticas, sin red)
+package_path: apps/ui
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__Automattic__studio          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: apps/ui/src/components/site-preview/address-bar.tsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Aceptar la dirección del sitio escrita sin http://
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Botón para borrar los destinos recientes
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: No ofrecer la página actual entre los recientes
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: google
+    V2: local_a
+    V3: local_b
+  references:
+    V1: null
+    V2: null
+    V3: null

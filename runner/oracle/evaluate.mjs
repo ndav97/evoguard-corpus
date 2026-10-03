@@ -23,9 +23,9 @@ function familyContext(familyId, root = ROOT) {
   const key = `${familyId}@${root}`;
   if (!contexts[key]) {
     const oracle = familyOracle(familyId);
-    const dir = readdirSync(new URL('families/', root)).find(name => name.startsWith(`${familyId}-`));
+    const dir = readdirSync(new URL('archive/sintetico/families/', root)).find(name => name.startsWith(`${familyId}-`));
     if (!dir) throw new Error(`Falta el directorio de la familia ${familyId}`);
-    const fixture = JSON.parse(readFileSync(new URL(`families/${dir}/${oracle.FIXTURE}`, root), 'utf8'));
+    const fixture = JSON.parse(readFileSync(new URL(`archive/sintetico/families/${dir}/${oracle.FIXTURE}`, root), 'utf8'));
     contexts[key] = oracle.context ? oracle.context(fixture) : { fixture };
   }
   return contexts[key];
@@ -35,7 +35,7 @@ export function loadCases(root = ROOT, familyId = 'F001') {
   if (!FAMILY.test(familyId)) throw new Error(`Familia inválida: ${familyId}`);
   const cases = [];
   for (const requirement of ['R001', 'R002', 'R003', 'R004', 'R005']) {
-    const file = JSON.parse(readFileSync(new URL(`oracle/${familyId}/${requirement}.cases.yaml`, root), 'utf8'));
+    const file = JSON.parse(readFileSync(new URL(`archive/sintetico/oracle/${familyId}/${requirement}.cases.yaml`, root), 'utf8'));
     if (!VERSIONS.includes(file.minimum_version)) throw new Error(`Versión mínima inválida en ${requirement}`);
     for (const spec of file.cases) cases.push({ ...spec, requirement, minimum_version: file.minimum_version, family: familyId });
   }

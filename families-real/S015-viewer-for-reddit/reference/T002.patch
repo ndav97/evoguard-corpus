@@ -1,0 +1,30 @@
+diff --git a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+index 01c914c..9570329 100644
+--- a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
++++ b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+@@ -2,7 +2,7 @@
+ 
+ import type {ManagedSubscription} from '@/lib/hooks/useSubredditManager'
+ import {useSubscriptionsFilterSort} from '@/lib/hooks/useSubscriptionsFilterSort'
+-import {Avatar, NavLink, Select, Stack, TextInput} from '@mantine/core'
++import {Avatar, Button, NavLink, Select, Stack, Text, TextInput} from '@mantine/core'
+ import {IconMessage, IconSearch} from '@tabler/icons-react'
+ import Link from 'next/link'
+ 
+@@ -54,6 +54,16 @@ export function SubscriptionFilterList({
+         aria-label="Sort subscriptions"
+         allowDeselect={false}
+       />
++      {filteredSubscriptions.length === 0 && searchQuery.trim() !== '' && (
++        <Stack gap={4} align="flex-start">
++          <Text size="sm" c="dimmed" role="status">
++            {`No subreddits match "${searchQuery.trim()}"`}
++          </Text>
++          <Button size="xs" variant="subtle" onClick={() => setSearchQuery('')}>
++            Clear search
++          </Button>
++        </Stack>
++      )}
+       <Stack gap={4}>
+         {filteredSubscriptions.map((sub) => (
+           <NavLink

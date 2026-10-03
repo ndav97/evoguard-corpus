@@ -1,0 +1,18 @@
+diff --git a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+index ab80bffd..fdbfdc54 100644
+--- a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
++++ b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+@@ -35,7 +35,12 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+     useOtelTerms,
+   } = props;
+ 
+-  const count = textFilter ? <span className="TracePageSearchBar--count">{resultCount}</span> : null;
++  const countLabel = `${resultCount} matching ${resultCount === 1 ? 'span' : 'spans'}`;
++  const count = textFilter ? (
++    <span className="TracePageSearchBar--count" aria-live="polite" aria-label={countLabel}>
++      {resultCount}
++    </span>
++  ) : null;
+ 
+   const btnClass = cx('TracePageSearchBar--btn', { 'is-disabled': !textFilter });
+   const uiFindInputInputProps = {

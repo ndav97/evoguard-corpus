@@ -1,0 +1,24 @@
+diff --git a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+index fdbfdc54..fec3a4f0 100644
+--- a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
++++ b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+@@ -42,11 +42,19 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+     </span>
+   ) : null;
+ 
++  const onSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
++    if (event.key !== 'Enter' || !navigable || !textFilter) return;
++    event.preventDefault();
++    if (event.shiftKey) prevResult();
++    else nextResult();
++  };
++
+   const btnClass = cx('TracePageSearchBar--btn', { 'is-disabled': !textFilter });
+   const uiFindInputInputProps = {
+     'data-test': markers.IN_TRACE_SEARCH,
+     className: 'TracePageSearchBar--bar ub-flex-auto',
+     name: 'search',
++    onKeyDown: onSearchKeyDown,
+     suffix: count,
+   };
+ 

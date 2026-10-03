@@ -1,0 +1,78 @@
+diff --git a/client/modules/IDE/actions/toast.js b/client/modules/IDE/actions/toast.js
+index d18c2616..3d3e424b 100644
+--- a/client/modules/IDE/actions/toast.js
++++ b/client/modules/IDE/actions/toast.js
+@@ -22,8 +22,10 @@ export function hideToast() {
+  * And also supports proposed single-action syntax with message and optional timeout.
+  *    dispatch(showToast('Toast.SketchFailedSave'));
+  *    dispatch(showToast('Toast.SketchSaved', 5500));
++ * An optional third argument sets the variant: 'info' (default) or 'error'.
++ *    dispatch(showToast('Toast.SketchFailedSave', 5500, 'error'));
+  */
+-export function showToast(textOrTime, timeout = 1500) {
++export function showToast(textOrTime, timeout = 1500, variant = 'info') {
+   return (dispatch) => {
+     let time = timeout;
+     if (typeof textOrTime === 'string') {
+@@ -33,7 +35,8 @@ export function showToast(textOrTime, timeout = 1500) {
+       time = textOrTime;
+     }
+     dispatch({
+-      type: ActionTypes.SHOW_TOAST
++      type: ActionTypes.SHOW_TOAST,
++      variant: variant === 'error' ? 'error' : 'info'
+     });
+     if (hideTimer) clearTimeout(hideTimer);
+     hideTimer = setTimeout(() => {
+diff --git a/client/modules/IDE/components/Toast.jsx b/client/modules/IDE/components/Toast.jsx
+index 586faf9c..6e901c32 100644
+--- a/client/modules/IDE/components/Toast.jsx
++++ b/client/modules/IDE/components/Toast.jsx
+@@ -6,7 +6,7 @@ import { hideToast } from '../actions/toast';
+ import ExitIcon from '../../../images/exit.svg';
+ 
+ export default function Toast() {
+-  const { text, isVisible } = useSelector((state) => state.toast);
++  const { text, isVisible, variant } = useSelector((state) => state.toast);
+   const dispatch = useDispatch();
+   const { t } = useTranslation();
+ 
+@@ -24,8 +24,13 @@ export default function Toast() {
+   if (!isVisible) {
+     return null;
+   }
++  const isError = variant === 'error';
+   return (
+-    <section className="toast" role="status" aria-live="polite">
++    <section
++      className={isError ? 'toast toast--error' : 'toast'}
++      role={isError ? 'alert' : 'status'}
++      aria-live={isError ? 'assertive' : 'polite'}
++    >
+       <p>{t(text)}</p>
+       <button
+         className="toast__close"
+diff --git a/client/modules/IDE/reducers/toast.js b/client/modules/IDE/reducers/toast.js
+index b680c7cf..63af698a 100644
+--- a/client/modules/IDE/reducers/toast.js
++++ b/client/modules/IDE/reducers/toast.js
+@@ -2,13 +2,17 @@ import * as ActionTypes from '../../../constants';
+ 
+ const initialState = {
+   isVisible: false,
+-  text: ''
++  text: '',
++  variant: 'info'
+ };
+ 
+ const toast = (state = initialState, action) => {
+   switch (action.type) {
+     case ActionTypes.SHOW_TOAST:
+-      return Object.assign({}, state, { isVisible: true });
++      return Object.assign({}, state, {
++        isVisible: true,
++        variant: action.variant === 'error' ? 'error' : 'info'
++      });
+     case ActionTypes.HIDE_TOAST:
+       return Object.assign({}, state, { isVisible: false });
+     case ActionTypes.SET_TOAST_TEXT:

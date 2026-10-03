@@ -1,6 +1,6 @@
 # Estrato semi-real: guía de uso (Windows)
 
-Familias `families-real/S001–S010`. Cada una parte de un repositorio público real fijado en su commit V0; los modelos generan V1–V3 a partir de las peticiones T001–T003. Decisiones y diseño: `docs/operational-decisions.md` (sección del 2026-09-27) y `docs/diseno-integracion-semi-real.md`.
+Familias `families-real/S001–S020` (S011–S020 se añadieron el 2026-10-02 y deben calibrarse antes de preparar sus imágenes: `docs/autoria-familias-semi-reales.md`). Desde el 2026-10-02 el corpus es solo semi-real (`config/strata.json`). Cada una parte de un repositorio público real fijado en su commit V0; los modelos generan V1–V3 a partir de las peticiones T001–T003. Decisiones y diseño: `docs/operational-decisions.md` (sección del 2026-09-27) y `docs/diseno-integracion-semi-real.md`.
 
 ## Una sola vez (sin modelos)
 

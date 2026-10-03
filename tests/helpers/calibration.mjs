@@ -24,8 +24,8 @@ export function calibrationSuite(family) {
   const cases = loadCases(ROOT, family);
 
   test(`${family}: la página de calibración embebe exactamente el fixture de la familia`, () => {
-    const dir = readdirSync(new URL('families/', ROOT)).find(name => name.startsWith(`${family}-`));
-    const fixture = JSON.parse(readFileSync(new URL(`families/${dir}/${familyOracle(family).FIXTURE}`, ROOT), 'utf8'));
+    const dir = readdirSync(new URL('archive/sintetico/families/', ROOT)).find(name => name.startsWith(`${family}-`));
+    const fixture = JSON.parse(readFileSync(new URL(`archive/sintetico/families/${dir}/${familyOracle(family).FIXTURE}`, ROOT), 'utf8'));
     const html = readFileSync(page(), 'utf8');
     const embedded = JSON.parse(html.match(/const FIXTURE = ([\s\S]*?);\n/)[1]);
     assert.deepEqual(embedded, fixture);

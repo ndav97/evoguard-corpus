@@ -7,7 +7,7 @@ export const CATEGORIES = ['Electronics', 'Home', 'Sports', 'Books'];
 export const SORTS = ['name-asc', 'name-desc', 'price-asc', 'price-desc'];
 
 export function loadProducts(root = new URL('../../', import.meta.url)) {
-  const products = JSON.parse(readFileSync(new URL('families/F001-product-catalog/fixtures/products.json', root), 'utf8'));
+  const products = JSON.parse(readFileSync(new URL('archive/sintetico/families/F001-product-catalog/fixtures/products.json', root), 'utf8'));
   if (!Array.isArray(products) || products.length !== 30) throw new Error('Fixture F001 inválido');
   return products;
 }

@@ -1,0 +1,53 @@
+# Familia semi-real S018 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S018
+slug: p5js-web-editor
+stratum: semi-real
+repo: processing/p5.js-web-editor
+url: https://github.com/processing/p5.js-web-editor
+license: LGPL-2.1
+domain: Editor web de programación creativa (p5.js)
+v0:
+  commit: b5464d7af83bbc72e509a03261ccaec88372fdbc
+  date: 2026-09-21
+  verified: 2026-09-27 GREEN_WITH_KNOWN_FAILURES (460 tests, 8 fallos conocidos estables, sin red)
+package_path: .
+package_manager: npm
+runner: jest
+node: "24"
+workspace: github__processing__p5.js-web-editor          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: client/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: client/modules/IDE/components/Toast.jsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Cerrar los avisos con Escape
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.jsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Cada aviso dura su tiempo completo
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.jsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Avisos de error anunciados como alerta
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.jsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_a
+    V2: local_b
+    V3: openai
+  references:
+    V1: null
+    V2: null
+    V3: null

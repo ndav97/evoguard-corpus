@@ -1,0 +1,16 @@
+diff --git a/src/components/resources/TraefikResourceStatsCard.tsx b/src/components/resources/TraefikResourceStatsCard.tsx
+index 5b08e439..2eae8da5 100644
+--- a/src/components/resources/TraefikResourceStatsCard.tsx
++++ b/src/components/resources/TraefikResourceStatsCard.tsx
+@@ -87,7 +87,10 @@ const CustomLegend = ({
+   linkTo: string
+ }) => {
+   return (
+-    <Link to={`${linkTo}?status=${status}`}>
++    <Link
++      to={`${linkTo}?status=${status}`}
++      aria-label={`${capitalizeFirstLetter(label)}: ${count} of ${total} (${getPercent(total, count)}%)`}
++    >
+       <Flex css={{ alignItems: 'center', p: '$2' }}>
+         <Status status={status} />
+         <Flex css={{ flexDirection: 'column', flex: 1 }}>

@@ -1,0 +1,37 @@
+diff --git a/src/components/resources/TraefikResourceStatsCard.tsx b/src/components/resources/TraefikResourceStatsCard.tsx
+index 6c3f61b4..c9dd9025 100644
+--- a/src/components/resources/TraefikResourceStatsCard.tsx
++++ b/src/components/resources/TraefikResourceStatsCard.tsx
+@@ -140,17 +140,20 @@ const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: Tr
+ 
+   const counts = useMemo(
+     () => ({
+-      success: total - (errors + warnings),
++      success: Math.max(total - (errors + warnings), 0),
+       warnings,
+       errors,
+     }),
+     [errors, total, warnings],
+   )
+ 
++  // Si los datos llegan incoherentes (errores + avisos > total), los porcentajes se calculan sobre la suma real.
++  const shownTotal = counts.success + counts.warnings + counts.errors
++
+   const percents = useMemo(() => {
+-    const [success, warning, error] = getPercents([counts.success, counts.warnings, counts.errors], total)
++    const [success, warning, error] = getPercents([counts.success, counts.warnings, counts.errors], shownTotal)
+     return { success, warnings: warning, errors: error }
+-  }, [counts, total])
++  }, [counts, shownTotal])
+ 
+   useEffect(() => {
+     if (counts.success + counts.warnings + counts.errors === 0) {
+@@ -220,7 +223,7 @@ const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: Tr
+               key={`${title}-${i.label}`}
+               {...i}
+               count={counts[i.label]}
+-              total={total}
++              total={shownTotal}
+               percent={percents[i.label]}
+               linkTo={linkTo}
+             />

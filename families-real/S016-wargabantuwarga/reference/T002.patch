@@ -1,0 +1,42 @@
+diff --git a/components/search-form.tsx b/components/search-form.tsx
+index cf32e04..0fe93fb 100644
+--- a/components/search-form.tsx
++++ b/components/search-form.tsx
+@@ -11,7 +11,7 @@ import React, {
+   useEffect,
+   useState,
+ } from "react";
+-import { FilterIcon } from "@heroicons/react/outline";
++import { FilterIcon, XIcon } from "@heroicons/react/outline";
+ import { PrimaryButton } from "./ui/button";
+ import { FormLabel } from "./ui/forms/form-label";
+ import { InputText } from "./ui/forms/input-text";
+@@ -87,6 +87,11 @@ export function SearchForm({
+     }
+   }
+ 
++  function handleClear() {
++    setKeywords("");
++    onSubmitKeywords("", filters, sortBy);
++  }
++
+   function handleFilterChange(event: ChangeEvent<HTMLSelectElement>) {
+     const newFilters = { ...filters };
+     const filterName = event.target.name;
+@@ -129,6 +134,16 @@ export function SearchForm({
+                 type="text"
+                 value={keywords}
+               />
++              {keywords !== "" && (
++                <button
++                  aria-label="Hapus pencarian"
++                  className="-ml-px relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm text-gray-500 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
++                  onClick={handleClear}
++                  type="button"
++                >
++                  <XIcon aria-hidden="true" className="h-4 w-4" />
++                </button>
++              )}
+               {withFilterModal &&
+                 !isLoading &&
+                 (filterItems || sortSettings?.length) && (

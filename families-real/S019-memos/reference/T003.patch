@@ -1,0 +1,43 @@
+diff --git a/src/components/MemoMetadata/Attachment/attachmentHelpers.ts b/src/components/MemoMetadata/Attachment/attachmentHelpers.ts
+index d5bf3c48..7943ff5e 100644
+--- a/src/components/MemoMetadata/Attachment/attachmentHelpers.ts
++++ b/src/components/MemoMetadata/Attachment/attachmentHelpers.ts
+@@ -39,7 +39,7 @@ export const separateAttachments = (attachments: Attachment[]): AttachmentGroups
+ };
+ 
+ export const getAttachmentMetadata = (attachment: Attachment): AttachmentMetadata => ({
+-  fileTypeLabel: getFileTypeLabel(attachment.type),
++  fileTypeLabel: getFileTypeLabel(attachment.type, attachment.filename),
+   fileSizeLabel: attachment.size ? formatFileSize(Number(attachment.size)) : undefined,
+ });
+ 
+diff --git a/src/utils/format.ts b/src/utils/format.ts
+index 0a756057..237bf160 100644
+--- a/src/utils/format.ts
++++ b/src/utils/format.ts
+@@ -17,10 +17,22 @@ export function formatFileSize(bytes: number): string {
+   return `${formatted} ${units[i]}`;
+ }
+ 
+-export function getFileTypeLabel(mimeType: string): string {
+-  if (!mimeType) return "File";
++// Extension of a file name in upper case ("report.final.pdf" → "PDF"), or null when there is none.
++function getExtensionLabel(filename?: string): string | null {
++  if (!filename) return null;
++  const name = filename.trim().split(/[\\/]/).pop() ?? "";
++  const dot = name.lastIndexOf(".");
++  if (dot <= 0 || dot === name.length - 1) return null;
++  return name.slice(dot + 1).toUpperCase();
++}
++
++export function getFileTypeLabel(mimeType: string, filename?: string): string {
++  const normalizedMimeType = (mimeType ?? "").toLowerCase().split(";")[0].trim();
++  // Without a useful MIME type, the file name extension describes the file better.
++  if (!normalizedMimeType || normalizedMimeType === "application/octet-stream") {
++    return getExtensionLabel(filename) ?? "File";
++  }
+ 
+-  const normalizedMimeType = mimeType.toLowerCase().split(";")[0].trim();
+   const [category = "", subtype = ""] = normalizedMimeType.split("/");
+ 
+   const specialCases: Record<string, string> = {

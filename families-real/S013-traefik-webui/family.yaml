@@ -1,0 +1,53 @@
+# Familia semi-real S013 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S013
+slug: traefik-webui
+stratum: semi-real
+repo: traefik/traefik
+url: https://github.com/traefik/traefik
+license: MIT
+domain: Proxy inverso (panel de administración)
+v0:
+  commit: f08964179357f5170d1bc515213b16e120d02e6d
+  date: 2026-09-25
+  verified: 2026-09-27 GREEN_WITH_KNOWN_FAILURES (161 tests, 2 ejecuciones idénticas, sin red)
+package_path: webui
+package_manager: yarn
+runner: vitest
+node: "24"
+workspace: github__traefik__traefik          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: webui/src/components/resources/TraefikResourceStatsCard.tsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Leyenda accesible en la tarjeta de estadísticas
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Porcentajes de la leyenda que suman 100
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Tarjeta robusta ante datos incoherentes
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_a
+    V2: local_b
+    V3: openai
+  references:
+    V1: null
+    V2: null
+    V3: null

@@ -1,0 +1,31 @@
+diff --git a/src/components/site-preview/address-bar.tsx b/src/components/site-preview/address-bar.tsx
+index 08e1981e..d617327f 100644
+--- a/src/components/site-preview/address-bar.tsx
++++ b/src/components/site-preview/address-bar.tsx
+@@ -217,6 +217,8 @@ export function PreviewAddressBar( {
+ 		loadRecentLocations( site.id )
+ 	);
+ 	const addressBarRef = useRef< HTMLFormElement | null >( null );
++	// The page currently shown is not offered as a recent destination.
++	const visibleRecentLocations = recentLocations.filter( ( recent ) => recent.path !== path );
+ 
+ 	useEffect( () => setValue( displayUrl ), [ displayUrl ] );
+ 	useEffect( () => setRecentLocations( loadRecentLocations( site.id ) ), [ site.id ] );
+@@ -364,7 +366,7 @@ export function PreviewAddressBar( {
+ 						<span>{ __( 'Database' ) }</span>
+ 					</Popover.Close>
+ 				</div>
+-				{ recentLocations.length > 0 ? (
++				{ visibleRecentLocations.length > 0 ? (
+ 					<div className={ styles.shortcutsSection }>
+ 						<div className={ styles.shortcutsLabel }>{ __( 'Recent' ) }</div>
+ 						<button
+@@ -377,7 +379,7 @@ export function PreviewAddressBar( {
+ 						>
+ 							{ __( 'Clear recent' ) }
+ 						</button>
+-						{ recentLocations.map( ( recent ) => (
++						{ visibleRecentLocations.map( ( recent ) => (
+ 							<Popover.Close
+ 								key={ recent.path }
+ 								className={ styles.shortcut }

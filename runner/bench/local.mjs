@@ -63,7 +63,7 @@ async function candidatePolicy(root, candidate, data) {
   const wide = structuredClone(policy); wide.estimator.bytes_per_token = 1000; wide.budget.input_tokens = 10 ** 9;
   const samples = [
     buildContextInput({ packet: makePacket(data, 'V3'), messages: [], attempt: 1, cycle: 1 }, { policy: wide, responseContract: RESPONSE_CONTRACT, overhead }).input,
-    JSON.stringify({ fixture: readFileSync(join(root, 'families/F001-product-catalog/fixtures/products.json'), 'utf8') })
+    JSON.stringify({ fixture: readFileSync(join(root, 'archive/sintetico/families/F001-product-catalog/fixtures/products.json'), 'utf8') })
   ];
   const ratios = [];
   for (const input of samples) {

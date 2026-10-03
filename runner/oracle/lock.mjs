@@ -11,7 +11,7 @@ const [family, flag] = process.argv.slice(2);
 if (!/^F\d{3}$/.test(family ?? '') || (flag && flag !== '--check')) { console.error('Uso: npm run oracle:lock -- Fxxx [--check]'); process.exit(1); }
 const cases = {};
 for (const requirement of ['R001', 'R002', 'R003', 'R004', 'R005']) {
-  const file = JSON.parse(readFileSync(new URL(`oracle/${family}/${requirement}.cases.yaml`, root), 'utf8'));
+  const file = JSON.parse(readFileSync(new URL(`archive/sintetico/oracle/${family}/${requirement}.cases.yaml`, root), 'utf8'));
   for (const spec of file.cases) cases[spec.id] = specHash(spec);
 }
 const target = new URL(`runner/oracle/families/${family}/spec-lock.json`, root);

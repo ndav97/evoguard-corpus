@@ -1,0 +1,62 @@
+diff --git a/src/dialogs/SaveQueueDialog.jsx b/src/dialogs/SaveQueueDialog.jsx
+index 768a2382..2c3380ce 100644
+--- a/src/dialogs/SaveQueueDialog.jsx
++++ b/src/dialogs/SaveQueueDialog.jsx
+@@ -29,11 +29,13 @@ export const SaveQueueDialog = () => {
+   const translate = useTranslate()
+   const history = useHistory()
+   const [isSaving, setIsSaving] = useState(false)
++  const [saveFailed, setSaveFailed] = useState(false)
+   const refresh = useRefresh()
+ 
+   const handleClose = useCallback(
+     (e) => {
+       setName('')
++      setSaveFailed(false)
+       dispatch(closeSaveQueueDialog())
+       e.stopPropagation()
+     },
+@@ -42,6 +44,7 @@ export const SaveQueueDialog = () => {
+ 
+   const handleSave = useCallback(() => {
+     setIsSaving(true)
++    setSaveFailed(false)
+     const ids = queue.map((item) => item.trackId)
+     dataProvider
+       .create('playlist', { data: { name: name.trim() } })
+@@ -66,7 +69,10 @@ export const SaveQueueDialog = () => {
+         refresh()
+         history.push(`/playlist/${res.data.id}/show`)
+       })
+-      .catch(() => notify('ra.page.error', { type: 'warning' }))
++      .catch(() => {
++        setSaveFailed(true)
++        notify('ra.page.error', { type: 'warning' })
++      })
+       .finally(() => setIsSaving(false))
+   }, [dataProvider, dispatch, notify, queue, name, history, refresh])
+ 
+@@ -93,7 +99,10 @@ export const SaveQueueDialog = () => {
+       <DialogContent>
+         <TextField
+           value={name}
+-          onChange={(e) => setName(e.target.value)}
++          onChange={(e) => {
++            setName(e.target.value)
++            setSaveFailed(false)
++          }}
+           onKeyPress={handleKeyPress}
+           autoFocus
+           fullWidth
+@@ -110,6 +119,11 @@ export const SaveQueueDialog = () => {
+             ? '1 song will be saved'
+             : `${queue.length} songs will be saved`}
+         </Typography>
++        {saveFailed && (
++          <Typography variant="body2" color="error" role="alert">
++            Could not save the playlist.
++          </Typography>
++        )}
+       </DialogContent>
+       <DialogActions>
+         <Button onClick={handleClose} color="primary" disabled={isSaving}>

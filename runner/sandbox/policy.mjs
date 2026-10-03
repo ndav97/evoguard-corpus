@@ -7,7 +7,7 @@ export const SCAFFOLD_FILES = ['package.json','package-lock.json','tsconfig.json
 export const IMAGE_FILES = ['docker/base.json','docker/Dockerfile','docker/init.mjs','templates/react-vite/package.json','templates/react-vite/package-lock.json'];
 export const VERIFICATION_FILES = [...new Set([...IMAGE_FILES,...SCAFFOLD_FILES.map(p=>`templates/react-vite/${p}`),
   'runner/sandbox/policy.mjs','runner/sandbox/docker.mjs','runner/sandbox/seed-init.mjs','runner/sandbox/lineage.mjs','runner/sandbox/lock.mjs','runner/sandbox/build.mjs','runner/sandbox/verify.mjs','runner/sandbox/probe.mjs','runner/sandbox/cli.mjs','runner/sandbox/sessions.mjs','runner/packet.mjs','runner/validation/corpus.mjs',
-  'prompts/common.md','families/F001-product-catalog/prompts/architecture.md','families/F001-product-catalog/prompts/generate-v0.md','runner/families.mjs','families/F001-product-catalog/fixtures/products.json','families/F001-product-catalog/requirements/R001.yaml','families/F001-product-catalog/requirements/R002.yaml'])];
+  'prompts/common.md','archive/sintetico/families/F001-product-catalog/prompts/architecture.md','archive/sintetico/families/F001-product-catalog/prompts/generate-v0.md','runner/families.mjs','archive/sintetico/families/F001-product-catalog/fixtures/products.json','archive/sintetico/families/F001-product-catalog/requirements/R001.yaml','archive/sintetico/families/F001-product-catalog/requirements/R002.yaml'])];
 export function assertRelativePath(path) {
   if (typeof path !== 'string' || !path || /[\\:\x00-\x1f]/.test(path) || path.split('/').some(s=>!s || s==='.' || s==='..')) throw new Error('Ruta relativa inválida');
 }

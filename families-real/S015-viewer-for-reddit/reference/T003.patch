@@ -1,0 +1,68 @@
+diff --git a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+index 9570329..b9a174c 100644
+--- a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
++++ b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+@@ -47,10 +47,13 @@ export function SubscriptionFilterList({
+         data={[
+           {value: 'default', label: 'Default Order'},
+           {value: 'a-z', label: 'A-Z'},
+-          {value: 'z-a', label: 'Z-A'}
++          {value: 'z-a', label: 'Z-A'},
++          {value: 'subscribers', label: 'Most subscribers'}
+         ]}
+         value={sortBy}
+-        onChange={(value) => setSortBy(value as 'default' | 'a-z' | 'z-a')}
++        onChange={(value) =>
++          setSortBy(value as 'default' | 'a-z' | 'z-a' | 'subscribers')
++        }
+         aria-label="Sort subscriptions"
+         allowDeselect={false}
+       />
+diff --git a/lib/hooks/useSubredditManager.ts b/lib/hooks/useSubredditManager.ts
+index 1be9728..b66a737 100644
+--- a/lib/hooks/useSubredditManager.ts
++++ b/lib/hooks/useSubredditManager.ts
+@@ -9,6 +9,7 @@ export interface ManagedSubscription {
+   name: string
+   displayName: string
+   icon?: string
++  subscribers?: number
+ }
+ 
+ interface UseSubredditManagerOptions {
+diff --git a/lib/hooks/useSubscriptionsFilterSort.ts b/lib/hooks/useSubscriptionsFilterSort.ts
+index 5ba1dbb..2d8b13c 100644
+--- a/lib/hooks/useSubscriptionsFilterSort.ts
++++ b/lib/hooks/useSubscriptionsFilterSort.ts
+@@ -11,7 +11,7 @@ interface UseSubscriptionsFilterSortOptions {
+   initialSubscriptions: Subscription[]
+ }
+ 
+-type SortOption = 'default' | 'a-z' | 'z-a'
++type SortOption = 'default' | 'a-z' | 'z-a' | 'subscribers'
+ 
+ interface UseSubscriptionsFilterSortReturn {
+   searchQuery: string
+@@ -54,13 +54,19 @@ export function useSubscriptionsFilterSort({
+     : initialSubscriptions
+ 
+   // Apply sorting
++  const byName = (a: Subscription, b: Subscription) =>
++    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+   const filteredSubscriptions =
+     sortBy === 'default'
+       ? filtered
+       : [...filtered].sort((a, b) => {
+-          const comparison = a.name
+-            .toLowerCase()
+-            .localeCompare(b.name.toLowerCase())
++          if (sortBy === 'subscribers') {
++            // Most subscribers first; subscriptions without a count go last; ties A-Z
++            const countA = a.subscribers ?? -1
++            const countB = b.subscribers ?? -1
++            return countB - countA || byName(a, b)
++          }
++          const comparison = byName(a, b)
+           return sortBy === 'a-z' ? comparison : -comparison
+         })
+ 

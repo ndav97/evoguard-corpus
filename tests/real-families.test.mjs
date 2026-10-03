@@ -11,19 +11,27 @@ const reject = (id, mutate, pattern) => {
   assert.match(validateRealFamily(data, root).join('\n'), pattern);
 };
 
-test('estrato semi-real: 10 familias S001–S010 válidas', () => {
-  assert.deepEqual(families.map(f => f.id), Array.from({ length: 10 }, (_, i) => `S${String(i + 1).padStart(3, '0')}`));
-  for (const [id, errors] of Object.entries(validateAllReal(root))) assert.deepEqual(errors, [], id);
+// Desde el 2026-10-02 el piloto tiene 20 familias semi-reales (config/strata.json). S001–S010 están calibradas;
+// las nuevas pueden estar en borrador (provenance DRAFT) hasta calibrarlas en el PC: su único error admitido es ese.
+test('estrato semi-real: familias S001–S0nn consecutivas; S001–S010 calibradas y las demás válidas o pendientes de calibrar', () => {
+  assert.ok(families.length >= 10);
+  assert.deepEqual(families.map(f => f.id), Array.from({ length: families.length }, (_, i) => `S${String(i + 1).padStart(3, '0')}`));
+  for (const [id, errors] of Object.entries(validateAllReal(root))) {
+    const draft = loadRealFamily(root, id).manifest.provenance.status === 'DRAFT';
+    assert.ok(!draft || Number(id.slice(1)) > 10, `${id}: S001–S010 deben seguir calibradas`);
+    assert.deepEqual(errors, draft ? ['Familia sin calibrar (provenance.status)'] : [], id);
+  }
 });
 
-test('rotación por fila en V1–V3: cada proveedor genera 6 de 30 artefactos, sin repetir dentro de una familia', () => {
+test('rotación por fila en V1–V3: reparto equilibrado entre los cinco proveedores, sin repetir dentro de una familia', () => {
   const counts = {};
   for (const { id } of families) {
     const plan = Object.values(loadRealFamily(root, id).manifest.generation.plan);
     assert.equal(new Set(plan).size, 3, id);
     for (const provider of plan) counts[provider] = (counts[provider] ?? 0) + 1;
   }
-  assert.deepEqual(counts, { openai: 6, anthropic: 6, google: 6, local_a: 6, local_b: 6 });
+  const each = families.length * 3 / 5; // 10 familias → 6 por proveedor; 20 → 12
+  if (families.length % 5 === 0) assert.deepEqual(counts, { openai: each, anthropic: each, google: each, local_a: each, local_b: each });
 });
 
 test('la validación detecta manifiestos incoherentes', () => {

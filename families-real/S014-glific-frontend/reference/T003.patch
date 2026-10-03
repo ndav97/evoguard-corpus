@@ -1,0 +1,13 @@
+diff --git a/src/components/UI/Timer/Timer.tsx b/src/components/UI/Timer/Timer.tsx
+index 65ac2d81b..c724dafd2 100644
+--- a/src/components/UI/Timer/Timer.tsx
++++ b/src/components/UI/Timer/Timer.tsx
+@@ -43,7 +43,7 @@ export const Timer = (props: TimerProps) => {
+   useEffect(() => {
+     intervalID = setInterval(() => {
+       setCurrentTime(dayjs());
+-    }, 60000);
++    }, 30000);
+ 
+     return () => clearInterval(intervalID);
+   }, []);

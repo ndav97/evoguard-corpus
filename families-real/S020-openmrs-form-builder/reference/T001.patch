@@ -1,0 +1,65 @@
+diff --git a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+index 6a62402..a5b6f87 100644
+--- a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
++++ b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+@@ -3,22 +3,36 @@ import { useTranslation } from 'react-i18next';
+ import { TextInput } from '@carbon/react';
+ import { useFormField } from '../../../../form-field-context';
+ 
++// An empty value is allowed; anything else must be a complete number such as "5", "-2" or "0.5".
++const isValidNumber = (value: string) => {
++  const text = String(value).trim();
++  return text === '' || /^-?(\d+(\.\d+)?|\.\d+)$/.test(text);
++};
++
+ const Number: React.FC = () => {
+   const { t } = useTranslation();
+   const { formField, setFormField } = useFormField();
+ 
++  const min = String(formField.questionOptions?.min ?? '');
++  const max = String(formField.questionOptions?.max ?? '');
++  const minIsValid = isValidNumber(min);
++  const maxIsValid = isValidNumber(max);
++  const rangeIsInverted = parseFloat(min) > parseFloat(max);
++
++  const invalidTextFor = (isValid: boolean) => {
++    if (!isValid) return t('invalidNumber', 'Enter a valid number');
++    if (rangeIsInverted) return t('invalidMinMax', 'Min value cannot be greater than max');
++    return '';
++  };
++
+   return (
+     <>
+       <TextInput
+         id="min"
+         labelText={t('minValue', 'Min value that can be entered')}
+-        value={formField.questionOptions?.min ?? ''}
+-        invalid={parseFloat(formField.questionOptions?.min ?? '') > parseFloat(formField.questionOptions?.max ?? '')}
+-        invalidText={
+-          parseFloat(formField.questionOptions?.min ?? '') > parseFloat(formField.questionOptions?.max ?? '')
+-            ? t('invalidMinMax', 'Min value cannot be greater than max')
+-            : ''
+-        }
++        value={min}
++        invalid={!minIsValid || rangeIsInverted}
++        invalidText={invalidTextFor(minIsValid)}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+             ...formField,
+@@ -30,13 +44,9 @@ const Number: React.FC = () => {
+       <TextInput
+         id="max"
+         labelText={t('maxValue', 'Max value that can be entered')}
+-        value={formField.questionOptions?.max ?? ''}
+-        invalid={parseFloat(formField.questionOptions?.min ?? '') > parseFloat(formField.questionOptions?.max ?? '')}
+-        invalidText={
+-          parseFloat(formField.questionOptions?.min ?? '') > parseFloat(formField.questionOptions?.max ?? '')
+-            ? t('invalidMinMax', 'Min value cannot be greater than max')
+-            : ''
+-        }
++        value={max}
++        invalid={!maxIsValid || rangeIsInverted}
++        invalidText={invalidTextFor(maxIsValid)}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+             ...formField,

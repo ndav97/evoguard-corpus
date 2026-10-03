@@ -296,3 +296,25 @@ F001 se generó y congeló con el protocolo de acciones 1.0 y con los problemas 
 - **Ensayo:** `npm run pipeline:rehearse-family -- F001 --revision`, en una copia desechable. Abre la revisión y regenera V0→V3 con constructores que aplican los parches archivados: las cuatro versiones se aceptan, la auditoría da PASS 5/5 y la familia vuelve a FROZEN. Evidencia en `docs/verification/family-rehearsal-f001-revision.json`.
 - **Análisis:** como los registros de la revisión 1 se mueven a `runs/archive/`, `npm run analysis` mide solo la revisión vigente.
 
+
+## Corpus solo semi-real y piloto de 20 familias semi-reales — 2026-10-02
+**Decisión del tesista:** el corpus de EvoGuard UI ya no usa familias sintéticas puras. Se trabaja solo con el estrato semi-real: repositorios públicos con cambios controlados. El piloto pasa a 20 familias semi-reales. Decisiones de implementación de Claude, con autorización del usuario:
+
+- **Configuración:** `config/strata.json` declara el estrato activo (`semi-real`) y el archivado (`synthetic`). `runner/strata.mjs` la expone.
+- **Archivo del estrato sintético:**
+  - `families/` y `oracle/` pasan a `archive/sintetico/`, junto con el lanzador `run-f001.*`. Se conservan la historia, las referencias de F001 y la evidencia.
+  - El código común (motor, contenedores, protocolo, oráculo E2E) sigue en `runner/`, con las rutas apuntando al archivo.
+  - Las calibraciones E2E siguen en `tests/calibration/`.
+- **Bloqueos:**
+  - el preflight rechaza generar cualquier Fxxx («Estrato sintético archivado»);
+  - `corpus:generate` y `corpus:audit` ya no tienen F001 como familia por defecto;
+  - `npm run analysis` excluye los registros de Fxxx salvo con `--include-archived`.
+- **Banco de modelos locales:** solo tareas semi-reales (`S001:V1`, `S003:V1`, `S005:V1` y `S007:V1`).
+- **Evidencia del contenedor sintético:** la de `config/container.json` quedó obsoleta al mover las rutas. Sus pruebas se omiten mientras el estrato esté archivado y se restaura con `npm run environment:verify`. No afecta al estrato semi-real, que usa sus propias imágenes, ni a las huellas de sus ensayos: no cambió ningún archivo de `REAL_PIPELINE_SOURCES`.
+- **Familias en borrador:** la validación admite familias semi-reales nuevas en DRAFT (`provenance.status`). `npm run corpus:validate` las lista como pendientes de calibrar, las pruebas solo les permiten ese error y el preflight sigue bloqueándolas.
+- **Selección de S011–S020** (`docs/seleccion-piloto-semi-real.md`):
+  - **Criterios:** mismas reglas que en el primer lote; ninguna organización repetida.
+  - **Bases descartadas:** repo-remover (bun), start-ui-web (tests en navegador), kafka-ui (código generado no versionado) y tasking-manager (`craco test`).
+  - **Consecuencias:** runners 13 vitest y 7 jest en total; S020 (formularios clínicos) comparte el área de salud con S004.
+- **Redacción sin ejecutar:** las familias se redactaron en la nube sin poder instalar dependencias (registro de npm bloqueado). Por eso los tests ocultos y las referencias no se han ejecutado: la calibración en el PC es la primera ejecución real.
+- **Regla añadida:** los textos de interfaz que aparecen en la petición no pueden superar 40 caracteres si también están en el parche o en los tests (`docs/autoria-familias-semi-reales.md`).

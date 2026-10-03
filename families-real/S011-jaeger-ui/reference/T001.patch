@@ -1,0 +1,28 @@
+diff --git a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+index 8ada855d..ab80bffd 100644
+--- a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
++++ b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+@@ -95,6 +95,7 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+               disabled={!textFilter}
+               htmlType="button"
+               onClick={focusUiFindMatches}
++              aria-label="Locate matches in the trace"
+             >
+               <IoLocate />
+             </Button>
+@@ -104,6 +105,7 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+               htmlType="button"
+               data-testid="UpOutlined"
+               onClick={prevResult}
++              aria-label="Previous match"
+             >
+               <IoChevronUp />
+             </Button>
+@@ -113,6 +115,7 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+               htmlType="button"
+               data-testid="DownOutlined"
+               onClick={nextResult}
++              aria-label="Next match"
+             >
+               <IoChevronDown />
+             </Button>

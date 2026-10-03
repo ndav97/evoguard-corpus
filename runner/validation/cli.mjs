@@ -1,4 +1,5 @@
-// Uso: npm run corpus:validate [-- Fxxx|Sxxx]   (sin argumento: todas las familias de ambos estratos)
+// Uso: npm run corpus:validate [-- Fxxx|Sxxx]   (sin argumento: todas las familias; las Fxxx pertenecen al estrato
+// sintético archivado en archive/sintetico/ y se validan solo para conservar su integridad)
 import { fileURLToPath } from 'node:url';
 import { loadCorpus, validateCorpus, validateAll } from './corpus.mjs';
 import { validateAllReal, loadRealFamily, validateRealFamily } from '../real/families.mjs';
@@ -6,7 +7,7 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const describe = data => {
   const records = Array.isArray(data.fixture) ? data.fixture.length : data.family.fixture.count;
   const cases = data.oracleCases.reduce((n, c) => n + c.cases.length, 0);
-  return `${data.familyId}: especificación válida; ${data.requirements.length} requisitos, ${data.turns.length} turnos, ${records} registros de fixture, ${cases} casos declarativos. Estado ${data.family.status}; oráculo ${data.family.oracle.status}.`;
+  return `${data.familyId} (archivada): especificación válida; ${data.requirements.length} requisitos, ${data.turns.length} turnos, ${records} registros de fixture, ${cases} casos declarativos. Estado ${data.family.status}; oráculo ${data.family.oracle.status}.`;
 };
 try {
   const args = process.argv.slice(2);
@@ -29,7 +30,9 @@ try {
       else if (id !== '*') console.log(describe(loadCorpus(root, id)));
     }
     for (const [id, errors] of Object.entries(validateAllReal(root))) {
-      if (errors.length) { console.error(`${id}:\n  ${errors.join('\n  ')}`); process.exitCode = 1; }
+      // Familia nueva en borrador: válida salvo que falta calibrarla en el PC (scripts\real\calibrar-familias-reales.cmd).
+      if (errors.length === 1 && errors[0].startsWith('Familia sin calibrar')) console.log(`${id}: familia semi-real en borrador; pendiente de calibrar (scripts\\real\\calibrar-familias-reales.cmd -Familia ${id}).`);
+      else if (errors.length) { console.error(`${id}:\n  ${errors.join('\n  ')}`); process.exitCode = 1; }
       else console.log(describeReal(loadRealFamily(root, id)));
     }
   }

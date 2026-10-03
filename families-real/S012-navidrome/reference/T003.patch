@@ -1,0 +1,51 @@
+diff --git a/src/dialogs/SaveQueueDialog.jsx b/src/dialogs/SaveQueueDialog.jsx
+index 2c3380ce..df44258d 100644
+--- a/src/dialogs/SaveQueueDialog.jsx
++++ b/src/dialogs/SaveQueueDialog.jsx
+@@ -31,6 +31,8 @@ export const SaveQueueDialog = () => {
+   const [isSaving, setIsSaving] = useState(false)
+   const [saveFailed, setSaveFailed] = useState(false)
+   const refresh = useRefresh()
++  const queueIsEmpty = queue.length === 0
++  const canSave = name.trim() !== '' && !queueIsEmpty && !isSaving
+ 
+   const handleClose = useCallback(
+     (e) => {
+@@ -78,11 +80,11 @@ export const SaveQueueDialog = () => {
+ 
+   const handleKeyPress = useCallback(
+     (e) => {
+-      if (e.key === 'Enter' && name.trim() !== '') {
++      if (e.key === 'Enter' && canSave) {
+         handleSave()
+       }
+     },
+-    [handleSave, name],
++    [handleSave, canSave],
+   )
+ 
+   return (
+@@ -115,9 +117,11 @@ export const SaveQueueDialog = () => {
+           color="textSecondary"
+           data-testid="save-queue-count"
+         >
+-          {queue.length === 1
+-            ? '1 song will be saved'
+-            : `${queue.length} songs will be saved`}
++          {queueIsEmpty
++            ? 'The queue is empty'
++            : queue.length === 1
++              ? '1 song will be saved'
++              : `${queue.length} songs will be saved`}
+         </Typography>
+         {saveFailed && (
+           <Typography variant="body2" color="error" role="alert">
+@@ -132,7 +136,7 @@ export const SaveQueueDialog = () => {
+         <Button
+           onClick={handleSave}
+           color="primary"
+-          disabled={name.trim() === '' || isSaving}
++          disabled={!canSave}
+           data-testid="save-queue-save"
+           startIcon={isSaving ? <CircularProgress size={20} /> : null}
+         >

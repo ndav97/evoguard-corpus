@@ -1,0 +1,29 @@
+diff --git a/client/modules/IDE/components/Toast.jsx b/client/modules/IDE/components/Toast.jsx
+index b6364de9..586faf9c 100644
+--- a/client/modules/IDE/components/Toast.jsx
++++ b/client/modules/IDE/components/Toast.jsx
+@@ -1,4 +1,4 @@
+-import React from 'react';
++import React, { useEffect } from 'react';
+ import { useDispatch, useSelector } from 'react-redux';
+ import { useTranslation } from 'react-i18next';
+ import { hideToast } from '../actions/toast';
+@@ -9,6 +9,18 @@ export default function Toast() {
+   const { text, isVisible } = useSelector((state) => state.toast);
+   const dispatch = useDispatch();
+   const { t } = useTranslation();
++
++  useEffect(() => {
++    if (!isVisible) return undefined;
++    const handleKeyDown = (event) => {
++      if (event.key === 'Escape') {
++        dispatch(hideToast());
++      }
++    };
++    document.addEventListener('keydown', handleKeyDown);
++    return () => document.removeEventListener('keydown', handleKeyDown);
++  }, [isVisible, dispatch]);
++
+   if (!isVisible) {
+     return null;
+   }

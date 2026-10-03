@@ -1,0 +1,37 @@
+diff --git a/src/dialogs/SaveQueueDialog.jsx b/src/dialogs/SaveQueueDialog.jsx
+index f916a079..768a2382 100644
+--- a/src/dialogs/SaveQueueDialog.jsx
++++ b/src/dialogs/SaveQueueDialog.jsx
+@@ -14,6 +14,7 @@ import {
+   DialogTitle,
+   TextField,
+   CircularProgress,
++  Typography,
+ } from '@material-ui/core'
+ import { closeSaveQueueDialog } from '../actions'
+ import { useHistory } from 'react-router-dom'
+@@ -43,7 +44,7 @@ export const SaveQueueDialog = () => {
+     setIsSaving(true)
+     const ids = queue.map((item) => item.trackId)
+     dataProvider
+-      .create('playlist', { data: { name } })
++      .create('playlist', { data: { name: name.trim() } })
+       .then((res) => {
+         const playlistId = res.data.id
+         if (ids.length) {
+@@ -100,6 +101,15 @@ export const SaveQueueDialog = () => {
+           label={translate('resources.playlist.fields.name')}
+           disabled={isSaving}
+         />
++        <Typography
++          variant="body2"
++          color="textSecondary"
++          data-testid="save-queue-count"
++        >
++          {queue.length === 1
++            ? '1 song will be saved'
++            : `${queue.length} songs will be saved`}
++        </Typography>
+       </DialogContent>
+       <DialogActions>
+         <Button onClick={handleClose} color="primary" disabled={isSaving}>

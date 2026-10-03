@@ -1,5 +1,7 @@
 # EvoGuard Corpus — Estado del proyecto (2026-09-27)
 
+> Sustituido por `estado-del-proyecto-2026-10-02.md` (corpus solo semi-real; estrato sintético archivado).
+
 Sustituye a `estado-del-proyecto-2026-09-24.md` como estado vigente; aquel documento se conserva como registro histórico de F001.
 
 ## 1. Resumen

@@ -1,0 +1,38 @@
+diff --git a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+index f9b1f8c..ca3b32e 100644
+--- a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
++++ b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+@@ -1,6 +1,6 @@
+ import React from 'react';
+ import { useTranslation } from 'react-i18next';
+-import { TextInput } from '@carbon/react';
++import { Button, TextInput } from '@carbon/react';
+ import { useFormField } from '../../../../form-field-context';
+ 
+ // An empty value is allowed; anything else must be a complete number such as "5", "-2" or "0.5".
+@@ -21,6 +21,13 @@ const Number: React.FC = () => {
+   const step = String(formField.questionOptions?.step ?? '');
+   const stepIsValid = step.trim() === '' || (isValidNumber(step) && parseFloat(step) > 0);
+ 
++  const hasRange = [min, max, step].some((value) => value !== '');
++
++  const clearRange = () => {
++    const { min: _min, max: _max, step: _step, ...questionOptions } = formField.questionOptions ?? {};
++    setFormField({ ...formField, questionOptions });
++  };
++
+   const invalidTextFor = (isValid: boolean) => {
+     if (!isValid) return t('invalidNumber', 'Enter a valid number');
+     if (rangeIsInverted) return t('invalidMinMax', 'Min value cannot be greater than max');
+@@ -71,6 +78,11 @@ const Number: React.FC = () => {
+           setFormField(updatedQuestion);
+         }}
+       />
++      {hasRange && (
++        <Button kind="ghost" size="sm" onClick={clearRange}>
++          {t('clearRange', 'Clear range')}
++        </Button>
++      )}
+     </>
+   );
+ };

@@ -18,7 +18,7 @@ export function oracleBundle(root, familyId = 'F001') {
   const dir = familyDir(root, familyId);
   const family = JSON.parse(readFileSync(join(root, dir, 'family.yaml'), 'utf8'));
   const own = readdirSync(join(root, 'runner/oracle/families', familyId)).filter(name => /\.(mjs|json)$/.test(name)).map(name => `runner/oracle/families/${familyId}/${name}`);
-  const cases = ['R001', 'R002', 'R003', 'R004', 'R005'].map(r => `oracle/${familyId}/${r}.cases.yaml`);
+  const cases = ['R001', 'R002', 'R003', 'R004', 'R005'].map(r => `archive/sintetico/oracle/${familyId}/${r}.cases.yaml`);
   const f001 = familyId === 'F001' ? ['runner/oracle/plans.mjs', 'runner/oracle/reference.mjs', 'runner/oracle/ui-adapter.mjs'] : [];
   return [...COMMON, ...f001, ...own.sort(), ...cases, `${dir}/${family.fixture.path}`];
 }

@@ -1,16 +1,67 @@
 {
   "schema_version": "1.0.0",
   "purpose": "Banco de prueba de modelos locales (paso 3). Solo ensayo: los resultados nunca son referencias del corpus.",
-  "tasks": ["V0", "V1", "V2", "V3", "S001:V1", "S005:V1"],
-  "tasks_note": "V0–V3: F001 desde sus referencias congeladas. Sxxx:V1: primer turno semi-real sobre la imagen V0 (S001, repositorio pequeño; S005, grande: 635 archivos en el paquete). La ventana de 8 192 solo deja ver el directorio de la zona del cambio en repositorios grandes (npm run real:context).",
-  "defaults": { "temperature": 0, "seed": 42, "keep_alive": "30m" },
+  "tasks": [
+    "S001:V1",
+    "S003:V1",
+    "S005:V1",
+    "S007:V1"
+  ],
+  "tasks_note": "Desde el 2026-10-02 el banco usa solo tareas semi-reales (el estrato sintético está archivado; config/strata.json). Sxxx:V1 es el primer turno sobre la imagen V0 de la familia: S001 (vitest, 152 archivos), S003 (vitest, 388), S005 (jest, 635) y S007 (jest, 233). Las tareas V0–V3 de F001 siguen disponibles con --tasks=V0,... solo como ensayo histórico.",
+  "defaults": {
+    "temperature": 0,
+    "seed": 42,
+    "keep_alive": "30m"
+  },
   "candidates": [
-    { "id": "qwen25c7-8k", "model": "qwen2.5-coder:7b", "context": 8192, "max_output_tokens": 1024, "note": "Línea base del pool congelado (local_a)" },
-    { "id": "granite33-8k", "model": "granite3.3:8b", "context": 8192, "max_output_tokens": 1024, "note": "Línea base del pool congelado (local_b)" },
-    { "id": "qwen25c7-32k", "model": "qwen2.5-coder:7b", "context": 32768, "max_output_tokens": 4096, "note": "Mismo modelo con más contexto y salida" },
-    { "id": "qwen25c14-32k", "model": "qwen2.5-coder:14b", "context": 32768, "max_output_tokens": 4096, "note": "~9 GB Q4" },
-    { "id": "devstral24-32k", "model": "devstral:24b", "context": 32768, "max_output_tokens": 4096, "note": "~14 GB Q4; orientado a agentes de código" },
-    { "id": "qwen3coder30-32k", "model": "qwen3-coder:30b", "context": 32768, "max_output_tokens": 4096, "note": "~19 GB Q4, MoE (3,3B activos)" },
-    { "id": "qwen25c32-16k", "model": "qwen2.5-coder:32b", "context": 16384, "max_output_tokens": 4096, "note": "~20 GB Q4; contexto reducido para caber en 24 GB" }
+    {
+      "id": "qwen25c7-8k",
+      "model": "qwen2.5-coder:7b",
+      "context": 8192,
+      "max_output_tokens": 1024,
+      "note": "Línea base del pool congelado (local_a)"
+    },
+    {
+      "id": "granite33-8k",
+      "model": "granite3.3:8b",
+      "context": 8192,
+      "max_output_tokens": 1024,
+      "note": "Línea base del pool congelado (local_b)"
+    },
+    {
+      "id": "qwen25c7-32k",
+      "model": "qwen2.5-coder:7b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "note": "Mismo modelo con más contexto y salida"
+    },
+    {
+      "id": "qwen25c14-32k",
+      "model": "qwen2.5-coder:14b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "note": "~9 GB Q4"
+    },
+    {
+      "id": "devstral24-32k",
+      "model": "devstral:24b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "note": "~14 GB Q4; orientado a agentes de código"
+    },
+    {
+      "id": "qwen3coder30-32k",
+      "model": "qwen3-coder:30b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "note": "~19 GB Q4, MoE (3,3B activos)"
+    },
+    {
+      "id": "qwen25c32-16k",
+      "model": "qwen2.5-coder:32b",
+      "context": 16384,
+      "max_output_tokens": 4096,
+      "note": "~20 GB Q4; contexto reducido para caber en 24 GB"
+    }
   ]
 }

@@ -1,0 +1,32 @@
+diff --git a/client/modules/IDE/actions/toast.js b/client/modules/IDE/actions/toast.js
+index b1e43d9e..d18c2616 100644
+--- a/client/modules/IDE/actions/toast.js
++++ b/client/modules/IDE/actions/toast.js
+@@ -1,6 +1,14 @@
+ import * as ActionTypes from '../../../constants';
+ 
++// Pending automatic hide of the toast currently shown. A new toast cancels it,
++// so each toast stays visible for its own full time.
++let hideTimer = null;
++
+ export function hideToast() {
++  if (hideTimer) {
++    clearTimeout(hideTimer);
++    hideTimer = null;
++  }
+   return {
+     type: ActionTypes.HIDE_TOAST
+   };
+@@ -27,7 +35,11 @@ export function showToast(textOrTime, timeout = 1500) {
+     dispatch({
+       type: ActionTypes.SHOW_TOAST
+     });
+-    setTimeout(() => dispatch(hideToast()), time);
++    if (hideTimer) clearTimeout(hideTimer);
++    hideTimer = setTimeout(() => {
++      hideTimer = null;
++      dispatch(hideToast());
++    }, time);
+   };
+ }
+ 

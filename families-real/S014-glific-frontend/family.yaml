@@ -1,0 +1,53 @@
+# Familia semi-real S014 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S014
+slug: glific-frontend
+stratum: semi-real
+repo: glific/glific-frontend
+url: https://github.com/glific/glific-frontend
+license: AGPL-3.0
+domain: Mensajería con WhatsApp para ONG (chatbots y conversaciones)
+v0:
+  commit: 8388dbfcce95649a475549797316d17fa7acc39b
+  date: 2026-09-22
+  verified: 2026-09-27 GREEN (2 260 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: vitest
+node: "22"
+workspace: github__glific__glific-frontend          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: src/components/UI/Timer/Timer.tsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Temporizador de la ventana de sesión accesible
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Minutos restantes en la última hora de la ventana
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Actualizar el temporizador cada 30 segundos
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_b
+    V2: openai
+    V3: anthropic
+  references:
+    V1: null
+    V2: null
+    V3: null

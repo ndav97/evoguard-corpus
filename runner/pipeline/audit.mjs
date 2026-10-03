@@ -122,8 +122,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     try { execFileSync(process.execPath, [fileURLToPath(new URL('../real/audit.mjs', import.meta.url)), ...args], { stdio: 'inherit' }); process.exit(0); }
     catch { process.exit(1); }
   }
-  const familyId = /^F\d{3}$/.test(args[0] ?? '') ? args.shift() : 'F001';
-  if (args.some(flag => flag !== '--freeze')) { console.error('Uso: npm run corpus:audit -- [Fxxx] [--freeze]'); process.exit(1); }
+  if (!/^F\d{3}$/.test(args[0] ?? '')) { console.error('Uso: npm run corpus:audit -- Sxxx [--freeze] (Fxxx: estrato sintético archivado, solo auditoría de lo existente)'); process.exit(1); }
+  const familyId = args.shift();
+  if (args.some(flag => flag !== '--freeze')) { console.error('Uso: npm run corpus:audit -- Fxxx [--freeze]'); process.exit(1); }
   auditCorpus(root, { familyId, freeze: args.includes('--freeze') }).then(report => {
     console.log(`Auditoría ${familyId} ${report.status}${report.frozen ? ` — ${familyId} congelada (FROZEN)` : ''}`);
     for (const f of report.findings) console.log(`- ${f.version ?? familyId}: ${f.message}`);

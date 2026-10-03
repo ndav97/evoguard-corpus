@@ -1,0 +1,87 @@
+diff --git a/src/components/resources/TraefikResourceStatsCard.tsx b/src/components/resources/TraefikResourceStatsCard.tsx
+index 2eae8da5..6c3f61b4 100644
+--- a/src/components/resources/TraefikResourceStatsCard.tsx
++++ b/src/components/resources/TraefikResourceStatsCard.tsx
+@@ -56,7 +56,23 @@ export type DataType = {
+   labels?: string[]
+ }
+ 
+-const getPercent = (total: number, value: number) => (total > 0 ? ((value * 100) / total).toFixed(0) : 0)
++// Porcentajes enteros que suman 100 (método del mayor resto). Los empates se resuelven en el orden
++// success, warnings, errors.
++const getPercents = (values: number[], total: number): number[] => {
++  if (total <= 0) return values.map(() => 0)
++  const exact = values.map((value) => (value * 100) / total)
++  const result = exact.map((x) => Math.floor(x))
++  let missing = 100 - result.reduce((a, b) => a + b, 0)
++  const order = exact
++    .map((x, index) => ({ index, rest: x - Math.floor(x) }))
++    .sort((a, b) => b.rest - a.rest || a.index - b.index)
++  for (const { index } of order) {
++    if (missing <= 0) break
++    result[index] += 1
++    missing -= 1
++  }
++  return result
++}
+ 
+ const STATS_ATTRIBUTES: { status: Resource.Status; label: string }[] = [
+   {
+@@ -78,25 +94,27 @@ const CustomLegend = ({
+   label,
+   count,
+   total,
++  percent,
+   linkTo,
+ }: {
+   status: Resource.Status
+   label: string
+   count: number
+   total: number
++  percent: number
+   linkTo: string
+ }) => {
+   return (
+     <Link
+       to={`${linkTo}?status=${status}`}
+-      aria-label={`${capitalizeFirstLetter(label)}: ${count} of ${total} (${getPercent(total, count)}%)`}
++      aria-label={`${capitalizeFirstLetter(label)}: ${count} of ${total} (${percent}%)`}
+     >
+       <Flex css={{ alignItems: 'center', p: '$2' }}>
+         <Status status={status} />
+         <Flex css={{ flexDirection: 'column', flex: 1 }}>
+           <Text css={{ fontWeight: 600 }}>{capitalizeFirstLetter(label)}</Text>
+           <Text size={1} css={{ color: 'hsl(0, 0%, 56%)' }} data-testid={`${label}-pc`}>
+-            {getPercent(total, count)}%
++            {percent}%
+           </Text>
+         </Flex>
+         <Text size={5} css={{ fontWeight: 700 }} data-testid={`${label}-count`}>
+@@ -129,6 +147,11 @@ const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: Tr
+     [errors, total, warnings],
+   )
+ 
++  const percents = useMemo(() => {
++    const [success, warning, error] = getPercents([counts.success, counts.warnings, counts.errors], total)
++    return { success, warnings: warning, errors: error }
++  }, [counts, total])
++
+   useEffect(() => {
+     if (counts.success + counts.warnings + counts.errors === 0) {
+       setData(defaultData)
+@@ -193,7 +216,14 @@ const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: Tr
+         </Box>
+         <Box css={{ width: '50%' }}>
+           {STATS_ATTRIBUTES.map((i) => (
+-            <CustomLegend key={`${title}-${i.label}`} {...i} count={counts[i.label]} total={total} linkTo={linkTo} />
++            <CustomLegend
++              key={`${title}-${i.label}`}
++              {...i}
++              count={counts[i.label]}
++              total={total}
++              percent={percents[i.label]}
++              linkTo={linkTo}
++            />
+           ))}
+         </Box>
+       </Flex>

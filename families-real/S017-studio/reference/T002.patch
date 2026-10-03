@@ -1,0 +1,36 @@
+diff --git a/src/components/site-preview/address-bar.tsx b/src/components/site-preview/address-bar.tsx
+index 2dc16289..08e1981e 100644
+--- a/src/components/site-preview/address-bar.tsx
++++ b/src/components/site-preview/address-bar.tsx
+@@ -185,6 +185,14 @@ function storeRecentLocation(
+ 	return locations;
+ }
+ 
++function clearRecentLocations( siteId: string ) {
++	try {
++		window.localStorage.removeItem( getRecentLocationsStorageKey( siteId ) );
++	} catch {
++		// Nothing to clear when storage is unavailable.
++	}
++}
++
+ function getDisplayUrl( siteUrl: string, path: string ): string {
+ 	try {
+ 		return new URL( path, siteUrl ).toString();
+@@ -359,6 +367,16 @@ export function PreviewAddressBar( {
+ 				{ recentLocations.length > 0 ? (
+ 					<div className={ styles.shortcutsSection }>
+ 						<div className={ styles.shortcutsLabel }>{ __( 'Recent' ) }</div>
++						<button
++							type="button"
++							className={ styles.shortcut }
++							onClick={ () => {
++								clearRecentLocations( site.id );
++								setRecentLocations( [] );
++							} }
++						>
++							{ __( 'Clear recent' ) }
++						</button>
+ 						{ recentLocations.map( ( recent ) => (
+ 							<Popover.Close
+ 								key={ recent.path }

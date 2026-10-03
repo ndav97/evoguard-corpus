@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "decided_at": "2026-10-02",
+  "decision": "El corpus de EvoGuard UI se construye solo con el estrato semi-real: repositorios públicos fijados en un commit V0 verificado, con cambios controlados redactados para el estudio.",
+  "active": [
+    "semi-real"
+  ],
+  "semi_real": {
+    "status": "ACTIVE",
+    "path": "families-real",
+    "pilot_families": 20,
+    "pilot_turns_per_episode": 3,
+    "final_turns_per_episode": 5
+  },
+  "synthetic": {
+    "status": "ARCHIVED",
+    "path": "archive/sintetico",
+    "families": [
+      "F001",
+      "F002",
+      "F003",
+      "F004",
+      "F005",
+      "F006",
+      "F007",
+      "F008",
+      "F009",
+      "F010"
+    ],
+    "reason": "Decisión del tesista (2026-10-02): no se trabajará con familias sintéticas puras. Se conservan como antecedente del piloto, sin generación nueva y fuera del corpus y del análisis."
+  }
+}

@@ -1,0 +1,53 @@
+# Familia semi-real S015 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
+id: S015
+slug: viewer-for-reddit
+stratum: semi-real
+repo: gregrickaby/viewer-for-reddit
+url: https://github.com/gregrickaby/viewer-for-reddit
+license: MIT
+domain: Lector de foros sociales (Reddit)
+v0:
+  commit: 259ed474ffda1c705ac280cd7a48b1405d965583
+  date: 2026-09-24
+  verified: 2026-09-27 GREEN (1 617 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__gregrickaby__viewer-for-reddit          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx                 # zona que tocan los tres cambios
+turns:
+  - id: T001
+    title: Búsqueda de suscripciones más tolerante
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Mensaje y botón para limpiar cuando no hay resultados
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Ordenar las suscripciones por número de suscriptores
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-02
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: openai
+    V2: anthropic
+    V3: google
+  references:
+    V1: null
+    V2: null
+    V3: null

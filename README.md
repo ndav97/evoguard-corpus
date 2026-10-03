@@ -1,34 +1,39 @@
 # EvoGuard Corpus
-Especificación ejecutable F001 conforme a las decisiones del protocolo v1.0 recuperadas de “Saludo inicial”. Estado: **DRAFT**. Este repositorio contiene infraestructura metodológica y un scaffold neutro; no contiene V0 ni resultados experimentales.
+Infraestructura que construye el **corpus** de la tesis. El producto final de la tesis es **EvoGuard UI** (modelo de predicción de impacto y riesgo de regresión); este repositorio solo produce los datos con los que EvoGuard UI se entrena y evalúa.
 
-## Uso local
+**Desde el 2026-10-02 el corpus es solo semi-real** (`config/strata.json`):
+- **Base:** repositorios públicos React/TypeScript fijados en un commit V0 verificado (`families-real/Sxxx-*`).
+- **Cambios:** tres turnos T001–T003 por familia en el piloto, con tests ocultos y una implementación de referencia calibrada.
+- **Piloto:** 20 familias (S001–S020).
+- **Estrato sintético:** F001–F010 queda archivado en [`archive/sintetico/`](archive/sintetico/README.md).
+
+## Uso local (Windows, con Docker Desktop)
 ```powershell
 npm ci
-npm --prefix templates/react-vite ci
-npm run check
-npm run family:validate -- F001
-npm run packet:preview -- F001 V0
-npm run generation:preflight
+npm run check                                 # validación + pruebas + build del scaffold
+npm run corpus:validate                       # todas las familias (Fxxx archivadas, Sxxx activas)
+scripts\real\calibrar-familias-reales.cmd -Familia S011    # calibra una familia nueva sobre su base instalada
+scripts\real\preparar-imagenes.cmd -Familias S011          # imagen inmutable de la familia
+scripts\real\ensayar-familias.cmd -Familias S011           # ensayo del pipeline sin modelos
+npm run generation:preflight -- S011
+npm run corpus:generate -- S011 all
+npm run corpus:audit -- S011 --freeze
 ```
-El último comando rechaza la generación mientras falten conectividad completa, parámetros congelados, integración experimental del runner y oráculo E2E. No llama APIs. El preview escribe solo insumos visibles en runs/preflight; **no es un workspace aislado ni ejecuta agentes**.
-
-## Entorno Linux verificado
-La imagen local está guardada por SHA-256, con dependencias offline y Chromium. `npm run environment:verify` carga el archivo guardado y prueba dos contenedores limpios. Consulta [operación y reproducción](docker/README.md) y [evidencia](docs/verification/container.json). `npm run environment:build` reconstruye y exige verificar de nuevo antes de abrir sesiones.
+Guía detallada: [docs/estrato-semi-real.md](docs/estrato-semi-real.md). Autoría de familias nuevas: [docs/autoria-familias-semi-reales.md](docs/autoria-familias-semi-reales.md).
 
 ## Contenido
-- config/models.json y runner/providers/: pool seleccionado, adaptadores reales y diagnóstico; `npm run providers -- inspect` no genera F001.
-- runner/execution/ y runner/simulation/: motor de intentos y ensayo con respuestas guionadas; ejecutar `npm run runner:simulate`. No genera V0 ni llama modelos.
+- config/models.json y runner/providers/: pool seleccionado, adaptadores reales y diagnóstico.
+- runner/execution/, runner/protocol/ y runner/real/: motor de intentos, protocolo de acciones 1.1 y pipeline semi-real (imágenes, suite, oráculo de tests ocultos, control de alcance, auditoría).
 - schema/: JSON Schema draft-07, versión 1.0.0, validación estricta.
-- families/F001-product-catalog/: manifiestos, 5 requisitos, 3 turnos y 30 productos.
+- families-real/: estrato semi-real activo (S001–S020): manifiesto, peticiones, tests ocultos y parches de referencia por familia.
+- archive/sintetico/: estrato sintético archivado (F001–F010 y sus oráculos).
 - prompts/: instrucciones comunes, generación, evolución y reparación.
-- templates/react-vite/: scaffold sin lógica del catálogo; dependencias exactas y lockfile.
-- oracle/F001/: casos independientes y contrato de adaptación a la futura UI.
-- runner/: validación, ensamblado seguro de insumos y contratos del runner futuro.
+- templates/react-vite/ y docker/ (salvo docker/real/): scaffold y runtime del estrato sintético archivado, conservados por trazabilidad. docker/real/ es la instalación de las imágenes semi-reales.
 - runs/: separación entre construcción de referencias y ejecuciones de π0.
 - docs/: protocolo recuperado, decisiones operativas, entorno y verificación.
 
-## Límites actuales
-La validación estructural no equivale a validar F001 funcionalmente. app/ y generation/V0–V3 están vacíos intencionalmente. El pool está seleccionado y los locales tienen comprobación instrumental de conectividad; no hay generaciones experimentales, etiquetas de impacto/riesgo ni commits de referencia.
-El sandbox implementado recibe únicamente el scaffold, fixture y requisitos iniciales, sin montar archivos del host ni copiar la historia Git del corpus. La exportación de referencias posteriores está pendiente y V1–V3 se rechazan. No ejecutar un agente experimental en la raíz de este repositorio.
-
-Consulta docs/protocol-v1.0.md y docs/environment.md antes de iniciar generación.
+## Estado (2026-10-02)
+- **S001–S010:** calibradas, con imágenes verificadas y ensayos del pipeline en PASS. Están listas para generar en cuanto se congelen los modelos.
+- **S011–S020:** en redacción o calibración. Su progreso está en `docs/estado-del-proyecto-2026-10-02.md`.
+- **Aún no hay referencias semi-reales generadas por modelos**, ni etiquetas de impacto o riesgo (π0).
+- **Seguridad:** no ejecutar un agente experimental en la raíz de este repositorio. Los constructores trabajan solo dentro de contenedores sin red.

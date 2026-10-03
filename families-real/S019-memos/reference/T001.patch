@@ -1,0 +1,26 @@
+diff --git a/src/utils/format.ts b/src/utils/format.ts
+index e6fb31e1..41f7a326 100644
+--- a/src/utils/format.ts
++++ b/src/utils/format.ts
+@@ -1,11 +1,17 @@
+ export function formatFileSize(bytes: number): string {
+-  if (bytes === 0) return "0 B";
+-  if (bytes < 0) return "Invalid size";
++  if (!Number.isFinite(bytes) || bytes < 0) return "Invalid size";
++  const whole = Math.floor(bytes);
++  if (whole === 0) return "0 B";
+ 
+   const units = ["B", "KB", "MB", "GB", "TB"];
+   const k = 1024;
+-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+-  const size = bytes / Math.pow(k, i);
++  let i = Math.min(Math.floor(Math.log(whole) / Math.log(k)), units.length - 1);
++  let size = whole / Math.pow(k, i);
++  // A value that rounds up to 1024 is shown in the next unit (1048570 B → "1.0 MB", not "1024.0 KB").
++  if (i > 0 && i < units.length - 1 && Number(size.toFixed(1)) >= k) {
++    i += 1;
++    size = whole / Math.pow(k, i);
++  }
+   const formatted = i === 0 ? size.toString() : size.toFixed(1);
+ 
+   return `${formatted} ${units[i]}`;

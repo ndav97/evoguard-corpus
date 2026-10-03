@@ -1,0 +1,46 @@
+diff --git a/src/components/site-preview/address-bar.tsx b/src/components/site-preview/address-bar.tsx
+index a0dc3558..2dc16289 100644
+--- a/src/components/site-preview/address-bar.tsx
++++ b/src/components/site-preview/address-bar.tsx
+@@ -63,6 +63,30 @@ export function getRealmNavigationPath( path: string, siteUrl: string ): string
+ 	}
+ }
+ 
++// The site's own address typed without a scheme ("localhost:8881/about/") is a path on the site.
++function getPathFromSiteHost( value: string, siteUrl: string ): string | null {
++	let host: string;
++	try {
++		host = new URL( siteUrl ).host.toLowerCase();
++	} catch {
++		return null;
++	}
++	if ( ! host || ! value.toLowerCase().startsWith( host ) ) {
++		return null;
++	}
++	const rest = value.slice( host.length );
++	if ( rest === '' ) {
++		return '/';
++	}
++	if ( rest.startsWith( '/' ) ) {
++		return rest;
++	}
++	if ( rest.startsWith( '?' ) || rest.startsWith( '#' ) ) {
++		return `/${ rest }`;
++	}
++	return null;
++}
++
+ type OmniboxIntent = { type: 'path'; path: string } | { type: 'search'; term: string };
+ 
+ export function parseOmniboxInput( raw: string, siteUrl: string ): OmniboxIntent | null {
+@@ -74,6 +98,10 @@ export function parseOmniboxInput( raw: string, siteUrl: string ): OmniboxIntent
+ 		const path = getPathFromPreviewUrl( value, siteUrl );
+ 		return path ? { type: 'path', path } : null;
+ 	}
++	const hostPath = getPathFromSiteHost( value, siteUrl );
++	if ( hostPath ) {
++		return { type: 'path', path: hostPath };
++	}
+ 	if ( /\s/.test( value ) ) {
+ 		return { type: 'search', term: value };
+ 	}

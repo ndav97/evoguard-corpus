@@ -132,7 +132,8 @@ async function main() {
     log(`Generación de ${familyId} completa.`);
     return;
   }
-  const familyId = /^F\d{3}$/.test(args[0] ?? '') ? args.shift() : 'F001';
+  if (!/^F\d{3}$/.test(args[0] ?? '')) throw new Error('Uso: npm run corpus:generate -- Sxxx V1|V2|V3|all [--no-commit] (el estrato sintético Fxxx está archivado)');
+  const familyId = args.shift();
   const [target, ...flags] = args;
   const commit = !flags.includes('--no-commit');
   if (!['all', ...VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- [Fxxx] V0|V1|V2|V3|all [--no-commit]');

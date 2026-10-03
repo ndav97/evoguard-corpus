@@ -47,9 +47,9 @@ export function loadTask(dir) {
   return { dir, summary, calls, events, attempts };
 }
 
-export function loadRuns(runsDir) {
+export function loadRuns(runsDir, { exclude = () => false } = {}) {
   const tasks = [];
-  for (const family of dirs(runsDir)) for (const version of dirs(join(runsDir, family))) for (const task of dirs(join(runsDir, family, version))) {
+  for (const family of dirs(runsDir).filter(id => !exclude(id))) for (const version of dirs(join(runsDir, family))) for (const task of dirs(join(runsDir, family, version))) {
     const dir = join(runsDir, family, version, task);
     if (existsSync(join(dir, 'summary.json'))) tasks.push(loadTask(dir));
   }
@@ -241,8 +241,8 @@ function tablesHtml(md) {
   return out.join('');
 }
 
-export function analyze({ runsDir, outDir, now = new Date().toISOString() }) {
-  const tasks = loadRuns(runsDir);
+export function analyze({ runsDir, outDir, now = new Date().toISOString(), exclude }) {
+  const tasks = loadRuns(runsDir, { exclude });
   const { taskRows, attemptRows, callRows } = rows(tasks);
   const result = metrics(taskRows, attemptRows, callRows);
   const meta = { generated_at: now, runs: runsDir, tasks: taskRows.length, attempts: attemptRows.length, calls: callRows.length };
@@ -262,6 +262,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const arg = name => process.argv.find(a => a.startsWith(`--${name}=`))?.split('=').slice(1).join('=');
   const runsDir = arg('runs') ?? join(root, 'runs/corpus-generation');
   const outDir = arg('out') ?? join(root, 'analysis');
-  const { meta } = analyze({ runsDir, outDir });
+  // Desde el 2026-10-02 el estrato sintético está archivado (config/strata.json): sus registros (F001) no entran en el
+  // análisis del corpus salvo con --include-archived.
+  const exclude = process.argv.includes('--include-archived') ? undefined : id => /^F\d{3}$/.test(id);
+  const { meta } = analyze({ runsDir, outDir, exclude });
   console.log(`${meta.tasks} tareas, ${meta.attempts} intentos y ${meta.calls} llamadas → ${outDir}`);
 }
