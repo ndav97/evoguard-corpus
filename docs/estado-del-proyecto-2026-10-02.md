@@ -50,7 +50,7 @@ El tesista decidió que el corpus de EvoGuard UI **ya no usa familias sintética
 ## 3. Pendientes
 
 ### En el PC, sin modelos
-1. **Llevar al PC el archivo del estrato sintético** (`archive/sintetico/`, `config/strata.json`, cambios en `runner/` y en las pruebas) y las familias S011–S020.
+1. ~~Llevar al PC el archivo del estrato sintético y las familias S011–S020~~: hecho en el commit `e50205c`.
 2. **Calibrar** `scripts\real\calibrar-familias-reales.cmd -Familia S0xx` para S011–S020 y corregir lo que falle (`docs/autoria-familias-semi-reales.md`). S013 y S018 parten de bases `GREEN_WITH_KNOWN_FAILURES`: hay que añadir sus fallos conocidos a `known_failures`.
 3. **Preparar imágenes, ensayar, ejecutar `real:mutants` y `real:context`** para S011–S020.
 4. **Revisión independiente** de las 30 peticiones nuevas y revisión humana de todas las peticiones semi-reales.
