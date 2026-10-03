@@ -6,10 +6,10 @@
 # Ocupa 0,5–2 GB por familia. Se puede repetir: rehace la imagen y actualiza su entrada.
 #
 # Uso (PowerShell o doble clic en preparar-imagenes.cmd):
-#   .\scripts\real\preparar-imagenes.ps1                    # las 10 familias
+#   .\scripts\real\preparar-imagenes.ps1                    # las 20 familias
 #   .\scripts\real\preparar-imagenes.ps1 -Familias S010,S005
 
-param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010'))
+param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020'))
 
 $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -24,9 +24,14 @@ try {
   Paso 'Comprobando Docker'
   Asegurar-Docker
   Fijar-Memoria
-  Paso 'Descargando la imagen base node:24-bookworm (solo la primera vez)'
-  docker pull node:24-bookworm
-  if ($LASTEXITCODE -ne 0) { throw 'No se pudo descargar node:24-bookworm. ¿Hay conexión a Internet?' }
+  # Cada familia declara su versión de Node (node: "24", "22"…): se descargan todas las que usen.
+  $nodos = Get-ChildItem (Join-Path $root 'families-real') -Filter family.yaml -Recurse |
+    Select-String -Pattern '^node:\s*"?(\d+)"?' | ForEach-Object { $_.Matches[0].Groups[1].Value } | Sort-Object -Unique
+  foreach ($v in $nodos) {
+    Paso "Descargando la imagen base node:$v-bookworm (solo la primera vez)"
+    docker pull "node:$v-bookworm"
+    if ($LASTEXITCODE -ne 0) { throw "No se pudo descargar node:$v-bookworm. ¿Hay conexión a Internet?" }
+  }
   if (-not (Test-Path (Join-Path $root 'node_modules\yaml'))) { Paso 'Instalando dependencias del runner'; npm ci --no-audit --no-fund }
   $Familias = $Familias | ForEach-Object { $_ -split ',' } | Where-Object { $_ }
   foreach ($f in $Familias) {

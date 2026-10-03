@@ -7,10 +7,10 @@
 # Resultado por familia: docs\verification\real-rehearsal-sxxx.json (lo exige el preflight antes de generar).
 #
 # Uso (PowerShell o doble clic en ensayar-familias.cmd):
-#   .\scripts\real\ensayar-familias.ps1                    # las 10 familias
+#   .\scripts\real\ensayar-familias.ps1                    # las 20 familias
 #   .\scripts\real\ensayar-familias.ps1 -Familias S010,S005
 
-param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010'))
+param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020'))
 
 $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -25,6 +25,10 @@ try {
   Paso 'Comprobando Docker'
   Asegurar-Docker
   Fijar-Memoria
+  # Ensayo general del pipeline (familia de prueba S900): el preflight lo exige con el código actual.
+  Paso 'Ensayo general del pipeline (S900)'
+  node runner/real/rehearse.mjs --mini
+  if ($LASTEXITCODE -ne 0) { $fallidas += 'S900 (ensayo general)'; Write-Host 'El ensayo general no pasó (ver el registro).' -ForegroundColor Yellow }
   $Familias = $Familias | ForEach-Object { $_ -split ',' } | Where-Object { $_ }
   foreach ($f in $Familias) {
     Paso "Ensayando $f"
