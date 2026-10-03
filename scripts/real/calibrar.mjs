@@ -13,7 +13,7 @@
 // Al terminar deja el workspace exactamente en V0.
 //
 // Uso (dentro del contenedor, sin red):
-//   node scripts/real/calibrar.mjs --cache /cache/repos --out .artifacts/real-calibration [--family S001]
+//   node scripts/real/calibrar.mjs --cache /cache/repos --out .artifacts/real-calibration [--family S001[,S002,...]]
 
 import { spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
@@ -27,7 +27,8 @@ const root = path.resolve(here, '..', '..');
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, x, i, arr) => (x.startsWith('--') ? [...a, [x.slice(2), arr[i + 1]]] : a), []));
 const cache = args.cache ?? '/cache/repos';
 const out = path.resolve(root, args.out ?? '.artifacts/real-calibration');
-const only = args.family ?? null;
+// --family admite una familia (S011) o una lista separada por comas (S011,S012,...).
+const only = args.family ? args.family.split(',').map((f) => f.trim()).filter(Boolean) : null;
 const runs = Number(args.runs ?? 2);
 const log = (...a) => console.error(...a);
 
@@ -156,7 +157,7 @@ async function calibrateFamily(dir) {
 
 async function main() {
   const famRoot = path.join(root, 'families-real');
-  const dirs = (await fs.readdir(famRoot)).filter((d) => /^S\d{3}-/.test(d) && (!only || d.startsWith(only))).sort();
+  const dirs = (await fs.readdir(famRoot)).filter((d) => /^S\d{3}-/.test(d) && (!only || only.some((f) => d.startsWith(f)))).sort();
   await fs.mkdir(out, { recursive: true });
   const all = [];
   for (const d of dirs) {

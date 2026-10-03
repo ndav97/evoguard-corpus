@@ -8,9 +8,10 @@
 # Uso (desde PowerShell o con doble clic en calibrar-familias-reales.cmd):
 #   .\scripts\real\calibrar-familias-reales.ps1              # todas las familias
 #   .\scripts\real\calibrar-familias-reales.ps1 -Familia S001 # solo una
+#   .\scripts\real\calibrar-familias-reales.ps1 -Familia S011,S012   # varias (lista separada por comas)
 
 param(
-  [string]$Familia = ''
+  [string[]]$Familia = @()
 )
 
 $ErrorActionPreference = 'Continue'
@@ -88,7 +89,9 @@ try {
     '-e', 'YARN_CACHE_FOLDER=/cache/yarn',
     '-e', 'NODE_OPTIONS=--max-old-space-size=3072'
   )
-  $filtro = if ($Familia) { "--family $Familia" } else { '' }
+  $lista = ($Familia | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ }) -join ','
+  $filtro = if ($lista) { "--family $lista" } else { '' }
+  if ($lista) { Write-Host "Familias: $lista" }
   Paso 'Calibrando (sin red)'
   docker @comun --network none $imagen bash -c "node scripts/real/calibrar.mjs --cache /cache/repos --out .artifacts/real-calibration $filtro"
   if ($LASTEXITCODE -ne 0) { throw "La calibración terminó con código $LASTEXITCODE" }
