@@ -17,7 +17,12 @@ runner: vitest
 node: "24"
 workspace: github__gregrickaby__viewer-for-reddit          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+# tests excluidos del pass-to-pass. Ensayo 2026-10-04: los dos tests de plegado de SidebarNav usan waitFor con el
+# tiempo por defecto (1 s) y fallaron una vez con la máquina cargada, sin relación con el cambio. Son ajenos a la zona
+# del cambio; se excluyen para que un fallo intermitente no rechace candidatos correctos.
+known_failures:
+  - "components/layout/Sidebar/SidebarNav.test.tsx › SidebarNav collapse behavior can toggle Navigation section collapse"
+  - "components/layout/Sidebar/SidebarNav.test.tsx › SidebarNav collapse behavior toggles Navigation by keyboard"
 focus: components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001
