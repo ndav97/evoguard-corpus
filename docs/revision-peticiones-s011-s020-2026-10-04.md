@@ -40,3 +40,5 @@ Coinciden en 22 de 24. Las dos discrepancias:
 - **S014 T001 `Timer.tsx:115`.** El mutante cambia el estilo de los temporizadores no secundarios. La línea ya existía en V0 y la referencia solo la reformatea, así que es una cuestión de no regresión visual que la petición protege con «los estilos no cambian». **Se anota como debilidad menor sin refuerzo:** comprobar clases de módulos CSS en un test oculto ataría la evaluación a detalles de implementación.
 
 Con esto quedan 7 de 8 debilidades corregidas. La de S018 se verifica con `scripts\real\recalibrar-reforzadas.cmd -Familias S018`.
+
+**Verificación (2026-10-04, 14:51 hora de Lima):** S018 se recalibró con el test nuevo de T002 y pasa los tres turnos. En T002 fallan antes 3 de 5 tests. El mutante `toast.js:8` queda eliminado: S018 pasa a 15 eliminados y 3 sobrevivientes, todos equivalentes (puntuación bruta 0,83).

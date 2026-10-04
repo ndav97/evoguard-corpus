@@ -3,7 +3,7 @@
   "family_id": "S018",
   "image_id": "sha256:5e3f3a0cb756fae9641761fba7dd161f3398e6113f953947d0c03a4b0f40ccbb",
   "max_per_turn": 8,
-  "started_at": "2026-10-04T14:09:50.581Z",
+  "started_at": "2026-10-04T19:51:35.240Z",
   "turns": [
     {
       "turn": "T001",
@@ -79,7 +79,7 @@
           "operator": "negación",
           "original": "if (hideTimer) {",
           "mutated": "if (!hideTimer) {",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "client/modules/IDE/actions/toast.js",
@@ -124,17 +124,17 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 10,
+        "tests": 11,
         "failed": 0,
         "failing": []
       },
       "summary": {
-        "KILLED": 3,
-        "SURVIVED": 3,
+        "KILLED": 4,
+        "SURVIVED": 2,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.5
+      "score": 0.67
     },
     {
       "turn": "T003",
@@ -203,7 +203,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 14,
+        "tests": 15,
         "failed": 0,
         "failing": []
       },
@@ -216,17 +216,8 @@
       "score": 0.86
     }
   ],
-  "score": 0.78,
+  "score": 0.83,
   "survivors": [
-    {
-      "turn": "T002",
-      "file": "client/modules/IDE/actions/toast.js",
-      "line": 8,
-      "operator": "negación",
-      "original": "if (hideTimer) {",
-      "mutated": "if (!hideTimer) {",
-      "result": "SURVIVED"
-    },
     {
       "turn": "T002",
       "file": "client/modules/IDE/actions/toast.js",
@@ -255,5 +246,5 @@
       "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-10-04T14:11:02.663Z"
+  "finished_at": "2026-10-04T19:53:43.390Z"
 }
