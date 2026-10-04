@@ -1,0 +1,58 @@
+{
+  "family": "S016",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Los cuatro puntos de llamada (envío, autoSearch, filtro y orden) están enumerados y son exactamente los que prueban los tests.",
+        "Que el campo conserve el texto sin recortar está explícito (test toHaveValue('  oksigen  ')).",
+        "Ningún test existente depende de palabras con espacios: faq, lbh y provinces escriben valores sin espacios sobrantes."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "El nombre accesible `Kosongkan kata kunci` es literal y no casa con /cari/i, que usan faq.test.tsx y lbh/index.test.tsx en getByRole('button', {name: /cari/i}). El problema de S016 ya no se da.",
+        "Las tres exigencias del test están en la petición: la llamada inmediata con filtros conservados (toHaveBeenCalledTimes(1)), que no se envíe el formulario y que el botón desaparezca.",
+        "El botón va en la FormGroup y no en la barra principal. Ningún test existente cuenta botones."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "reference_bug",
+          "request_quote": "se llama **de inmediato** (sin esperar la búsqueda automática) a `onSubmitKeywords(\"\", filtros, orden)`",
+          "evidence": "reference/T002.patch: handleClear() { setKeywords(\"\"); onSubmitKeywords(\"\", filters, sortBy); }, sin cancelar debouncedSearch. oracle/T003.test.tsx («el botón de borrar sigue funcionando en modo automático»): type(\"ab\"); click(clear); expect(lastCalledWith(\"\")), sin avanzar los temporizadores después.",
+          "problem": "Con autoSearch (pages/provinces/index.tsx), si se escribe y se pulsa la X antes de 300 ms, la búsqueda automática pendiente se ejecuta después con el texto anterior ('ab'). El campo queda vacío pero la lista vuelve a filtrarse. La referencia incumple el objetivo del turno («volver a ver todos los resultados»), y el test no lo detecta porque no avanza los temporizadores tras el clic. Una implementación que cancele la búsqueda pendiente y otra que no la cancele reciben la misma nota.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "   - se llama **de inmediato** (sin esperar la búsqueda automática) a `onSubmitKeywords(\"\", filtros, orden)`, conservando los filtros y el orden actuales;",
+            "new": "   - se llama **de inmediato** (sin esperar la búsqueda automática) a `onSubmitKeywords(\"\", filtros, orden)`, conservando los filtros y el orden actuales, y se descarta la búsqueda automática que estuviera pendiente;"
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "El mínimo de 2 caracteres tras recortar, la excepción de la cadena vacía, los 300 ms y la ausencia de mínimo en el envío manual y en el botón están explícitos y casan con los 6 tests.",
+        "provinces/index.test.tsx escribe el nombre completo de una provincia con autoSearch (más de 2 caracteres), así que sigue pasando.",
+        "Conflicto con T002: el test del botón en modo automático exige que borrar no tenga mínimo, y el punto 4 lo dice."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "ambiguity",
+          "request_quote": "Con 1 carácter (por ejemplo `a` o ` a `) no se llama a `onSubmitKeywords`.",
+          "evidence": "reference/T003.patch: con 1 carácter simplemente no se llama a debouncedSearch, y una búsqueda pendiente anterior ('ab') se ejecuta igualmente a los 300 ms.",
+          "problem": "Al borrar rápido de 'ab' a 'a', la referencia lanza igualmente onSubmitKeywords('ab') mientras el campo muestra 'a'. Los tests no lo cubren y no penalizan a nadie, pero la petición no aclara si la búsqueda pendiente debe cancelarse. Es el mismo hueco que en T002.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "2. Con 1 carácter (por ejemplo `a` o ` a `) no se llama a `onSubmitKeywords`.",
+            "new": "2. Con 1 carácter (por ejemplo `a` o ` a `) no se llama a `onSubmitKeywords` (puede ejecutarse igualmente una búsqueda automática anterior que ya estuviera pendiente)."
+          }
+        }
+      ]
+    }
+  ]
+}

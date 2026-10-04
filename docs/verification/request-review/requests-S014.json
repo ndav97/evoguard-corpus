@@ -1,0 +1,34 @@
+{
+  "family": "S014",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Los tres textos del aria-label (`N hours left in the session window`, `1 hour left…`, `Session window expired`) están literalmente en la petición y coinciden con los tests.",
+        "El N sin ceros se ilustra con el ejemplo `04 hrs` → `4 hours…`; el caso `24 hours` (ago(0)) se deduce del valor mostrado en V0 (24 - floor(horas transcurridas)).",
+        "El aria-label va en el div con data-testid=\"timerCount\", que se nombra explícitamente. El wrapper Tooltip de V0 envuelve a los hijos en un <span>, así que el aria-label que MUI pone en su hijo (null aquí, porque el título no es una cadena) no pisa el del div.",
+        "Tests existentes: Timer.test.tsx usa toHaveTextContent con subcadenas ('22', '02', '0') y ConversationHeader.test.tsx usa getByText('24 hrs'). El texto visible no cambia, así que siguen pasando. No hay snapshots de Timer."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "La regla (≥23 h y <24 h → minutos; 1440 − minutos completos) coincide con los tests ago(23,35)→25, ago(23)→60, ago(23,35,50)→25 y ago(23,59)→1.",
+        "Los límites (22:59 → `02 hrs`; 24:00 → `0 hrs`/`Session window expired`) son los de V0 y la petición los repite.",
+        "Formato visible exacto `M min`: los tests usan /^25 min$/. Está entre comillas invertidas y el prompt general dice que esos textos son exactos.",
+        "Que la última hora ya no muestre `1 hour left` no rompe T001: sus tests no cubren ese caso."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Cambiar el intervalo de 60000 a 30000 ms es exactamente lo que exigen los tests. El test de 29 s solo falla si se actualiza antes de 30 s, y la petición pide «cada 30 segundos».",
+        "Los tests usan vi.useFakeTimers + setSystemTime, y dayjs() lee el Date simulado, así que el setInterval existente basta.",
+        "Los ejemplos del punto 2 se parecen a los tests (25→24 min, expirar), pero solo ilustran la semántica pedida. No revelan nada más."
+      ],
+      "findings": []
+    }
+  ]
+}

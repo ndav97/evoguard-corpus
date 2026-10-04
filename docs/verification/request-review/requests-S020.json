@@ -1,0 +1,38 @@
+{
+  "family": "S020",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "El criterio de número válido (vacío, entero o decimal, `-` opcional, punto, `.5`) está explícito y cubre `abc`, `1..5`, `-2.5` y `.5` del test.",
+        "«Se marca como inválido (`invalid`)» corresponde a la clase `cds--text-input--invalid` que pone el `TextInput` de Carbon, el mismo mecanismo que ya usa V0 y su test existente («shows the invalid min and max values»).",
+        "El texto y la clave (`t('invalidNumber', 'Enter a valid number')`) son literales; el mock de react-i18next del repo (`__mocks__/react-i18next.js`, alias en vitest.config.ts) devuelve el texto por defecto.",
+        "«El otro campo no se marca por ello» cubre `maxInput` no inválido en el primer test, y garantiza que `getByText('Enter a valid number')` encuentre un único elemento.",
+        "Guardar el texto tal cual (`7x`) es el comportamiento de V0 y está pedido en el punto 4.",
+        "El test existente number.test.tsx (con `useFormField` simulado y nombres /min/i y /max/i) sigue pasando con la referencia."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "Etiqueta exacta y «campo de texto» explícitos: el test lo busca como `textbox` (un `NumberInput` de Carbon, con rol `spinbutton`, queda descartado por la petición).",
+        "Guardar en `questionOptions.step` como texto sin tocar el resto coincide con el `toEqual` del test.",
+        "Validez del paso (vacío o número > 0, mismo criterio que T001) y el texto `Step must be a number greater than 0` son literales; `0`, `-1` y `x` inválidos, `0.25` válido.",
+        "La etiqueta nueva no contiene «min» ni «max», así que no interfiere con las consultas `/min/i` y `/max/i` del test existente ni de los ocultos.",
+        "El test de T002 que repite la validación de T001 es coherente con el punto 4."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Nombre accesible exacto `Clear range` y la condición de visibilidad (algún valor en min, max o paso) están explícitos y coinciden con el test.",
+        "«Se eliminan las claves» y «las demás opciones se conservan» coinciden con `toEqual({ rendering: 'number', required: true })`.",
+        "Que desaparezcan los avisos tras pulsar el botón (incluido `Enter a valid number` con `min: 'abc'`) se deduce del punto 2.",
+        "El botón no tiene rol `textbox`, así que no afecta a las consultas de los tests existentes ni de T001/T002; en number.test.tsx (con min `1` y max `10`) el botón aparece pero ningún test lo impide."
+      ],
+      "findings": []
+    }
+  ]
+}

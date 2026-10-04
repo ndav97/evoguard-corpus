@@ -1,0 +1,38 @@
+{
+  "family": "S019",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Los tres fallos descritos existen en V0 (web/src/utils/format.ts): `1048575` da `1024.0 KB`, `1024⁵` da `undefined` como unidad (índice 5 fuera de `units`) y `NaN` da `NaN undefined`.",
+        "Cada caso del test está pedido literalmente: `Invalid size` para NaN/Infinity/negativos, suelo de fracciones (`512.9` → `512 B`, `0.5` → `0 B`), salto de unidad al llegar a `1024.0` (`1048570`, `1024³ − 1`) y tope en TB (`1024.0 TB`).",
+        "`1024*1024 − 1` → `1.0 MB` y `1.5 TB` se deducen de los puntos 3 y 4; `1023` → `1023 B` del punto 3 (bytes sin decimales, sin salto de unidad para B).",
+        "Con `Math.log` el índice para potencias exactas de 1024 es exacto (comprobado para 1024¹…1024⁵), así que una implementación con logaritmos o con bucle da lo mismo.",
+        "No hay tests existentes de `formatFileSize` que puedan romperse; `Invalid size` ya es el texto de V0."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "La tabla de la petición coincide uno a uno con los `expect` del test y con el parche.",
+        "La normalización (minúsculas y sin parámetros) ya existe en V0, así que `Text/CSV; charset=utf-8` → `CSV` es deducible y además se menciona.",
+        "Los tipos que «no cambian» (`PDF`, `SVG`, `MOV`, `TXT`) ya se comportaban así en V0.",
+        "Sin tests existentes de `getFileTypeLabel`."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Firma `getFileTypeLabel(mimeType, filename?)`, la condición (vacío u `application/octet-stream`, sin mayúsculas ni parámetros) y la regla del último punto están explícitas; los ejemplos `report.final.Pdf` → `PDF` y `backup.tar.gz` → `GZ` son los del test.",
+        "Los casos `File` (`README`, `.env`, `archive.`, sin nombre, y `application/octet-stream` sin nombre) están enumerados literalmente en el punto 3.",
+        "«Con un tipo MIME útil se usa el tipo» cubre `application/pdf` + `photo.jpg` y `text/csv` + `data.txt` (este último depende de T002, que ya está aplicado).",
+        "El punto 5 nombra el archivo y el campo (`attachment.filename`); `AttachmentSchema` tiene `filename`, `type` y `size` en V0 (web/src/types/proto/api/v1/attachment_service_pb.ts) y `2048` → `2.0 KB` no cambia con T001.",
+        "El cambio de `OCTET-STREAM` a `File` sin nombre no rompe tests existentes: los únicos tests con `fileTypeLabel` (web/tests/attachment-library-source-link.test.tsx) pasan la etiqueta ya calculada.",
+        "No exige tocar los otros llamadores (AttachmentListEditor, AudioAttachmentItem, media-metadata); hacerlo tampoco rompería nada."
+      ],
+      "findings": []
+    }
+  ]
+}

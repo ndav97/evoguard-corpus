@@ -1,0 +1,47 @@
+{
+  "family": "S012",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "`dataProvider.create('playlist', { data: { name } })` con nombre recortado está explícito y coincide con el test (`'  Road trip  '` → `'Road trip'`).",
+        "`data-testid=\"save-queue-count\"` y los textos `N songs will be saved` / `1 song will be saved` son literales; la nota de no usar claves de traducción evita depender del i18nProvider de TestContext.",
+        "La segunda llamada (`playlistTrack` con ids y `playlist_id`) ya es así en V0; el test existente (`'my playlist'`) no se ve afectado por el trim."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "`role=\"alert\"` y `Could not save the playlist.` literales; la ausencia de alertas antes del fallo está en las notas.",
+        "Conservar el nombre y reactivar el botón ya ocurre en V0 (`finally(() => setIsSaving(false))`); reintentar produce la 3.ª llamada esperada.",
+        "Desaparecer al editar y al iniciar un nuevo guardado está explícito; `ra.page.error` se mantiene como en V0.",
+        "El botón Cancel se busca por /cancel/i; TestContext devuelve la clave `ra.action.cancel`, que casa."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "ambiguity",
+          "request_quote": "El aviso desaparece: [...] al cerrar el diálogo.",
+          "evidence": "Test: tras pulsar Cancel espera que no haya `role=alert`. TestContext de ra-test sin `enableReducers` usa un store estático: `closeSaveQueueDialog()` no cambia `saveQueueDialog.open`, el diálogo sigue abierto. La referencia lo resuelve con `setSaveFailed(false)` en `handleClose`.",
+          "problem": "Una implementación razonable que limpie el aviso reaccionando al estado `open` (p. ej. `useEffect(() => { if (!open) setSaveFailed(false) }, [open])`, o que lo muestre solo con `open`) funciona en la aplicación real, pero falla en el test, porque `open` nunca cambia en ese store. Sigue el estilo de V0 (`setName('')` en `handleClose`) y es lo más probable, pero no se dice.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "   - al cerrar el diálogo.",
+            "new": "   - al cerrar el diálogo (en el manejador `handleClose`, igual que se vacía el nombre)."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "`The queue is empty` en el mismo `data-testid=\"save-queue-count\"`, botón `save-queue-save` deshabilitado con nombre y Enter sin efecto: todo explícito.",
+        "El test «Enter sigue guardando» usa `onKeyPress` existente; la referencia no cambia el evento y user-event emite keypress para Enter.",
+        "Deshabilitar también el campo de texto con la cola vacía no rompería los tests (solo comprueban el botón y que no se llame a create).",
+        "Los tests de T001/T002 usan colas no vacías y siguen pasando."
+      ],
+      "findings": []
+    }
+  ]
+}

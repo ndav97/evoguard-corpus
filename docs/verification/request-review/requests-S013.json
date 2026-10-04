@@ -1,0 +1,35 @@
+{
+  "family": "S013",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Formato `<Estado>: <recuento> of <total> (<porcentaje>%)` con los tres ejemplos literales del test (2 errores, 7 total, 4 avisos).",
+        "Los href `/http/routers?status=enabled|warning|disabled` ya son así en V0; el enlace Explore se busca por /Explore/ y no choca con los nuevos nombres.",
+        "Ningún spec de V0 consulta enlaces por rol; los specs existentes usan `data-testid` e `innerHTML.toContain('Success')`, que no cambian con `aria-label`.",
+        "«El porcentaje es el mismo que ya se muestra» es deducible: en V0 es `getPercent(total, count)`."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "El método del mayor resto, con desempate Success, Warnings, Errors, está descrito con precisión; los tres ejemplos coinciden con el test y el parche (comprobado: 4/1/1 de 6 → 66+16+16 = 98, empate de restos → Success y Warnings).",
+        "Los specs existentes (0/3/2 de 5 → 0/60/40; 1/4/2 de 7 → 14/57/29) dan lo mismo con el nuevo método.",
+        "La aplicación del mismo porcentaje en el nombre accesible está explícita (punto 3) y no contradice T001.",
+        "Una implementación en coma flotante o con aritmética entera da el mismo resultado en los casos probados."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Success = max(total − (warnings + errors), 0) y porcentajes sobre la suma mostrada: los casos (3,4,3) → 0/50/50 y (1,1,2) → 0/67/33 coinciden con el test.",
+        "El ejemplo de la petición (total 1, 2 avisos, 1 error) es el del test.",
+        "Con datos coherentes la suma coincide con `total`, así que los tests de T001/T002 y los specs existentes no cambian.",
+        "No se exige nada sobre el gráfico; la referencia usa el recuento recortado también en el Doughnut, y no se comprueba (no penaliza ninguna opción razonable)."
+      ],
+      "findings": []
+    }
+  ]
+}

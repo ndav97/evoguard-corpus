@@ -55,6 +55,18 @@ describe('T002 · un aviso nuevo no se cierra antes de tiempo', () => {
     expect(toast()).not.toBeInTheDocument();
   });
 
+  it('al cerrar el aviso no queda ningún cierre automático pendiente', () => {
+    jest.useFakeTimers();
+    const { store } = reduxRender(<Toast />);
+    const before = jest.getTimerCount();
+    act(() => {
+      store.dispatch(showToast('Toast.SketchSaved', 1000));
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Close Alert' }));
+    expect(toast()).not.toBeInTheDocument();
+    expect(jest.getTimerCount()).toBe(before);
+  });
+
   it('un solo aviso se sigue cerrando a su tiempo', () => {
     jest.useFakeTimers();
     const { store } = reduxRender(<Toast />);

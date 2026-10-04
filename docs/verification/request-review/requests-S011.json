@@ -1,0 +1,61 @@
+{
+  "family": "S011",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "Los tres nombres (`Locate matches in the trace`, `Previous match`, `Next match`) coinciden literalmente con el test y el parche; antd `Button` reenvía `aria-label` al `<button>`.",
+        "El test de deshabilitado con textFilter vacío ya se cumple en V0 (`disabled={!textFilter}`); el request pide no cambiarlo.",
+        "«No añadas botones nuevos» protege el test existente `getAllByRole('button')` con longitud 3 (TracePageSearchBar.test.jsx).",
+        "El test existente usa `data-testid` UpOutlined/DownOutlined, que la petición no obliga a tocar."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "`aria-label` `N matching spans`/`1 matching span` y `aria-live=\"polite\"` están literalmente en la petición; `0 matching spans` en plural está explícito.",
+        "El test localiza el recuento por texto y selector `.TracePageSearchBar--count`; la petición exige el mismo `<span>` con solo el número visible, así que no hay requisito oculto.",
+        "Los tests existentes (`getByText('0')` con clase `TracePageSearchBar--count`, y su ausencia con textFilter vacío) siguen pasando con aria-label.",
+        "No entra en conflicto con T001 (el test de T002 comprueba `Next match`)."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "wording",
+          "request_quote": "tener `aria-label` igual a `N matching spans` [...] tener `aria-live=\"polite\"`",
+          "evidence": "Referencia: <span className=\"TracePageSearchBar--count\" aria-live=\"polite\" aria-label={countLabel}>; el test solo comprueba los atributos.",
+          "problem": "En ARIA 1.2 `aria-label` está prohibido en un elemento genérico (`<span>` sin rol) y varios lectores de pantalla lo ignoran, de modo que el objetivo declarado («anunciado a lectores de pantalla») no se consigue del todo; un `role=\"status\"` lo haría válido. No hace fallar a ningún modelo (los tests no comprueban el rol), pero la petición enseña una práctica incorrecta. Si se adopta, actualizar también reference/T002.patch.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "   - tener `aria-live=\"polite\"`, para que se anuncien los cambios.",
+            "new": "   - tener `role=\"status\"` y `aria-live=\"polite\"`, para que se anuncien los cambios."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Enter → nextResult, Mayús+Enter → prevResult, sin navegar si `!navigable` o `textFilter` vacío, y otras teclas sin efecto: todo explícito y coincide con los cinco tests.",
+        "En V0 `UiFindInput` hace `{...inputProps}` sobre el `Input` de antd antes de sus propios onBlur/onChange, así que un `onKeyDown` en `inputProps` llega al `<input>` real y al del mock.",
+        "Un manejador en un contenedor (burbujeo de keydown) también pasaría.",
+        "Los tests de T001/T002 siguen pasando; el test existente usa un mock que ignora props desconocidas."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "El campo es el componente `UiFindInput`, que reenvía al `<input>` las propiedades que recibe en `inputProps`.",
+          "evidence": "Mock del test: `const { suffix, ...rest } = inputProps; <input ref={ref} data-testid=\"find-input\" {...rest} />`. En V0, UiFindInput pasa inputProps al `Input` de antd, que admite `onPressEnter`.",
+          "problem": "La forma idiomática en antd es `onPressEnter` (recibe el KeyboardEvent con `shiftKey`) y funcionaría en la aplicación real, porque `UiFindInput` reenvía `inputProps` al `Input` de antd. Pero el mock lo pasa a un `<input>` nativo, donde React lo ignora como prop desconocida, y los tests de Enter fallarían. La nota insinúa el `<input>` nativo pero no excluye `onPressEnter`. Alternativa: que el mock traduzca `onPressEnter` (llamarlo desde `onKeyDown` cuando `key === 'Enter'`).",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "- El campo es el componente `UiFindInput`, que reenvía al `<input>` las propiedades que recibe en `inputProps`.",
+            "new": "- El campo es el componente `UiFindInput`, que reenvía al `<input>` las propiedades que recibe en `inputProps`. Usa el evento estándar `onKeyDown` (no el `onPressEnter` de antd)."
+          }
+        }
+      ]
+    }
+  ]
+}

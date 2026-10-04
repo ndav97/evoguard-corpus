@@ -1,0 +1,78 @@
+{
+  "family": "S018",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "El cierre con Escape despachando `hideToast()` y con el foco en otro elemento (test con un `<input>` enfocado) está pedido explícitamente.",
+        "«Las demás teclas no lo cierran» coincide con el test de Enter y `a`.",
+        "El botón «X» se localiza por su nombre accesible `Close Alert`, que ya existe en V0 (`Toast.CloseAlertARIA` en translations/locales/en-US/translations.json); no hay que crear nada.",
+        "Retirar el escuchador al desmontar está cubierto por «no deja escuchadores de teclado colgados».",
+        "Con React 16 (package.json ^16.14.0) el `onClick` del botón hace que React registre `click` en `document`, no `keydown`, así que los espías de `keydown` solo ven el escuchador del modelo.",
+        "La suite existente (client/modules/IDE/components/Toast.test.jsx) no se ve afectada."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "3. Cuando no hay aviso visible, Escape no hace nada y el componente no deja escuchadores de teclado colgados.",
+          "evidence": "Test «sin aviso visible no queda ningún escuchador de teclado»: monta `<Toast />` con `isVisible: false` y exige que no quede ningún `keydown` añadido en document/window sin retirar, sin desmontar. En V0 el patrón del repo para atajos es `useKeyDownHandlers` (client/common/useKeyDownHandlers.ts, usado por useModalClose con `{ escape: onClose }`), que registra `document.addEventListener('keydown', …)` mientras el componente esté montado. Como Toast hace `return null` después de los hooks, `useKeyDownHandlers({ escape: … })` en Toast registra el escuchador aunque el aviso esté oculto.",
+          "problem": "«Colgados» se lee con naturalidad como «sin fugas» (que se retiren al desmontar), y la implementación más fiel a las convenciones del repo (llamar a `useKeyDownHandlers` en Toast y comprobar `isVisible` dentro del manejador) cumple esa lectura y el comportamiento visible, pero falla el test porque el escuchador existe mientras el aviso está oculto. El test exige en realidad que no haya ningún escuchador registrado mientras no hay aviso visible.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "3. Cuando no hay aviso visible, Escape no hace nada y el componente no deja escuchadores de teclado colgados.",
+            "new": "3. Cuando no hay aviso visible, Escape no hace nada y el componente no tiene ningún escuchador de teclado registrado: el escuchador se añade al mostrarse el aviso y se retira al ocultarse o al desmontarse. (Si usas `useKeyDownHandlers`, llámalo desde un componente que solo se monte con el aviso visible.)"
+          }
+        },
+        {
+          "severity": "low",
+          "type": "hidden_requirement",
+          "request_quote": "1. Mientras un aviso está visible, pulsar `Escape` lo cierra (despacha `hideToast()`), esté donde esté el foco dentro de la página.",
+          "evidence": "Los tests disparan `fireEvent.keyDown(document, { key: 'Escape' })` y espían `addEventListener`/`removeEventListener` solo en `document` y `window`, filtrando el tipo `keydown`; el último test exige `added.handlers().length > 0` con el aviso visible.",
+          "problem": "Un escuchador de `keyup` o uno registrado en `document.body` (ambos razonables para «pulsar Escape esté donde esté el foco») fallan: el evento disparado sobre `document` no llega a `body`, y los espías no ven escuchadores de `body`. La petición no dice el evento ni el destino.",
+          "fix": {
+            "target": "turns/T001.md",
+            "old": "1. Mientras un aviso está visible, pulsar `Escape` lo cierra (despacha `hideToast()`), esté donde esté el foco dentro de la página.",
+            "new": "1. Mientras un aviso está visible, pulsar `Escape` lo cierra (despacha `hideToast()`), esté donde esté el foco dentro de la página. Escucha el evento `keydown` en `document` (como `useKeyDownHandlers`)."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "El fallo descrito existe en V0: `showToast` hace `setTimeout(() => dispatch(hideToast()), time)` sin guardar ni cancelar el temporizador (client/modules/IDE/actions/toast.js).",
+        "Los tiempos del test (600+500+499+1 con dos avisos de 1000 ms; 300/100/700/300 al cerrar a mano) corresponden exactamente a «su propio tiempo completo».",
+        "La forma antigua `SET_TOAST_TEXT` + `showToast(800)` y el tiempo por defecto de 1500 ms están pedidos explícitamente; los textos (`Settings saved.`, `Autosave enabled.`, `Sketch saved.`) son traducciones existentes en en-US.",
+        "Admite varias implementaciones correctas (temporizador en el módulo, identificador del aviso comprobado con `getState`, etc.); el test no impone dónde se guarda el temporizador.",
+        "No rompe tests existentes: no hay tests que comparen la secuencia de acciones de `showToast`/`SHOW_TOAST` (solo Toast.test.jsx, que sigue pasando).",
+        "Nota (no afecta a la petición): el punto 2 no tiene un test que lo distinga, porque en «cerrar a mano cancela…» el segundo `showToast` ya cancela el temporizador antiguo por el punto 1."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "Firma `showToast(texto, tiempo, variante)`, roles, `aria-live` y las clases `toast toast--error` están literalmente en la petición y coinciden con el test.",
+        "«Un aviso informativo mostrado después de uno de error vuelve a ser informativo» cubre el test correspondiente; Escape y el cierre automático para errores son consecuencia de T001/T002.",
+        "El texto `Failed to save sketch.` y `Network error` existen en V0 (Toast.SketchFailedSave, Toast.NetworkError).",
+        "No obliga a cambiar las llamadas existentes (project.js usa la forma antigua `setToastText` + `showToast(1500)`); no hay tests que lo exijan en un sentido u otro.",
+        "Los tests de T001 siguen pasando: el helper `toast()` acepta `status` o `alert`."
+      ],
+      "findings": [
+        {
+          "severity": "low",
+          "type": "hidden_requirement",
+          "request_quote": "   - para `'info'`: como hasta ahora, `role=\"status\"`, `aria-live=\"polite\"` y la clase `toast`.",
+          "evidence": "Los tests de T001 y el test existente «closes when \"X\" button is pressed» renderizan con `initialState: { toast: { isVisible: true, text: 'Hello World' } }`; `setupStore` lo pasa como `preloadedState` (client/store.ts) y el estado del aviso queda sin `variant`, aunque el reducer tenga `variant: 'info'` en su estado inicial.",
+          "problem": "Una implementación que confíe en el valor por defecto del reducer y resuelva la variante con un mapa (`VARIANTS[variant].role`) se rompe con `variant` indefinido y hace fallar T001 y la suite existente. La petición solo garantiza `'info'` para las llamadas a `showToast`, no para un estado sin la clave.",
+          "fix": {
+            "target": "turns/T003.md",
+            "old": "   - para `'info'`: como hasta ahora, `role=\"status\"`, `aria-live=\"polite\"` y la clase `toast`.",
+            "new": "   - para `'info'`: como hasta ahora, `role=\"status\"`, `aria-live=\"polite\"` y la clase `toast`. Un estado del aviso sin `variant` (por ejemplo, uno precargado en los tests) se trata como `'info'`."
+          }
+        }
+      ]
+    }
+  ]
+}

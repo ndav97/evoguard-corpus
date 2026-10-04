@@ -1,0 +1,34 @@
+{
+  "family": "S017",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "La regla (host de new URL(siteUrl).host sin distinguir mayúsculas, seguido del final, '/', '?' o '#') y las tres formas de path coinciden con la referencia y con los tests, incluidos '  localhost:8881/  ' → '/' y 'LocalHost:8881?p=2' → '/?p=2'.",
+        "Los contraejemplos ('localhost:8882/about' → ruta '/localhost:8882/about'; 'localhost:88811' → búsqueda) están en la petición y salen del comportamiento de V0.",
+        "Una implementación alternativa con new URL('http://' + value) y comparación de origen también pasa todos los tests: 88811 da un puerto inválido y cae al flujo de V0.",
+        "Tests existentes de parseOmniboxInput ('wp-admin/plugins.php', 'hello world', URLs con esquema) no se ven afectados."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "El texto `Clear recent` es literal. getByText('Recent') es una coincidencia exacta y no casa con 'Clear recent'.",
+        "La clave de localStorage aparece en la petición, y la exigencia de no tocar otros sitios está explícita (un localStorage.clear() fallaría, como pide la petición).",
+        "La nota de no añadir botones a la barra protege el test existente «puts the configured site icon inside the address field» (container.querySelectorAll('button') con longitud 1 con el panel cerrado).",
+        "Da igual si el botón cierra el panel o no: ambos comportamientos pasan."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "El filtro por igualdad exacta con la prop path, la desaparición de la sección y del botón `Clear recent`, y la conservación en el almacenamiento están explícitos y casan con los 3 tests.",
+        "El test existente «remembers submitted addresses…» renderiza con path '/' y espera '/about/', así que no se ve afectado.",
+        "Coherente con T002: el botón está dentro de la sección y desaparece con ella."
+      ],
+      "findings": []
+    }
+  ]
+}

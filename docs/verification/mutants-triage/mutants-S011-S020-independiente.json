@@ -1,0 +1,245 @@
+{
+  "reviewed_at": "2026-10-04",
+  "items": [
+    {
+      "family": "S011",
+      "turn": "T003",
+      "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+      "line": 47,
+      "original": "event.preventDefault();",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "verdict": "EQUIVALENT",
+      "reason": "El <input> de UiFindInput no está dentro de ningún <form> (ni en TracePageSearchBar, ni en TracePageHeader, ni en TracePage/index), y antd Input no asocia acción por defecto a Enter: sin preventDefault no hay envío implícito ni otro efecto. La petición no menciona preventDefault; la navegación (next/prevResult) no cambia."
+    },
+    {
+      "family": "S012",
+      "turn": "T002",
+      "file": "src/dialogs/SaveQueueDialog.jsx",
+      "line": 38,
+      "original": "setSaveFailed(false)",
+      "mutated": "setSaveFailed(true)",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. En handleClose: la petición exige que el aviso desaparezca 'al cerrar el diálogo'. SaveQueueDialog permanece montado en Dialogs.jsx (solo cambia open), así que con el mutante el estado queda en true y el aviso role=alert reaparece al reabrir el diálogo (o persiste durante la transición de cierre). La versión anterior de T002 no tenía el test de cierre."
+    },
+    {
+      "family": "S012",
+      "turn": "T002",
+      "file": "src/dialogs/SaveQueueDialog.jsx",
+      "line": 74,
+      "original": "notify('ra.page.error', { type: 'warning' })",
+      "mutated": "notify('ra.page.error·X', { type: 'warning' })",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. La petición dice explícitamente 'La notificación actual (ra.page.error) se mantiene'; con el mutante la clave no existe en react-admin y se mostraría la clave cruda en lugar del mensaje traducido. La versión anterior de T002 no comprobaba la llamada a notify."
+    },
+    {
+      "family": "S014",
+      "turn": "T001",
+      "file": "src/components/UI/Timer/Timer.tsx",
+      "line": 115,
+      "original": "variant === 'secondary' && styles.SecondaryTimer",
+      "mutated": "variant !== 'secondary' && styles.SecondaryTimer",
+      "verdict": "WEAKNESS",
+      "reason": "Línea preexistente que el parche solo reformatea. El mutante aplica SecondaryTimer (border-radius 5px, margin 0) a los temporizadores por defecto de la lista de chats y cabecera, y lo quita del de ContactDescription: cambio visible. La petición exige 'El texto visible y los estilos no cambian' y ni T001 ni la suite existente comprueban la clase (vitest con css: true). Debilidad menor: protege comportamiento previo, no el cambio pedido."
+    },
+    {
+      "family": "S015",
+      "turn": "T002",
+      "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+      "line": 59,
+      "original": "<Text size=\"sm\" c=\"dimmed\" role=\"status\">",
+      "mutated": "<Text size=\"sm\" c=\"dimmed·X\" role=\"status\">",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia el color del texto (Mantine genera un color CSS no válido y el texto hereda el color normal). Texto, rol y comportamiento intactos; la petición no fija el estilo. Cae en 'estilos' de la definición de EQUIVALENT."
+    },
+    {
+      "family": "S016",
+      "turn": "T001",
+      "file": "components/search-form.tsx",
+      "line": 100,
+      "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
+      "mutated": "(borrado)",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. La petición exige que las llamadas a onSubmitKeywords 'al cambiar un filtro o el orden' reciban las palabras recortadas; borrar la llamada elimina la búsqueda al cambiar filtro (además rompe comportamiento previo). La versión anterior de T001 no ejercía handleFilterChange."
+    },
+    {
+      "family": "S016",
+      "turn": "T001",
+      "file": "components/search-form.tsx",
+      "line": 106,
+      "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
+      "mutated": "(borrado)",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. Igual que la línea 100 pero para el cambio de orden (handleSortChange), mencionado explícitamente en la petición; la versión anterior de T001 no lo ejercía."
+    },
+    {
+      "family": "S016",
+      "turn": "T002",
+      "file": "components/search-form.tsx",
+      "line": 144,
+      "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
+      "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
+      "verdict": "EQUIVALENT",
+      "reason": "El icono está dentro de un <button> con aria-label='Kosongkan kata kunci': el nombre accesible lo da aria-label y los hijos de role=button son presentacionales, así que el árbol de accesibilidad y el nombre no cambian. Sin efecto visual."
+    },
+    {
+      "family": "S017",
+      "turn": "T001",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 72,
+      "original": "return null;",
+      "mutated": "return undefined as any;",
+      "verdict": "EQUIVALENT",
+      "reason": "getPathFromSiteHost no se exporta; su único llamador (parseOmniboxInput) hace 'if (hostPath)', así que null y undefined se tratan igual. Además es la rama catch de new URL(siteUrl)."
+    },
+    {
+      "family": "S017",
+      "turn": "T001",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 87,
+      "original": "return null;",
+      "mutated": "return undefined as any;",
+      "verdict": "EQUIVALENT",
+      "reason": "Misma función interna; el llamador solo comprueba si el valor es truthy, de modo que undefined equivale a null y se sigue con la interpretación anterior."
+    },
+    {
+      "family": "S017",
+      "turn": "T002",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 371,
+      "original": "type=\"button\"",
+      "mutated": "type=\"button·X\"",
+      "verdict": "EQUIVALENT",
+      "reason": "Un type no válido hace que el botón sea submit, pero 'Clear recent' está en Popover.Popup, que en el JSX está después de </form> (y se renderiza en el panel/portal), así que no hay formulario que enviar; el clic sigue borrando los recientes y no navega."
+    },
+    {
+      "family": "S018",
+      "turn": "T001",
+      "file": "client/modules/IDE/components/Toast.jsx",
+      "line": 14,
+      "original": "if (!isVisible) return undefined;",
+      "mutated": "(borrado)",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. La petición exige: 'Cuando no hay aviso visible, Escape no hace nada y el componente no deja escuchadores de teclado colgados'. Sin la guarda se registra el escuchador con el aviso oculto y Escape despacha HIDE_TOAST. La versión anterior de T001 no espiaba add/removeEventListener (el test 'sin aviso visible no queda ningún escuchador' es posterior)."
+    },
+    {
+      "family": "S018",
+      "turn": "T001",
+      "file": "client/modules/IDE/components/Toast.jsx",
+      "line": 21,
+      "original": "removeEventListener('keydown', handleKeyDown)",
+      "mutated": "removeEventListener('keydown·X', handleKeyDown)",
+      "verdict": "WEAKNESS",
+      "reason": "Primera medición. La limpieza no retira el escuchador: al ocultarse o desmontarse queda colgado y se acumulan escuchadores en cada aviso, justo lo que la petición prohíbe. La versión anterior de T001 no tenía el test de desmontaje."
+    },
+    {
+      "family": "S018",
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 8,
+      "original": "if (hideTimer) {",
+      "mutated": "if (!hideTimer) {",
+      "verdict": "WEAKNESS",
+      "reason": "Con un cierre automático pendiente, hideToast ya no lo cancela (solo 'limpia' cuando no hay temporizador). La petición lo exige explícitamente (punto 2: al cerrar con X/Escape 'se cancela su cierre automático pendiente'). El efecto visible es limitado porque showToast vuelve a cancelar hideTimer, pero el temporizador viejo sigue vivo y despacha HIDE_TOAST tarde; un test razonable (jest.getTimerCount() o espiar dispatch tras avanzar el tiempo) lo detecta."
+    },
+    {
+      "family": "S018",
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 10,
+      "original": "hideTimer = null;",
+      "mutated": "(borrado)",
+      "verdict": "EQUIVALENT",
+      "reason": "Tras clearTimeout la variable conserva un id ya cancelado; los usos posteriores solo llaman a clearTimeout sobre él (no-op) o lo sobrescriben. Sin efecto observable."
+    },
+    {
+      "family": "S018",
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 40,
+      "original": "hideTimer = null;",
+      "mutated": "(borrado)",
+      "verdict": "EQUIVALENT",
+      "reason": "En la callback del temporizador: dispatch(hideToast()) se ejecuta enseguida y hideToast hace clearTimeout (no-op, ya disparado) y pone hideTimer = null. Resultado idéntico."
+    },
+    {
+      "family": "S018",
+      "turn": "T003",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 28,
+      "original": "variant = 'info'",
+      "mutated": "variant = 'info·X'",
+      "verdict": "EQUIVALENT",
+      "reason": "El valor se normaliza al despachar (variant === 'error' ? 'error' : 'info') y otra vez en el reducer; cualquier valor por defecto distinto de 'error' produce 'info'."
+    },
+    {
+      "family": "S019",
+      "turn": "T002",
+      "file": "src/utils/format.ts",
+      "line": 44,
+      "original": "\"text/csv\": \"CSV\",",
+      "mutated": "\"text/csv·X\": \"CSV\",",
+      "verdict": "EQUIVALENT",
+      "reason": "Sin la entrada especial, getFileTypeLabel cae en el retorno genérico subtype.toUpperCase(), que para text/csv también da 'CSV' (también con mayúsculas o parámetros, porque se normaliza antes)."
+    },
+    {
+      "family": "S020",
+      "turn": "T001",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 23,
+      "original": "t('invalidNumber', 'Enter a valid number')",
+      "mutated": "t('invalidNumber·X', 'Enter a valid number')",
+      "verdict": "EQUIVALENT",
+      "reason": "La clave invalidNumber no existe en ninguno de los 42 archivos translations/*.json (V0 y parches no la añaden), así que i18next devuelve el texto por defecto con cualquier clave: sin diferencia en ningún idioma. El mock del repo también devuelve el valor por defecto. Caso límite: la petición nombra la clave, pero hoy solo afecta a la extracción de traducciones."
+    },
+    {
+      "family": "S020",
+      "turn": "T001",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 25,
+      "original": "return '';",
+      "mutated": "return undefined as any;",
+      "verdict": "EQUIVALENT",
+      "reason": "Esa rama solo se alcanza con el campo válido y el rango no invertido, es decir, con invalid=false; Carbon no muestra invalidText si invalid es false, así que '' y undefined no se distinguen."
+    },
+    {
+      "family": "S020",
+      "turn": "T002",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 62,
+      "original": "t('stepValue', 'Step between allowed values')",
+      "mutated": "t('stepValue·X', 'Step between allowed values')",
+      "verdict": "EQUIVALENT",
+      "reason": "La clave stepValue no está en translations/*.json; con cualquier clave se muestra la misma etiqueta por defecto. Mismo caso límite que invalidNumber."
+    },
+    {
+      "family": "S020",
+      "turn": "T002",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 65,
+      "original": "t('invalidStep', 'Step must be a number greater than 0')",
+      "mutated": "t('invalidStep·X', 'Step must be a number greater than 0')",
+      "verdict": "EQUIVALENT",
+      "reason": "La clave invalidStep no está en translations/*.json; con cualquier clave se muestra el mismo texto por defecto."
+    },
+    {
+      "family": "S020",
+      "turn": "T003",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 82,
+      "original": "<Button kind=\"ghost\" size=\"sm\" onClick={clearRange}>",
+      "mutated": "<Button kind=\"ghost·X\" size=\"sm\" onClick={clearRange}>",
+      "verdict": "EQUIVALENT",
+      "reason": "Solo cambia la clase de estilo de Carbon (cds--btn--ghost·X) y, en desarrollo, provoca un aviso de PropTypes; el nombre, la visibilidad y el comportamiento del botón no cambian. La petición no fija la variante visual."
+    },
+    {
+      "family": "S020",
+      "turn": "T003",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 83,
+      "original": "t('clearRange', 'Clear range')",
+      "mutated": "t('clearRange·X', 'Clear range')",
+      "verdict": "EQUIVALENT",
+      "reason": "La clave clearRange no está en translations/*.json; con cualquier clave se muestra 'Clear range'."
+    }
+  ]
+}

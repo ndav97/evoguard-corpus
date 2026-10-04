@@ -60,3 +60,7 @@ Los tests nuevos no se han podido ejecutar desde la nube (sin acceso al registro
 | S018 | 14 | 4 | 0,78 | Temporizador interno y variante por defecto (equivalentes) |
 
 Las 6 debilidades quedan eliminadas. En S011–S020 solo sobreviven mutantes clasificados como equivalentes, y la puntuación descontándolos es **1,00**.
+
+## Segunda revisión del triaje (2026-10-04)
+
+Ver `docs/revision-peticiones-s011-s020-2026-10-04.md`. Un revisor independiente coincide en 22 de los 24 veredictos. S018 `toast.js:8` pasa a debilidad y se refuerza el test de S018 T002. S014 `Timer.tsx:115` queda como debilidad menor de no regresión visual, sin refuerzo.

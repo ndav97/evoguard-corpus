@@ -1,0 +1,47 @@
+{
+  "family": "S015",
+  "turns": [
+    {
+      "turn": "T001",
+      "ok": [
+        "El recorte, la búsqueda solo con espacios = todo, y la coincidencia en name o displayName sin distinguir mayúsculas están explícitos y casan con los 4 tests.",
+        "Que el campo se vea con espacios no se comprueba. Aunque una implementación recorte el valor controlado, el resultado de '  aww  ' sigue siendo ['r/aww'].",
+        "Tests existentes del hook ('java', 'JAVA', 'script', 'nonexistent') y del componente ('react') siguen dando el mismo resultado al buscar también en displayName ('r/…').",
+        "El tipo Subscription del hook ya tiene displayName obligatorio, así que no hay problemas de tipos."
+      ],
+      "findings": []
+    },
+    {
+      "turn": "T002",
+      "ok": [
+        "El texto `No subreddits match \"<búsqueda>\"` con role=\"status\" y el botón `Clear search` son literales. El test usa toHaveTextContent (subcadena) y getByRole('button', {name: 'Clear search'}).",
+        "No hay colisión con el `Clear search` de SubredditSearchBar: es otro componente, y sus tests no renderizan SubscriptionFilterList.",
+        "El caso de lista vacía sin búsqueda está pedido explícitamente."
+      ],
+      "findings": [
+        {
+          "severity": "medium",
+          "type": "hidden_requirement",
+          "request_quote": "Mientras haya resultados, o si no hay búsqueda, no se muestran ni el texto ni el botón",
+          "evidence": "expect(screen.queryByRole('status')).not.toBeInTheDocument()  // tanto sin búsqueda como con resultados ('aww') y tras Clear search",
+          "problem": "El test exige que no exista ningún elemento con role=\"status\" mientras no hay mensaje. Una práctica de accesibilidad habitual es dejar siempre montada la región viva (role=\"status\" vacío) y cambiar solo su contenido, para que los lectores de pantalla anuncien el cambio. Esa implementación cumple «no se muestra el texto», pero falla tres tests. Es el mismo caso que se corrigió en S007 T002.",
+          "fix": {
+            "target": "turns/T002.md",
+            "old": "2. Mientras haya resultados, o si no hay búsqueda, no se muestran ni el texto ni el botón (tampoco cuando la lista de suscripciones está vacía y no se ha buscado nada).",
+            "new": "2. Mientras haya resultados, o si no hay búsqueda, no se muestran ni el texto ni el botón (tampoco cuando la lista de suscripciones está vacía y no se ha buscado nada); en esos casos no se renderiza ningún elemento con `role=\"status\"`, tampoco vacío."
+          }
+        }
+      ]
+    },
+    {
+      "turn": "T003",
+      "ok": [
+        "La etiqueta `Most subscribers`, el valor `subscribers`, el orden descendente, los empates A-Z por nombre y los que no tienen dato al final casan con el test ['r/aww','r/nextjs','r/reactjs','r/webdev'].",
+        "El test de combinación busca 'r/' y depende del displayName de T001. Es coherente con T001, que sigue vigente.",
+        "El punto 4 (subscribers?: number en ManagedSubscription) no lo exigen los tests, que pasan una constante sin anotar. El tipo Subscription del hook ya lo tenía en V0, así que no hay requisito oculto.",
+        "Las opciones existentes ('Z-A') se siguen localizando por texto exacto, sin colisión con la etiqueta nueva."
+      ],
+      "findings": []
+    }
+  ]
+}
