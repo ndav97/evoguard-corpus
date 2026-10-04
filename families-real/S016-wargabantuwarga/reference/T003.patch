@@ -1,17 +1,22 @@
 diff --git a/components/search-form.tsx b/components/search-form.tsx
-index 0fe93fb..11bcb03 100644
+index 6515f53..b36bde8 100644
 --- a/components/search-form.tsx
 +++ b/components/search-form.tsx
-@@ -82,8 +82,10 @@ export function SearchForm({
+@@ -94,13 +94,10 @@ export function SearchForm({
    function handleKeywordsChange(event: ChangeEvent<HTMLInputElement>) {
      const newKeywords = event.target.value;
      setKeywords(newKeywords);
 -    if (autoSearch) {
--      void debouncedSearch(newKeywords.trim(), filters, sortBy);
+-      void debouncedSearch(
+-        newKeywords.trim(),
+-        filters,
+-        sortBy,
+-        searchGeneration.current,
+-      );
 +    const trimmed = newKeywords.trim();
 +    // Automatic search only for empty queries or queries of at least two characters.
 +    if (autoSearch && (trimmed.length === 0 || trimmed.length >= 2)) {
-+      void debouncedSearch(trimmed, filters, sortBy);
++      void debouncedSearch(trimmed, filters, sortBy, searchGeneration.current);
      }
    }
  

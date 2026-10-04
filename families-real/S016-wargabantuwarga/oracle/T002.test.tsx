@@ -34,6 +34,19 @@ describe("T002 · borrar la búsqueda", () => {
     expect(clearButton()).not.toBeInTheDocument();
   });
 
+  it("con búsqueda automática, descarta la búsqueda pendiente", () => {
+    jest.useFakeTimers();
+    const onSubmit = jest.fn();
+    render(<SearchForm autoSearch checkDocSize itemName="provinsi" onSubmitKeywords={onSubmit} />);
+    type("oksigen");
+    fireEvent.click(clearButton() as HTMLElement);
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit).toHaveBeenLastCalledWith("", {}, "");
+  });
+
   it("no envía el formulario", () => {
     const onSubmit = jest.fn();
     render(<SearchForm checkDocSize initialValue={INITIAL} itemName="provinsi" onSubmitKeywords={onSubmit} />);

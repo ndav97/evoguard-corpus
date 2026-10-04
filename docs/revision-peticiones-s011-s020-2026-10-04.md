@@ -22,7 +22,7 @@
 ### Sin cambio (anotados)
 
 - **S011 T002 (baja):** `aria-label` en un `<span>` sin rol. ARIA 1.2 lo desaconseja y algunos lectores lo ignoran, pero ningún test lo comprueba y no hace fallar a nadie.
-- **S016 T002 (media, pendiente):** la referencia de «Kosongkan kata kunci» no cancela la búsqueda automática pendiente. Con `autoSearch`, si se escribe y se borra en menos de 300 ms, la búsqueda antigua se ejecuta después. No penaliza a ninguna implementación, porque ningún test lo exige. Corregirlo requiere cambiar la referencia (`debouncedSearch.cancel()`) y el test a la vez, y comprobar cómo trata `ts-debounce` las promesas canceladas. Se hará cuando se pueda iterar en el PC, como se hizo con S010 T002.
+- **S016 T002 (media): corregido el 2026-10-04.** La referencia no descartaba la búsqueda automática pendiente al pulsar «Kosongkan kata kunci». Con `autoSearch`, si se escribía y se borraba en menos de 300 ms, la búsqueda antigua se ejecutaba después. Ahora la referencia lleva un contador de generación (`useRef`): borrar invalida las búsquedas programadas antes, sin depender de cómo `ts-debounce` cancela sus promesas. La petición lo pide en el punto 2 y hay un test oculto nuevo en T002. El parche de T003 se regeneró sobre la nueva referencia.
 - **S016 T003 (baja):** al pasar rápido de `ab` a `a`, la búsqueda pendiente con `ab` se ejecuta igualmente. No afecta a los tests.
 
 ## Triaje de mutantes: segunda revisión

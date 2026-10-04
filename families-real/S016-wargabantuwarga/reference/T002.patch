@@ -1,9 +1,12 @@
 diff --git a/components/search-form.tsx b/components/search-form.tsx
-index cf32e04..0fe93fb 100644
+index cf32e04..6515f53 100644
 --- a/components/search-form.tsx
 +++ b/components/search-form.tsx
-@@ -11,7 +11,7 @@ import React, {
+@@ -9,9 +9,10 @@ import React, {
+   FormEvent,
+   useCallback,
    useEffect,
++  useRef,
    useState,
  } from "react";
 -import { FilterIcon } from "@heroicons/react/outline";
@@ -11,11 +14,47 @@ index cf32e04..0fe93fb 100644
  import { PrimaryButton } from "./ui/button";
  import { FormLabel } from "./ui/forms/form-label";
  import { InputText } from "./ui/forms/input-text";
-@@ -87,6 +87,11 @@ export function SearchForm({
+@@ -69,11 +70,22 @@ export function SearchForm({
+     onSubmitKeywords(keywords.trim(), {}, sortBy);
+   }
+ 
++  // Clearing the search discards automatic searches scheduled before it.
++  const searchGeneration = useRef(0);
++
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   const debouncedSearch = useCallback(
+     debounce(
+-      (keywordsValue: string, filtersValue?: any, sortValue?: string) =>
+-        onSubmitKeywords(keywordsValue, filtersValue, sortValue),
++      (
++        keywordsValue: string,
++        filtersValue?: any,
++        sortValue?: string,
++        generation?: number,
++      ) => {
++        if (generation === searchGeneration.current) {
++          onSubmitKeywords(keywordsValue, filtersValue, sortValue);
++        }
++      },
+       300,
+     ),
+     [],
+@@ -83,10 +95,21 @@ export function SearchForm({
+     const newKeywords = event.target.value;
+     setKeywords(newKeywords);
+     if (autoSearch) {
+-      void debouncedSearch(newKeywords.trim(), filters, sortBy);
++      void debouncedSearch(
++        newKeywords.trim(),
++        filters,
++        sortBy,
++        searchGeneration.current,
++      );
      }
    }
  
 +  function handleClear() {
++    searchGeneration.current += 1;
 +    setKeywords("");
 +    onSubmitKeywords("", filters, sortBy);
 +  }
@@ -23,7 +62,7 @@ index cf32e04..0fe93fb 100644
    function handleFilterChange(event: ChangeEvent<HTMLSelectElement>) {
      const newFilters = { ...filters };
      const filterName = event.target.name;
-@@ -129,6 +134,16 @@ export function SearchForm({
+@@ -129,6 +152,16 @@ export function SearchForm({
                  type="text"
                  value={keywords}
                />
