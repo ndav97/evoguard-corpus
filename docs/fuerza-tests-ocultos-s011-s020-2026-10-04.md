@@ -48,3 +48,15 @@ Los tests nuevos no se han podido ejecutar desde la nube (sin acceso al registro
 ## Contexto de las 20 familias
 
 `docs/verification/real-context.json` (2026-10-04): el primer mensaje de V1 cabe en las tres ventanas medidas (8192, 16384 y 32768 tokens). Cuando la vista completa no cabe, se reduce al árbol o al directorio de la zona del cambio. El margen más ajustado es el de S014 con 32768 tokens: entra el árbol completo sin contenidos y quedan 199 tokens.
+
+## Recalibración y segunda medición (2026-10-04, 09:06–09:11 hora de Lima)
+
+`scripts\real\recalibrar-reforzadas.cmd`: S012, S016 y S018 pasan de nuevo las cuatro comprobaciones de calibración en los tres turnos con los tests ampliados. Los 6 tests nuevos fallan antes del cambio y pasan después.
+
+| Familia | Eliminados | Sobreviven | Puntuación bruta | Sobrevivientes |
+|---|---|---|---|---|
+| S012 | 17 | 0 | 1,00 | — |
+| S016 | 10 | 1 | 0,91 | `aria-hidden` del icono (equivalente) |
+| S018 | 14 | 4 | 0,78 | Temporizador interno y variante por defecto (equivalentes) |
+
+Las 6 debilidades quedan eliminadas. En S011–S020 solo sobreviven mutantes clasificados como equivalentes, y la puntuación descontándolos es **1,00**.

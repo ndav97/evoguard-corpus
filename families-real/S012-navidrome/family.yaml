@@ -39,7 +39,7 @@ provenance:
   authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
   authored_at: 2026-10-02
   status: CALIBRATED
-  calibrated_at: "2026-10-03 (T001 3/4, T002 3/4, T003 3/4 fail-to-pass; suite 761 tests sin regresiones; estable 2/2)"
+  calibrated_at: "2026-10-04, tests ocultos reforzados tras el triaje de mutantes (T001 3/4, T002 5/6, T003 3/4 fail-to-pass; suite 761 tests sin regresiones; estable 2/2)"
 # Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
 # proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
 generation:

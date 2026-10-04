@@ -3,7 +3,7 @@
   "family_id": "S016",
   "image_id": "sha256:2e7b61a86fce18dccd41a5b063e7b17d72b56778a7ee708ff00b08a304ee2881",
   "max_per_turn": 8,
-  "started_at": "2026-10-04T13:38:45.653Z",
+  "started_at": "2026-10-04T14:08:44.556Z",
   "turns": [
     {
       "turn": "T001",
@@ -25,7 +25,7 @@
           "operator": "borrado",
           "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
           "mutated": "/* evoguard-mutant */ void 0;",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "components/search-form.tsx",
@@ -33,22 +33,22 @@
           "operator": "borrado",
           "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
           "mutated": "/* evoguard-mutant */ void 0;",
-          "result": "SURVIVED"
+          "result": "KILLED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 3,
+        "tests": 5,
         "failed": 0,
         "failing": []
       },
       "summary": {
-        "KILLED": 1,
-        "SURVIVED": 2,
+        "KILLED": 3,
+        "SURVIVED": 0,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.33
+      "score": 1
     },
     {
       "turn": "T002",
@@ -108,7 +108,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 7,
+        "tests": 9,
         "failed": 0,
         "failing": []
       },
@@ -147,7 +147,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 13,
+        "tests": 15,
         "failed": 0,
         "failing": []
       },
@@ -160,26 +160,8 @@
       "score": 1
     }
   ],
-  "score": 0.73,
+  "score": 0.91,
   "survivors": [
-    {
-      "turn": "T001",
-      "file": "components/search-form.tsx",
-      "line": 100,
-      "operator": "borrado",
-      "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
-      "mutated": "/* evoguard-mutant */ void 0;",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T001",
-      "file": "components/search-form.tsx",
-      "line": 106,
-      "operator": "borrado",
-      "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
-      "mutated": "/* evoguard-mutant */ void 0;",
-      "result": "SURVIVED"
-    },
     {
       "turn": "T002",
       "file": "components/search-form.tsx",
@@ -190,5 +172,5 @@
       "result": "SURVIVED"
     }
   ],
-  "finished_at": "2026-10-04T13:39:52.376Z"
+  "finished_at": "2026-10-04T14:09:50.429Z"
 }

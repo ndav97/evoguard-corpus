@@ -3,7 +3,7 @@
   "family_id": "S012",
   "image_id": "sha256:6e121aea356876f6880b9369e83be2ee13607cd2aedbf0b634f83f84c0b07dcc",
   "max_per_turn": 8,
-  "started_at": "2026-10-04T13:34:23.890Z",
+  "started_at": "2026-10-04T14:06:50.844Z",
   "turns": [
     {
       "turn": "T001",
@@ -71,7 +71,7 @@
           "operator": "booleano",
           "original": "setSaveFailed(false)",
           "mutated": "setSaveFailed(true)",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/dialogs/SaveQueueDialog.jsx",
@@ -95,7 +95,7 @@
           "operator": "texto",
           "original": "notify('ra.page.error', { type: 'warning' })",
           "mutated": "notify('ra.page.error·X', { type: 'warning' })",
-          "result": "SURVIVED"
+          "result": "KILLED"
         },
         {
           "file": "src/dialogs/SaveQueueDialog.jsx",
@@ -124,17 +124,17 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 8,
+        "tests": 10,
         "failed": 0,
         "failing": []
       },
       "summary": {
-        "KILLED": 6,
-        "SURVIVED": 2,
+        "KILLED": 8,
+        "SURVIVED": 0,
         "COMPILE": 0,
         "ERROR": 0
       },
-      "score": 0.75
+      "score": 1
     },
     {
       "turn": "T003",
@@ -195,7 +195,7 @@
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 12,
+        "tests": 14,
         "failed": 0,
         "failing": []
       },
@@ -208,26 +208,7 @@
       "score": 1
     }
   ],
-  "score": 0.88,
-  "survivors": [
-    {
-      "turn": "T002",
-      "file": "src/dialogs/SaveQueueDialog.jsx",
-      "line": 38,
-      "operator": "booleano",
-      "original": "setSaveFailed(false)",
-      "mutated": "setSaveFailed(true)",
-      "result": "SURVIVED"
-    },
-    {
-      "turn": "T002",
-      "file": "src/dialogs/SaveQueueDialog.jsx",
-      "line": 74,
-      "operator": "texto",
-      "original": "notify('ra.page.error', { type: 'warning' })",
-      "mutated": "notify('ra.page.error·X', { type: 'warning' })",
-      "result": "SURVIVED"
-    }
-  ],
-  "finished_at": "2026-10-04T13:36:08.239Z"
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-10-04T14:08:44.392Z"
 }
