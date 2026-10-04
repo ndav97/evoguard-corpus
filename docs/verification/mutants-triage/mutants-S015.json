@@ -1,0 +1,19 @@
+{
+ "family": "S015",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T002",
+   "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+   "line": 59,
+   "operator": "texto",
+   "original": "<Text size=\"sm\" c=\"dimmed\" role=\"status\">",
+   "mutated": "<Text size=\"sm\" c=\"dimmed·X\" role=\"status\">",
+   "verdict": "EQUIVALENT",
+   "reason": "Prop de estilo de Mantine (c=\"dimmed\"); no cambia el texto, el rol ni el comportamiento.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

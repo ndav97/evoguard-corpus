@@ -45,4 +45,40 @@ describe('T001 · cerrar con Escape', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close Alert' }));
     expect(toast()).not.toBeInTheDocument();
   });
+
+  // Escuchadores de teclado añadidos y retirados en document o window.
+  const spyKeydown = (method) => {
+    const spies = [jest.spyOn(document, method), jest.spyOn(window, method)];
+    return {
+      handlers: () => spies.flatMap((spy) => spy.mock.calls.filter(([type]) => type === 'keydown').map(([, fn]) => fn)),
+      restore: () => spies.forEach((spy) => spy.mockRestore())
+    };
+  };
+
+  it('sin aviso visible no queda ningún escuchador de teclado', () => {
+    const added = spyKeydown('addEventListener');
+    const removed = spyKeydown('removeEventListener');
+    try {
+      reduxRender(<Toast />, { initialState: { toast: { isVisible: false, text: '' } } });
+      const pending = added.handlers().filter((fn) => !removed.handlers().includes(fn));
+      expect(pending).toHaveLength(0);
+    } finally {
+      added.restore();
+      removed.restore();
+    }
+  });
+
+  it('al desmontarse retira el escuchador de teclado', () => {
+    const added = spyKeydown('addEventListener');
+    const removed = spyKeydown('removeEventListener');
+    try {
+      const { unmount } = reduxRender(<Toast />, { initialState: { toast: { isVisible: true, text: 'Hello World' } } });
+      expect(added.handlers().length).toBeGreaterThan(0);
+      unmount();
+      added.handlers().forEach((fn) => expect(removed.handlers()).toContain(fn));
+    } finally {
+      added.restore();
+      removed.restore();
+    }
+  });
 });

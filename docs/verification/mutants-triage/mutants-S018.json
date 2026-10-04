@@ -1,0 +1,79 @@
+{
+ "family": "S018",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "client/modules/IDE/components/Toast.jsx",
+   "line": 14,
+   "operator": "borrado",
+   "original": "if (!isVisible) return undefined;",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "WEAKNESS",
+   "reason": "La petición (punto 3) exige que sin aviso visible el componente no deje escuchadores de teclado; el test no lo comprobaba.",
+   "request_quote": null,
+   "test_addition": "«sin aviso visible no queda ningún escuchador de teclado» (espía de add/removeEventListener en document y window)."
+  },
+  {
+   "turn": "T001",
+   "file": "client/modules/IDE/components/Toast.jsx",
+   "line": 21,
+   "operator": "texto",
+   "original": "return () => document.removeEventListener('keydown', handleKeyDown);",
+   "mutated": "return () => document.removeEventListener('keydown·X', handleKeyDown);",
+   "verdict": "WEAKNESS",
+   "reason": "El mutante no retira el escuchador al ocultar o desmontar; la petición (punto 3) lo exige.",
+   "request_quote": null,
+   "test_addition": "«al desmontarse retira el escuchador de teclado»."
+  },
+  {
+   "turn": "T002",
+   "file": "client/modules/IDE/actions/toast.js",
+   "line": 8,
+   "operator": "negación",
+   "original": "if (hideTimer) {",
+   "mutated": "if (!hideTimer) {",
+   "verdict": "EQUIVALENT",
+   "reason": "Sin efecto observable: el temporizador que no se cancela solo despacha otro HIDE_TOAST con el aviso ya oculto, y cualquier showToast posterior lo cancela igualmente.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "client/modules/IDE/actions/toast.js",
+   "line": 10,
+   "operator": "borrado",
+   "original": "hideTimer = null;",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "EQUIVALENT",
+   "reason": "Poner hideTimer a null es contabilidad interna; clearTimeout sobre un temporizador ya cancelado no hace nada.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "client/modules/IDE/actions/toast.js",
+   "line": 40,
+   "operator": "borrado",
+   "original": "hideTimer = null;",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "EQUIVALENT",
+   "reason": "Igual que la línea 10, dentro del propio temporizador ya vencido.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "client/modules/IDE/actions/toast.js",
+   "line": 28,
+   "operator": "texto",
+   "original": "export function showToast(textOrTime, timeout = 1500, variant = 'info') {",
+   "mutated": "export function showToast(textOrTime, timeout = 1500, variant = 'info·X') {",
+   "verdict": "EQUIVALENT",
+   "reason": "El valor por defecto mutado no es «error», y la acción normaliza todo lo que no es «error» a «info».",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

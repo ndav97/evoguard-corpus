@@ -1,0 +1,127 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S015",
+  "image_id": "sha256:e538de77ba6300b3074f6b9da06515407b4075b20575da2995ac1ad622865789",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:37:56.366Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "evoguard/T001.test.tsx"
+      ],
+      "mutants": [],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 0,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": null
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "evoguard/T001.test.tsx",
+        "evoguard/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+          "line": 57,
+          "operator": "igualdad",
+          "original": "{filteredSubscriptions.length === 0 && searchQuery.trim() !== '' && (",
+          "mutated": "{filteredSubscriptions.length !== 0 && searchQuery.trim() !== '' && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+          "line": 59,
+          "operator": "texto",
+          "original": "<Text size=\"sm\" c=\"dimmed\" role=\"status\">",
+          "mutated": "<Text size=\"sm\" c=\"dimmed·X\" role=\"status\">",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+          "line": 60,
+          "operator": "texto",
+          "original": "{`No subreddits match \"${searchQuery.trim()}\"`}",
+          "mutated": "{`No subreddits match \"·X${searchQuery.trim()}\"`}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.67
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "evoguard/T001.test.tsx",
+        "evoguard/T002.test.tsx",
+        "evoguard/T003.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "lib/hooks/useSubscriptionsFilterSort.ts",
+          "line": 63,
+          "operator": "igualdad",
+          "original": "if (sortBy === 'subscribers') {",
+          "mutated": "if (sortBy !== 'subscribers') {",
+          "result": "KILLED"
+        },
+        {
+          "file": "lib/hooks/useSubscriptionsFilterSort.ts",
+          "line": 67,
+          "operator": "lógico",
+          "original": "return countB - countA || byName(a, b)",
+          "mutated": "return countB - countA && byName(a, b)",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.8,
+  "survivors": [
+    {
+      "turn": "T002",
+      "file": "components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx",
+      "line": 59,
+      "operator": "texto",
+      "original": "<Text size=\"sm\" c=\"dimmed\" role=\"status\">",
+      "mutated": "<Text size=\"sm\" c=\"dimmed·X\" role=\"status\">",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:38:45.519Z"
+}

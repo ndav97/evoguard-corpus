@@ -1,0 +1,19 @@
+{
+ "family": "S011",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T003",
+   "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+   "line": 47,
+   "operator": "borrado",
+   "original": "event.preventDefault();",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "EQUIVALENT",
+   "reason": "El campo (UiFindInput) no está dentro de un formulario: Enter no tiene acción por defecto que prevenir. La petición no pide preventDefault.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

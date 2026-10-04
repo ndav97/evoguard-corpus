@@ -1,0 +1,133 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S013",
+  "image_id": "sha256:f4c8b72facf36654a7724781d285914d51f894b2aa1f8298cbc1d6dedee3954e",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:36:08.388Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
+      "mutants": [],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 0,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": null
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 62,
+          "operator": "relacional",
+          "original": "if (total <= 0) return values.map(() => 0)",
+          "mutated": "if (total > 0) return values.map(() => 0)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 65,
+          "operator": "aritmético",
+          "original": "let missing = 100 - result.reduce((a, b) => a + b, 0)",
+          "mutated": "let missing = 100 + result.reduce((a, b) => a + b, 0)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 67,
+          "operator": "aritmético",
+          "original": ".map((x, index) => ({ index, rest: x - Math.floor(x) }))",
+          "mutated": ".map((x, index) => ({ index, rest: x + Math.floor(x) }))",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 68,
+          "operator": "lógico",
+          "original": ".sort((a, b) => b.rest - a.rest || a.index - b.index)",
+          "mutated": ".sort((a, b) => b.rest - a.rest && a.index - b.index)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 70,
+          "operator": "relacional",
+          "original": "if (missing <= 0) break",
+          "mutated": "if (missing > 0) break",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 143,
+          "operator": "aritmético",
+          "original": "success: Math.max(total - (errors + warnings), 0),",
+          "mutated": "success: Math.max(total + (errors + warnings), 0),",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/resources/TraefikResourceStatsCard.tsx",
+          "line": 151,
+          "operator": "aritmético",
+          "original": "const shownTotal = counts.success + counts.warnings + counts.errors",
+          "mutated": "const shownTotal = counts.success - counts.warnings + counts.errors",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-10-04T13:37:11.213Z"
+}

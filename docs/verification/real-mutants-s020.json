@@ -1,0 +1,253 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S020",
+  "image_id": "sha256:783305f7927c60765f981bb26085c659d4fbdf811e881f73950a0b45f01f8dda",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:43:46.530Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 9,
+          "operator": "igualdad",
+          "original": "return text === '' || /^-?(\\d+(\\.\\d+)?|\\.\\d+)$/.test(text);",
+          "mutated": "return text !== '' || /^-?(\\d+(\\.\\d+)?|\\.\\d+)$/.test(text);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 20,
+          "operator": "relacional",
+          "original": "const rangeIsInverted = parseFloat(min) > parseFloat(max);",
+          "mutated": "const rangeIsInverted = parseFloat(min) <= parseFloat(max);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 23,
+          "operator": "texto",
+          "original": "if (!isValid) return t('invalidNumber', 'Enter a valid number');",
+          "mutated": "if (!isValid) return t('invalidNumber·X', 'Enter a valid number');",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 24,
+          "operator": "negación",
+          "original": "if (rangeIsInverted) return t('invalidMinMax', 'Min value cannot be greater than max');",
+          "mutated": "if (!rangeIsInverted) return t('invalidMinMax', 'Min value cannot be greater than max');",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 25,
+          "operator": "retorno",
+          "original": "return '';",
+          "mutated": "return undefined as any;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 34,
+          "operator": "lógico",
+          "original": "invalid={!minIsValid || rangeIsInverted}",
+          "mutated": "invalid={!minIsValid && rangeIsInverted}",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 48,
+          "operator": "lógico",
+          "original": "invalid={!maxIsValid || rangeIsInverted}",
+          "mutated": "invalid={!maxIsValid && rangeIsInverted}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.71
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 22,
+          "operator": "igualdad",
+          "original": "const stepIsValid = step.trim() === '' || (isValidNumber(step) && parseFloat(step) > 0);",
+          "mutated": "const stepIsValid = step.trim() !== '' || (isValidNumber(step) && parseFloat(step) > 0);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 62,
+          "operator": "texto",
+          "original": "labelText={t('stepValue', 'Step between allowed values')}",
+          "mutated": "labelText={t('stepValue·X', 'Step between allowed values')}",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 65,
+          "operator": "texto",
+          "original": "invalidText={stepIsValid ? '' : t('invalidStep', 'Step must be a number greater than 0')}",
+          "mutated": "invalidText={stepIsValid ? '' : t('invalidStep·X', 'Step must be a number greater than 0')}",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 71,
+          "operator": "borrado",
+          "original": "setFormField(updatedQuestion);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 10,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.5
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 24,
+          "operator": "igualdad",
+          "original": "const hasRange = [min, max, step].some((value) => value !== '');",
+          "mutated": "const hasRange = [min, max, step].some((value) => value === '');",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 81,
+          "operator": "lógico",
+          "original": "{hasRange && (",
+          "mutated": "{hasRange || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 82,
+          "operator": "texto",
+          "original": "<Button kind=\"ghost\" size=\"sm\" onClick={clearRange}>",
+          "mutated": "<Button kind=\"ghost·X\" size=\"sm\" onClick={clearRange}>",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+          "line": 83,
+          "operator": "texto",
+          "original": "{t('clearRange', 'Clear range')}",
+          "mutated": "{t('clearRange·X', 'Clear range')}",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 13,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.5
+    }
+  ],
+  "score": 0.6,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 23,
+      "operator": "texto",
+      "original": "if (!isValid) return t('invalidNumber', 'Enter a valid number');",
+      "mutated": "if (!isValid) return t('invalidNumber·X', 'Enter a valid number');",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 25,
+      "operator": "retorno",
+      "original": "return '';",
+      "mutated": "return undefined as any;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 62,
+      "operator": "texto",
+      "original": "labelText={t('stepValue', 'Step between allowed values')}",
+      "mutated": "labelText={t('stepValue·X', 'Step between allowed values')}",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 65,
+      "operator": "texto",
+      "original": "invalidText={stepIsValid ? '' : t('invalidStep', 'Step must be a number greater than 0')}",
+      "mutated": "invalidText={stepIsValid ? '' : t('invalidStep·X', 'Step must be a number greater than 0')}",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 82,
+      "operator": "texto",
+      "original": "<Button kind=\"ghost\" size=\"sm\" onClick={clearRange}>",
+      "mutated": "<Button kind=\"ghost·X\" size=\"sm\" onClick={clearRange}>",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+      "line": 83,
+      "operator": "texto",
+      "original": "{t('clearRange', 'Clear range')}",
+      "mutated": "{t('clearRange·X', 'Clear range')}",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:44:50.820Z"
+}

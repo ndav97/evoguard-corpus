@@ -6,6 +6,12 @@ import userEvent from '@testing-library/user-event'
 import { describe, afterEach, it, expect, vi } from 'vitest'
 import { SaveQueueDialog } from '../dialogs/SaveQueueDialog'
 
+const { notify } = vi.hoisted(() => ({ notify: vi.fn() }))
+vi.mock('react-admin', async (importOriginal) => {
+  const actual = await importOriginal()
+  return { ...actual, useNotify: () => notify }
+})
+
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal()
   return { ...actual, useHistory: () => ({ push: () => {} }) }
@@ -36,7 +42,10 @@ const ok = () =>
 const saveButton = () => screen.getByTestId('save-queue-save')
 const count = () => screen.getByTestId('save-queue-count')
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  notify.mockClear()
+})
 
 const failing = () => ({
   create: vi.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce({ data: { id: 'created-id' } }).mockResolvedValueOnce({ data: { id: 'pt-id' } }),
@@ -86,5 +95,26 @@ describe('T002 · aviso de error al guardar', () => {
     await waitFor(() => expect(saveButton()).toBeEnabled())
     await user.click(saveButton())
     await waitFor(() => expect(screen.queryByRole('alert')).not.toBeInTheDocument())
+  })
+
+  it('el aviso desaparece al cerrar el diálogo', async () => {
+    const user = userEvent.setup()
+    renderDialog(failing())
+    await user.type(screen.getByRole('textbox'), 'Road trip')
+    await user.click(saveButton())
+    await screen.findByRole('alert')
+    const cancel = screen.getByRole('button', { name: /cancel/i })
+    await waitFor(() => expect(cancel).toBeEnabled())
+    await user.click(cancel)
+    await waitFor(() => expect(screen.queryByRole('alert')).not.toBeInTheDocument())
+  })
+
+  it('se mantiene la notificación ra.page.error', async () => {
+    const user = userEvent.setup()
+    renderDialog(failing())
+    await user.type(screen.getByRole('textbox'), 'Road trip')
+    await user.click(saveButton())
+    await screen.findByRole('alert')
+    expect(notify.mock.calls.map(([message]) => message)).toContain('ra.page.error')
   })
 })

@@ -1,0 +1,43 @@
+{
+ "family": "S017",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/components/site-preview/address-bar.tsx",
+   "line": 72,
+   "operator": "retorno",
+   "original": "return null;",
+   "mutated": "return undefined as any;",
+   "verdict": "EQUIVALENT",
+   "reason": "Función auxiliar interna; el llamador comprueba el resultado por veracidad, así que null y undefined se comportan igual.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T001",
+   "file": "src/components/site-preview/address-bar.tsx",
+   "line": 87,
+   "operator": "retorno",
+   "original": "return null;",
+   "mutated": "return undefined as any;",
+   "verdict": "EQUIVALENT",
+   "reason": "Igual que la línea 72: null y undefined son falsos para el llamador.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/site-preview/address-bar.tsx",
+   "line": 371,
+   "operator": "texto",
+   "original": "type=\"button\"",
+   "mutated": "type=\"button·X\"",
+   "verdict": "EQUIVALENT",
+   "reason": "El botón está en el panel de atajos (Popover en portal), fuera del formulario: su type no envía nada.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

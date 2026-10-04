@@ -1,0 +1,226 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S017",
+  "image_id": "sha256:5c2105f1bf1836f9c63a583d783dadfd6c6205d5664729d068854bdda6a6b839",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:39:52.524Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 70,
+          "operator": "borrado",
+          "original": "host = new URL( siteUrl ).host.toLowerCase();",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 72,
+          "operator": "retorno",
+          "original": "return null;",
+          "mutated": "return undefined as any;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 74,
+          "operator": "lógico",
+          "original": "if ( ! host || ! value.toLowerCase().startsWith( host ) ) {",
+          "mutated": "if ( ! host && ! value.toLowerCase().startsWith( host ) ) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 78,
+          "operator": "igualdad",
+          "original": "if ( rest === '' ) {",
+          "mutated": "if ( rest !== '' ) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 79,
+          "operator": "retorno",
+          "original": "return '/';",
+          "mutated": "return undefined as any;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 81,
+          "operator": "negación",
+          "original": "if ( rest.startsWith( '/' ) ) {",
+          "mutated": "if (! rest.startsWith( '/' ) ) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 84,
+          "operator": "lógico",
+          "original": "if ( rest.startsWith( '?' ) || rest.startsWith( '#' ) ) {",
+          "mutated": "if ( rest.startsWith( '?' ) && rest.startsWith( '#' ) ) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 87,
+          "operator": "retorno",
+          "original": "return null;",
+          "mutated": "return undefined as any;",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 190,
+          "operator": "borrado",
+          "original": "window.localStorage.removeItem( getRecentLocationsStorageKey( siteId ) );",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 371,
+          "operator": "texto",
+          "original": "type=\"button\"",
+          "mutated": "type=\"button·X\"",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 374,
+          "operator": "borrado",
+          "original": "clearRecentLocations( site.id );",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 375,
+          "operator": "borrado",
+          "original": "setRecentLocations( [] );",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 378,
+          "operator": "texto",
+          "original": "{ __( 'Clear recent' ) }",
+          "mutated": "{ __( 'Clear recent·X' ) }",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 9,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 4,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.8
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 221,
+          "operator": "igualdad",
+          "original": "const visibleRecentLocations = recentLocations.filter( ( recent ) => recent.path !== path );",
+          "mutated": "const visibleRecentLocations = recentLocations.filter( ( recent ) => recent.path === path );",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/site-preview/address-bar.tsx",
+          "line": 369,
+          "operator": "relacional",
+          "original": "{ visibleRecentLocations.length > 0 ? (",
+          "mutated": "{ visibleRecentLocations.length <= 0 ? (",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.8,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 72,
+      "operator": "retorno",
+      "original": "return null;",
+      "mutated": "return undefined as any;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 87,
+      "operator": "retorno",
+      "original": "return null;",
+      "mutated": "return undefined as any;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/components/site-preview/address-bar.tsx",
+      "line": 371,
+      "operator": "texto",
+      "original": "type=\"button\"",
+      "mutated": "type=\"button·X\"",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:41:36.550Z"
+}

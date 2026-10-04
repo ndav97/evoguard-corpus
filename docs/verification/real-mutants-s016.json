@@ -1,0 +1,194 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S016",
+  "image_id": "sha256:2e7b61a86fce18dccd41a5b063e7b17d72b56778a7ee708ff00b08a304ee2881",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:38:45.653Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "components/evoguard/__tests__/T001.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "components/search-form.tsx",
+          "line": 86,
+          "operator": "borrado",
+          "original": "void debouncedSearch(newKeywords.trim(), filters, sortBy);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 100,
+          "operator": "borrado",
+          "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 106,
+          "operator": "borrado",
+          "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.33
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "components/evoguard/__tests__/T001.test.tsx",
+        "components/evoguard/__tests__/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "components/search-form.tsx",
+          "line": 91,
+          "operator": "borrado",
+          "original": "setKeywords(\"\");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 92,
+          "operator": "borrado",
+          "original": "onSubmitKeywords(\"\", filters, sortBy);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 137,
+          "operator": "igualdad",
+          "original": "{keywords !== \"\" && (",
+          "mutated": "{keywords === \"\" && (",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 139,
+          "operator": "texto",
+          "original": "aria-label=\"Kosongkan kata kunci\"",
+          "mutated": "aria-label=\"Kosongkan kata kunci·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 142,
+          "operator": "texto",
+          "original": "type=\"button\"",
+          "mutated": "type=\"button·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 144,
+          "operator": "booleano",
+          "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
+          "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 7,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.83
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "components/evoguard/__tests__/T001.test.tsx",
+        "components/evoguard/__tests__/T002.test.tsx",
+        "components/evoguard/__tests__/T003.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "components/search-form.tsx",
+          "line": 87,
+          "operator": "igualdad",
+          "original": "if (autoSearch && (trimmed.length === 0 || trimmed.length >= 2)) {",
+          "mutated": "if (autoSearch && (trimmed.length !== 0 || trimmed.length >= 2)) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 88,
+          "operator": "borrado",
+          "original": "void debouncedSearch(trimmed, filters, sortBy);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 13,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 2,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.73,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "components/search-form.tsx",
+      "line": 100,
+      "operator": "borrado",
+      "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "components/search-form.tsx",
+      "line": 106,
+      "operator": "borrado",
+      "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "components/search-form.tsx",
+      "line": 144,
+      "operator": "booleano",
+      "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
+      "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:39:52.376Z"
+}

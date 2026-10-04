@@ -1,0 +1,240 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S019",
+  "image_id": "sha256:26a7cc988aab4610fc19421a69c8ddd5f27bcbcff376d95ec8fb40dea88e73a2",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:42:50.069Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "tests/evoguard/T001.test.ts"
+      ],
+      "mutants": [
+        {
+          "file": "src/utils/format.ts",
+          "line": 2,
+          "operator": "relacional",
+          "original": "if (!Number.isFinite(bytes) || bytes < 0) return \"Invalid size\";",
+          "mutated": "if (!Number.isFinite(bytes) || bytes >= 0) return \"Invalid size\";",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 4,
+          "operator": "igualdad",
+          "original": "if (whole === 0) return \"0 B\";",
+          "mutated": "if (whole !== 0) return \"0 B\";",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 8,
+          "operator": "aritmético",
+          "original": "let i = Math.min(Math.floor(Math.log(whole) / Math.log(k)), units.length - 1);",
+          "mutated": "let i = Math.min(Math.floor(Math.log(whole) / Math.log(k)), units.length + 1);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 11,
+          "operator": "relacional",
+          "original": "if (i > 0 && i < units.length - 1 && Number(size.toFixed(1)) >= k) {",
+          "mutated": "if (i > 0 && i < units.length - 1 && Number(size.toFixed(1)) < k) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 12,
+          "operator": "borrado",
+          "original": "i += 1;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 13,
+          "operator": "borrado",
+          "original": "size = whole / Math.pow(k, i);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 5,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "tests/evoguard/T001.test.ts",
+        "tests/evoguard/T002.test.ts"
+      ],
+      "mutants": [
+        {
+          "file": "src/utils/format.ts",
+          "line": 37,
+          "operator": "texto",
+          "original": "\"application/msword\": \"DOC\",",
+          "mutated": "\"application/msword·X\": \"DOC\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 38,
+          "operator": "texto",
+          "original": "\"application/vnd.openxmlformats-officedocument.wordprocessingml.document\": \"DOCX\",",
+          "mutated": "\"application/vnd.openxmlformats-officedocument.wordprocessingml.document·X\": \"DOCX\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 39,
+          "operator": "texto",
+          "original": "\"application/vnd.ms-excel\": \"XLS\",",
+          "mutated": "\"application/vnd.ms-excel·X\": \"XLS\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 40,
+          "operator": "texto",
+          "original": "\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\": \"XLSX\",",
+          "mutated": "\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet·X\": \"XLSX\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 41,
+          "operator": "texto",
+          "original": "\"application/vnd.ms-powerpoint\": \"PPT\",",
+          "mutated": "\"application/vnd.ms-powerpoint·X\": \"PPT\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 42,
+          "operator": "texto",
+          "original": "\"application/vnd.openxmlformats-officedocument.presentationml.presentation\": \"PPTX\",",
+          "mutated": "\"application/vnd.openxmlformats-officedocument.presentationml.presentation·X\": \"PPTX\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 43,
+          "operator": "texto",
+          "original": "\"text/markdown\": \"MD\",",
+          "mutated": "\"text/markdown·X\": \"MD\",",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 44,
+          "operator": "texto",
+          "original": "\"text/csv\": \"CSV\",",
+          "mutated": "\"text/csv·X\": \"CSV\",",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 7,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.88
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "tests/evoguard/T001.test.ts",
+        "tests/evoguard/T002.test.ts",
+        "tests/evoguard/T003.test.ts"
+      ],
+      "mutants": [
+        {
+          "file": "src/utils/format.ts",
+          "line": 22,
+          "operator": "borrado",
+          "original": "if (!filename) return null;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 25,
+          "operator": "igualdad",
+          "original": "if (dot <= 0 || dot === name.length - 1) return null;",
+          "mutated": "if (dot <= 0 || dot !== name.length - 1) return null;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 26,
+          "operator": "aritmético",
+          "original": "return name.slice(dot + 1).toUpperCase();",
+          "mutated": "return name.slice(dot - 1).toUpperCase();",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 32,
+          "operator": "igualdad",
+          "original": "if (!normalizedMimeType || normalizedMimeType === \"application/octet-stream\") {",
+          "mutated": "if (!normalizedMimeType || normalizedMimeType !== \"application/octet-stream\") {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/utils/format.ts",
+          "line": 33,
+          "operator": "texto",
+          "original": "return getExtensionLabel(filename) ?? \"File\";",
+          "mutated": "return getExtensionLabel(filename) ?? \"File·X\";",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 13,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 5,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.95,
+  "survivors": [
+    {
+      "turn": "T002",
+      "file": "src/utils/format.ts",
+      "line": 44,
+      "operator": "texto",
+      "original": "\"text/csv\": \"CSV\",",
+      "mutated": "\"text/csv·X\": \"CSV\",",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:43:46.389Z"
+}

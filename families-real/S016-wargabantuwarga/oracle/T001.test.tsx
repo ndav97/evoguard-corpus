@@ -6,7 +6,13 @@ import { SearchForm } from "~/components/search-form";
 
 const input = () => screen.getByLabelText("Cari provinsi:");
 const type = (value: string) => fireEvent.change(input(), { target: { value } });
-const INITIAL = { filters: { lokasi: ["Bandung"] } };
+const FILTER_ITEMS = { lokasi: { title: "Lokasi", buckets: [{ key: "Bandung", doc_count: 3 }] } };
+const SORT_SETTINGS = [
+  { value: "nama", label: "Nama" },
+  { value: "terbaru", label: "Terbaru" },
+];
+const select = (container: HTMLElement, name: string) =>
+  container.querySelector(`select[name="${name}"]`) as HTMLSelectElement;
 
 afterEach(() => {
   jest.useRealTimers();
@@ -37,5 +43,25 @@ describe("T001 · búsqueda recortada", () => {
     render(<SearchForm checkDocSize itemName="provinsi" onSubmitKeywords={jest.fn()} />);
     type("  oksigen  ");
     expect(input()).toHaveValue("  oksigen  ");
+  });
+
+  it("al cambiar un filtro se buscan las palabras recortadas", () => {
+    const onSubmit = jest.fn();
+    const { container } = render(
+      <SearchForm checkDocSize filterItems={FILTER_ITEMS} itemName="provinsi" onSubmitKeywords={onSubmit} />,
+    );
+    type("  oksigen  ");
+    fireEvent.change(select(container, "lokasi"), { target: { value: "Bandung" } });
+    expect(onSubmit).toHaveBeenLastCalledWith("oksigen", { lokasi: ["Bandung"] }, "");
+  });
+
+  it("al cambiar el orden se buscan las palabras recortadas", () => {
+    const onSubmit = jest.fn();
+    const { container } = render(
+      <SearchForm checkDocSize itemName="provinsi" onSubmitKeywords={onSubmit} sortSettings={SORT_SETTINGS} />,
+    );
+    type("  oksigen  ");
+    fireEvent.change(select(container, "sort-by"), { target: { value: "terbaru" } });
+    expect(onSubmit).toHaveBeenLastCalledWith("oksigen", {}, "terbaru");
   });
 });

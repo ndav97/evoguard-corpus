@@ -1,0 +1,79 @@
+{
+ "family": "S020",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 23,
+   "operator": "texto",
+   "original": "if (!isValid) return t('invalidNumber', 'Enter a valid number');",
+   "mutated": "if (!isValid) return t('invalidNumber·X', 'Enter a valid number');",
+   "verdict": "EQUIVALENT",
+   "reason": "Clave de traducción nueva que no existe en los archivos de idioma: t() devuelve el texto por defecto, que no cambia.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T001",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 25,
+   "operator": "retorno",
+   "original": "return '';",
+   "mutated": "return undefined as any;",
+   "verdict": "EQUIVALENT",
+   "reason": "invalidText vacío o undefined con invalid=false: el campo no muestra error en ningún caso.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 62,
+   "operator": "texto",
+   "original": "labelText={t('stepValue', 'Step between allowed values')}",
+   "mutated": "labelText={t('stepValue·X', 'Step between allowed values')}",
+   "verdict": "EQUIVALENT",
+   "reason": "Clave de traducción nueva sin entrada en los idiomas: se muestra el texto por defecto.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T002",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 65,
+   "operator": "texto",
+   "original": "invalidText={stepIsValid ? '' : t('invalidStep', 'Step must be a number greater than 0')}",
+   "mutated": "invalidText={stepIsValid ? '' : t('invalidStep·X', 'Step must be a number greater than 0')}",
+   "verdict": "EQUIVALENT",
+   "reason": "Igual que la línea 62.",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 82,
+   "operator": "texto",
+   "original": "<Button kind=\"ghost\" size=\"sm\" onClick={clearRange}>",
+   "mutated": "<Button kind=\"ghost·X\" size=\"sm\" onClick={clearRange}>",
+   "verdict": "EQUIVALENT",
+   "reason": "Prop de estilo de Carbon (kind del botón).",
+   "request_quote": null,
+   "test_addition": null
+  },
+  {
+   "turn": "T003",
+   "file": "src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx",
+   "line": 83,
+   "operator": "texto",
+   "original": "{t('clearRange', 'Clear range')}",
+   "mutated": "{t('clearRange·X', 'Clear range')}",
+   "verdict": "EQUIVALENT",
+   "reason": "Clave de traducción nueva sin entrada en los idiomas: el texto visible sigue siendo «Clear range».",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

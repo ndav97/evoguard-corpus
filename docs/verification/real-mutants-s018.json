@@ -1,0 +1,277 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S018",
+  "image_id": "sha256:5e3f3a0cb756fae9641761fba7dd161f3398e6113f953947d0c03a4b0f40ccbb",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:41:36.683Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "client/evoguard/T001.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 14,
+          "operator": "borrado",
+          "original": "if (!isVisible) return undefined;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 16,
+          "operator": "igualdad",
+          "original": "if (event.key === 'Escape') {",
+          "mutated": "if (event.key !== 'Escape') {",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 17,
+          "operator": "borrado",
+          "original": "dispatch(hideToast());",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 20,
+          "operator": "texto",
+          "original": "document.addEventListener('keydown', handleKeyDown);",
+          "mutated": "document.addEventListener('keydown·X', handleKeyDown);",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 21,
+          "operator": "texto",
+          "original": "return () => document.removeEventListener('keydown', handleKeyDown);",
+          "mutated": "return () => document.removeEventListener('keydown·X', handleKeyDown);",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.6
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "client/evoguard/T001.test.jsx",
+        "client/evoguard/T002.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 8,
+          "operator": "negación",
+          "original": "if (hideTimer) {",
+          "mutated": "if (!hideTimer) {",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 9,
+          "operator": "borrado",
+          "original": "clearTimeout(hideTimer);",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 10,
+          "operator": "borrado",
+          "original": "hideTimer = null;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 38,
+          "operator": "negación",
+          "original": "if (hideTimer) clearTimeout(hideTimer);",
+          "mutated": "if (!hideTimer) clearTimeout(hideTimer);",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 40,
+          "operator": "borrado",
+          "original": "hideTimer = null;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 41,
+          "operator": "borrado",
+          "original": "dispatch(hideToast());",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 3,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.5
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "client/evoguard/T001.test.jsx",
+        "client/evoguard/T002.test.jsx",
+        "client/evoguard/T003.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 28,
+          "operator": "texto",
+          "original": "export function showToast(textOrTime, timeout = 1500, variant = 'info') {",
+          "mutated": "export function showToast(textOrTime, timeout = 1500, variant = 'info·X') {",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "client/modules/IDE/actions/toast.js",
+          "line": 39,
+          "operator": "igualdad",
+          "original": "variant: variant === 'error' ? 'error' : 'info'",
+          "mutated": "variant: variant !== 'error' ? 'error' : 'info'",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 27,
+          "operator": "igualdad",
+          "original": "const isError = variant === 'error';",
+          "mutated": "const isError = variant !== 'error';",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 31,
+          "operator": "texto",
+          "original": "role={isError ? 'alert' : 'status'}",
+          "mutated": "role={isError ? 'alert·X' : 'status'}",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/components/Toast.jsx",
+          "line": 32,
+          "operator": "texto",
+          "original": "aria-live={isError ? 'assertive' : 'polite'}",
+          "mutated": "aria-live={isError ? 'assertive·X' : 'polite'}",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/reducers/toast.js",
+          "line": 13,
+          "operator": "booleano",
+          "original": "isVisible: true,",
+          "mutated": "isVisible: false,",
+          "result": "KILLED"
+        },
+        {
+          "file": "client/modules/IDE/reducers/toast.js",
+          "line": 14,
+          "operator": "igualdad",
+          "original": "variant: action.variant === 'error' ? 'error' : 'info'",
+          "mutated": "variant: action.variant !== 'error' ? 'error' : 'info'",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.86
+    }
+  ],
+  "score": 0.67,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "client/modules/IDE/components/Toast.jsx",
+      "line": 14,
+      "operator": "borrado",
+      "original": "if (!isVisible) return undefined;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T001",
+      "file": "client/modules/IDE/components/Toast.jsx",
+      "line": 21,
+      "operator": "texto",
+      "original": "return () => document.removeEventListener('keydown', handleKeyDown);",
+      "mutated": "return () => document.removeEventListener('keydown·X', handleKeyDown);",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 8,
+      "operator": "negación",
+      "original": "if (hideTimer) {",
+      "mutated": "if (!hideTimer) {",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 10,
+      "operator": "borrado",
+      "original": "hideTimer = null;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 40,
+      "operator": "borrado",
+      "original": "hideTimer = null;",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T003",
+      "file": "client/modules/IDE/actions/toast.js",
+      "line": 28,
+      "operator": "texto",
+      "original": "export function showToast(textOrTime, timeout = 1500, variant = 'info') {",
+      "mutated": "export function showToast(textOrTime, timeout = 1500, variant = 'info·X') {",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:42:49.931Z"
+}

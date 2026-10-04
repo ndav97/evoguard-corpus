@@ -1,6 +1,6 @@
 {
   "artifact_type": "real_context_fit",
-  "created_at": "2026-10-02T16:24:39.002Z",
+  "created_at": "2026-10-04T13:44:50.965Z",
   "estimator": {
     "method": "utf8_bytes_per_token_lower_bound",
     "bytes_per_token": 3.31,
@@ -364,6 +364,346 @@
           "level": "completa",
           "estimated_tokens": 13534,
           "history_margin": 14626
+        }
+      ]
+    },
+    "S011": {
+      "files": 819,
+      "tree_bytes": 57219,
+      "contents_bytes": 20480,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 5287,
+          "history_margin": 1369
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 5287,
+          "history_margin": 6489
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 26123,
+          "history_margin": 2037
+        }
+      ]
+    },
+    "S012": {
+      "files": 452,
+      "tree_bytes": 15165,
+      "contents_bytes": 21608,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3909,
+          "history_margin": 2747
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 10188,
+          "history_margin": 1588
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 10188,
+          "history_margin": 17972
+        }
+      ]
+    },
+    "S013": {
+      "files": 235,
+      "tree_bytes": 9539,
+      "contents_bytes": 23046,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 5788,
+          "history_margin": 868
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 7822,
+          "history_margin": 3954
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 7822,
+          "history_margin": 20338
+        }
+      ]
+    },
+    "S014": {
+      "files": 1286,
+      "tree_bytes": 68396,
+      "contents_bytes": 5956,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3462,
+          "history_margin": 3194
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3462,
+          "history_margin": 8314
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "árbol completo sin contenidos",
+          "estimated_tokens": 27961,
+          "history_margin": 199
+        }
+      ]
+    },
+    "S015": {
+      "files": 913,
+      "tree_bytes": 50814,
+      "contents_bytes": 4806,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3141,
+          "history_margin": 3515
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3141,
+          "history_margin": 8635
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 23115,
+          "history_margin": 5045
+        }
+      ]
+    },
+    "S016": {
+      "files": 393,
+      "tree_bytes": 14085,
+      "contents_bytes": 24535,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "solo directorio de la zona",
+          "estimated_tokens": 4462,
+          "history_margin": 2194
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 9673,
+          "history_margin": 2103
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 9673,
+          "history_margin": 18487
+        }
+      ]
+    },
+    "S017": {
+      "files": 509,
+      "tree_bytes": 27745,
+      "contents_bytes": 25879,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4972,
+          "history_margin": 1684
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4972,
+          "history_margin": 6804
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 14396,
+          "history_margin": 13764
+        }
+      ]
+    },
+    "S018": {
+      "files": 685,
+      "tree_bytes": 27921,
+      "contents_bytes": 22198,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4552,
+          "history_margin": 2104
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 4552,
+          "history_margin": 7224
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 14916,
+          "history_margin": 13244
+        }
+      ]
+    },
+    "S019": {
+      "files": 732,
+      "tree_bytes": 30683,
+      "contents_bytes": 23798,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3477,
+          "history_margin": 3179
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3477,
+          "history_margin": 8299
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 16151,
+          "history_margin": 12009
+        }
+      ]
+    },
+    "S020": {
+      "files": 237,
+      "tree_bytes": 13178,
+      "contents_bytes": 2132,
+      "results": [
+        {
+          "context": 8192,
+          "output": 1024,
+          "input_budget": 6656,
+          "fits": true,
+          "level": "directorio de la zona + archivo recortado",
+          "estimated_tokens": 3183,
+          "history_margin": 3473
+        },
+        {
+          "context": 16384,
+          "output": 4096,
+          "input_budget": 11776,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8027,
+          "history_margin": 3749
+        },
+        {
+          "context": 32768,
+          "output": 4096,
+          "input_budget": 28160,
+          "fits": true,
+          "level": "completa",
+          "estimated_tokens": 8027,
+          "history_margin": 20133
         }
       ]
     }

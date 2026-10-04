@@ -1,0 +1,19 @@
+{
+ "family": "S014",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "src/components/UI/Timer/Timer.tsx",
+   "line": 115,
+   "operator": "igualdad",
+   "original": "className={timerStyle + ' ' + (variant === 'secondary' && styles.SecondaryTimer)}",
+   "mutated": "className={timerStyle + ' ' + (variant !== 'secondary' && styles.SecondaryTimer)}",
+   "verdict": "EQUIVALENT",
+   "reason": "Solo cambia una clase CSS de la variante secundaria; nada de la petición depende del estilo.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

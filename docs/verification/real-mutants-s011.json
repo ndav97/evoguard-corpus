@@ -1,0 +1,160 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S011",
+  "image_id": "sha256:6147e79d924638dcb1bd04ff9505273bb7329bfca2b97d94fcaa3c4818b39f68",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:33:27.389Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 98,
+          "operator": "texto",
+          "original": "aria-label=\"Locate matches in the trace\"",
+          "mutated": "aria-label=\"Locate matches in the trace·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 108,
+          "operator": "texto",
+          "original": "aria-label=\"Previous match\"",
+          "mutated": "aria-label=\"Previous match·X\"",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 118,
+          "operator": "texto",
+          "original": "aria-label=\"Next match\"",
+          "mutated": "aria-label=\"Next match·X\"",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 3,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 38,
+          "operator": "igualdad",
+          "original": "const countLabel = `${resultCount} matching ${resultCount === 1 ? 'span' : 'spans'}`;",
+          "mutated": "const countLabel = `${resultCount} matching ${resultCount !== 1 ? 'span' : 'spans'}`;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 43,
+          "operator": "borrado",
+          "original": ") : null;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 7,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 1,
+        "SURVIVED": 0,
+        "COMPILE": 1,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx",
+        "src/evoguard/T003.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 46,
+          "operator": "igualdad",
+          "original": "if (event.key !== 'Enter' || !navigable || !textFilter) return;",
+          "mutated": "if (event.key === 'Enter' || !navigable || !textFilter) return;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 47,
+          "operator": "borrado",
+          "original": "event.preventDefault();",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 48,
+          "operator": "negación",
+          "original": "if (event.shiftKey) prevResult();",
+          "mutated": "if (!event.shiftKey) prevResult();",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+          "line": 49,
+          "operator": "borrado",
+          "original": "else nextResult();",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    }
+  ],
+  "score": 0.88,
+  "survivors": [
+    {
+      "turn": "T003",
+      "file": "src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx",
+      "line": 47,
+      "operator": "borrado",
+      "original": "event.preventDefault();",
+      "mutated": "/* evoguard-mutant */ void 0;",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:34:23.749Z"
+}

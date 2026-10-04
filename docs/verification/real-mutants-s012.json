@@ -1,0 +1,233 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S012",
+  "image_id": "sha256:6e121aea356876f6880b9369e83be2ee13607cd2aedbf0b634f83f84c0b07dcc",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:34:23.890Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 47,
+          "operator": "texto",
+          "original": ".create('playlist', { data: { name: name.trim() } })",
+          "mutated": ".create('playlist·X', { data: { name: name.trim() } })",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 109,
+          "operator": "igualdad",
+          "original": "{queue.length === 1",
+          "mutated": "{queue.length !== 1",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 110,
+          "operator": "texto",
+          "original": "? '1 song will be saved'",
+          "mutated": "? '1 song will be saved·X'",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 32,
+          "operator": "booleano",
+          "original": "const [saveFailed, setSaveFailed] = useState(false)",
+          "mutated": "const [saveFailed, setSaveFailed] = useState(true)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 38,
+          "operator": "booleano",
+          "original": "setSaveFailed(false)",
+          "mutated": "setSaveFailed(true)",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 47,
+          "operator": "booleano",
+          "original": "setSaveFailed(false)",
+          "mutated": "setSaveFailed(true)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 73,
+          "operator": "booleano",
+          "original": "setSaveFailed(true)",
+          "mutated": "setSaveFailed(false)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 74,
+          "operator": "texto",
+          "original": "notify('ra.page.error', { type: 'warning' })",
+          "mutated": "notify('ra.page.error·X', { type: 'warning' })",
+          "result": "SURVIVED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 104,
+          "operator": "booleano",
+          "original": "setSaveFailed(false)",
+          "mutated": "setSaveFailed(true)",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 122,
+          "operator": "lógico",
+          "original": "{saveFailed && (",
+          "mutated": "{saveFailed || (",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 123,
+          "operator": "texto",
+          "original": "<Typography variant=\"body2\" color=\"error\" role=\"alert\">",
+          "mutated": "<Typography variant=\"body2\" color=\"error\" role=\"alert·X\">",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 8,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 2,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.jsx",
+        "src/evoguard/T002.test.jsx",
+        "src/evoguard/T003.test.jsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 34,
+          "operator": "igualdad",
+          "original": "const queueIsEmpty = queue.length === 0",
+          "mutated": "const queueIsEmpty = queue.length !== 0",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 35,
+          "operator": "igualdad",
+          "original": "const canSave = name.trim() !== '' && !queueIsEmpty && !isSaving",
+          "mutated": "const canSave = name.trim() === '' && !queueIsEmpty && !isSaving",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 83,
+          "operator": "igualdad",
+          "original": "if (e.key === 'Enter' && canSave) {",
+          "mutated": "if (e.key !== 'Enter' && canSave) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 121,
+          "operator": "texto",
+          "original": "? 'The queue is empty'",
+          "mutated": "? 'The queue is empty·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 122,
+          "operator": "igualdad",
+          "original": ": queue.length === 1",
+          "mutated": ": queue.length !== 1",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/dialogs/SaveQueueDialog.jsx",
+          "line": 123,
+          "operator": "texto",
+          "original": "? '1 song will be saved'",
+          "mutated": "? '1 song will be saved·X'",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 12,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    }
+  ],
+  "score": 0.88,
+  "survivors": [
+    {
+      "turn": "T002",
+      "file": "src/dialogs/SaveQueueDialog.jsx",
+      "line": 38,
+      "operator": "booleano",
+      "original": "setSaveFailed(false)",
+      "mutated": "setSaveFailed(true)",
+      "result": "SURVIVED"
+    },
+    {
+      "turn": "T002",
+      "file": "src/dialogs/SaveQueueDialog.jsx",
+      "line": 74,
+      "operator": "texto",
+      "original": "notify('ra.page.error', { type: 'warning' })",
+      "mutated": "notify('ra.page.error·X', { type: 'warning' })",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:36:08.239Z"
+}

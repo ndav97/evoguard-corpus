@@ -1,0 +1,167 @@
+{
+  "artifact_type": "real_hidden_tests_mutation",
+  "family_id": "S014",
+  "image_id": "sha256:77fe875306c17594ef1aef48178606896b6870585ba13464483a712f5dd04e0a",
+  "max_per_turn": 8,
+  "started_at": "2026-10-04T13:37:11.354Z",
+  "turns": [
+    {
+      "turn": "T001",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 98,
+          "operator": "igualdad",
+          "original": "hours === 0",
+          "mutated": "hours !== 0",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 99,
+          "operator": "texto",
+          "original": "? 'Session window expired'",
+          "mutated": "? 'Session window expired·X'",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 100,
+          "operator": "igualdad",
+          "original": ": `${hours} ${hours === 1 ? 'hour' : 'hours'} left in the session window`;",
+          "mutated": ": `${hours} ${hours !== 1 ? 'hour' : 'hours'} left in the session window`;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 115,
+          "operator": "igualdad",
+          "original": "className={timerStyle + ' ' + (variant === 'secondary' && styles.SecondaryTimer)}",
+          "mutated": "className={timerStyle + ' ' + (variant !== 'secondary' && styles.SecondaryTimer)}",
+          "result": "SURVIVED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 4,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 3,
+        "SURVIVED": 1,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 0.75
+    },
+    {
+      "turn": "T002",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx"
+      ],
+      "mutants": [
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 83,
+          "operator": "igualdad",
+          "original": "if (hours === 1) {",
+          "mutated": "if (hours !== 1) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 84,
+          "operator": "texto",
+          "original": "const elapsedMinutes = Math.floor(currentTime.diff(lastMessageTime, 'minute'));",
+          "mutated": "const elapsedMinutes = Math.floor(currentTime.diff(lastMessageTime, 'minute·X'));",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 85,
+          "operator": "aritmético",
+          "original": "minutesLeft = Math.max(24 * 60 - elapsedMinutes, 0);",
+          "mutated": "minutesLeft = Math.max(24 * 60 + elapsedMinutes, 0);",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 107,
+          "operator": "igualdad",
+          "original": "if (minutesLeft !== null && hours !== 0) {",
+          "mutated": "if (minutesLeft === null && hours !== 0) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 108,
+          "operator": "igualdad",
+          "original": "remainingLabel = `${minutesLeft} ${minutesLeft === 1 ? 'minute' : 'minutes'} left in the session window`;",
+          "mutated": "remainingLabel = `${minutesLeft} ${minutesLeft !== 1 ? 'minute' : 'minutes'} left in the session window`;",
+          "result": "KILLED"
+        },
+        {
+          "file": "src/components/UI/Timer/Timer.tsx",
+          "line": 128,
+          "operator": "igualdad",
+          "original": "{minutesLeft !== null && hours !== 0 ? `${minutesLeft} min` : `${hours} hrs`}",
+          "mutated": "{minutesLeft === null && hours !== 0 ? `${minutesLeft} min` : `${hours} hrs`}",
+          "result": "KILLED"
+        }
+      ],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 10,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 6,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": 1
+    },
+    {
+      "turn": "T003",
+      "hidden_tests": [
+        "src/evoguard/T001.test.tsx",
+        "src/evoguard/T002.test.tsx",
+        "src/evoguard/T003.test.tsx"
+      ],
+      "mutants": [],
+      "baseline": {
+        "status": "SURVIVED",
+        "tests": 14,
+        "failed": 0,
+        "failing": []
+      },
+      "summary": {
+        "KILLED": 0,
+        "SURVIVED": 0,
+        "COMPILE": 0,
+        "ERROR": 0
+      },
+      "score": null
+    }
+  ],
+  "score": 0.9,
+  "survivors": [
+    {
+      "turn": "T001",
+      "file": "src/components/UI/Timer/Timer.tsx",
+      "line": 115,
+      "operator": "igualdad",
+      "original": "className={timerStyle + ' ' + (variant === 'secondary' && styles.SecondaryTimer)}",
+      "mutated": "className={timerStyle + ' ' + (variant !== 'secondary' && styles.SecondaryTimer)}",
+      "result": "SURVIVED"
+    }
+  ],
+  "finished_at": "2026-10-04T13:37:56.221Z"
+}

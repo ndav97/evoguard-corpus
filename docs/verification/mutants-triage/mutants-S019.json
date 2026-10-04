@@ -1,0 +1,19 @@
+{
+ "family": "S019",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T002",
+   "file": "src/utils/format.ts",
+   "line": 44,
+   "operator": "texto",
+   "original": "\"text/csv\": \"CSV\",",
+   "mutated": "\"text/csv·X\": \"CSV\",",
+   "verdict": "EQUIVALENT",
+   "reason": "Sin la entrada especial, text/csv cae en la regla general (subtipo en mayúsculas) y da igualmente «CSV».",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}

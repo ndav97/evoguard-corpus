@@ -1,0 +1,31 @@
+{
+ "family": "S012",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T002",
+   "file": "src/dialogs/SaveQueueDialog.jsx",
+   "line": 38,
+   "operator": "booleano",
+   "original": "setSaveFailed(false)",
+   "mutated": "setSaveFailed(true)",
+   "verdict": "WEAKNESS",
+   "reason": "La petición exige que el aviso desaparezca al cerrar el diálogo (3c). El mutante lo deja activo al cerrar y el test no cubría el cierre.",
+   "request_quote": null,
+   "test_addition": "«el aviso desaparece al cerrar el diálogo»: falla el guardado, se pulsa Cancel y no queda role=\"alert\"."
+  },
+  {
+   "turn": "T002",
+   "file": "src/dialogs/SaveQueueDialog.jsx",
+   "line": 74,
+   "operator": "texto",
+   "original": "notify('ra.page.error', { type: 'warning' })",
+   "mutated": "notify('ra.page.error·X', { type: 'warning' })",
+   "verdict": "WEAKNESS",
+   "reason": "La petición exige mantener la notificación ra.page.error (punto 4); el test no la comprobaba.",
+   "request_quote": null,
+   "test_addition": "«se mantiene la notificación ra.page.error»: useNotify simulado con vi.mock parcial de react-admin."
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "family": "S016",
+ "reviewed_at": "2026-10-04",
+ "reviewer": "Claude (claude-opus-5-5)",
+ "items": [
+  {
+   "turn": "T001",
+   "file": "components/search-form.tsx",
+   "line": 100,
+   "operator": "borrado",
+   "original": "onSubmitKeywords(keywords.trim(), newFilters, sortBy);",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "WEAKNESS",
+   "reason": "La petición (1c) exige que al cambiar un filtro onSubmitKeywords reciba las palabras recortadas; el test no cambiaba ningún filtro.",
+   "request_quote": null,
+   "test_addition": "«al cambiar un filtro se buscan las palabras recortadas»."
+  },
+  {
+   "turn": "T001",
+   "file": "components/search-form.tsx",
+   "line": 106,
+   "operator": "borrado",
+   "original": "onSubmitKeywords(keywords.trim(), filters, sortValue);",
+   "mutated": "/* evoguard-mutant */ void 0;",
+   "verdict": "WEAKNESS",
+   "reason": "La petición (1c) exige lo mismo al cambiar el orden; el test no lo cubría.",
+   "request_quote": null,
+   "test_addition": "«al cambiar el orden se buscan las palabras recortadas»."
+  },
+  {
+   "turn": "T002",
+   "file": "components/search-form.tsx",
+   "line": 144,
+   "operator": "booleano",
+   "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
+   "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
+   "verdict": "EQUIVALENT",
+   "reason": "aria-hidden del icono decorativo: el nombre accesible del botón sale de su aria-label, que no cambia.",
+   "request_quote": null,
+   "test_addition": null
+  }
+ ]
+}
