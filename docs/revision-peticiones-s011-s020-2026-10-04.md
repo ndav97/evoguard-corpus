@@ -42,3 +42,5 @@ Coinciden en 22 de 24. Las dos discrepancias:
 Con esto quedan 7 de 8 debilidades corregidas. La de S018 se verifica con `scripts\real\recalibrar-reforzadas.cmd -Familias S018`.
 
 **Verificación (2026-10-04, 14:51 hora de Lima):** S018 se recalibró con el test nuevo de T002 y pasa los tres turnos. En T002 fallan antes 3 de 5 tests. El mutante `toast.js:8` queda eliminado: S018 pasa a 15 eliminados y 3 sobrevivientes, todos equivalentes (puntuación bruta 0,83).
+
+**Verificación de S016 (2026-10-04, 15:15–15:22 hora de Lima):** S016 se recalibró con la referencia corregida y pasa los tres turnos; en T002 fallan antes 4 de 5 tests. Los mutantes de S016 dan 1,00 (no sobrevive ninguno) y el ensayo del pipeline está en PASS.

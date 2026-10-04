@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:a0426fdabd69209ff4cee7ebd24236d69242fbf162816055d1930d73d952cc2d",
+  "image_id": "sha256:6dbec03712ab953f4c4441f3acc12237bd5a4c8d9dd1abc7d14c561fe81f1cc4",
   "experimental": false,
-  "started_at": "2026-10-03T21:41:56.432Z",
+  "started_at": "2026-10-04T20:16:58.691Z",
   "versions": {
     "V1": {
-      "task_id": "afdda656-6c8b-4a19-971f-f0f6849a6a15",
+      "task_id": "ee5f645c-dadf-40f4-aec3-173942a1cb6f",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "ae64c3bee0aa473634d276bdb40fa505f7050867"
     },
     "V2": {
-      "task_id": "b77af8f1-ab72-4b40-ab66-c691e687bc6e",
+      "task_id": "9155b8a2-680d-485a-8bf3-a2a9fc55fc8e",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "26370cea92758617ff23dce2f32ada956669084b"
     },
     "V3": {
-      "task_id": "b30cc4c5-4edd-42be-b505-e756cbda4807",
+      "task_id": "1f060cdb-1733-4014-a684-fb56bb7fecfa",
       "outcomes": [
         {
           "provider": "google",
@@ -119,7 +119,7 @@
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-03T21:42:43.646Z",
+  "finished_at": "2026-10-04T20:17:48.889Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {

@@ -3,7 +3,7 @@
   "family_id": "S016",
   "image_id": "sha256:2e7b61a86fce18dccd41a5b063e7b17d72b56778a7ee708ff00b08a304ee2881",
   "max_per_turn": 8,
-  "started_at": "2026-10-04T14:08:44.556Z",
+  "started_at": "2026-10-04T20:15:30.479Z",
   "turns": [
     {
       "turn": "T001",
@@ -59,15 +59,39 @@
       "mutants": [
         {
           "file": "components/search-form.tsx",
-          "line": 91,
+          "line": 85,
+          "operator": "igualdad",
+          "original": "if (generation === searchGeneration.current) {",
+          "mutated": "if (generation !== searchGeneration.current) {",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 86,
           "operator": "borrado",
-          "original": "setKeywords(\"\");",
+          "original": "onSubmitKeywords(keywordsValue, filtersValue, sortValue);",
           "mutated": "/* evoguard-mutant */ void 0;",
           "result": "KILLED"
         },
         {
           "file": "components/search-form.tsx",
-          "line": 92,
+          "line": 103,
+          "operator": "borrado",
+          "original": ");",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "COMPILE"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 108,
+          "operator": "borrado",
+          "original": "searchGeneration.current += 1;",
+          "mutated": "/* evoguard-mutant */ void 0;",
+          "result": "KILLED"
+        },
+        {
+          "file": "components/search-form.tsx",
+          "line": 110,
           "operator": "borrado",
           "original": "onSubmitKeywords(\"\", filters, sortBy);",
           "mutated": "/* evoguard-mutant */ void 0;",
@@ -75,7 +99,7 @@
         },
         {
           "file": "components/search-form.tsx",
-          "line": 137,
+          "line": 155,
           "operator": "igualdad",
           "original": "{keywords !== \"\" && (",
           "mutated": "{keywords === \"\" && (",
@@ -83,7 +107,7 @@
         },
         {
           "file": "components/search-form.tsx",
-          "line": 139,
+          "line": 157,
           "operator": "texto",
           "original": "aria-label=\"Kosongkan kata kunci\"",
           "mutated": "aria-label=\"Kosongkan kata kunci·X\"",
@@ -91,34 +115,26 @@
         },
         {
           "file": "components/search-form.tsx",
-          "line": 142,
+          "line": 160,
           "operator": "texto",
           "original": "type=\"button\"",
           "mutated": "type=\"button·X\"",
           "result": "KILLED"
-        },
-        {
-          "file": "components/search-form.tsx",
-          "line": 144,
-          "operator": "booleano",
-          "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
-          "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
-          "result": "SURVIVED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 9,
+        "tests": 10,
         "failed": 0,
         "failing": []
       },
       "summary": {
-        "KILLED": 5,
-        "SURVIVED": 1,
-        "COMPILE": 0,
+        "KILLED": 7,
+        "SURVIVED": 0,
+        "COMPILE": 1,
         "ERROR": 0
       },
-      "score": 0.83
+      "score": 1
     },
     {
       "turn": "T003",
@@ -130,7 +146,7 @@
       "mutants": [
         {
           "file": "components/search-form.tsx",
-          "line": 87,
+          "line": 99,
           "operator": "igualdad",
           "original": "if (autoSearch && (trimmed.length === 0 || trimmed.length >= 2)) {",
           "mutated": "if (autoSearch && (trimmed.length !== 0 || trimmed.length >= 2)) {",
@@ -138,16 +154,16 @@
         },
         {
           "file": "components/search-form.tsx",
-          "line": 88,
+          "line": 100,
           "operator": "borrado",
-          "original": "void debouncedSearch(trimmed, filters, sortBy);",
+          "original": "void debouncedSearch(trimmed, filters, sortBy, searchGeneration.current);",
           "mutated": "/* evoguard-mutant */ void 0;",
           "result": "KILLED"
         }
       ],
       "baseline": {
         "status": "SURVIVED",
-        "tests": 15,
+        "tests": 16,
         "failed": 0,
         "failing": []
       },
@@ -160,17 +176,7 @@
       "score": 1
     }
   ],
-  "score": 0.91,
-  "survivors": [
-    {
-      "turn": "T002",
-      "file": "components/search-form.tsx",
-      "line": 144,
-      "operator": "booleano",
-      "original": "<XIcon aria-hidden=\"true\" className=\"h-4 w-4\" />",
-      "mutated": "<XIcon aria-hidden=\"false\" className=\"h-4 w-4\" />",
-      "result": "SURVIVED"
-    }
-  ],
-  "finished_at": "2026-10-04T14:09:50.429Z"
+  "score": 1,
+  "survivors": [],
+  "finished_at": "2026-10-04T20:16:46.506Z"
 }
