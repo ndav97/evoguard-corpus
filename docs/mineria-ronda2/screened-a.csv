@@ -1,0 +1,185 @@
+forge,repo,status,reason,loc,ui_test_files,unit_test_files,ai_share,license,url
+github,aave/interface,descartado,pocos tests de UI (0); pocos tests (7); pocos casos de test (39); muy grande (107837 líneas),107837,0,7,0.07,OTRA,https://github.com/aave/interface
+github,actualbudget/actual,descartado,muy grande (161572 líneas); 50 % commits con trazas IA,161572,37,97,0.5,MIT,https://github.com/actualbudget/actual
+github,afadil/wealthfolio,descartado,muy grande (217896 líneas),217896,187,331,0.03,AGPL-3.0,https://github.com/afadil/wealthfolio
+github,airbytehq/airbyte-platform,descartado,muy grande (121349 líneas); licencia no abierta,121349,169,221,0.26,NO-ABIERTA,https://github.com/airbytehq/airbyte-platform
+github,ansible/ansible-hub-ui,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),42422,0,0,0.01,APACHE-2.0,https://github.com/ansible/ansible-hub-ui
+github,ansible/ansible-ui,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (110 líneas); 52 % commits con trazas IA,110,0,0,0.52,APACHE-2.0,https://github.com/ansible/ansible-ui
+github,ansible/awx,descartado,sin React,,,,,APACHE-2.0,https://github.com/ansible/awx
+github,apache/airflow,aprobado,,89202,132,166,0.03,APACHE-2.0,https://github.com/apache/airflow
+github,apache/answer,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),48233,0,0,0.01,APACHE-2.0,https://github.com/apache/answer
+github,apache/apisix-dashboard,descartado,pocos tests de UI (0),17442,0,18,0.02,APACHE-2.0,https://github.com/apache/apisix-dashboard
+github,apache/superset,descartado,muy grande (233346 líneas); 41 % commits con trazas IA,233346,550,801,0.41,APACHE-2.0,https://github.com/apache/superset
+github,AppFlowy-IO/AppFlowy-Web,descartado,muy grande (266525 líneas),266525,366,640,0.25,AGPL-3.0,https://github.com/AppFlowy-IO/AppFlowy-Web
+github,Arize-ai/phoenix,descartado,muy grande (255033 líneas); sin lockfile; licencia no abierta,255033,65,300,0.25,NO-ABIERTA,https://github.com/Arize-ai/phoenix
+github,Automattic/newspack-plugin,descartado,"librería, no app",,,,,GPL-2.0,https://github.com/Automattic/newspack-plugin
+github,Automattic/sensei,aprobado,,33831,71,125,0,LGPL-3.0,https://github.com/Automattic/sensei
+github,Automattic/simplenote-electron,descartado,pocos tests de UI (0); pocos tests (13),22885,0,13,0.01,GPL-2.0,https://github.com/Automattic/simplenote-electron
+github,Automattic/woocommerce-payments,descartado,64 % commits con trazas IA,92433,237,386,0.64,GPL-3.0,https://github.com/Automattic/woocommerce-payments
+github,Bahmni/openmrs-module-bahmniapps,descartado,"librería, no app",,,,,MPL-2.0,https://github.com/Bahmni/openmrs-module-bahmniapps
+github,block/goose,descartado,sin lockfile,69818,45,111,0.05,APACHE-2.0,https://github.com/block/goose
+github,blockscout/frontend,descartado,muy grande (163675 líneas); 57 % commits con trazas IA,163675,30,172,0.57,OTRA,https://github.com/blockscout/frontend
+github,broadinstitute/gnomad-browser,aprobado,,49702,66,75,0,MIT,https://github.com/broadinstitute/gnomad-browser
+github,calcom/cal.com,descartado,sin vitest/jest; 34 % commits con trazas IA,89230,17,66,0.34,MIT,https://github.com/calcom/cal.com
+github,cBioPortal/cbioportal-frontend,descartado,muy grande (222889 líneas); 38 % commits con trazas IA,222889,105,221,0.38,AGPL-3.0,https://github.com/cBioPortal/cbioportal-frontend
+github,chanzuckerberg/single-cell-data-portal,descartado,sin vitest/jest; pocos tests de UI (0),60828,0,40,0.05,MIT,https://github.com/chanzuckerberg/single-cell-data-portal
+github,cilium/hubble-ui,descartado,pocos tests de UI (2),29865,2,28,0,APACHE-2.0,https://github.com/cilium/hubble-ui
+github,cockroachdb/cockroach,descartado,sin lockfile,51834,38,64,0,OTRA,https://github.com/cockroachdb/cockroach
+github,codecov/gazebo,aprobado,,83457,684,716,0.04,APACHE-2.0,https://github.com/codecov/gazebo
+github,coder/coder,descartado,muy grande (201165 líneas),201165,152,308,0.03,AGPL-3.0,https://github.com/coder/coder
+github,comet-ml/opik,descartado,muy grande (220674 líneas); 52 % commits con trazas IA,220674,103,221,0.52,APACHE-2.0,https://github.com/comet-ml/opik
+github,content-services/content-sources-frontend,aprobado,,30450,64,114,0.17,APACHE-2.0,https://github.com/content-services/content-sources-frontend
+github,continuedev/continue,aprobado,,37956,17,40,0.14,APACHE-2.0,https://github.com/continuedev/continue
+github,conveyal/analysis-ui,descartado,inactivo desde 2022-01-13,31939,30,100,0,MIT,https://github.com/conveyal/analysis-ui
+github,cowprotocol/cowswap,descartado,muy grande (148793 líneas),148793,150,317,0.02,GPL-3.0,https://github.com/cowprotocol/cowswap
+github,dagster-io/dagster,descartado,muy grande (186266 líneas); sin lockfile; 35 % commits con trazas IA,186266,151,204,0.35,APACHE-2.0,https://github.com/dagster-io/dagster
+github,danny-avila/LibreChat,descartado,muy grande (211452 líneas),211452,468,635,0.01,MIT,https://github.com/danny-avila/LibreChat
+github,DataBiosphere/terra-ui,descartado,muy grande (104654 líneas),104654,258,365,0.01,BSD-3-CLAUSE,https://github.com/DataBiosphere/terra-ui
+github,datahub-project/datahub,descartado,muy grande (322435 líneas); 53 % commits con trazas IA,322435,366,633,0.53,APACHE-2.0,https://github.com/datahub-project/datahub
+github,determined-ai/determined,descartado,inactivo desde 2025-03-20,74159,71,111,0,APACHE-2.0,https://github.com/determined-ai/determined
+github,docmost/docmost,descartado,pocos tests de UI (1); pocos tests (5); pocos casos de test (69),86684,1,5,0.01,AGPL-3.0,https://github.com/docmost/docmost
+github,eclipse-che/che-dashboard,aprobado,,53751,225,419,0.1,GPL-3.0,https://github.com/eclipse-che/che-dashboard
+github,element-hq/element-call,aprobado,,34846,47,102,0.01,,https://github.com/element-hq/element-call
+github,element-hq/element-web,descartado,muy grande (218985 líneas),218985,364,797,0.02,,https://github.com/element-hq/element-web
+github,ensdomains/ens-app-v3,aprobado,,62944,96,202,0,MIT,https://github.com/ensdomains/ens-app-v3
+github,Ensembl/ensembl-client,descartado,muy grande (114379 líneas),114379,115,178,0,APACHE-2.0,https://github.com/Ensembl/ensembl-client
+github,evershopcommerce/evershop,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (0); muy pequeño (0 líneas),0,0,1,0,GPL-3.0,https://github.com/evershopcommerce/evershop
+github,excalidraw/excalidraw,descartado,pocos tests de UI (3); pocos tests (3); pocos casos de test (5),6662,3,3,0.04,MIT,https://github.com/excalidraw/excalidraw
+github,exercism/website,descartado,muy grande (103211 líneas); 84 % commits con trazas IA,103211,133,197,0.84,AGPL-3.0,https://github.com/exercism/website
+github,fleetdm/fleet,descartado,pocos tests de UI (3); pocos casos de test (1); muy grande (286126 líneas),286126,3,20,0.09,MIT,https://github.com/fleetdm/fleet
+github,flipt-io/flipt,descartado,pocos tests de UI (0),20463,0,16,0,MIT,https://github.com/flipt-io/flipt
+github,forem/forem,descartado,sin React,,,,,AGPL-3.0,https://github.com/forem/forem
+github,formbricks/formbricks,descartado,muy grande (287825 líneas); 52 % commits con trazas IA,287825,64,975,0.52,AGPL-3.0,https://github.com/formbricks/formbricks
+github,freeCodeCamp/freeCodeCamp,descartado,"librería, no app",,,,,BSD-3-CLAUSE,https://github.com/freeCodeCamp/freeCodeCamp
+github,freelensapp/freelens,descartado,muy grande (150300 líneas); 67 % commits con trazas IA,150300,142,319,0.67,MIT,https://github.com/freelensapp/freelens
+github,getfider/fider,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (105 líneas),105,0,0,0.03,AGPL-3.0,https://github.com/getfider/fider
+github,getredash/redash,descartado,pocos tests de UI (5); pocos casos de test (75),29458,5,21,0.09,BSD-2-CLAUSE,https://github.com/getredash/redash
+github,getsentry/spotlight,descartado,pocos tests de UI (5),21587,5,19,0.1,APACHE-2.0,https://github.com/getsentry/spotlight
+github,glitch-soc/mastodon,descartado,pocos tests de UI (9); muy grande (210970 líneas),210970,9,48,0,AGPL-3.0,https://github.com/glitch-soc/mastodon
+github,grafana/grafana-infinity-datasource,aprobado,,10037,18,38,0.03,APACHE-2.0,https://github.com/grafana/grafana-infinity-datasource
+github,grafana/logs-drilldown,aprobado,,45733,28,98,0.09,AGPL-3.0,https://github.com/grafana/logs-drilldown
+github,grafana/metrics-drilldown,aprobado,,27656,25,82,0.03,AGPL-3.0,https://github.com/grafana/metrics-drilldown
+github,grafana/oncall,aprobado,,55434,11,47,0,AGPL-3.0,https://github.com/grafana/oncall
+github,grafana/synthetic-monitoring-app,aprobado,,73823,205,288,0.11,AGPL-3.0,https://github.com/grafana/synthetic-monitoring-app
+github,gravitational/teleport,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (28 líneas),28,0,0,0,AGPL-3.0,https://github.com/gravitational/teleport
+github,greenbone/gsa,descartado,muy grande (160914 líneas),160914,707,993,0,AGPL-3.0,https://github.com/greenbone/gsa
+github,growthbook/growthbook,descartado,muy grande (401887 líneas); 38 % commits con trazas IA,401887,18,105,0.38,MIT,https://github.com/growthbook/growthbook
+github,hackforla/311-data,descartado,pocos tests de UI (1); pocos tests (2); pocos casos de test (5),14760,1,2,0,GPL-3.0,https://github.com/hackforla/311-data
+github,hackforla/HomeUniteUs,descartado,pocos tests de UI (9); pocos tests (9); pocos casos de test (46),8145,9,9,0,LGPL-3.0,https://github.com/hackforla/HomeUniteUs
+github,hackforla/VRMS,descartado,pocos tests de UI (2); pocos tests (4); pocos casos de test (15),10402,2,4,0,AGPL-3.0,https://github.com/hackforla/VRMS
+github,hasura/graphql-engine,descartado,muy grande (257821 líneas),257821,65,181,0.1,APACHE-2.0,https://github.com/hasura/graphql-engine
+github,headlamp-k8s/headlamp,descartado,muy grande (104511 líneas),104511,136,252,0,APACHE-2.0,https://github.com/headlamp-k8s/headlamp
+github,Helicone/helicone,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0),61570,0,0,0.25,APACHE-2.0,https://github.com/Helicone/helicone
+github,homarr-labs/homarr,aprobado,,60717,12,123,0,APACHE-2.0,https://github.com/homarr-labs/homarr
+github,HumanSignal/label-studio,descartado,sin vitest/jest; muy grande (107796 líneas); sin lockfile,107796,67,210,0.28,APACHE-2.0,https://github.com/HumanSignal/label-studio
+github,hyperdxio/hyperdx,descartado,muy grande (125588 líneas),125588,168,263,0.12,MIT,https://github.com/hyperdxio/hyperdx
+github,I-TECH-UW/OpenELIS-Global-2,descartado,muy grande (243832 líneas),243832,338,417,0.15,MPL-2.0,https://github.com/I-TECH-UW/OpenELIS-Global-2
+github,ibi-group/datatools-ui,descartado,sin vitest/jest; pocos tests de UI (1),65015,1,31,0,MIT,https://github.com/ibi-group/datatools-ui
+github,ifmeorg/ifme,descartado,"librería, no app",,,,,AGPL-3.0,https://github.com/ifmeorg/ifme
+github,impress-org/givewp,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (2),77548,0,1,0.04,GPL-3.0,https://github.com/impress-org/givewp
+github,influxdata/ui,descartado,muy grande (173326 líneas),173326,72,166,0,,https://github.com/influxdata/ui
+github,InvenTree/InvenTree,descartado,sin vitest/jest; pocos tests de UI (0),84062,0,32,0,MIT,https://github.com/InvenTree/InvenTree
+github,invoke-ai/InvokeAI,descartado,muy grande (260415 líneas); 34 % commits con trazas IA,260415,271,893,0.34,APACHE-2.0,https://github.com/invoke-ai/InvokeAI
+github,jitsi/jitsi-meet,descartado,React Native,,,,,APACHE-2.0,https://github.com/jitsi/jitsi-meet
+github,Katello/katello,descartado,sin React,,,,,LGPL-3.0,https://github.com/Katello/katello
+github,kedro-org/kedro-viz,aprobado,,22925,67,102,0,BSD-3-CLAUSE,https://github.com/kedro-org/kedro-viz
+github,kiali/kiali,descartado,sin vitest/jest; muy grande (109701 líneas); 54 % commits con trazas IA,109701,83,147,0.54,APACHE-2.0,https://github.com/kiali/kiali
+github,Kong/insomnia,descartado,sin vitest/jest; pocos tests de UI (5); muy grande (154851 líneas),154851,5,179,0.08,APACHE-2.0,https://github.com/Kong/insomnia
+github,konveyor/forklift-console-plugin,descartado,51 % commits con trazas IA,85357,149,395,0.51,APACHE-2.0,https://github.com/konveyor/forklift-console-plugin
+github,konveyor/tackle-ui,descartado,inactivo desde 2022-05-04,23963,63,67,0,APACHE-2.0,https://github.com/konveyor/tackle-ui
+github,kubeflow/model-registry,aprobado,,39598,41,73,0.07,APACHE-2.0,https://github.com/kubeflow/model-registry
+github,kubeflow/pipelines,aprobado,,41098,101,124,0.01,APACHE-2.0,https://github.com/kubeflow/pipelines
+github,kubernetes-sigs/headlamp,descartado,muy grande (104511 líneas),104511,136,252,0,APACHE-2.0,https://github.com/kubernetes-sigs/headlamp
+github,kubevirt-ui/kubevirt-plugin,descartado,muy grande (188626 líneas),188626,29,132,0.29,MPL-2.0,https://github.com/kubevirt-ui/kubevirt-plugin
+github,labring/FastGPT,descartado,pocos tests de UI (6); muy grande (235860 líneas),235860,6,380,0.08,APACHE-2.0,https://github.com/labring/FastGPT
+github,langflow-ai/langflow,descartado,muy grande (180105 líneas),180105,486,963,0.08,MIT,https://github.com/langflow-ai/langflow
+github,langfuse/langfuse,descartado,muy grande (529347 líneas); 50 % commits con trazas IA,529347,11,357,0.5,MIT,https://github.com/langfuse/langfuse
+github,langgenius/dify,descartado,muy grande (444845 líneas),444845,1942,2284,0.03,APACHE-2.0,https://github.com/langgenius/dify
+github,lensapp/lens,descartado,sin React,,,,,MIT,https://github.com/lensapp/lens
+github,lightdash/lightdash,descartado,muy grande (482351 líneas),482351,515,799,0.2,MIT,https://github.com/lightdash/lightdash
+github,linkerd/linkerd2,aprobado,,11335,14,16,0,APACHE-2.0,https://github.com/linkerd/linkerd2
+github,lobehub/lobe-chat,descartado,muy grande (911746 líneas); sin lockfile; 36 % commits con trazas IA,911746,561,2475,0.36,APACHE-2.0,https://github.com/lobehub/lobe-chat
+github,mailpoet/mailpoet,descartado,sin vitest/jest; pocos tests de UI (0); muy grande (112034 líneas),112034,0,121,0.15,,https://github.com/mailpoet/mailpoet
+github,makeplane/plane,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy grande (172061 líneas),172061,0,0,0.09,AGPL-3.0,https://github.com/makeplane/plane
+github,marimo-team/marimo,descartado,muy grande (169951 líneas),169951,157,518,0.08,APACHE-2.0,https://github.com/marimo-team/marimo
+github,MarquezProject/marquez,descartado,pocos tests de UI (4); pocos tests (10); pocos casos de test (49),12884,4,10,0,APACHE-2.0,https://github.com/MarquezProject/marquez
+github,mastodon/mastodon,descartado,pocos tests de UI (6); muy grande (103826 líneas),103826,6,27,0,AGPL-3.0,https://github.com/mastodon/mastodon
+github,mattermost/mattermost,descartado,muy grande (421222 líneas); sin lockfile; 58 % commits con trazas IA,421222,1056,1373,0.58,APACHE-2.0,https://github.com/mattermost/mattermost
+github,medusajs/medusa,descartado,muy grande (162068 líneas),162068,203,221,0.01,MIT,https://github.com/medusajs/medusa
+github,mlflow/mlflow,descartado,muy grande (286234 líneas); 54 % commits con trazas IA,286234,594,734,0.54,APACHE-2.0,https://github.com/mlflow/mlflow
+github,mlrun/ui,descartado,muy grande (105420 líneas),105420,25,93,0,APACHE-2.0,https://github.com/mlrun/ui
+github,MobilityData/mobility-feed-api,descartado,sin React,,,,,APACHE-2.0,https://github.com/MobilityData/mobility-feed-api
+github,mozilla/experimenter,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (85 líneas),85,0,0,0,MPL-2.0,https://github.com/mozilla/experimenter
+github,mozilla/foundation.mozilla.org,descartado,"librería, no app",,,,,MPL-2.0,https://github.com/mozilla/foundation.mozilla.org
+github,mozilla/fxa,descartado,muy grande (121776 líneas),121776,284,493,0,MPL-2.0,https://github.com/mozilla/fxa
+github,nasa-gcn/gcn.nasa.gov,descartado,pocos tests de UI (2),22398,2,16,0,APACHE-2.0,https://github.com/nasa-gcn/gcn.nasa.gov
+github,Nerivec/zigbee2mqtt-windfront,descartado,pocos tests de UI (1); pocos tests (3); pocos casos de test (49),25254,1,3,0,GPL-3.0,https://github.com/Nerivec/zigbee2mqtt-windfront
+github,nextstrain/auspice,descartado,pocos tests de UI (0),37559,0,27,0,AGPL-3.0,https://github.com/nextstrain/auspice
+github,nhost/nhost,descartado,muy grande (161738 líneas),161738,171,367,0.01,MIT,https://github.com/nhost/nhost
+github,OHIF/Viewers,descartado,pocos tests de UI (0),42850,0,33,0.07,MIT,https://github.com/OHIF/Viewers
+github,open-metadata/OpenMetadata,descartado,muy grande (639822 líneas),639822,1424,1798,0.29,APACHE-2.0,https://github.com/open-metadata/OpenMetadata
+github,opencollective/opencollective-frontend,descartado,muy grande (242397 líneas),242397,38,74,0.07,MIT,https://github.com/opencollective/opencollective-frontend
+github,opendatahub-io/odh-dashboard,aprobado,,33829,103,131,0.16,APACHE-2.0,https://github.com/opendatahub-io/odh-dashboard
+github,OpenHands/OpenHands,descartado,muy grande (141808 líneas),141808,454,737,0.05,MIT,https://github.com/OpenHands/OpenHands
+github,openobserve/openobserve,descartado,React Native,,,,,AGPL-3.0,https://github.com/openobserve/openobserve
+github,openreplay/openreplay,descartado,pocos tests de UI (0); muy grande (154279 líneas),154279,0,26,0.01,AGPL-3.0,https://github.com/openreplay/openreplay
+github,opensearch-project/alerting-dashboards-plugin,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/alerting-dashboards-plugin
+github,opensearch-project/anomaly-detection-dashboards-plugin,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/anomaly-detection-dashboards-plugin
+github,opensearch-project/dashboards-observability,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/dashboards-observability
+github,opensearch-project/index-management-dashboards-plugin,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/index-management-dashboards-plugin
+github,openshift/assisted-installer-ui,descartado,sin React,,,,,APACHE-2.0,https://github.com/openshift/assisted-installer-ui
+github,opensrp/web,descartado,licencia no abierta,3578,31,40,0,NO-ABIERTA,https://github.com/opensrp/web
+github,opentripplanner/otp-react-redux,descartado,pocos tests de UI (1); pocos casos de test (72),41316,1,29,0,MIT,https://github.com/opentripplanner/otp-react-redux
+github,openzipkin/zipkin,aprobado,,9994,15,27,0,APACHE-2.0,https://github.com/openzipkin/zipkin
+github,osbuild/image-builder-frontend,aprobado,,41419,82,158,0.07,APACHE-2.0,https://github.com/osbuild/image-builder-frontend
+github,outline/outline,descartado,pocos tests de UI (1); muy grande (254681 líneas),254681,1,328,0.22,APACHE-2.0,https://github.com/outline/outline
+github,parca-dev/parca,descartado,sin vitest/jest; pocos tests de UI (3); pocos tests (6),22397,3,6,0.01,APACHE-2.0,https://github.com/parca-dev/parca
+github,perses/perses,descartado,sin vitest/jest; sin lockfile,22337,10,17,0.02,APACHE-2.0,https://github.com/perses/perses
+github,pgadmin-org/pgadmin4,descartado,"librería, no app",,,,,POSTGRESQL,https://github.com/pgadmin-org/pgadmin4
+github,portainer/portainer,descartado,muy grande (184225 líneas),184225,238,300,0.17,OTRA,https://github.com/portainer/portainer
+github,prometheus/prometheus,aprobado,,7625,29,34,0.02,APACHE-2.0,https://github.com/prometheus/prometheus
+github,prymitive/karma,aprobado,,13242,97,103,0,APACHE-2.0,https://github.com/prymitive/karma
+github,pulp/pulp-ui,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),40342,0,0,0,APACHE-2.0,https://github.com/pulp/pulp-ui
+github,qdrant/qdrant-web-ui,aprobado,,26947,13,29,0.08,APACHE-2.0,https://github.com/qdrant/qdrant-web-ui
+github,quay/quay,descartado,47 % commits con trazas IA,72609,139,193,0.47,APACHE-2.0,https://github.com/quay/quay
+github,ray-project/ray,descartado,41 % commits con trazas IA,20605,32,37,0.41,APACHE-2.0,https://github.com/ray-project/ray
+github,readest/readest,descartado,muy grande (254877 líneas); 69 % commits con trazas IA,254877,328,1206,0.69,AGPL-3.0,https://github.com/readest/readest
+github,redhat-developer/rhdh,descartado,pocos tests de UI (4); pocos tests (5); pocos casos de test (31); muy pequeño (1095 líneas),1095,4,5,0.26,APACHE-2.0,https://github.com/redhat-developer/rhdh
+github,RedHatInsights/compliance-frontend,aprobado,,16215,62,72,0.03,APACHE-2.0,https://github.com/RedHatInsights/compliance-frontend
+github,RedHatInsights/insights-advisor-frontend,aprobado,,16537,35,56,0,APACHE-2.0,https://github.com/RedHatInsights/insights-advisor-frontend
+github,RedHatInsights/patchman-ui,descartado,"librería, no app",,,,,APACHE-2.0,https://github.com/RedHatInsights/patchman-ui
+github,RedHatInsights/vulnerability-ui,descartado,"librería, no app",,,,,APACHE-2.0,https://github.com/RedHatInsights/vulnerability-ui
+github,redis/RedisInsight,descartado,pocos tests de UI (6); pocos tests (9); licencia no abierta,3431,6,9,0.15,NO-ABIERTA,https://github.com/redis/RedisInsight
+github,redpanda-data/console,descartado,sin vitest/jest; muy grande (203479 líneas),203479,152,290,0.3,,https://github.com/redpanda-data/console
+github,safe-global/safe-wallet-web,descartado,muy grande (176676 líneas); 41 % commits con trazas IA,176676,812,1256,0.41,GPL-3.0,https://github.com/safe-global/safe-wallet-web
+github,saleor/saleor-dashboard,descartado,muy grande (328381 líneas); 39 % commits con trazas IA,328381,448,953,0.39,BSD-3-CLAUSE,https://github.com/saleor/saleor-dashboard
+github,scratchfoundation/scratch-gui,aprobado,,39788,26,65,0,AGPL-3.0,https://github.com/scratchfoundation/scratch-gui
+github,scratchfoundation/scratch-www,aprobado,,56867,30,83,0,AGPL-3.0,https://github.com/scratchfoundation/scratch-www
+github,sharetribe/web-template,descartado,muy grande (111750 líneas),111750,50,82,0,APACHE-2.0,https://github.com/sharetribe/web-template
+github,Shelf-nu/shelf.nu,descartado,muy grande (314120 líneas),314120,144,628,0,AGPL-3.0,https://github.com/Shelf-nu/shelf.nu
+github,shlinkio/shlink-web-client,aprobado,,2443,28,44,0,MIT,https://github.com/shlinkio/shlink-web-client
+github,SigNoz/signoz,descartado,muy grande (374754 líneas),374754,598,862,0.05,MIT,https://github.com/SigNoz/signoz
+github,standardnotes/app,descartado,"librería, no app",,,,,AGPL-3.0,https://github.com/standardnotes/app
+github,Stirling-Tools/Stirling-PDF,descartado,muy grande (380960 líneas),380960,298,775,0.01,MIT,https://github.com/Stirling-Tools/Stirling-PDF
+github,stolostron/console,descartado,muy grande (178614 líneas),178614,412,511,0.12,APACHE-2.0,https://github.com/stolostron/console
+github,strapi/strapi,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (2); muy pequeño (794 líneas),794,0,1,0.21,MIT,https://github.com/strapi/strapi
+github,streamlit/streamlit,descartado,sin lockfile; 33 % commits con trazas IA,14349,34,46,0.33,APACHE-2.0,https://github.com/streamlit/streamlit
+github,supabase/supabase,descartado,muy grande (458460 líneas),458460,298,711,0.17,APACHE-2.0,https://github.com/supabase/supabase
+github,taskcluster/taskcluster,aprobado,,42594,20,72,0,MPL-2.0,https://github.com/taskcluster/taskcluster
+github,tektoncd/dashboard,aprobado,,12388,29,43,0,APACHE-2.0,https://github.com/tektoncd/dashboard
+github,thanos-io/thanos,aprobado,,10154,29,32,0,APACHE-2.0,https://github.com/thanos-io/thanos
+github,theforeman/foreman,descartado,sin lockfile,46504,126,236,0.1,GPL-3.0,https://github.com/theforeman/foreman
+github,tolgee/tolgee-platform,descartado,pocos tests de UI (1),90380,1,21,0.02,APACHE-2.0,https://github.com/tolgee/tolgee-platform
+github,TryGhost/Ghost,descartado,muy grande (132378 líneas),132378,273,462,0.01,MIT,https://github.com/TryGhost/Ghost
+github,twentyhq/twenty,descartado,muy grande (472259 líneas),472259,481,1410,0,AGPL-3.0,https://github.com/twentyhq/twenty
+github,Uniswap/interface,descartado,muy grande (243222 líneas),243222,373,807,0,,https://github.com/Uniswap/interface
+github,Unleash/unleash,descartado,muy grande (231278 líneas),231278,257,373,0.11,AGPL-3.0,https://github.com/Unleash/unleash
+github,usebruno/bruno,descartado,"librería, no app",,,,,MIT,https://github.com/usebruno/bruno
+github,vitessio/vitess,descartado,37 % commits con trazas IA,15487,20,33,0.37,APACHE-2.0,https://github.com/vitessio/vitess
+github,vmware-tanzu/kubeapps,aprobado,,20590,94,121,0,APACHE-2.0,https://github.com/vmware-tanzu/kubeapps
+github,voxel51/fiftyone,descartado,sin vitest/jest; pocos tests de UI (4); pocos tests (8); sin lockfile,8069,4,8,0,APACHE-2.0,https://github.com/voxel51/fiftyone
+github,wazuh/wazuh-dashboard-plugins,descartado,sin React,,,,,LGPL-3.0,https://github.com/wazuh/wazuh-dashboard-plugins
+github,weaveworks/weave-gitops,aprobado,,18122,33,38,0,APACHE-2.0,https://github.com/weaveworks/weave-gitops
+github,wireapp/wire-webapp,descartado,muy grande (206526 líneas),206526,302,782,0,GPL-3.0,https://github.com/wireapp/wire-webapp
+github,Yoast/wordpress-seo,aprobado,,84678,33,246,0.02,GPL-3.0,https://github.com/Yoast/wordpress-seo
+github,zilliztech/attu,descartado,sin React,,,,,APACHE-2.0,https://github.com/zilliztech/attu

@@ -13,6 +13,7 @@
 #   .\scripts\mine\verificar-bases.ps1                 # piloto: las 5 primeras bases
 #   .\scripts\mine\verificar-bases.ps1 -Cantidad 46    # la selección completa
 #   .\scripts\mine\verificar-bases.ps1 -Limpiar        # borra el volumen (libera disco)
+#   .\scripts\mine\verificar-bases.ps1 -Cantidad 80 -Lista scripts/mine/repos-v0-ronda2.txt -Salida .artifacts/baselines-ronda2
 #
 # Si se interrumpe (apagón, ventana cerrada), vuelve a lanzar el mismo comando:
 # detiene lo que hubiera quedado corriendo y continúa donde se quedó (las suites
@@ -20,7 +21,10 @@
 
 param(
   [int]$Cantidad = 5,
-  [switch]$Limpiar
+  [switch]$Limpiar,
+  # Lista de bases (owner/repo@SHA) y carpeta de resultados; por defecto, la primera ronda de minería.
+  [string]$Lista = 'scripts/mine/repos-v0.txt',
+  [string]$Salida = '.artifacts/baselines'
 )
 
 $ErrorActionPreference = 'Continue'
@@ -28,8 +32,9 @@ $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location $root
 $imagen = 'node:24-bookworm'
 $volumen = 'evoguard-bases'
-New-Item -ItemType Directory -Force -Path (Join-Path $root '.artifacts\baselines') | Out-Null
-$log = Join-Path $root (".artifacts\baselines\verificar-" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.log')
+$salidaWin = Join-Path $root ($Salida -replace '/', '\')
+New-Item -ItemType Directory -Force -Path $salidaWin | Out-Null
+$log = Join-Path $salidaWin ("verificar-" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.log')
 Start-Transcript -Path $log -Append | Out-Null
 
 function Paso($texto) { Write-Host "`n=== $texto ($(Get-Date -Format 'HH:mm:ss')) ===" -ForegroundColor Cyan }
@@ -105,7 +110,7 @@ try {
     '-e', 'YARN_CACHE_FOLDER=/cache/yarn',
     '-e', 'NODE_OPTIONS=--max-old-space-size=3072'
   )
-  $minero = "node scripts/mine/mine-baselines.mjs --repos scripts/mine/repos-v0.txt --workdir /cache/repos --out .artifacts/baselines --concurrency 4 --workers 2 --test-timeout 20 --verify $Cantidad"
+  $minero = "node scripts/mine/mine-baselines.mjs --repos $Lista --workdir /cache/repos --out $Salida --concurrency 4 --workers 2 --test-timeout 20 --verify $Cantidad"
 
   Paso "Fase 1 de 2: descargar repos e instalar dependencias (con red) — $Cantidad bases"
   docker @comun $imagen bash -c "(corepack enable || npm i -g corepack && corepack enable) && $minero --verify-step install"
@@ -116,13 +121,13 @@ try {
   if ($LASTEXITCODE -ne 0) { throw "La fase de tests terminó con código $LASTEXITCODE" }
 
   Paso 'Resultado'
-  $csv = Join-Path $root '.artifacts\baselines\baselines.csv'
+  $csv = Join-Path $salidaWin 'baselines.csv'
   $filas = Import-Csv $csv | Where-Object { $_.baseline -ne '' }
   $filas | Select-Object rank, repo, baseline, baseline_tests, baseline_seconds | Format-Table -AutoSize
   $filas | Group-Object baseline | Select-Object @{n='estado';e={$_.Name}}, @{n='bases';e={$_.Count}} | Format-Table -AutoSize
   $verdes = @($filas | Where-Object { $_.baseline -like 'GREEN*' }).Count
   Write-Host "$verdes de $($filas.Count) bases en verde." -ForegroundColor Green
-  Write-Host "Detalle por repo: .artifacts\baselines\verify\   ·   Registro: $log"
+  Write-Host "Detalle por repo: $Salida/verify/   ·   Registro: $log"
 }
 catch {
   Write-Host "`nERROR: $($_.Exception.Message)" -ForegroundColor Red

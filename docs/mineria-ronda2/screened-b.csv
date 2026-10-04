@@ -1,0 +1,83 @@
+forge,repo,status,reason,loc,ui_test_files,unit_test_files,ai_share,license,url
+github,amundsen-io/amundsen,aprobado,,30371,114,168,0,APACHE-2.0,https://github.com/amundsen-io/amundsen
+github,apache/devlake,descartado,pocos tests de UI (2); pocos tests (6); pocos casos de test (43),27655,2,6,0.11,APACHE-2.0,https://github.com/apache/devlake
+github,apache/druid,aprobado,,86363,118,167,0.01,APACHE-2.0,https://github.com/apache/druid
+github,apache/gravitino,descartado,pocos tests de UI (0); pocos tests (6); pocos casos de test (51),33367,0,6,0.23,APACHE-2.0,https://github.com/apache/gravitino
+github,apache/ozone,descartado,pocos tests (11); pocos casos de test (59),22526,10,11,0.04,APACHE-2.0,https://github.com/apache/ozone
+github,apache/pinot,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),26651,0,0,0.03,APACHE-2.0,https://github.com/apache/pinot
+github,apache/zeppelin,descartado,"librería, no app",,,,,APACHE-2.0,https://github.com/apache/zeppelin
+github,Automattic/newspack-blocks,descartado,sin React,,,,,,https://github.com/Automattic/newspack-blocks
+github,binwiederhier/ntfy,descartado,pocos tests de UI (0); pocos tests (8),11065,0,8,0,APACHE-2.0,https://github.com/binwiederhier/ntfy
+github,chartdb/chartdb,descartado,pocos tests de UI (1),71340,1,108,0,AGPL-3.0,https://github.com/chartdb/chartdb
+github,chrisbenincasa/tunarr,descartado,pocos tests de UI (8),51809,8,25,0.27,OTRA,https://github.com/chrisbenincasa/tunarr
+github,coursetable/coursetable,descartado,pocos tests de UI (0); pocos tests (4); pocos casos de test (49),24718,0,4,0.04,MIT,https://github.com/coursetable/coursetable
+github,DIGI-UW/OpenELIS-Global-2,descartado,muy grande (243832 líneas),243832,338,417,0.15,MPL-2.0,https://github.com/DIGI-UW/OpenELIS-Global-2
+github,drawdb-io/drawdb,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),29330,0,0,0,AGPL-3.0,https://github.com/drawdb-io/drawdb
+github,gotify/server,descartado,pocos tests de UI (0); pocos tests (12),4757,0,12,0,MIT,https://github.com/gotify/server
+github,grafana/athena-datasource,descartado,pocos tests de UI (5); pocos tests (13); pocos casos de test (39); muy pequeño (1280 líneas),1280,5,13,0.01,APACHE-2.0,https://github.com/grafana/athena-datasource
+github,grafana/grafana-csv-datasource,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (8); muy pequeño (1341 líneas),1341,0,1,0,APACHE-2.0,https://github.com/grafana/grafana-csv-datasource
+github,grafana/grafana-github-datasource,descartado,pocos tests de UI (5); pocos tests (10); pocos casos de test (25),2591,5,10,0.03,APACHE-2.0,https://github.com/grafana/grafana-github-datasource
+github,grafana/grafana-llm-app,descartado,sin vitest/jest; pocos tests de UI (3); pocos tests (7); pocos casos de test (16),3705,3,7,0.06,APACHE-2.0,https://github.com/grafana/grafana-llm-app
+github,grafana/grafana-polystat-panel,descartado,pocos tests de UI (6),8915,6,26,0,APACHE-2.0,https://github.com/grafana/grafana-polystat-panel
+github,grafana/grafana-zabbix,descartado,pocos tests de UI (7),17922,7,26,0.03,APACHE-2.0,https://github.com/grafana/grafana-zabbix
+github,grafana/profiles-drilldown,aprobado,,38039,16,64,0.04,AGPL-3.0,https://github.com/grafana/profiles-drilldown
+github,grafana/traces-drilldown,aprobado,,17383,24,51,0.02,AGPL-3.0,https://github.com/grafana/traces-drilldown
+github,harness/harness,descartado,muy grande (140016 líneas),140016,72,87,0,APACHE-2.0,https://github.com/harness/harness
+github,jellyfin/jellyfin-web,descartado,pocos tests de UI (0); pocos tests (11); muy grande (109815 líneas),109815,0,11,0,LGPL-3.0,https://github.com/jellyfin/jellyfin-web
+github,jorenn92/Maintainerr,aprobado,,35598,57,67,0,MIT,https://github.com/jorenn92/Maintainerr
+github,karmada-io/dashboard,descartado,pocos tests de UI (0); pocos tests (2); pocos casos de test (6); sin lockfile,26710,0,2,0,APACHE-2.0,https://github.com/karmada-io/dashboard
+github,keycloak/keycloak,descartado,pocos tests de UI (2); sin lockfile,81422,2,152,0.07,APACHE-2.0,https://github.com/keycloak/keycloak
+github,Kong/kong-manager,descartado,sin React,,,,,APACHE-2.0,https://github.com/Kong/kong-manager
+github,konveyor/tackle2-ui,aprobado,,81340,36,49,0.03,APACHE-2.0,https://github.com/konveyor/tackle2-ui
+github,kubeflow/katib,descartado,sin React,,,,,APACHE-2.0,https://github.com/kubeflow/katib
+github,kubeflow/notebooks,descartado,sin React,,,,,APACHE-2.0,https://github.com/kubeflow/notebooks
+github,kubev2v/forklift-console-plugin,descartado,51 % commits con trazas IA,85357,149,395,0.51,APACHE-2.0,https://github.com/kubev2v/forklift-console-plugin
+github,Lidarr/Lidarr,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),99952,0,0,0,GPL-3.0,https://github.com/Lidarr/Lidarr
+github,Lissy93/web-check,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),12936,0,0,0,MIT,https://github.com/Lissy93/web-check
+github,Maintainerr/Maintainerr,aprobado,,35598,57,67,0,MIT,https://github.com/Maintainerr/Maintainerr
+github,mattermost/mattermost-plugin-ai,descartado,70 % commits con trazas IA,30872,53,72,0.7,APACHE-2.0,https://github.com/mattermost/mattermost-plugin-ai
+github,mattermost/mattermost-plugin-boards,aprobado,,37919,141,158,0.04,APACHE-2.0,https://github.com/mattermost/mattermost-plugin-boards
+github,mattermost/mattermost-plugin-calls,aprobado,,29232,51,62,0.01,APACHE-2.0,https://github.com/mattermost/mattermost-plugin-calls
+github,mattermost/mattermost-plugin-playbooks,aprobado,,63211,49,62,0.24,APACHE-2.0,https://github.com/mattermost/mattermost-plugin-playbooks
+github,metabrainz/bookbrainz-site,descartado,sin vitest/jest; pocos tests de UI (9),52465,9,77,0,LGPL-3.0,https://github.com/metabrainz/bookbrainz-site
+github,metabrainz/listenbrainz-server,aprobado,,63491,61,64,0,LGPL-3.0,https://github.com/metabrainz/listenbrainz-server
+github,netobserv/network-observability-console-plugin,aprobado,,50156,51,86,0.05,APACHE-2.0,https://github.com/netobserv/network-observability-console-plugin
+github,ohcnetwork/care_fe,descartado,sin vitest/jest; pocos tests de UI (0); muy grande (224552 líneas),224552,0,132,0.14,MIT,https://github.com/ohcnetwork/care_fe
+github,opendatahub-io/mod-arch-library,descartado,pocos tests de UI (2); pocos tests (4); pocos casos de test (15); muy pequeño (1525 líneas),1525,2,4,0.06,APACHE-2.0,https://github.com/opendatahub-io/mod-arch-library
+github,openfoodfacts/openfoodfacts-explorer,descartado,sin React,,,,,AGPL-3.0,https://github.com/openfoodfacts/openfoodfacts-explorer
+github,openshift/console-plugin-template,descartado,pocos tests de UI (1); pocos tests (2); pocos casos de test (3); muy pequeño (1047 líneas),1047,1,2,0,APACHE-2.0,https://github.com/openshift/console-plugin-template
+github,openshift/distributed-tracing-console-plugin,descartado,pocos tests de UI (0); pocos tests (3); pocos casos de test (3),3632,0,3,0,APACHE-2.0,https://github.com/openshift/distributed-tracing-console-plugin
+github,openshift/lightspeed-console,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (9),5189,0,9,0,APACHE-2.0,https://github.com/openshift/lightspeed-console
+github,openshift/logging-view-plugin,descartado,pocos tests de UI (0); pocos tests (14),10606,0,14,0,APACHE-2.0,https://github.com/openshift/logging-view-plugin
+github,openshift/monitoring-plugin,descartado,pocos tests de UI (6),29720,6,31,0,APACHE-2.0,https://github.com/openshift/monitoring-plugin
+github,openshift/networking-console-plugin,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),26581,0,0,0,APACHE-2.0,https://github.com/openshift/networking-console-plugin
+github,openshift/troubleshooting-panel-console-plugin,descartado,pocos tests de UI (1); pocos tests (11),6914,1,11,0,APACHE-2.0,https://github.com/openshift/troubleshooting-panel-console-plugin
+github,openstax/tutor-js,descartado,inactivo desde 2024-03-11,79801,96,303,0,AGPL-3.0,https://github.com/openstax/tutor-js
+github,outerbase/studio,descartado,pocos tests de UI (0); pocos tests (9); pocos casos de test (75),48956,0,9,0,AGPL-3.0,https://github.com/outerbase/studio
+github,pixie-io/pixie,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0),49772,0,0,0,APACHE-2.0,https://github.com/pixie-io/pixie
+github,pomerium/pomerium,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (1); pocos casos de test (6),3415,0,1,0.03,APACHE-2.0,https://github.com/pomerium/pomerium
+github,project-koku/koku-ui,aprobado,,86176,229,395,0.05,APACHE-2.0,https://github.com/project-koku/koku-ui
+github,Prowlarr/Prowlarr,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),51969,0,0,0,GPL-3.0,https://github.com/Prowlarr/Prowlarr
+github,Radarr/Radarr,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),97282,0,0,0,GPL-3.0,https://github.com/Radarr/Radarr
+github,RedHatInsights/edge-frontend,aprobado,,15331,20,40,0,APACHE-2.0,https://github.com/RedHatInsights/edge-frontend
+github,RedHatInsights/insights-inventory-frontend,aprobado,,39375,147,211,0.02,APACHE-2.0,https://github.com/RedHatInsights/insights-inventory-frontend
+github,RedHatInsights/insights-rbac-ui,descartado,pocos tests de UI (8); pocos tests (14); pocos casos de test (63),49263,8,14,0.11,APACHE-2.0,https://github.com/RedHatInsights/insights-rbac-ui
+github,RedHatInsights/insights-remediations-frontend,aprobado,,13474,54,75,0,APACHE-2.0,https://github.com/RedHatInsights/insights-remediations-frontend
+github,RedHatInsights/landing-page-frontend,descartado,pocos tests de UI (6); pocos tests (6); pocos casos de test (9); muy pequeño (1743 líneas),1743,6,6,0.02,APACHE-2.0,https://github.com/RedHatInsights/landing-page-frontend
+github,RedHatInsights/learning-resources,aprobado,,15686,10,17,0.06,APACHE-2.0,https://github.com/RedHatInsights/learning-resources
+github,RedHatInsights/malware-detection-frontend,descartado,pocos tests de UI (6); pocos tests (11); pocos casos de test (36),9376,6,11,0,APACHE-2.0,https://github.com/RedHatInsights/malware-detection-frontend
+github,RedHatInsights/notifications-frontend,aprobado,,25764,34,52,0.07,APACHE-2.0,https://github.com/RedHatInsights/notifications-frontend
+github,RedHatInsights/ocp-advisor-frontend,descartado,pocos tests de UI (6); pocos tests (9); pocos casos de test (63),9382,6,9,0.02,APACHE-2.0,https://github.com/RedHatInsights/ocp-advisor-frontend
+github,RedHatInsights/policies-ui-frontend,aprobado,,8742,35,58,0,APACHE-2.0,https://github.com/RedHatInsights/policies-ui-frontend
+github,RedHatInsights/ros-frontend,descartado,pocos tests de UI (6); pocos tests (8); pocos casos de test (27),4774,6,8,0,APACHE-2.0,https://github.com/RedHatInsights/ros-frontend
+github,RedHatInsights/sed-frontend,descartado,pocos tests de UI (9); pocos tests (12); pocos casos de test (27); muy pequeño (1050 líneas),1050,9,12,0,APACHE-2.0,https://github.com/RedHatInsights/sed-frontend
+github,RedHatInsights/tasks-frontend,aprobado,,7930,42,52,0,APACHE-2.0,https://github.com/RedHatInsights/tasks-frontend
+github,seerr-team/seerr,descartado,sin vitest/jest; pocos tests de UI (0),91669,0,24,0,MIT,https://github.com/seerr-team/seerr
+github,Sefaria/Sefaria-Project,descartado,pocos tests de UI (0); muy grande (132513 líneas),132513,0,117,0.29,GPL-3.0,https://github.com/Sefaria/Sefaria-Project
+github,Sonarr/Sonarr,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),85598,0,0,0,GPL-3.0,https://github.com/Sonarr/Sonarr
+github,swagger-api/swagger-editor,descartado,pocos tests de UI (2); pocos tests (4); pocos casos de test (2),17825,2,4,0,,https://github.com/swagger-api/swagger-editor
+github,theforeman/foreman_remote_execution,descartado,sin React,,,,,GPL-3.0,https://github.com/theforeman/foreman_remote_execution
+github,treeverse/lakeFS,descartado,pocos tests de UI (3); pocos tests (7); pocos casos de test (72),16409,3,7,0.11,APACHE-2.0,https://github.com/treeverse/lakeFS
+github,Velocidex/velociraptor,descartado,pocos tests de UI (1); pocos tests (1); pocos casos de test (7),43159,1,1,0.01,AGPL-3.0,https://github.com/Velocidex/velociraptor
+github,wealthfolio/wealthfolio,descartado,muy grande (217896 líneas),217896,187,331,0.03,AGPL-3.0,https://github.com/wealthfolio/wealthfolio
+github,WordPress/openverse,descartado,sin React,,,,,MIT,https://github.com/WordPress/openverse

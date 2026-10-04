@@ -1,0 +1,58 @@
+# Bases V0 de la ronda 2 de minería (2026-10-04), en orden de puntuación. Formato owner/repo@SHA.
+# Tope de 3 repositorios por organización contando el piloto S001–S020 y las 10 bases verdes sin usar de la ronda 1.
+prymitive/karma@4d5a17a594d0afe4d280895fba75b1cc1365a026   # 91.8 ui jest 13242 líneas; 
+Automattic/sensei@f93ac7c7aa4d29ef238d77283998365a3881a88a   # 86.6 . jest 33831 líneas; 
+amundsen-io/amundsen@469c1b778340655d1967d1589355acb4f35c65a7   # 84.9 frontend/amundsen_application/static jest 30371 líneas; 
+RedHatInsights/insights-inventory-frontend@3a2b1bfa57bb425e1d0979484f908d8dcd600240   # 84.7 . jest 39375 líneas; 
+RedHatInsights/policies-ui-frontend@2d46860fbcc360a3832ded1d6e8b679d2cbe129b   # 84.3 . jest 8742 líneas; 
+codecov/gazebo@b8fbfc00f256aea81bf1a5571c25f947aa88369d   # 83.3 . vitest 83457 líneas; 
+vmware-tanzu/kubeapps@b70ead2c476805bf73bb76190bf406f9e453e6ff   # 82.1 dashboard jest 20590 líneas; 
+RedHatInsights/insights-remediations-frontend@6ca54723b28ee6210d4fb0f897502e996050dddb   # 82.1 . jest 13474 líneas; 
+eclipse-che/che-dashboard@34ebe56a0a0a63cc9a7b99565e8c29716a611fa0   # 80.1 packages/dashboard-frontend jest 53751 líneas; 
+shlinkio/shlink-web-client@aa9e56aedcb779a435653c5fbe7f0ee10b228171   # 76 . vitest 2443 líneas; 
+element-hq/element-call@8835a6d75d36f9494dee63f5221cc45348225bae   # 75.9 . vitest 34846 líneas; licencia por revisar
+opendatahub-io/odh-dashboard@f71fcf426623181bb78079914be63c2233f881b6   # 75.7 packages/gen-ai/frontend jest 33829 líneas; monorepo (61 paquetes); IA 16 %
+kubeflow/pipelines@e3c93651a44fa718ab079010bb332318854e0491   # 72.6 frontend vitest 41098 líneas; monorepo (5 paquetes)
+grafana/synthetic-monitoring-app@001ab97525e87e98be280ad85835a45d80f86fe5   # 71.1 . jest 73823 líneas; IA 11 %
+tektoncd/dashboard@868ba5bbafb7630895e9ace82584b54d4b5bac91   # 70.9 . vitest 12388 líneas; monorepo (5 paquetes)
+openzipkin/zipkin@878ce2a1fad54ca941d17fdcf2e1d924b148eb1f   # 70 zipkin-lens vitest 9994 líneas; 
+ensdomains/ens-app-v3@89f8681d524e9f40511dadd016ee95a6abff346d   # 68.8 . vitest 62944 líneas; 
+thanos-io/thanos@1d2b2ae7d159573f85db609d59566aeaf8f0113f   # 68.6 pkg/ui/react-app jest 10154 líneas; 
+kedro-org/kedro-viz@8c175c518fae68b64c021db4ad3f085f993aa609   # 66.3 . jest 22925 líneas; 
+kubeflow/model-registry@56b05282dcd5494c39c65afd4c55a2fa28d1c5f3   # 66 clients/ui/frontend jest 39598 líneas; 
+grafana/traces-drilldown@47aba34060258811bed1564000e1fb4c9f2991f0   # 66 . jest 17383 líneas; 
+mattermost/mattermost-plugin-boards@c7b30d03c1b8544eb4481bb7ef528857bc29dc4a   # 63.5 webapp jest 37919 líneas; muchos snapshots
+weaveworks/weave-gitops@936e848c4e001355fccdfee61c0d54e4a9917183   # 63.4 . jest 18122 líneas; 
+osbuild/image-builder-frontend@9db6c9fed1821432024dd90494ca1c81260f70fe   # 62.8 . vitest 41419 líneas; 
+mattermost/mattermost-plugin-calls@6763ceb82dd9df19b340c41675f2ef1aff5519c3   # 61.2 webapp jest 29232 líneas; 
+prometheus/prometheus@961c9ba40923ca4d7adf4a7a9167e56d0406df83   # 61 web/ui/react-app jest 7625 líneas; monorepo (5 paquetes)
+Yoast/wordpress-seo@90911c5ef7379bc79fc5ec17cc82674f94e269bb   # 60.7 packages/js jest 84678 líneas; monorepo (26 paquetes)
+content-services/content-sources-frontend@db5445942e926e9f9a76d988e0870489d3992ee8   # 60.6 . jest 30450 líneas; deps de servicios: pg; IA 17 %
+qdrant/qdrant-web-ui@b2232842dad8cbd5471e709c1803fcdb9a615c22   # 59.2 . vitest 26947 líneas; 
+scratchfoundation/scratch-gui@dae2a97a5bb0cd8a7513fafd60f9e7488f2a89a4   # 58.5 . jest 39788 líneas; un solo autor
+metabrainz/listenbrainz-server@274281aee17dfe96d8278318d47483528dcc3c7f   # 58.5 . jest 63491 líneas; 
+apache/druid@1265b47c9a51252295a4aed42d95c459b00bf2a3   # 57.9 web-console jest 86363 líneas; 
+linkerd/linkerd2@f0cb1f2c8a80c0bd6a872070fc1b8dfd39c966a2   # 57.2 web/app jest 11335 líneas; 
+netobserv/network-observability-console-plugin@aba92a5381ef384e3fc65c27031473af20c106be   # 54.8 web jest 50156 líneas; 
+continuedev/continue@5522c6f44ca0ac3528b37244818fbfa39b5af470   # 53.2 gui vitest 37956 líneas; monorepo (23 paquetes); IA 14 %
+mattermost/mattermost-plugin-playbooks@88d4f4d7c4e3c6b64bd77961525d318eb8e70183   # 51 webapp jest 63211 líneas; IA 24 %
+apache/airflow@6f5d5d06b17751d61b9dea4f7ffca898875298e1   # 50.7 airflow-core/src/airflow/ui vitest 89202 líneas; monorepo (8 paquetes)
+project-koku/koku-ui@0207f98fd6fa084360e32cdca7c7fc1fc21c4ee7   # 50.5 apps/koku-ui-hccm jest 86176 líneas; monorepo (8 paquetes)
+scratchfoundation/scratch-www@86992c510bd4ed879fbe24c7cd8277a04447c8ef   # 50.1 . jest 56867 líneas; 
+konveyor/tackle2-ui@9b21407e798765e2f97330dcee3d11960593b94c   # 43.1 client jest 81340 líneas; monorepo (5 paquetes)
+broadinstitute/gnomad-browser@528b4998486eb17a9ed449c7a37191a35f1bb2cf   # 39.1 browser jest 49702 líneas; monorepo (5 paquetes); muchos snapshots
+homarr-labs/homarr@473b6cb7c46a147886c41a9b1fabe36d10b6b854   # 37.1 apps/nextjs vitest 60717 líneas; monorepo (43 paquetes); deps de servicios: drizzle-orm better-sqlite3
+taskcluster/taskcluster@b081d6705c0d8c7a2fe401ed3e23f14fbf841706   # 29.6 ui vitest 42594 líneas; monorepo (29 paquetes); deps de servicios: pg
+Maintainerr/Maintainerr@7475b3bd9db350383cb757cd4df7bec59f8c8b8c   # 65.1 apps/ui vitest 35598 líneas; Node 26
+# Reservas: superan el tope de 3 por organización; se verifican por si fallan bases de arriba.
+RedHatInsights/insights-advisor-frontend@c0aa3d8af5f6f70cd67361d80cbcfed0ef9033b7   # 73.3 . jest 16537 líneas; 
+RedHatInsights/compliance-frontend@387b17ac2a896d0e55e0a49942a1638a6a5e78de   # 65.8 . jest 16215 líneas; 
+RedHatInsights/tasks-frontend@13d5966fc9534ae13270909f46d5b3ada34e08da   # 75.8 . jest 7930 líneas; 
+RedHatInsights/notifications-frontend@a7876895d5d5f027110bc9711e34430f744f133a   # 69.7 . jest 25764 líneas; 
+RedHatInsights/learning-resources@943874e54c584e76a3da8a317ad060550e2a8d55   # 65.9 . jest 15686 líneas; 
+RedHatInsights/edge-frontend@57dbc8f050d70f37a31903f14e53691d5f6670d2   # 56.2 . jest 15331 líneas; 
+grafana/metrics-drilldown@6784dff4afaaf184ea43187e2710c8f54c1af86f   # 64.6 . jest 27656 líneas; 
+grafana/profiles-drilldown@8f87197db0c16a58cb8b300a8e7907d9a39ae8eb   # 56.7 . jest 38039 líneas; 
+grafana/logs-drilldown@c2940aab9cdee24c7e7a8892f153b2c6880f7e77   # 54 . jest 45733 líneas; 
+grafana/grafana-infinity-datasource@4ef0752339f826d766f9bdc490dcb6b60c765886   # 61.4 . jest 10037 líneas; 
+grafana/oncall@af0fbd40558c9a63bcf438589894c440fc434a54   # 45 grafana-plugin jest 55434 líneas; 
