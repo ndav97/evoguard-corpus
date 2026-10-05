@@ -22,15 +22,15 @@ try {
   Start-Sleep 10
   Asegurar-Docker
 
+  # Sin `docker system df` ni `du`: con cientos de miles de archivos en node_modules tardan muchísimo.
   Paso 'Espacio antes'
-  docker system df
   $descartadas = Get-Content (Join-Path $root 'scripts\mine\bases-descartadas.txt') | Where-Object { $_ -and -not $_.StartsWith('#') }
   $lista = ($descartadas | ForEach-Object { "/cache/repos/_baselines/$_" }) -join ' '
-  $script = "df -h /cache; echo; du -sh /cache/* /cache/repos/_baselines 2>/dev/null | sort -h | tail -12; " +
+  $script = "df -h /cache; echo; " +
             "rm -rf /cache/npm /cache/yarn /cache/pnpm /cache/pnpm-store /cache/.pnpm-store /root/.cache 2>/dev/null; " +
             "for d in $lista; do if [ -d `$d ]; then echo borrando `$d; rm -rf `$d; fi; done; " +
             "cd /cache/repos/_baselines 2>/dev/null && for d in */; do git -C `$d worktree prune 2>/dev/null; done; echo; df -h /cache"
-  Paso 'Limpiando el volumen evoguard-bases'
+  Paso 'Limpiando el volumen evoguard-bases (puede tardar 10-30 minutos: son muchos archivos)'
   docker run --rm -v evoguard-bases:/cache node:24-bookworm bash -c $script
 
   Paso 'Limpiando caché de construcción e imágenes sin etiqueta'
@@ -39,7 +39,7 @@ try {
   docker container prune -f
 
   Paso 'Espacio después'
-  docker system df
+  docker run --rm -v evoguard-bases:/cache node:24-bookworm df -h /cache
   Write-Host "`nListo. Ahora vuelve a lanzar scripts\mine\verificar-bases-ronda3.cmd (continúa donde quedó)." -ForegroundColor Green
   Write-Host "Registro: $log"
 }
