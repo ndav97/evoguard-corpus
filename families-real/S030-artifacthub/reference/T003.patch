@@ -1,0 +1,39 @@
+diff --git a/src/layout/common/Pagination.tsx b/src/layout/common/Pagination.tsx
+index 6bc3c67..8b5fd12 100644
+--- a/src/layout/common/Pagination.tsx
++++ b/src/layout/common/Pagination.tsx
+@@ -13,6 +13,7 @@ interface Props {
+   active: number;
+   className?: string;
+   showFirstLast?: boolean;
++  siblingCount?: number;
+   onChange: (pageNumber: number) => void;
+ }
+ 
+@@ -25,8 +26,13 @@ interface ButtonProps {
+   onChange: (pageNumber: number) => void;
+ }
+ 
+-const getPaginationOptions = (currentPage: number, pageCount: number): (string | number)[] => {
+-  const delta = 1;
++const DEFAULT_SIBLING_COUNT = 1;
++
++const getPaginationOptions = (
++  currentPage: number,
++  pageCount: number,
++  delta: number = DEFAULT_SIBLING_COUNT
++): (string | number)[] => {
+   const range = [];
+   for (let i = Math.max(2, currentPage - delta); i <= Math.min(pageCount - 1, currentPage + delta); i++) {
+     range.push(i);
+@@ -78,7 +84,9 @@ const Pagination = (props: Props) => {
+ 
+   // Keep the active page within the available range (e.g. after removing items)
+   const currentPage = Math.min(Math.max(active, 1), totalPages);
+-  const visiblePages = getPaginationOptions(currentPage, totalPages);
++  const siblingCount =
++    isNumber(props.siblingCount) && props.siblingCount >= 0 ? Math.floor(props.siblingCount) : DEFAULT_SIBLING_COUNT;
++  const visiblePages = getPaginationOptions(currentPage, totalPages, siblingCount);
+ 
+   return (
+     <nav role="navigation" aria-label="pagination">

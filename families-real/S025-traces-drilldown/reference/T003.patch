@@ -1,0 +1,29 @@
+diff --git a/src/components/Explore/SavedSearches/SaveSearchModal.tsx b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+index 7a105af..ff78f64 100644
+--- a/src/components/Explore/SavedSearches/SaveSearchModal.tsx
++++ b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+@@ -89,6 +89,11 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+       </Box>
+       {state !== 'saved' ? (
+         <form onSubmit={handleSubmit}>
++          {state === 'error' && (
++            <Alert title={t('save-search-modal.error-title', 'Could not save the search')} severity="error">
++              <Trans i18nKey="save-search-modal.error-message">Please try again.</Trans>
++            </Alert>
++          )}
+           <Stack gap={1} direction="column" minWidth={0} flex={1}>
+             <Box flex={1} marginBottom={2}>
+               {existingSearch && (
+diff --git a/src/locales/en-US/grafana-exploretraces-app.json b/src/locales/en-US/grafana-exploretraces-app.json
+index ece2c91..19292a0 100644
+--- a/src/locales/en-US/grafana-exploretraces-app.json
++++ b/src/locales/en-US/grafana-exploretraces-app.json
+@@ -184,6 +184,8 @@
+     "cancel": "Cancel",
+     "close": "Close",
+     "duplicate-title": "This title is already in use",
++    "error-message": "Please try again.",
++    "error-title": "Could not save the search",
+     "existing-search-warning": "There is a previously saved search with the same query: {{title}}",
+     "field": {
+       "description": "Description",

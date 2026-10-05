@@ -1,0 +1,91 @@
+diff --git a/packages/components/src/components/LabelFilter/LabelFilter.jsx b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+index 0be0b11..f3b290b 100644
+--- a/packages/components/src/components/LabelFilter/LabelFilter.jsx
++++ b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+@@ -28,6 +28,7 @@ class LabelFilter extends Component {
+     currentFilterValue: '',
+     isValid: true,
+     filterMessage: null,
++    statusMessage: '',
+     url: '',
+     urlMessage: ''
+   };
+@@ -45,6 +46,7 @@ class LabelFilter extends Component {
+     if (!requestedFilters.length || !requestedFilters.every(isValidFilter)) {
+       this.setState({
+         isValid: false,
++        statusMessage: '',
+         filterMessage: intl.formatMessage({
+           id: 'dashboard.labelFilter.invalid',
+           defaultMessage:
+@@ -62,6 +64,7 @@ class LabelFilter extends Component {
+     if (requestedFilters.some(filter => filter.split(':')[1].length > 63)) {
+       this.setState({
+         isValid: false,
++        statusMessage: '',
+         filterMessage: intl.formatMessage({
+           id: 'dashboard.labelFilter.invalidLength',
+           defaultMessage:
+@@ -87,6 +90,7 @@ class LabelFilter extends Component {
+     if (!newFilters.length) {
+       this.setState({
+         isValid: false,
++        statusMessage: '',
+         filterMessage: intl.formatMessage({
+           id: 'dashboard.labelFilter.duplicate',
+           defaultMessage: 'No duplicate filters allowed'
+@@ -98,6 +102,27 @@ class LabelFilter extends Component {
+     }
+     this.props.handleAddFilter(filters.concat(newFilters));
+     this.resetCurrentFilterValue();
++
++    const skipped = currentFiltersArray.length - newFilters.length;
++    this.setState({
++      statusMessage: skipped
++        ? intl.formatMessage(
++            {
++              id: 'dashboard.labelFilter.addedWithSkipped',
++              defaultMessage:
++                '{added, plural, one {Added # label filter} other {Added # label filters}}, {skipped} already applied'
++            },
++            { added: newFilters.length, skipped }
++          )
++        : intl.formatMessage(
++            {
++              id: 'dashboard.labelFilter.added',
++              defaultMessage:
++                '{added, plural, one {Added # label filter} other {Added # label filters}}'
++            },
++            { added: newFilters.length }
++          )
++    });
+   };
+ 
+   handleChange = event => {
+@@ -134,8 +159,14 @@ class LabelFilter extends Component {
+   render() {
+     const { filters, intl } = this.props;
+ 
+-    const { currentFilterValue, filterMessage, isValid, url, urlMessage } =
+-      this.state;
++    const {
++      currentFilterValue,
++      filterMessage,
++      isValid,
++      statusMessage,
++      url,
++      urlMessage
++    } = this.state;
+ 
+     const searchDescription = intl.formatMessage({
+       id: 'dashboard.labelFilter.searchPlaceholder',
+@@ -155,6 +186,9 @@ class LabelFilter extends Component {
+             {url && <Link href={url}>{urlMessage}</Link>}
+           </ActionableNotification>
+         )}
++        <div className="tkn--visually-hidden" role="status">
++          {statusMessage}
++        </div>
+         <Form onSubmit={this.handleAddFilter} autoComplete="on">
+           <Search
+             placeholder={searchDescription}

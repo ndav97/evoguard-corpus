@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
-import { listRealFamilies, loadRealFamily, validateRealFamily, validateAllReal, makeRealPacket, scopeViolation, REAL_VERSIONS } from '../runner/real/families.mjs';
+import { listRealFamilies, loadRealFamily, validateRealFamily, validateAllReal, makeRealPacket, scopeViolation, realVersions } from '../runner/real/families.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const families = listRealFamilies(root);
@@ -23,15 +23,19 @@ test('estrato semi-real: familias S001–S0nn consecutivas; S001–S010 calibrad
   }
 });
 
-test('rotación por fila en V1–V3: reparto equilibrado entre los cinco proveedores, sin repetir dentro de una familia', () => {
+test('rotación por fila (V1–V3 en el piloto, V1–V5 en el corpus definitivo): reparto equilibrado, sin repetir dentro de una familia', () => {
   const counts = {};
+  let total = 0;
   for (const { id } of families) {
-    const plan = Object.values(loadRealFamily(root, id).manifest.generation.plan);
-    assert.equal(new Set(plan).size, 3, id);
+    const manifest = loadRealFamily(root, id).manifest;
+    const plan = Object.values(manifest.generation.plan);
+    assert.equal(plan.length, manifest.turns.length, id);
+    assert.equal(new Set(plan).size, plan.length, id);
     for (const provider of plan) counts[provider] = (counts[provider] ?? 0) + 1;
+    total += plan.length;
   }
-  const each = families.length * 3 / 5; // 10 familias → 6 por proveedor; 20 → 12
-  if (families.length % 5 === 0) assert.deepEqual(counts, { openai: each, anthropic: each, google: each, local_a: each, local_b: each });
+  // Con bloques de 5 familias consecutivas del mismo número de turnos, cada proveedor recibe total/5 versiones.
+  if (families.length % 5 === 0) assert.deepEqual(counts, Object.fromEntries(['openai', 'anthropic', 'google', 'local_a', 'local_b'].map(p => [p, total / 5])));
 });
 
 test('la validación detecta manifiestos incoherentes', () => {
@@ -52,7 +56,7 @@ test('control de alcance: dependencias, configuración y rutas peligrosas', () =
 for (const { id } of families) {
   test(`${id}: el paquete de cada turno solo contiene la petición y datos operativos`, () => {
     const data = loadRealFamily(root, id);
-    for (const [index, version] of REAL_VERSIONS.entries()) {
+    for (const [index, version] of realVersions(data.manifest).entries()) {
       const packet = makeRealPacket(data, version);
       assert.deepEqual(Object.keys(packet), ['family_id', 'stratum', 'version', 'prompt', 'request', 'repository', 'checks']);
       assert.equal(packet.request, data.turns[index].requestText);
@@ -67,6 +71,7 @@ for (const { id } of families) {
       }
       for (const later of data.turns.slice(index + 1)) assert.ok(!text.includes(later.requestText.slice(0, 80)), `${id} ${version}: petición futura`);
     }
-    assert.throws(() => makeRealPacket(data, 'V0'), /V1–V3/);
+    assert.throws(() => makeRealPacket(data, 'V0'), /versión no admitida/);
+    assert.throws(() => makeRealPacket(data, `V${data.turns.length + 1}`), /versión no admitida/);
   });
 }

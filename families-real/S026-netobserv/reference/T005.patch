@@ -1,0 +1,60 @@
+diff --git a/src/components/health/health-typeahead-filter.tsx b/src/components/health/health-typeahead-filter.tsx
+index ad76ca9..78e4052 100644
+--- a/src/components/health/health-typeahead-filter.tsx
++++ b/src/components/health/health-typeahead-filter.tsx
+@@ -24,6 +24,12 @@ export interface HealthTypeaheadFilterProps {
+ // (the user can always type a pattern and press Enter without picking one).
+ const MAX_SUGGESTIONS = 10;
+ 
++const splitValues = (raw: string) =>
++  raw
++    .split(',')
++    .map(v => v.trim())
++    .filter(v => v.length > 0);
++
+ // Free-text namespace filter for the Network Health page, mirroring the Network Traffic UX: the user
+ // types a name or a pattern and presses Enter to add it as a filter value; matching namespaces are
+ // suggested below the input but picking one is optional (it just fills an exact value). No checkbox
+@@ -46,12 +52,14 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+   const query = inputValue.trim();
+   // Reuse the exact validation the Network Traffic namespace filter applies (label.ts): allows
+   // partial names, `*` wildcards and "quoted" exact matches, rejects anything else.
+-  const isValid = !query || validateK8SName(query);
++  // Several values can be entered at once, separated by commas.
++  const isList = query.includes(',');
++  const isValid = !query || splitValues(query).every(validateK8SName);
+   const isDuplicate = !!query && selected.includes(query);
+ 
+   // Suggestions are the known namespaces matching what's typed, minus the ones already added.
+   const suggestions = React.useMemo(() => {
+-    if (!query || !isValid) {
++    if (!query || !isValid || isList) {
+       return [];
+     }
+     const matching = options.filter(
+@@ -64,19 +72,20 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+     const prefix = query.toLowerCase();
+     const startsWith = matching.filter(opt => opt.value.toLowerCase().startsWith(prefix));
+     return [...startsWith, ...matching.filter(opt => !startsWith.includes(opt))];
+-  }, [options, selected, inputValue, query, isValid]);
++  }, [options, selected, inputValue, query, isValid, isList]);
+   const shownSuggestions = suggestions.slice(0, maxSuggestions);
+ 
+   const addValue = React.useCallback(
+     (raw: string) => {
+-      const value = raw.trim();
+-      if (!value || !validateK8SName(value)) {
++      const values = splitValues(raw);
++      if (!values.length || !values.every(validateK8SName)) {
+         return;
+       }
+-      if (selected.includes(value)) {
++      const added = values.filter((value, i) => !selected.includes(value) && values.indexOf(value) === i);
++      if (!added.length) {
+         return;
+       }
+-      onChange([...selected, value]);
++      onChange([...selected, ...added]);
+       setInputValue('');
+       setOpen(false);
+       inputRef.current?.focus();

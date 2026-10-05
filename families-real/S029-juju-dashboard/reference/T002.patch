@@ -1,0 +1,25 @@
+diff --git a/src/components/ChipGroup/ChipGroup.tsx b/src/components/ChipGroup/ChipGroup.tsx
+index 9a8f4bd..fc8204b 100644
+--- a/src/components/ChipGroup/ChipGroup.tsx
++++ b/src/components/ChipGroup/ChipGroup.tsx
+@@ -43,6 +43,11 @@ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+   };
+ 
+   const numberOfChips = getSumTotal(chips);
++  // Show the largest counts first. The sort is stable, so chips with the same
++  // count keep their original order.
++  const sortedChips = Object.entries(chips ?? {}).sort(
++    ([, countA], [, countB]) => countB - countA,
++  );
+   const labelType = getLabelType(descriptor, numberOfChips);
+ 
+   return (
+@@ -54,7 +59,7 @@ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+               {`${numberOfChips} ${labelType}`}
+             </strong>
+           )}
+-          {Object.entries(chips ?? {}).map(([label, count]) => {
++          {sortedChips.map(([label, count]) => {
+             return (
+               count > 0 && (
+                 <div className="p-chip" key={label}>

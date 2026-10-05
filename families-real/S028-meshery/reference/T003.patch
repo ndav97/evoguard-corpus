@@ -1,0 +1,57 @@
+diff --git a/utils/versionSort.ts b/utils/versionSort.ts
+index 374902acef3..cfe54f12a99 100644
+--- a/utils/versionSort.ts
++++ b/utils/versionSort.ts
+@@ -4,32 +4,37 @@ import { WILDCARD_V } from './hooks/useMeshModelComponents';
+ /**
+  * returns the API Version that should be used and is most stable
+  * Priority Order v1 > v1beta > v1alpha
++ * Within the same level, higher numbers win (v2 > v1, v1beta10 > v1beta2).
++ * A group prefix ("apps/v1") is ignored for the comparison but kept in the result.
+  *
+  * @param {Array.<String>} versionList
+  */
+ export default function getMostRecentVersion(versionList) {
+   if (!versionList) return;
+ 
+-  const stableList = [];
+-  const alphaList = [];
+-  const betaList = [];
++  const LEVELS = { alpha: 1, beta: 2, stable: 3 };
++  let best;
++  let bestKey;
+ 
+   versionList.forEach((apiVersion) => {
+-    const isStable = /^v[0-9]$/.test(apiVersion); // returns true if matches v1-v9
+-    const isAlpha = apiVersion.includes('alpha'); // returns true if matches alpha in string
+-    const isBeta = apiVersion.includes('beta'); // returns true if matches beta in string
+-
+-    isStable && stableList.push(apiVersion);
+-    isAlpha && alphaList.push(apiVersion);
+-    isBeta && betaList.push(apiVersion);
++    const version = String(apiVersion).split('/').pop();
++    const match = /^v(\d+)(?:(alpha|beta)(\d+))?$/.exec(version);
++    if (!match) return;
++
++    const key = [LEVELS[match[2] || 'stable'], Number(match[1]), Number(match[3] || 0)];
++    const isGreater =
++      !bestKey ||
++      key[0] - bestKey[0] > 0 ||
++      (key[0] === bestKey[0] && key[1] - bestKey[1] > 0) ||
++      (key[0] === bestKey[0] && key[1] === bestKey[1] && key[2] - bestKey[2] > 0);
++    if (isGreater) {
++      best = apiVersion;
++      bestKey = key;
++    }
+   });
+ 
+-  stableList.sort().reverse();
+-  alphaList.sort().reverse();
+-  betaList.sort().reverse();
+-
+   // priority order: stable > beta > alpha
+-  return stableList?.[0] || betaList?.[0] || alphaList?.[0] || versionList?.[0];
++  return best || versionList?.[0];
+ }
+ 
+ /**

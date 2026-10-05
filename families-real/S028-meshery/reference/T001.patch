@@ -1,0 +1,27 @@
+diff --git a/utils/versionSort.ts b/utils/versionSort.ts
+index 1039dd85b4c..8af0dd27361 100644
+--- a/utils/versionSort.ts
++++ b/utils/versionSort.ts
+@@ -52,9 +52,10 @@ export function versionSortComparatorFn(versionA, versionB) {
+   const verA = versionA.split('.');
+   const verB = versionB.split('.');
+ 
+-  for (let i = 0; i < verA.length && i < verB.length; i++) {
+-    let vA = verA[i];
+-    let vB = verB[i];
++  // missing segments count as 0, so "1.2" and "1.2.0" are the same version
++  for (let i = 0; i < verA.length || i < verB.length; i++) {
++    let vA = verA[i] ?? '0';
++    let vB = verB[i] ?? '0';
+     // index 0 is the start of the version, remove v if present for proper sorting
+     if (i == 0) {
+       vA = removeVFromVersion(vA);
+@@ -66,6 +67,8 @@ export function versionSortComparatorFn(versionA, versionB) {
+     }
+     return vA - vB;
+   }
++
++  return 0;
+ }
+ 
+ function removeVFromVersion(version) {

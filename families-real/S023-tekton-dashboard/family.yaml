@@ -1,0 +1,67 @@
+# Familia semi-real S023 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-05 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S023
+slug: tekton-dashboard
+stratum: semi-real
+repo: tektoncd/dashboard
+url: https://github.com/tektoncd/dashboard
+license: APACHE-2.0
+domain: CI/CD en Kubernetes (Tekton)
+v0:
+  commit: 868ba5bbafb7630895e9ace82584b54d4b5bac91
+  date: 2026-10-02
+  verified: 2026-10-05 GREEN (613 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__tektoncd__dashboard          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: packages/components/src/components/LabelFilter/LabelFilter.jsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Validar cada filtro de etiquetas de la lista
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.jsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Saltar los filtros de etiquetas ya aplicados
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.jsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Avisos de error del filtro de etiquetas coherentes
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.jsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Anunciar los filtros de etiquetas añadidos
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.jsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Anunciar la eliminación de filtros de etiquetas
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.jsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-05
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_a
+    V2: local_b
+    V3: openai
+    V4: anthropic
+    V5: google
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

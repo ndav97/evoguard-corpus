@@ -1,0 +1,76 @@
+diff --git a/src/components/Explore/SavedSearches/SaveSearchModal.tsx b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+index 103c304..7a105af 100644
+--- a/src/components/Explore/SavedSearches/SaveSearchModal.tsx
++++ b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+@@ -28,9 +28,16 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+   const { filters } = getFiltersVariable(traceExploration).useState();
+   const query = useMemo(() => renderTraceQLLabelFilters(filters), [filters]);
+ 
+-  const { saveSearch } = useSavedSearches(dsUid);
++  const { saveSearch, searches } = useSavedSearches(dsUid);
+   const existingSearch = useCheckForExistingSearch(dsUid, query);
+   const trimmedTitle = title.trim();
++  const titleError = useMemo(() => {
++    const normalized = trimmedTitle.toLowerCase();
++    if (normalized && searches.some((search) => search.title.trim().toLowerCase() === normalized)) {
++      return t('save-search-modal.duplicate-title', 'This title is already in use');
++    }
++    return undefined;
++  }, [searches, trimmedTitle]);
+ 
+   useEffect(() => {
+     reportInteraction('grafana_traces_app_save_search_visited');
+@@ -39,7 +46,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+   const handleSubmit = useCallback(
+     async (e: FormEvent) => {
+       e.preventDefault();
+-      if (!trimmedTitle) {
++      if (!trimmedTitle || titleError) {
+         return;
+       }
+       const appEvents = getAppEvents();
+@@ -67,7 +74,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+         });
+       }
+     },
+-    [description, dsUid, onClose, query, saveSearch, trimmedTitle]
++    [description, dsUid, onClose, query, saveSearch, titleError, trimmedTitle]
+   );
+ 
+   return (
+@@ -91,7 +98,13 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+                   </Trans>
+                 </Alert>
+               )}
+-              <Field label={t('save-search-modal.field.title', 'Title')} noMargin htmlFor="save-search-title">
++              <Field
++                label={t('save-search-modal.field.title', 'Title')}
++                noMargin
++                htmlFor="save-search-title"
++                invalid={Boolean(titleError)}
++                error={titleError}
++              >
+                 <Input
+                   id="save-search-title"
+                   required
+@@ -120,7 +133,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+             <Button variant="secondary" fill="outline" onClick={onClose} disabled={state === 'saving'}>
+               <Trans i18nKey="save-search-modal.cancel">Cancel</Trans>
+             </Button>
+-            <Button type="submit" disabled={!trimmedTitle || state === 'saving'}>
++            <Button type="submit" disabled={!trimmedTitle || Boolean(titleError) || state === 'saving'}>
+               <Trans i18nKey="save-search-modal.save">Save</Trans>
+             </Button>
+           </Modal.ButtonRow>
+diff --git a/src/locales/en-US/grafana-exploretraces-app.json b/src/locales/en-US/grafana-exploretraces-app.json
+index 15c0a24..ece2c91 100644
+--- a/src/locales/en-US/grafana-exploretraces-app.json
++++ b/src/locales/en-US/grafana-exploretraces-app.json
+@@ -183,6 +183,7 @@
+   "save-search-modal": {
+     "cancel": "Cancel",
+     "close": "Close",
++    "duplicate-title": "This title is already in use",
+     "existing-search-warning": "There is a previously saved search with the same query: {{title}}",
+     "field": {
+       "description": "Description",

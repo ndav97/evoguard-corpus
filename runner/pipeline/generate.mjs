@@ -121,11 +121,13 @@ async function main() {
   if (/^S\d{3}$/.test(args[0] ?? '')) {
     // Estrato semi-real: V1–V3 sobre la imagen de la familia (runner/real/generate.mjs).
     const { generateReal } = await import('../real/generate.mjs');
-    const { loadRealFamily, REAL_VERSIONS } = await import('../real/families.mjs');
+    const { loadRealFamily, realVersions } = await import('../real/families.mjs');
     const [familyId, target, ...flags] = args;
-    if (!['all', ...REAL_VERSIONS].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error('Uso: npm run corpus:generate -- Sxxx V1|V2|V3|all [--no-commit]');
-    const references = loadRealFamily(root, familyId).manifest.generation.references;
-    for (const version of target === 'all' ? REAL_VERSIONS.filter(v => !references[v]) : [target]) {
+    const manifest = loadRealFamily(root, familyId).manifest;
+    const versions = realVersions(manifest);
+    if (!['all', ...versions].includes(target) || flags.some(f => f !== '--no-commit')) throw new Error(`Uso: npm run corpus:generate -- Sxxx ${versions.join('|')}|all [--no-commit]`);
+    const references = manifest.generation.references;
+    for (const version of target === 'all' ? versions.filter(v => !references[v]) : [target]) {
       const status = await generateReal(root, familyId, version, { commit: !flags.includes('--no-commit') });
       if (status !== 'ACCEPTED') { log(`Detenido en ${familyId} ${version} (${status}).`); process.exitCode = 2; return; }
     }

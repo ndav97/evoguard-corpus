@@ -1,0 +1,93 @@
+diff --git a/src/components/Explore/SavedSearches/SaveSearchModal.tsx b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+index 99e8812..af74069 100644
+--- a/src/components/Explore/SavedSearches/SaveSearchModal.tsx
++++ b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+@@ -12,6 +12,9 @@ import { getFiltersVariable, getTraceExplorationScene } from '../../../utils/uti
+ import { renderTraceQLLabelFilters } from '../../../utils/filters-renderer';
+ import { useCheckForExistingSearch, useSavedSearches } from './saveSearch';
+ 
++const MAX_TITLE_LENGTH = 60;
++const MAX_DESCRIPTION_LENGTH = 200;
++
+ interface Props {
+   dsUid: string;
+   onClose(): void;
+@@ -32,12 +35,20 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+   const existingSearch = useCheckForExistingSearch(dsUid, query);
+   const trimmedTitle = title.trim();
+   const titleError = useMemo(() => {
++    if (trimmedTitle.length > MAX_TITLE_LENGTH) {
++      return t('save-search-modal.title-too-long', 'Use 60 characters or fewer');
++    }
+     const normalized = trimmedTitle.toLowerCase();
+     if (normalized && searches.some((search) => search.title.trim().toLowerCase() === normalized)) {
+       return t('save-search-modal.duplicate-title', 'This title is already in use');
+     }
+     return undefined;
+   }, [searches, trimmedTitle]);
++  const descriptionError =
++    description.trim().length > MAX_DESCRIPTION_LENGTH
++      ? t('save-search-modal.description-too-long', 'Use 200 characters or fewer')
++      : undefined;
++  const hasErrors = Boolean(titleError || descriptionError);
+ 
+   useEffect(() => {
+     reportInteraction('grafana_traces_app_save_search_visited');
+@@ -48,7 +59,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+   const handleSubmit = useCallback(
+     async (e: FormEvent) => {
+       e.preventDefault();
+-      if (!trimmedTitle || titleError) {
++      if (!trimmedTitle || hasErrors) {
+         return;
+       }
+       const appEvents = getAppEvents();
+@@ -76,7 +87,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+         });
+       }
+     },
+-    [description, dsUid, onClose, query, saveSearch, titleError, trimmedTitle]
++    [description, dsUid, hasErrors, onClose, query, saveSearch, trimmedTitle]
+   );
+ 
+   return (
+@@ -129,6 +140,8 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+                 label={t('save-search-modal.field.description', 'Description')}
+                 noMargin
+                 htmlFor="save-search-description"
++                invalid={Boolean(descriptionError)}
++                error={descriptionError}
+               >
+                 <Input
+                   id="save-search-description"
+@@ -146,7 +159,7 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+             <Button variant="secondary" fill="outline" onClick={onClose} disabled={state === 'saving'}>
+               <Trans i18nKey="save-search-modal.cancel">Cancel</Trans>
+             </Button>
+-            <Button type="submit" disabled={!trimmedTitle || Boolean(titleError) || state === 'saving'}>
++            <Button type="submit" disabled={!trimmedTitle || hasErrors || state === 'saving'}>
+               {state === 'saving' ? (
+                 <Trans i18nKey="save-search-modal.saving">Saving...</Trans>
+               ) : (
+diff --git a/src/locales/en-US/grafana-exploretraces-app.json b/src/locales/en-US/grafana-exploretraces-app.json
+index ccac202..3ec2f8f 100644
+--- a/src/locales/en-US/grafana-exploretraces-app.json
++++ b/src/locales/en-US/grafana-exploretraces-app.json
+@@ -183,6 +183,7 @@
+   "save-search-modal": {
+     "cancel": "Cancel",
+     "close": "Close",
++    "description-too-long": "Use 200 characters or fewer",
+     "duplicate-title": "This title is already in use",
+     "error-message": "Please try again.",
+     "error-title": "Could not save the search",
+@@ -196,7 +197,8 @@
+     "saving": "Saving...",
+     "success-message": "Search successfully saved.",
+     "success-title": "Success",
+-    "title": "Save current search"
++    "title": "Save current search",
++    "title-too-long": "Use 60 characters or fewer"
+   },
+   "search": {
+     "placeholder": "Search"

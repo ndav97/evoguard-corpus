@@ -12,7 +12,7 @@ import { createProviderPool } from '../providers/adapter.mjs';
 import { credentialsFromEnv } from '../providers/connection.mjs';
 import { withRetries } from '../providers/retry.mjs';
 import { createTaskStore, saveReference } from '../pipeline/store.mjs';
-import { loadRealFamily, makeRealPacket, REAL_VERSIONS } from './families.mjs';
+import { loadRealFamily, makeRealPacket, REAL_VERSIONS, realVersions } from './families.mjs';
 import { readBases } from './prepare.mjs';
 import { realWorkspaces, createRealEvaluator } from './pipeline.mjs';
 import { realSteps } from './lineage.mjs';
@@ -27,7 +27,7 @@ export function recordRealReference(root, data, version, reference) {
   const path = join(root, data.familyDir, 'family.yaml');
   const doc = YAML.parseDocument(readFileSync(path, 'utf8'));
   doc.setIn(['generation', 'references', version], reference.candidate_commit);
-  const refs = REAL_VERSIONS.map(v => doc.getIn(['generation', 'references', v]));
+  const refs = realVersions(data.manifest).map(v => doc.getIn(['generation', 'references', v]));
   doc.setIn(['generation', 'status'], refs.every(Boolean) ? 'VALIDATED' : 'GENERATED');
   const provider = reference.generator.provider;
   const previous = doc.getIn(['generation', 'models', provider]);
@@ -41,8 +41,8 @@ export async function generateReal(root, familyId, version, { commit = true, ada
   if (problems.length) throw new Error('Preflight bloquea la generación:\n' + problems.map(b => `- ${b}`).join('\n'));
   const data = loadRealFamily(root, familyId);
   const m = data.manifest;
-  const index = REAL_VERSIONS.indexOf(version);
-  if (index < 0) throw new Error(`Versión semi-real desconocida: ${version}`);
+  const index = realVersions(m).indexOf(version);
+  if (index < 0) throw new Error(`Versión semi-real desconocida para ${familyId}: ${version}`);
   if (m.generation.references[version]) throw new Error(`${version} ya tiene referencia; no se regenera`);
   if (index > 0 && !m.generation.references[REAL_VERSIONS[index - 1]]) throw new Error(`${version} requiere la referencia ${REAL_VERSIONS[index - 1]}`);
   const base = readBases(root).bases[familyId];

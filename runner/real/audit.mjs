@@ -12,7 +12,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import YAML from 'yaml';
 import { schemaValidators, validateRecord } from '../validation/corpus.mjs';
-import { loadRealFamily, validateRealFamily, REAL_VERSIONS } from './families.mjs';
+import { loadRealFamily, validateRealFamily, realVersions } from './families.mjs';
 import { readBases } from './prepare.mjs';
 import { openReal, closeReal, execReal } from './docker.mjs';
 import { applySteps, realSteps, loadRealReference } from './lineage.mjs';
@@ -36,7 +36,7 @@ export async function auditReal(root, familyId, { freeze = false, runs } = {}) {
   const known = new Set(m.known_failures);
   const report = { artifact_type: 'corpus_audit', family_id: familyId, stratum: 'semi-real', image_id: base.image_id, v0_commit: m.v0.commit, started_at: new Date().toISOString(), stability_runs: stabilityRuns, versions: {}, findings: [] };
   const finding = (version, message) => report.findings.push({ version, message });
-  for (const version of REAL_VERSIONS) {
+  for (const version of realVersions(m)) {
     const entry = report.versions[version] = { reference: m.generation.references[version] };
     if (!entry.reference) { finding(version, 'sin referencia'); continue; }
     const { reference, patch } = loadRealReference(referencesDir, version);

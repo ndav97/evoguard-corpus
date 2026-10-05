@@ -1,0 +1,25 @@
+diff --git a/ui/components/Pagination.tsx b/ui/components/Pagination.tsx
+index 233c8a0..65f60b6 100644
+--- a/ui/components/Pagination.tsx
++++ b/ui/components/Pagination.tsx
+@@ -47,6 +47,11 @@ function unstyledPagination({
+   length,
+   totalObjects,
+ }: Props) {
++  // an empty list shows 0 - 0, and the range never goes past the last object
++  const isEmpty = totalObjects <= 0;
++  const firstShown = isEmpty ? 0 : index + 1;
++  const lastShown = isEmpty ? 0 : Math.min(index + length, totalObjects);
++
+   return (
+     <Flex wide align end className={className}>
+       <FormControl>
+@@ -73,7 +78,7 @@ function unstyledPagination({
+       </FormControl>
+       <Spacer padding="base" />
+       <Text>
+-        {index + 1} - {index + length} out of {totalObjects}
++        {firstShown} - {lastShown} out of {totalObjects}
+       </Text>
+       <Spacer padding="base" />
+       <Flex>

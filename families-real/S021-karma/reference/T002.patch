@@ -1,0 +1,19 @@
+diff --git a/src/Components/InlineEdit/index.tsx b/src/Components/InlineEdit/index.tsx
+index 24fcbd7..b43971f 100644
+--- a/src/Components/InlineEdit/index.tsx
++++ b/src/Components/InlineEdit/index.tsx
+@@ -56,9 +56,11 @@ const InlineEdit: FC<{
+ 
+   const onKeyDown = (event: KeyboardEvent) => {
+     if (event.key === "Enter") {
+-      if (editedValue !== null && editedValue.trim() !== "") {
+-        onChange(editedValue.trim());
+-      } else if (editedValue === "") {
++      const trimmed = editedValue === null ? null : editedValue.trim();
++      // Only notify when the value actually changed.
++      if (trimmed !== null && trimmed !== "" && trimmed !== value) {
++        onChange(trimmed);
++      } else if (editedValue === "" && value !== "") {
+         onChange("");
+       }
+       doneEditing();

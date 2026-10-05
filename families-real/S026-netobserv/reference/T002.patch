@@ -1,0 +1,64 @@
+diff --git a/locales/en/plugin__netobserv-plugin.json b/locales/en/plugin__netobserv-plugin.json
+index 6cac4f1..06de9fa 100644
+--- a/locales/en/plugin__netobserv-plugin.json
++++ b/locales/en/plugin__netobserv-plugin.json
+@@ -479,6 +479,7 @@
+   "{{count}} more matching namespaces…_other": "{{count}} more matching namespaces…",
+   "No matching namespaces — press Enter to filter by this pattern": "No matching namespaces — press Enter to filter by this pattern",
+   "Press Enter to filter by this pattern, or pick a namespace above": "Press Enter to filter by this pattern, or pick a namespace above",
++  "Already added as a filter": "Already added as a filter",
+   "NetObserv": "NetObserv",
+   "Workloads": "Workloads",
+   "Health data source": "Health data source",
+diff --git a/src/components/health/health-typeahead-filter.tsx b/src/components/health/health-typeahead-filter.tsx
+index 811758f..314c632 100644
+--- a/src/components/health/health-typeahead-filter.tsx
++++ b/src/components/health/health-typeahead-filter.tsx
+@@ -45,6 +45,7 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+   // Reuse the exact validation the Network Traffic namespace filter applies (label.ts): allows
+   // partial names, `*` wildcards and "quoted" exact matches, rejects anything else.
+   const isValid = !query || validateK8SName(query);
++  const isDuplicate = !!query && selected.includes(query);
+ 
+   // Suggestions are the known namespaces matching what's typed, minus the ones already added.
+   const suggestions = React.useMemo(
+@@ -62,9 +63,10 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+       if (!value || !validateK8SName(value)) {
+         return;
+       }
+-      if (!selected.includes(value)) {
+-        onChange([...selected, value]);
++      if (selected.includes(value)) {
++        return;
+       }
++      onChange([...selected, value]);
+       setInputValue('');
+       setOpen(false);
+       inputRef.current?.focus();
+@@ -152,13 +154,19 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+                         })}
+                       </MenuItem>
+                     )}
+-                    <MenuItem isDisabled key="enter-hint" data-test={`${id}-enter-hint`}>
+-                      <div className="health-typeahead-note">
+-                        {shownSuggestions.length === 0
+-                          ? t('No matching namespaces — press Enter to filter by this pattern')
+-                          : t('Press Enter to filter by this pattern, or pick a namespace above')}
+-                      </div>
+-                    </MenuItem>
++                    {isDuplicate ? (
++                      <MenuItem isDisabled key="duplicate" data-test={`${id}-duplicate`}>
++                        {t('Already added as a filter')}
++                      </MenuItem>
++                    ) : (
++                      <MenuItem isDisabled key="enter-hint" data-test={`${id}-enter-hint`}>
++                        <div className="health-typeahead-note">
++                          {shownSuggestions.length === 0
++                            ? t('No matching namespaces — press Enter to filter by this pattern')
++                            : t('Press Enter to filter by this pattern, or pick a namespace above')}
++                        </div>
++                      </MenuItem>
++                    )}
+                   </>
+                 )}
+               </MenuList>

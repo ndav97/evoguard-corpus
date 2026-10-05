@@ -1,0 +1,56 @@
+diff --git a/ui/components/Pagination.tsx b/ui/components/Pagination.tsx
+index 65f60b6..7980955 100644
+--- a/ui/components/Pagination.tsx
++++ b/ui/components/Pagination.tsx
+@@ -35,7 +35,7 @@ export interface Props {
+   totalObjects: number;
+ }
+ 
+-function unstyledPagination({
++function UnstyledPagination({
+   className,
+   onForward,
+   onSkipForward,
+@@ -52,6 +52,12 @@ function unstyledPagination({
+   const firstShown = isEmpty ? 0 : index + 1;
+   const lastShown = isEmpty ? 0 : Math.min(index + length, totalObjects);
+ 
++  const [selectedPerPage, setSelectedPerPage] = React.useState<number>(
++    perPageOptions[0],
++  );
++  const currentPage = isEmpty ? 1 : Math.floor(index / selectedPerPage) + 1;
++  const pageCount = Math.max(1, Math.ceil(totalObjects / selectedPerPage));
++
+   return (
+     <Flex wide align end className={className}>
+       <FormControl>
+@@ -61,8 +67,9 @@ function unstyledPagination({
+           <Select
+             id="pagination"
+             variant="outlined"
+-            defaultValue={perPageOptions[0].toString()}
++            value={selectedPerPage.toString()}
+             onChange={(e: SelectChangeEvent) => {
++              setSelectedPerPage(Number(e.target.value));
+               onSelect(e.target.value);
+             }}
+           >
+@@ -81,6 +88,10 @@ function unstyledPagination({
+         {firstShown} - {lastShown} out of {totalObjects}
+       </Text>
+       <Spacer padding="base" />
++      <Text>
++        Page {currentPage} of {pageCount}
++      </Text>
++      <Spacer padding="base" />
+       <Flex>
+         <Button
+           color="inherit"
+@@ -123,6 +134,6 @@ function unstyledPagination({
+   );
+ }
+ 
+-export const Pagination = styled(unstyledPagination)``;
++export const Pagination = styled(UnstyledPagination)``;
+ 
+ export default Pagination;

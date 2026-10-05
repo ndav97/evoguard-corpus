@@ -1,0 +1,27 @@
+diff --git a/packages/components/src/components/LabelFilter/LabelFilter.jsx b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+index 87a663b..85ae1aa 100644
+--- a/packages/components/src/components/LabelFilter/LabelFilter.jsx
++++ b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+@@ -70,7 +70,12 @@ class LabelFilter extends Component {
+     const currentFiltersArray = arrayUnique(
+       requestedFilters.map(filter => filter.replace(':', '='))
+     );
+-    if (this.props.filters.includes(currentFiltersArray[0])) {
++    const { filters } = this.props;
++    // filters that are already applied are skipped, only the new ones are added
++    const newFilters = currentFiltersArray.filter(
++      filter => !filters.includes(filter)
++    );
++    if (!newFilters.length) {
+       this.setState({
+         isValid: false,
+         filterMessage: intl.formatMessage({
+@@ -82,7 +87,7 @@ class LabelFilter extends Component {
+       });
+       return;
+     }
+-    this.props.handleAddFilter(this.props.filters.concat(currentFiltersArray));
++    this.props.handleAddFilter(filters.concat(newFilters));
+     this.resetCurrentFilterValue();
+   };
+ 

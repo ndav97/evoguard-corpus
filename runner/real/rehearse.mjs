@@ -20,7 +20,7 @@ import { createHash } from 'node:crypto';
 import { runTask } from '../execution/engine.mjs';
 import { createTaskStore, saveReference } from '../pipeline/store.mjs';
 import { docker } from '../sandbox/docker.mjs';
-import { loadRealFamily, validateRealFamily, makeRealPacket, REAL_VERSIONS, TURN_OF, inPackage } from './families.mjs';
+import { loadRealFamily, validateRealFamily, makeRealPacket, REAL_VERSIONS, TURN_OF, inPackage, realVersions } from './families.mjs';
 import { prepare, readBases } from './prepare.mjs';
 import { realWorkspaces, createRealEvaluator, runRealOracle, TEST_FILE } from './pipeline.mjs';
 import { realSteps } from './lineage.mjs';
@@ -117,7 +117,9 @@ export async function rehearseReal(root, familyId, { base: baseOverride } = {}) 
   const referencesDir = join(root, '.artifacts/real/rehearsal-references', `${familyId}-${Date.now()}`);
   const stepsFor = version => realSteps(version, referencesDir);
   const report = { artifact_type: 'real_pipeline_rehearsal', family_id: familyId, image_id: base.image_id, experimental: false, started_at: new Date().toISOString(), versions: {} };
-  for (const version of REAL_VERSIONS) {
+  const versions = realVersions(data.manifest);
+  const last = versions[versions.length - 1];
+  for (const version of versions) {
     const { records, seen, reference, store } = await rehearseVersion({ root, data, base, version, referencesDir, stepsFor });
     report.versions[version] = { task_id: store.taskId, outcomes: records.map(r => ({ provider: r.generator.provider, attempt: r.attempt, outcome: r.outcome, reason: r.failure_reason, validation: r.validation })), candidate_commit: reference.candidate_commit };
     const privateLog = readFileSync(join(store.privateDir, 'evaluator.jsonl'), 'utf8');
@@ -142,9 +144,10 @@ export async function rehearseReal(root, familyId, { base: baseOverride } = {}) 
     }
     log(`${familyId} ${version}: ACEPTADA (${reference.generator.provider}) ${reference.candidate_commit}`);
   }
-  // Estabilidad del oráculo de V3 sobre la historia completa (dos ejecuciones idénticas).
+  // Estabilidad del oráculo de la última versión (V3 o V5) sobre la historia completa (dos ejecuciones idénticas).
+  // El campo conserva el nombre v3_oracle_stability por compatibilidad con los informes anteriores.
   const hiddenTests = data.turns.map(t => ({ id: t.id, file: basename(t.hidden_tests), text: t.hiddenTestsText }));
-  const final = await runRealOracle({ image: base.image_id, manifest: data.manifest, steps: realSteps('V3', referencesDir, { through: true }), v0Commit: base.v0_repo_commit, patch: '', hiddenTests, version: 'V3', runs: 2 });
+  const final = await runRealOracle({ image: base.image_id, manifest: data.manifest, steps: realSteps(last, referencesDir, { through: true }), v0Commit: base.v0_repo_commit, patch: '', hiddenTests, version: last, runs: 2 });
   assert.equal(final.status, 'PASS', JSON.stringify(final));
   report.v3_oracle_stability = { status: final.status, stable: final.stable, runs: final.runs.map(r => ({ status: r.status, total: r.total, seconds: r.seconds })) };
   assert.deepEqual(realContainers(), [], 'contenedores remanentes del ensayo');

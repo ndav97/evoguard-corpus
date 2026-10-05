@@ -1,0 +1,72 @@
+diff --git a/src/layout/common/Pagination.tsx b/src/layout/common/Pagination.tsx
+index 8b5fd12..ad6f779 100644
+--- a/src/layout/common/Pagination.tsx
++++ b/src/layout/common/Pagination.tsx
+@@ -1,7 +1,7 @@
+ import classnames from 'classnames';
+ import isNumber from 'lodash/isNumber';
+ import isString from 'lodash/isString';
+-import { useEffect, useState } from 'react';
++import { FormEvent, useEffect, useState } from 'react';
+ import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
+ 
+ import styles from './Pagination.module.css';
+@@ -14,6 +14,7 @@ interface Props {
+   className?: string;
+   showFirstLast?: boolean;
+   siblingCount?: number;
++  showGoTo?: boolean;
+   onChange: (pageNumber: number) => void;
+ }
+ 
+@@ -71,6 +72,7 @@ const PaginationBtn = (btnProps: ButtonProps) => (
+ const Pagination = (props: Props) => {
+   const [totalPages, setTotalPages] = useState(Math.ceil(props.total / props.limit));
+   const [active, setActive] = useState<number>(props.active);
++  const [goToValue, setGoToValue] = useState<string>('');
+ 
+   useEffect(() => {
+     setTotalPages(Math.ceil(props.total / props.limit));
+@@ -88,6 +90,18 @@ const Pagination = (props: Props) => {
+     isNumber(props.siblingCount) && props.siblingCount >= 0 ? Math.floor(props.siblingCount) : DEFAULT_SIBLING_COUNT;
+   const visiblePages = getPaginationOptions(currentPage, totalPages, siblingCount);
+ 
++  const onGoToSubmit = (e: FormEvent<HTMLFormElement>) => {
++    e.preventDefault();
++    if (goToValue.trim() === '') return;
++    const pageNumber = Number(goToValue);
++    if (Number.isInteger(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
++      if (pageNumber !== currentPage) {
++        props.onChange(pageNumber);
++      }
++      setGoToValue('');
++    }
++  };
++
+   return (
+     <nav role="navigation" aria-label="pagination">
+       <ul className={`pagination justify-content-center ${styles.pagination} ${props.className}`}>
+@@ -169,6 +183,23 @@ const Pagination = (props: Props) => {
+           </li>
+         )}
+       </ul>
++
++      {props.showGoTo && (
++        <form className="d-flex justify-content-center align-items-center mt-2" onSubmit={onGoToSubmit} noValidate>
++          <input
++            type="number"
++            className="form-control form-control-sm w-auto"
++            aria-label="Go to page"
++            min={1}
++            max={totalPages}
++            value={goToValue}
++            onChange={(e) => setGoToValue(e.target.value)}
++          />
++          <button type="submit" className="btn btn-sm btn-outline-secondary ms-2">
++            Go
++          </button>
++        </form>
++      )}
+     </nav>
+   );
+ };

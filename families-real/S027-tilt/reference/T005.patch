@@ -1,0 +1,26 @@
+diff --git a/src/ResourceNameFilter.tsx b/src/ResourceNameFilter.tsx
+index 3cb3073d..2ddc5545 100644
+--- a/src/ResourceNameFilter.tsx
++++ b/src/ResourceNameFilter.tsx
+@@ -29,7 +29,11 @@ export function matchesResourceName(
+   // a resource matches the query if the resource name contains all tokens in the query,
+   // and none of the excluded tokens (those prefixed with "-").
+   // A token can list alternatives separated by commas: "api,web" matches either.
+-  const name = resourceName.toLowerCase()
++  // Words with an uppercase letter are case-sensitive ("smart case").
++  const contains = (word: string) =>
++    word === word.toLowerCase()
++      ? resourceName.toLowerCase().includes(word)
++      : resourceName.includes(word)
+   return filter.split(" ").every((token) => {
+     const exclude = token.startsWith("-")
+     const words = (exclude ? token.slice(1) : token)
+@@ -38,7 +42,7 @@ export function matchesResourceName(
+     if (words.length === 0) {
+       return true
+     }
+-    const found = words.some((word) => name.includes(word.toLowerCase()))
++    const found = words.some(contains)
+     return exclude ? !found : found
+   })
+ }

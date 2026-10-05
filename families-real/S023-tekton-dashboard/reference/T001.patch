@@ -1,0 +1,42 @@
+diff --git a/packages/components/src/components/LabelFilter/LabelFilter.jsx b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+index 24f5978..87a663b 100644
+--- a/packages/components/src/components/LabelFilter/LabelFilter.jsx
++++ b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+@@ -34,9 +34,12 @@ class LabelFilter extends Component {
+ 
+     const { intl } = this.props;
+     const { currentFilterValue } = this.state;
+-    const filterRegex = '([a-z0-9A-Z-_./]:[a-z0-9A-Z-_.],?)+';
+     const filterValue = currentFilterValue.replace(/\s/g, '');
+-    if (!filterValue.match(filterRegex)) {
++    // each comma-separated entry must be a complete labelKey:labelValue pair,
++    // empty entries (e.g. a trailing comma) are ignored
++    const requestedFilters = filterValue.split(',').filter(Boolean);
++    const isValidFilter = filter => /^[\w./-]+:[\w.-]+$/.test(filter);
++    if (!requestedFilters.length || !requestedFilters.every(isValidFilter)) {
+       this.setState({
+         isValid: false,
+         filterMessage: intl.formatMessage({
+@@ -53,8 +56,7 @@ class LabelFilter extends Component {
+       });
+       return;
+     }
+-    const currentFilterRequest = filterValue.split(':');
+-    if (currentFilterRequest[1].length > 63) {
++    if (requestedFilters.some(filter => filter.split(':')[1].length > 63)) {
+       this.setState({
+         isValid: false,
+         filterMessage: intl.formatMessage({
+@@ -65,9 +67,9 @@ class LabelFilter extends Component {
+       });
+       return;
+     }
+-    const colonToEqualsFilters = filterValue.replace(/:/g, '=');
+-    let currentFiltersArray = colonToEqualsFilters.split(',');
+-    currentFiltersArray = arrayUnique(currentFiltersArray);
++    const currentFiltersArray = arrayUnique(
++      requestedFilters.map(filter => filter.replace(':', '='))
++    );
+     if (this.props.filters.includes(currentFiltersArray[0])) {
+       this.setState({
+         isValid: false,

@@ -21,7 +21,7 @@ function validate(options) {
   if(!MODES[options.mode]) throw new Error('Modo desconocido');
   if(options.mode==='experimental'&&(!Array.isArray(options.preflightBlockers)||options.preflightBlockers.length)) throw new Error('Generación experimental bloqueada por preflight');
   if(!p || p.max_attempts!==3 || p.max_agent_cycles!==25 || p.max_provider_assignments!==5 || !isDeepStrictEqual(p.provider_ring,RING) || p.timeout_seconds?.api!==1800 || p.timeout_seconds?.local!==3600 || p.oracle_visible!==false || p.oracle_failure!=='immediate_reassignment_no_feedback' || p.repair_base!=='own_previous_attempt' || p.reassignment_base!=='previous_validated_reference_or_scaffold') throw new Error('Política incompatible');
-  if(!RING.includes(options.initialProvider) || !(options.mode==='simulation'?['V0']:['V0','V1','V2','V3']).includes(options.packet?.version)) throw new Error('Proveedor o versión no disponible');
+  if(!RING.includes(options.initialProvider) || !(options.mode==='simulation'?['V0']:['V0','V1','V2','V3','V4','V5']).includes(options.packet?.version)) throw new Error('Proveedor o versión no disponible');
   if(options.simulationTimeoutMs!==undefined && options.mode!=='simulation') throw new Error('Timeout reducido solo en simulación');
   // singleProvider (banco de prueba): solo la primera asignación, sin reasignar; nunca en generación experimental.
   if(options.singleProvider!==undefined && (options.singleProvider!==true || options.mode!=='rehearsal')) throw new Error('singleProvider solo en ensayo');

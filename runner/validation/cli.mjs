@@ -12,7 +12,7 @@ const describe = data => {
 try {
   const args = process.argv.slice(2);
   if (args.length > 1 || (args[0] && !/^[FS]\d{3}$/.test(args[0]))) throw new Error('Uso: npm run corpus:validate [-- Fxxx|Sxxx]');
-  const describeReal = data => `${data.familyId}: familia semi-real válida; ${data.manifest.repo}@${data.manifest.v0.commit.slice(0, 12)} (${data.manifest.runner}), 3 turnos calibrados. Generación ${data.manifest.generation.status}.`;
+  const describeReal = data => `${data.familyId}: familia semi-real válida; ${data.manifest.repo}@${data.manifest.v0.commit.slice(0, 12)} (${data.manifest.runner}), ${data.turns.length} turnos calibrados. Generación ${data.manifest.generation.status}.`;
   if (args[0]?.startsWith('S')) {
     const data = loadRealFamily(root, args[0]);
     const errors = validateRealFamily(data, root);

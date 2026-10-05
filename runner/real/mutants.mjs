@@ -13,7 +13,7 @@
 import { writeFileSync, mkdtempSync, cpSync, mkdirSync, rmSync, chmodSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadRealFamily, inPackage, TURN_OF, REAL_VERSIONS } from './families.mjs';
+import { loadRealFamily, inPackage, TURN_OF, realVersions } from './families.mjs';
 import { readBases, prepare } from './prepare.mjs';
 import { openReal, execReal, closeReal } from './docker.mjs';
 import { runSuiteIn, failing } from './suite.mjs';
@@ -139,7 +139,7 @@ export async function mutateFamily(root, familyId, { max = 8 } = {}) {
   if (base?.status !== 'VERIFIED') throw new Error(`${familyId}: imagen sin verificar (npm run real:prepare)`);
   const report = { artifact_type: 'real_hidden_tests_mutation', family_id: familyId, image_id: base.image_id, max_per_turn: max, started_at: new Date().toISOString(), turns: [] };
   const dir = m.package_path === '.' ? '' : ` --directory='${m.package_path}'`;
-  for (const [index, version] of REAL_VERSIONS.entries()) {
+  for (const [index, version] of realVersions(m).entries()) {
     const turn = data.turns[index];
     const turnsSoFar = data.turns.slice(0, index + 1);
     const rels = turnsSoFar.map(t => `${m.hidden_tests_dir}/${basename(t.hidden_tests)}`);

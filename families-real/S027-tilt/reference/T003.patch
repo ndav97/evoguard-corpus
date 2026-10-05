@@ -1,0 +1,40 @@
+diff --git a/src/ResourceNameFilter.tsx b/src/ResourceNameFilter.tsx
+index 26593c35..72470c67 100644
+--- a/src/ResourceNameFilter.tsx
++++ b/src/ResourceNameFilter.tsx
+@@ -1,6 +1,6 @@
+ import { InputAdornment } from "@material-ui/core"
+ import { InputProps as StandardInputProps } from "@material-ui/core/Input/Input"
+-import React from "react"
++import React, { useRef } from "react"
+ import styled from "styled-components"
+ import { ReactComponent as CloseSvg } from "./assets/svg/close.svg"
+ import { ReactComponent as SearchSvg } from "./assets/svg/search.svg"
+@@ -82,6 +82,7 @@ export function ResourceNameFilter(props: { className?: string }) {
+     options: { resourceNameFilter },
+     setOptions,
+   } = useResourceListOptions()
++  const inputRef = useRef<HTMLInputElement>(null)
+ 
+   function setResourceNameFilter(newValue: string) {
+     setOptions({ resourceNameFilter: newValue })
+@@ -98,7 +99,10 @@ export function ResourceNameFilter(props: { className?: string }) {
+ 
+   // only show the "x" to clear if there's any input to clear
+   if (resourceNameFilter.length) {
+-    const onClearClick = () => setResourceNameFilter("")
++    const onClearClick = () => {
++      setResourceNameFilter("")
++      inputRef.current?.focus()
++    }
+ 
+     inputProps.endAdornment = (
+       <InputAdornment position="end">
+@@ -125,6 +129,7 @@ export function ResourceNameFilter(props: { className?: string }) {
+       }}
+       placeholder="Filter resources by name"
+       InputProps={inputProps}
++      inputRef={inputRef}
+       variant="outlined"
+     />
+   )

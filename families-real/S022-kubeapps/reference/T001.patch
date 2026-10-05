@@ -1,0 +1,40 @@
+diff --git a/src/components/SearchFilter/SearchFilter.tsx b/src/components/SearchFilter/SearchFilter.tsx
+index 081c132..a2a4338 100644
+--- a/src/components/SearchFilter/SearchFilter.tsx
++++ b/src/components/SearchFilter/SearchFilter.tsx
+@@ -17,18 +17,28 @@ export interface ISearchFilterProps {
+ 
+ function SearchFilter(props: ISearchFilterProps) {
+   const [value, setValue] = React.useState(props.value);
+-  const [timeout, setTimeoutState] = React.useState({} as NodeJS.Timeout);
++  const timeout = React.useRef<NodeJS.Timeout>();
++  const cancelPendingChange = () => {
++    clearTimeout(timeout.current);
++    timeout.current = undefined;
++  };
++  // Keep the input in sync when the parent changes the filter (e.g. navigation).
++  // A pending change typed before that would overwrite the new value, so drop it.
++  React.useEffect(() => {
++    clearTimeout(timeout.current);
++    timeout.current = undefined;
++    setValue(props.value);
++  }, [props.value]);
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     // Copy is needed to avoid losing the reference
+     const valueCopy = e.currentTarget.value;
+     setValue(e.currentTarget.value);
+     // Gather changes before submitting
+-    clearTimeout(timeout);
+-    setTimeoutState(
+-      setTimeout(() => {
+-        props.onChange(valueCopy);
+-      }, 300),
+-    );
++    cancelPendingChange();
++    timeout.current = setTimeout(() => {
++      timeout.current = undefined;
++      props.onChange(valueCopy);
++    }, 300);
+   };
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();

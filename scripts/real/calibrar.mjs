@@ -56,9 +56,16 @@ async function runTests(fam, wt, files) {
   const report = path.join(wt, '.evoguard-calib.json');
   await fs.rm(report, { force: true });
   const list = (files ?? []).map((f) => `"${f}"`).join(' ');
-  const cmd = fam.runner === 'vitest'
-    ? `npx --no-install vitest run ${list} --reporter=json --outputFile="${report}" --maxWorkers=2`
-    : `npx --no-install jest --ci ${list} --json --outputFile="${report}" --maxWorkers=2 --forceExit`;
+  // test_mode 'script': el script `test` del paquete (craco, react-scripts…) con los mismos argumentos.
+  const pm = fam.package_manager ?? 'npm';
+  const script = `CI=true ${pm} run test${pm === 'npm' ? ' --' : ''}`;
+  const cmd = fam.test_mode === 'script'
+    ? (fam.runner === 'vitest'
+      ? `${script} --run ${list} --reporter=json --outputFile="${report}" --maxWorkers=2`
+      : `${script} --ci --watchAll=false ${list} --json --outputFile="${report}" --maxWorkers=2 --forceExit`)
+    : fam.runner === 'vitest'
+      ? `npx --no-install vitest run ${list} --reporter=json --outputFile="${report}" --maxWorkers=2`
+      : `npx --no-install jest --ci ${list} --json --outputFile="${report}" --maxWorkers=2 --forceExit`;
   const r = await sh(cmd, cwd);
   let j = null;
   try { j = JSON.parse(await fs.readFile(report, 'utf8')); } catch { /* sin informe */ }

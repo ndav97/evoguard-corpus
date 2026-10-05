@@ -1,4 +1,5 @@
-// Estrato semi-real: familias families-real/Sxxx-slug/ (base V0 real + cambios T001–T003 redactados por el equipo).
+// Estrato semi-real: familias families-real/Sxxx-slug/ (base V0 real + cambios T001–T00n redactados por el equipo:
+// 3 en el piloto, 5 en el corpus definitivo).
 // Carga, validación y paquete de turno. El paquete solo contiene lo que ve el constructor: la petición del turno,
 // la zona del cambio y los comandos visibles; nunca tests ocultos, parches de referencia ni el manifiesto.
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -7,8 +8,11 @@ import YAML from 'yaml';
 import Ajv from 'ajv';
 
 export const REAL_ID = /^S\d{3}$/;
-export const REAL_VERSIONS = ['V1', 'V2', 'V3'];
-export const TURN_OF = { V1: 'T001', V2: 'T002', V3: 'T003' };
+// Versiones posibles (máximo 5 turnos). Las de cada familia salen de sus turnos: realVersions(manifest).
+export const REAL_VERSIONS = ['V1', 'V2', 'V3', 'V4', 'V5'];
+export const TURN_OF = { V1: 'T001', V2: 'T002', V3: 'T003', V4: 'T004', V5: 'T005' };
+export const TURN_COUNTS = [3, 5];
+export const realVersions = manifest => REAL_VERSIONS.slice(0, (manifest.turns ?? []).length);
 const read = path => readFileSync(path, 'utf8');
 
 export function listRealFamilies(root) {
@@ -39,16 +43,22 @@ export function loadRealFamily(root, id) {
   };
 }
 
-export const expectedRealPlan = (id, ring) => Object.fromEntries(REAL_VERSIONS.map((version, index) => [version, ring[(Number(id.slice(1)) - 1 + index + 1) % ring.length]]));
+export const expectedRealPlan = (id, ring, turns = 3) => Object.fromEntries(REAL_VERSIONS.slice(0, turns).map((version, index) => [version, ring[(Number(id.slice(1)) - 1 + index + 1) % ring.length]]));
 
 // Ruta de un archivo dentro del paquete de la app (package_path relativo a la raíz del repositorio).
 export const inPackage = (manifest, rel) => (manifest.package_path === '.' ? rel : `${manifest.package_path}/${rel}`);
 
 // Comandos visibles del constructor (y de las etapas visibles del pipeline), ejecutados en el paquete de la app.
+// test_mode 'script': el script `test` del paquete (craco, react-scripts…) con los mismos argumentos.
+export function scriptPrefix(manifest) {
+  const pm = manifest.package_manager ?? 'npm';
+  return [pm, 'run', 'test', ...(pm === 'npm' ? ['--'] : [])];
+}
 export function visibleChecks(manifest) {
+  const script = manifest.test_mode === 'script';
   const tests = manifest.runner === 'vitest'
-    ? ['npx', '--no-install', 'vitest', 'run', '--maxWorkers=2']
-    : ['npx', '--no-install', 'jest', '--ci', '--maxWorkers=2'];
+    ? (script ? [...scriptPrefix(manifest), '--run', '--maxWorkers=2'] : ['npx', '--no-install', 'vitest', 'run', '--maxWorkers=2'])
+    : (script ? [...scriptPrefix(manifest), '--ci', '--watchAll=false', '--maxWorkers=2'] : ['npx', '--no-install', 'jest', '--ci', '--maxWorkers=2']);
   const checks = { development_tests: tests };
   if (manifest.checks?.typecheck) checks.typecheck = manifest.checks.typecheck;
   return checks;
@@ -65,8 +75,11 @@ export function validateRealFamily(data, root) {
   const m = data.manifest;
   if (!validate(m)) return [`real-family: ${JSON.stringify(validate.errors)}`];
   demand(m.id === data.familyId && data.familyDir === `families-real/${m.id}-${m.slug}`, 'Directorio, id y slug no coinciden');
-  demand(JSON.stringify(m.turns.map(t => t.id)) === JSON.stringify(['T001', 'T002', 'T003']), 'Turnos T001–T003 incompletos o desordenados');
-  demand(JSON.stringify(m.generation.plan) === JSON.stringify(expectedRealPlan(m.id, data.policy.provider_ring)), 'Plan de generación distinto de la rotación por fila');
+  const versions = realVersions(m);
+  const ids = versions.map(v => TURN_OF[v]);
+  demand(TURN_COUNTS.includes(m.turns.length) && JSON.stringify(m.turns.map(t => t.id)) === JSON.stringify(ids), `Turnos incompletos o desordenados (se esperan T001–T003 o T001–T005)`);
+  demand(JSON.stringify(m.generation.plan) === JSON.stringify(expectedRealPlan(m.id, data.policy.provider_ring, m.turns.length)), 'Plan de generación distinto de la rotación por fila');
+  demand(JSON.stringify(Object.keys(m.generation.references)) === JSON.stringify(versions), `Referencias de generación distintas de ${versions.join(', ')}`);
   demand(m.package_path === '.' || m.focus.startsWith(`${m.package_path}/`), 'focus debe ser relativo a la raíz del repositorio y estar dentro del paquete');
   demand(m.provenance.status === 'CALIBRATED', 'Familia sin calibrar (provenance.status)');
   for (const [index, turn] of data.turns.entries()) {
@@ -77,7 +90,7 @@ export function validateRealFamily(data, root) {
     demand(turn.patchText && /^diff --git a\//m.test(turn.patchText), `${turn.id}: falta el parche de referencia`);
     if (turn.requestText) {
       demand(!PRIVATE.test(turn.requestText), `${turn.id}: la petición menciona material privado (${turn.requestText.match(PRIVATE)?.[0]})`);
-      for (const later of ['T001', 'T002', 'T003'].slice(n)) demand(!turn.requestText.includes(later), `${turn.id}: la petición menciona un turno futuro`);
+      for (const later of Object.values(TURN_OF).slice(n)) demand(!turn.requestText.includes(later), `${turn.id}: la petición menciona un turno futuro`);
     }
     if (turn.patchText) {
       // El parche de referencia es relativo al paquete y no toca tests existentes, dependencias ni configuración.
@@ -85,10 +98,11 @@ export function validateRealFamily(data, root) {
       for (const path of new Set(paths)) demand(!scopeViolation(path), `${turn.id}: el parche de referencia toca ${path}`);
     }
   }
-  const refs = REAL_VERSIONS.map(v => m.generation.references[v]);
+  const refs = versions.map(v => m.generation.references[v]);
   demand(refs.every((r, i) => !r || refs.slice(0, i).every(Boolean)), 'Referencias no consecutivas desde V1');
   const count = refs.filter(Boolean).length;
-  const needed = { DRAFT: [0, 0], GENERATED: [1, 3], VALIDATED: [3, 3], AUDITED: [3, 3], FROZEN: [3, 3] }[m.generation.status];
+  const all = versions.length;
+  const needed = { DRAFT: [0, 0], GENERATED: [1, all], VALIDATED: [all, all], AUDITED: [all, all], FROZEN: [all, all] }[m.generation.status];
   demand(count >= needed[0] && count <= needed[1], `Estado ${m.generation.status} incompatible con ${count} referencias`);
   return errors;
 }
@@ -104,7 +118,7 @@ export function scopeViolation(path) {
 }
 
 export function makeRealPacket(data, version) {
-  if (!REAL_VERSIONS.includes(version)) throw new Error('versión no admitida (semi-real: V1–V3)');
+  if (!realVersions(data.manifest).includes(version)) throw new Error(`versión no admitida (semi-real: ${realVersions(data.manifest).join(', ')})`);
   const turn = data.turns.find(t => t.id === TURN_OF[version]);
   if (!turn?.requestText) throw new Error(`Falta la petición de ${TURN_OF[version]}`);
   const m = data.manifest;

@@ -1,0 +1,31 @@
+diff --git a/utils/versionSort.ts b/utils/versionSort.ts
+index 3600fb534ac..8df70d45a3e 100644
+--- a/utils/versionSort.ts
++++ b/utils/versionSort.ts
+@@ -150,6 +150,26 @@ export function getGreaterVersion(v1, v2) {
+   return v2;
+ }
+ 
++/**
++ * Latest version of a list, ignoring empty entries and WILDCARD_V.
++ * Pre-releases are skipped while there is any other version, unless
++ * `includePrerelease` is true.
++ *
++ * @param {Array.<string>} versions
++ * @param {{ includePrerelease?: boolean }} options
++ * @returns {string | undefined} the latest version, as written in the list
++ */
++export function getLatestVersion(versions, { includePrerelease = false } = {}) {
++  const candidates = (versions || []).filter((version) => version && version !== WILDCARD_V);
++  const releases = candidates.filter((version) => !version.includes('-'));
++  const pool = includePrerelease || releases.length === 0 ? candidates : releases;
++
++  return pool.reduce(
++    (latest, version) => (latest && versionSortComparatorFn(version, latest) <= 0 ? latest : version),
++    undefined,
++  );
++}
++
+ /*
+     MeshModel Specific
+ */

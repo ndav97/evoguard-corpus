@@ -1,0 +1,30 @@
+diff --git a/src/components/SearchFilter/SearchFilter.tsx b/src/components/SearchFilter/SearchFilter.tsx
+index 945c697..2b3846e 100644
+--- a/src/components/SearchFilter/SearchFilter.tsx
++++ b/src/components/SearchFilter/SearchFilter.tsx
+@@ -13,6 +13,7 @@ export interface ISearchFilterProps {
+   placeholder: string;
+   onChange: (filter: string) => void;
+   submitFilters: () => void;
++  debounceTime?: number;
+ }
+ 
+ function SearchFilter(props: ISearchFilterProps) {
+@@ -30,6 +31,8 @@ function SearchFilter(props: ISearchFilterProps) {
+     timeout.current = undefined;
+     setValue(props.value);
+   }, [props.value]);
++  // Do not notify changes once the component is gone
++  React.useEffect(() => () => clearTimeout(timeout.current), []);
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     // Copy is needed to avoid losing the reference
+     const valueCopy = e.currentTarget.value;
+@@ -39,7 +42,7 @@ function SearchFilter(props: ISearchFilterProps) {
+     timeout.current = setTimeout(() => {
+       timeout.current = undefined;
+       props.onChange(valueCopy);
+-    }, 300);
++    }, props.debounceTime ?? 300);
+   };
+   const clearFilter = () => {
+     const hadPendingChange = timeout.current !== undefined;

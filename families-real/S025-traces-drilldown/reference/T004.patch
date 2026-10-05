@@ -1,0 +1,62 @@
+diff --git a/src/components/Explore/SavedSearches/SaveSearchModal.tsx b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+index ff78f64..99e8812 100644
+--- a/src/components/Explore/SavedSearches/SaveSearchModal.tsx
++++ b/src/components/Explore/SavedSearches/SaveSearchModal.tsx
+@@ -43,6 +43,8 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+     reportInteraction('grafana_traces_app_save_search_visited');
+   }, []);
+ 
++  const clearError = () => setState((current) => (current === 'error' ? 'idle' : current));
++
+   const handleSubmit = useCallback(
+     async (e: FormEvent) => {
+       e.preventDefault();
+@@ -114,7 +116,10 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+                   id="save-search-title"
+                   required
+                   value={title}
+-                  onChange={(e: FormEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)}
++                  onChange={(e: FormEvent<HTMLInputElement>) => {
++                    setTitle(e.currentTarget.value);
++                    clearError();
++                  }}
+                   disabled={state === 'saving'}
+                 />
+               </Field>
+@@ -128,7 +133,10 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+                 <Input
+                   id="save-search-description"
+                   value={description}
+-                  onChange={(e: FormEvent<HTMLInputElement>) => setDescription(e.currentTarget.value)}
++                  onChange={(e: FormEvent<HTMLInputElement>) => {
++                    setDescription(e.currentTarget.value);
++                    clearError();
++                  }}
+                   disabled={state === 'saving'}
+                 />
+               </Field>
+@@ -139,7 +147,11 @@ export function SaveSearchModal({ dsUid, onClose, sceneRef }: Props) {
+               <Trans i18nKey="save-search-modal.cancel">Cancel</Trans>
+             </Button>
+             <Button type="submit" disabled={!trimmedTitle || Boolean(titleError) || state === 'saving'}>
+-              <Trans i18nKey="save-search-modal.save">Save</Trans>
++              {state === 'saving' ? (
++                <Trans i18nKey="save-search-modal.saving">Saving...</Trans>
++              ) : (
++                <Trans i18nKey="save-search-modal.save">Save</Trans>
++              )}
+             </Button>
+           </Modal.ButtonRow>
+         </form>
+diff --git a/src/locales/en-US/grafana-exploretraces-app.json b/src/locales/en-US/grafana-exploretraces-app.json
+index 19292a0..ccac202 100644
+--- a/src/locales/en-US/grafana-exploretraces-app.json
++++ b/src/locales/en-US/grafana-exploretraces-app.json
+@@ -193,6 +193,7 @@
+     },
+     "info-alert": "Saved searches are stored locally in your browser and will only be available on this device.",
+     "save": "Save",
++    "saving": "Saving...",
+     "success-message": "Search successfully saved.",
+     "success-title": "Success",
+     "title": "Save current search"

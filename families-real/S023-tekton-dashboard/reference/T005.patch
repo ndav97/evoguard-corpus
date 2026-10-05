@@ -1,0 +1,57 @@
+diff --git a/packages/components/src/components/LabelFilter/LabelFilter.jsx b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+index f3b290b..8b293aa 100644
+--- a/packages/components/src/components/LabelFilter/LabelFilter.jsx
++++ b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+@@ -137,6 +137,32 @@ class LabelFilter extends Component {
+     });
+   };
+ 
++  handleDeleteFilter = (filter, labelDisplayText) => {
++    const { intl } = this.props;
++    this.props.handleDeleteFilter(filter);
++    this.setState({
++      statusMessage: intl.formatMessage(
++        {
++          id: 'dashboard.labelFilter.removed',
++          defaultMessage: 'Removed label filter {label}'
++        },
++        { label: labelDisplayText }
++      )
++    });
++  };
++
++  handleClearFilters = () => {
++    const { intl } = this.props;
++    this.props.handleClearFilters();
++    this.resetCurrentFilterValue();
++    this.setState({
++      statusMessage: intl.formatMessage({
++        id: 'dashboard.labelFilter.removedAll',
++        defaultMessage: 'Removed all label filters'
++      })
++    });
++  };
++
+   handleCloseFilterError = () => {
+     this.setState({
+       isValid: true,
+@@ -220,7 +246,9 @@ class LabelFilter extends Component {
+               <DismissibleTag
+                 dismissTooltipLabel={dismissTooltipLabel}
+                 key={filter}
+-                onClose={() => this.props.handleDeleteFilter(filter)}
++                onClose={() =>
++                  this.handleDeleteFilter(filter, labelDisplayText)
++                }
+                 text={labelDisplayText}
+                 title={dismissTooltipLabel}
+                 type="high-contrast"
+@@ -231,7 +259,7 @@ class LabelFilter extends Component {
+             <Button
+               kind="ghost"
+               size="sm"
+-              onClick={this.props.handleClearFilters}
++              onClick={this.handleClearFilters}
+             >
+               {intl.formatMessage({
+                 id: 'dashboard.labelFilter.clearAll',

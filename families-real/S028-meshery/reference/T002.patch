@@ -1,0 +1,47 @@
+diff --git a/utils/versionSort.ts b/utils/versionSort.ts
+index 8af0dd27361..374902acef3 100644
+--- a/utils/versionSort.ts
++++ b/utils/versionSort.ts
+@@ -49,8 +49,11 @@ export function versionSortComparatorFn(versionA, versionB) {
+     return -1;
+   }
+ 
+-  const verA = versionA.split('.');
+-  const verB = versionB.split('.');
++  // a pre-release suffix ("1.2.0-rc.1") is compared only when the numeric part is equal
++  const [coreA, ...preA] = versionA.split('-');
++  const [coreB, ...preB] = versionB.split('-');
++  const verA = coreA.split('.');
++  const verB = coreB.split('.');
+ 
+   // missing segments count as 0, so "1.2" and "1.2.0" are the same version
+   for (let i = 0; i < verA.length || i < verB.length; i++) {
+@@ -68,6 +71,28 @@ export function versionSortComparatorFn(versionA, versionB) {
+     return vA - vB;
+   }
+ 
++  return comparePrerelease(preA.join('-'), preB.join('-'));
++}
++
++// a version without pre-release is greater than the same version with one
++function comparePrerelease(preA, preB) {
++  if (preA === preB) return 0;
++  if (!preA) return 1;
++  if (!preB) return -1;
++
++  const idsA = preA.split('.');
++  const idsB = preB.split('.');
++  for (let i = 0; i < idsA.length || i < idsB.length; i++) {
++    const idA = idsA[i];
++    const idB = idsB[i];
++    if (idA === undefined) return -1;
++    if (idB === undefined) return 1;
++    if (idA === idB) continue;
++    if (/^\d+$/.test(idA) && /^\d+$/.test(idB)) {
++      return Number(idA) - Number(idB);
++    }
++    return idA < idB ? -1 : 1;
++  }
+   return 0;
+ }
+ 

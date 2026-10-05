@@ -1,0 +1,70 @@
+diff --git a/src/layout/common/Pagination.tsx b/src/layout/common/Pagination.tsx
+index 3559fb7..1a04424 100644
+--- a/src/layout/common/Pagination.tsx
++++ b/src/layout/common/Pagination.tsx
+@@ -72,15 +72,17 @@ const Pagination = (props: Props) => {
+ 
+   if (totalPages <= 1) return null;
+ 
+-  const visiblePages = getPaginationOptions(active, totalPages);
++  // Keep the active page within the available range (e.g. after removing items)
++  const currentPage = Math.min(Math.max(active, 1), totalPages);
++  const visiblePages = getPaginationOptions(currentPage, totalPages);
+ 
+   return (
+     <nav role="navigation" aria-label="pagination">
+       <ul className={`pagination justify-content-center ${styles.pagination} ${props.className}`}>
+-        <li className={classnames('page-item', { disabled: active === 1 })}>
++        <li className={classnames('page-item', { disabled: currentPage === 1 })}>
+           <PaginationBtn
+-            pageNumber={active - 1}
+-            disabled={active === 1}
++            pageNumber={currentPage - 1}
++            disabled={currentPage === 1}
+             content={
+               <>
+                 <span className="d-none d-sm-block">Previous</span>
+@@ -89,7 +91,7 @@ const Pagination = (props: Props) => {
+                 </span>
+               </>
+             }
+-            active={active}
++            active={currentPage}
+             onChange={props.onChange}
+           />
+         </li>
+@@ -99,9 +101,9 @@ const Pagination = (props: Props) => {
+             return (
+               <li
+                 key={`pag_${index}`}
+-                className={classnames('page-item', { [`active text-light ${styles.active}`]: active === value })}
++                className={classnames('page-item', { [`active text-light ${styles.active}`]: currentPage === value })}
+               >
+-                <PaginationBtn pageNumber={value} disabled={false} active={active} onChange={props.onChange} />
++                <PaginationBtn pageNumber={value} disabled={false} active={currentPage} onChange={props.onChange} />
+               </li>
+             );
+           } else {
+@@ -113,10 +115,10 @@ const Pagination = (props: Props) => {
+           }
+         })}
+ 
+-        <li className={classnames('page-item', { disabled: active === totalPages })}>
++        <li className={classnames('page-item', { disabled: currentPage === totalPages })}>
+           <PaginationBtn
+-            pageNumber={active + 1}
+-            disabled={active === totalPages}
++            pageNumber={currentPage + 1}
++            disabled={currentPage === totalPages}
+             content={
+               <>
+                 <span className="d-none d-sm-block">Next</span>
+@@ -125,7 +127,7 @@ const Pagination = (props: Props) => {
+                 </span>
+               </>
+             }
+-            active={active}
++            active={currentPage}
+             onChange={props.onChange}
+           />
+         </li>

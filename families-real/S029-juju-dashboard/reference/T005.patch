@@ -1,0 +1,62 @@
+diff --git a/src/components/ChipGroup/ChipGroup.tsx b/src/components/ChipGroup/ChipGroup.tsx
+index 376730a..e3b1771 100644
+--- a/src/components/ChipGroup/ChipGroup.tsx
++++ b/src/components/ChipGroup/ChipGroup.tsx
+@@ -7,6 +7,7 @@ type Props = {
+   chips?: Chip | null;
+   className?: null | string;
+   descriptor?: null | string;
++  maxChips?: number;
+   onChipClick?: (label: string) => void;
+ };
+ 
+@@ -14,6 +15,7 @@ const ChipGroup: FC<Props> = ({
+   chips,
+   className,
+   descriptor,
++  maxChips,
+   onChipClick,
+ }: Props) => {
+   const getLabelType = (
+@@ -51,9 +53,14 @@ const ChipGroup: FC<Props> = ({
+   const numberOfChips = getSumTotal(chips);
+   // Show the largest counts first. The sort is stable, so chips with the same
+   // count keep their original order.
+-  const sortedChips = Object.entries(chips ?? {}).sort(
+-    ([, countA], [, countB]) => countB - countA,
+-  );
++  const sortedChips = Object.entries(chips ?? {})
++    .filter(([, count]) => count > 0)
++    .sort(([, countA], [, countB]) => countB - countA);
++  const visibleChips =
++    maxChips !== undefined && sortedChips.length > maxChips
++      ? sortedChips.slice(0, maxChips)
++      : sortedChips;
++  const hiddenChips = sortedChips.length - visibleChips.length;
+   const labelType = getLabelType(descriptor, numberOfChips);
+   const descriptorText = labelType ? `${numberOfChips} ${labelType}` : null;
+ 
+@@ -70,10 +77,7 @@ const ChipGroup: FC<Props> = ({
+               {descriptorText}
+             </strong>
+           )}
+-          {sortedChips.map(([label, count]) => {
+-            if (count <= 0) {
+-              return null;
+-            }
++          {visibleChips.map(([label, count]) => {
+             const content = (
+               <span
+                 className={`status-icon is-${label.toLowerCase()}`}
+@@ -96,6 +100,11 @@ const ChipGroup: FC<Props> = ({
+               </div>
+             );
+           })}
++          {hiddenChips > 0 && (
++            <div className="p-chip">
++              <span className="p-chip__value">{`+${hiddenChips} more`}</span>
++            </div>
++          )}
+         </div>
+       )}
+     </>

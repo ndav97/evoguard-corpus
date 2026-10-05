@@ -1,0 +1,32 @@
+diff --git a/src/Components/InlineEdit/index.tsx b/src/Components/InlineEdit/index.tsx
+index c958a49..24fcbd7 100644
+--- a/src/Components/InlineEdit/index.tsx
++++ b/src/Components/InlineEdit/index.tsx
+@@ -35,6 +35,13 @@ const InlineEdit: FC<{
+     setIsEditing(true);
+   };
+ 
++  const onTextKeyDown = (event: KeyboardEvent) => {
++    if (event.key === "Enter" || event.key === " ") {
++      event.preventDefault();
++      startEditing();
++    }
++  };
++
+   const doneEditing = () => {
+     setIsEditing(false);
+     setEditedValue(null);
+@@ -85,7 +92,12 @@ const InlineEdit: FC<{
+   }
+ 
+   return (
+-    <span tabIndex={0} className={className} onClick={startEditing}>
++    <span
++      tabIndex={0}
++      className={className}
++      onClick={startEditing}
++      onKeyDown={onTextKeyDown}
++    >
+       {value}
+     </span>
+   );

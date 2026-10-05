@@ -1,0 +1,27 @@
+diff --git a/src/components/ChipGroup/ChipGroup.tsx b/src/components/ChipGroup/ChipGroup.tsx
+index fc8204b..d0dd7cd 100644
+--- a/src/components/ChipGroup/ChipGroup.tsx
++++ b/src/components/ChipGroup/ChipGroup.tsx
+@@ -49,14 +49,19 @@ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+     ([, countA], [, countB]) => countB - countA,
+   );
+   const labelType = getLabelType(descriptor, numberOfChips);
++  const descriptorText = labelType ? `${numberOfChips} ${labelType}` : null;
+ 
+   return (
+     <>
+       {numberOfChips > 0 && (
+-        <div className={classNames("chip-group", className)}>
+-          {labelType && (
++        <div
++          aria-label={descriptorText ?? "Status counts"}
++          className={classNames("chip-group", className)}
++          role="group"
++        >
++          {descriptorText && (
+             <strong className="chip-group__descriptor">
+-              {`${numberOfChips} ${labelType}`}
++              {descriptorText}
+             </strong>
+           )}
+           {sortedChips.map(([label, count]) => {

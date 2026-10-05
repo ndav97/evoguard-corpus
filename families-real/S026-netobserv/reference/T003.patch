@@ -1,0 +1,66 @@
+diff --git a/src/components/health/health-typeahead-filter.tsx b/src/components/health/health-typeahead-filter.tsx
+index 314c632..5779f57 100644
+--- a/src/components/health/health-typeahead-filter.tsx
++++ b/src/components/health/health-typeahead-filter.tsx
+@@ -17,6 +17,7 @@ export interface HealthTypeaheadFilterProps {
+   options: HealthTypeaheadFilterOption[];
+   selected: string[];
+   onChange: (values: string[]) => void;
++  maxSuggestions?: number;
+ }
+ 
+ // Cap the suggestion list: the namespace count can be large, and suggestions are only a convenience
+@@ -33,7 +34,8 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+   toggleLabel,
+   options,
+   selected,
+-  onChange
++  onChange,
++  maxSuggestions = MAX_SUGGESTIONS
+ }) => {
+   const { t } = useTranslation('plugin__netobserv-plugin');
+   const [inputValue, setInputValue] = React.useState('');
+@@ -48,14 +50,22 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+   const isDuplicate = !!query && selected.includes(query);
+ 
+   // Suggestions are the known namespaces matching what's typed, minus the ones already added.
+-  const suggestions = React.useMemo(
+-    () =>
+-      query && isValid
+-        ? options.filter(opt => !selected.includes(opt.value) && matchesNamespacePattern(inputValue, opt.value))
+-        : [],
+-    [options, selected, inputValue, query, isValid]
+-  );
+-  const shownSuggestions = suggestions.slice(0, MAX_SUGGESTIONS);
++  const suggestions = React.useMemo(() => {
++    if (!query || !isValid) {
++      return [];
++    }
++    const matching = options.filter(
++      opt => !selected.includes(opt.value) && matchesNamespacePattern(inputValue, opt.value)
++    );
++    if (query.includes('*') || query.startsWith('"')) {
++      return matching;
++    }
++    // Plain text: namespaces starting with the typed text come first, keeping the original order otherwise.
++    const prefix = query.toLowerCase();
++    const startsWith = matching.filter(opt => opt.value.toLowerCase().startsWith(prefix));
++    return [...startsWith, ...matching.filter(opt => !startsWith.includes(opt))];
++  }, [options, selected, inputValue, query, isValid]);
++  const shownSuggestions = suggestions.slice(0, maxSuggestions);
+ 
+   const addValue = React.useCallback(
+     (raw: string) => {
+@@ -147,10 +157,10 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+                         {opt.label}
+                       </MenuItem>
+                     ))}
+-                    {suggestions.length > MAX_SUGGESTIONS && (
++                    {suggestions.length > maxSuggestions && (
+                       <MenuItem isDisabled key="more" data-test={`${id}-more`}>
+                         {t('{{count}} more matching namespaces…', {
+-                          count: suggestions.length - MAX_SUGGESTIONS
++                          count: suggestions.length - maxSuggestions
+                         })}
+                       </MenuItem>
+                     )}

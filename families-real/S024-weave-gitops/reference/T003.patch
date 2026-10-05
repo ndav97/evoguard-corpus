@@ -1,0 +1,54 @@
+diff --git a/ui/components/Pagination.tsx b/ui/components/Pagination.tsx
+index 7980955..8c54ed4 100644
+--- a/ui/components/Pagination.tsx
++++ b/ui/components/Pagination.tsx
+@@ -27,6 +27,8 @@ export interface Props {
+   onSelect: (value: string) => void;
+   /** options for perPage select */
+   perPageOptions?: number[];
++  /** rows per page chosen by the parent; when set, the select is controlled */
++  perPage?: number;
+   /** starting index */
+   index: number;
+   /** total rows */
+@@ -43,6 +45,7 @@ function UnstyledPagination({
+   onSkipBack,
+   onSelect,
+   perPageOptions = [25, 50, 75, 100],
++  perPage,
+   index,
+   length,
+   totalObjects,
+@@ -55,8 +58,14 @@ function UnstyledPagination({
+   const [selectedPerPage, setSelectedPerPage] = React.useState<number>(
+     perPageOptions[0],
+   );
+-  const currentPage = isEmpty ? 1 : Math.floor(index / selectedPerPage) + 1;
+-  const pageCount = Math.max(1, Math.ceil(totalObjects / selectedPerPage));
++  const rowsPerPage = perPage ?? selectedPerPage;
++  // a perPage value that is not one of the options is still selectable
++  const options =
++    perPage && !perPageOptions.includes(perPage)
++      ? [...perPageOptions, perPage].sort((a, b) => a - b)
++      : perPageOptions;
++  const currentPage = isEmpty ? 1 : Math.floor(index / rowsPerPage) + 1;
++  const pageCount = Math.max(1, Math.ceil(totalObjects / rowsPerPage));
+ 
+   return (
+     <Flex wide align end className={className}>
+@@ -67,13 +76,13 @@ function UnstyledPagination({
+           <Select
+             id="pagination"
+             variant="outlined"
+-            value={selectedPerPage.toString()}
++            value={rowsPerPage.toString()}
+             onChange={(e: SelectChangeEvent) => {
+               setSelectedPerPage(Number(e.target.value));
+               onSelect(e.target.value);
+             }}
+           >
+-            {perPageOptions.map((option, index) => {
++            {options.map((option, index) => {
+               return (
+                 <MenuItem key={index} value={option}>
+                   {option}

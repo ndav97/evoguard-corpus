@@ -80,3 +80,14 @@ Seis familias pasaron a la primera (S011, S012, S014, S017, S019, S020). Las cua
 | S018 p5.js-web-editor | 8 tests de `server/models/__test__/user.test.ts` necesitan descargar el binario de mongodb-memory-server y no hay red | Añadidos a `known_failures` |
 
 `known_failures` admite ahora dos formas de entrada: la clave de un test (`archivo › nombre completo`) o la ruta de un archivo de test entero (sin « › ») que no llega a ejecutarse en V0. El calibrador y el pipeline (`runner/real/prepare.mjs`, `pipeline.mjs`, `audit.mjs`) excluyen esos archivos de las suites rotas. Como cambian fuentes del pipeline, los ensayos de S001–S010 deben repetirse junto con los de S011–S020. El calibrador guarda además el mensaje de error de cada test oculto que falla (`hidden_messages`) para diagnosticar sin volver a ejecutar.
+
+## Corpus definitivo: familias de 5 turnos (2026-10-05)
+
+Las familias S021–S060 tienen **cinco turnos (T001–T005)**. Las del piloto conservan tres. El pipeline admite las dos variantes:
+- **Esquema:** `turns` admite 3 o 5 entradas, y el plan y las referencias de generación tienen V1–V3 o V1–V5, igual que los turnos.
+- **Versiones de cada familia:** salen de sus turnos (`realVersions(manifest)` en `runner/real/families.mjs`). Generación, auditoría, mutantes y ensayo recorren V1–Vn. El ensayo comprueba la estabilidad del oráculo en la última versión.
+- **Rotación:** proveedor de Vv = `provider_ring[(n − 1 + v) mod 5]`. Con 5 turnos, cada familia usa los cinco proveedores una vez.
+
+**`test_mode: script`:** algunas bases solo ejecutan su suite con el script `test` del paquete (craco o react-scripts). La verificación de bases lo detecta en el campo `mode` del informe. Pasa en S022 kubeapps, S027 tilt, S035 tackle2-ui y S049 inji-web. Con `test_mode: script`, el calibrador, el pipeline y los comandos visibles lanzan `CI=true <gestor> run test [--] …` con los mismos argumentos que el runner directo, más `--watchAll=false` en jest.
+
+La primera tanda (S021–S030) la redactaron cinco autores en paralelo con el mismo encargo y los ejemplos calibrados de S011–S020. Ningún test se pudo ejecutar fuera del PC, así que la calibración es la primera ejecución real.

@@ -1,0 +1,16 @@
+diff --git a/src/ResourceNameFilter.tsx b/src/ResourceNameFilter.tsx
+index 0fa4b985..26593c35 100644
+--- a/src/ResourceNameFilter.tsx
++++ b/src/ResourceNameFilter.tsx
+@@ -118,6 +118,11 @@ export function ResourceNameFilter(props: { className?: string }) {
+       className={props.className}
+       value={resourceNameFilter ?? ""}
+       onChange={(e) => setResourceNameFilter(e.target.value)}
++      onKeyDown={(e) => {
++        if (e.key === "Escape" && resourceNameFilter.length) {
++          setResourceNameFilter("")
++        }
++      }}
+       placeholder="Filter resources by name"
+       InputProps={inputProps}
+       variant="outlined"

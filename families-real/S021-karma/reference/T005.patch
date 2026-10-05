@@ -1,0 +1,99 @@
+diff --git a/src/Components/InlineEdit/index.tsx b/src/Components/InlineEdit/index.tsx
+index 1551b30..9d32856 100644
+--- a/src/Components/InlineEdit/index.tsx
++++ b/src/Components/InlineEdit/index.tsx
+@@ -18,6 +18,7 @@ const InlineEdit: FC<{
+   onExitEditing?: () => void;
+   placeholder?: string;
+   label?: string;
++  validate?: (value: string) => string | undefined;
+ }> = ({
+   className,
+   classNameEditing,
+@@ -27,10 +28,12 @@ const InlineEdit: FC<{
+   onExitEditing,
+   placeholder,
+   label,
++  validate,
+ }) => {
+   const ref = useRef<HTMLInputElement | null>(null);
+   const [editedValue, setEditedValue] = useState<string | null>(null);
+   const [isEditing, setIsEditing] = useState<boolean>(false);
++  const [error, setError] = useState<string | null>(null);
+ 
+   const startEditing = () => {
+     if (onEnterEditing) {
+@@ -49,6 +52,7 @@ const InlineEdit: FC<{
+   const doneEditing = () => {
+     setIsEditing(false);
+     setEditedValue(null);
++    setError(null);
+     if (onExitEditing) {
+       onExitEditing();
+     }
+@@ -56,16 +60,26 @@ const InlineEdit: FC<{
+ 
+   const onInput = (event: ChangeEvent<HTMLInputElement>) => {
+     setEditedValue(event.target.value);
++    setError(null);
+   };
+ 
+   const onKeyDown = (event: KeyboardEvent) => {
+     if (event.key === "Enter") {
+       const trimmed = editedValue === null ? null : editedValue.trim();
++      let newValue: string | null = null;
+       // Only notify when the value actually changed.
+       if (trimmed !== null && trimmed !== "" && trimmed !== value) {
+-        onChange(trimmed);
++        newValue = trimmed;
+       } else if (editedValue === "" && value !== "") {
+-        onChange("");
++        newValue = "";
++      }
++      if (newValue !== null) {
++        const validationError = validate ? validate(newValue) : undefined;
++        if (validationError) {
++          setError(validationError);
++          return;
++        }
++        onChange(newValue);
+       }
+       doneEditing();
+     } else if (event.key === "Escape") {
+@@ -85,17 +99,25 @@ const InlineEdit: FC<{
+     const val = editedValue === null ? value : editedValue;
+ 
+     return (
+-      <input
+-        ref={ref}
+-        type="text"
+-        className={classNameEditing}
+-        value={val}
+-        size={(val || placeholder || "").length + 1}
+-        placeholder={placeholder}
+-        aria-label={label}
+-        onChange={onInput}
+-        onKeyDown={onKeyDown}
+-      />
++      <>
++        <input
++          ref={ref}
++          type="text"
++          className={classNameEditing}
++          value={val}
++          size={(val || placeholder || "").length + 1}
++          placeholder={placeholder}
++          aria-label={label}
++          onChange={onInput}
++          onKeyDown={onKeyDown}
++          aria-invalid={error ? true : undefined}
++        />
++        {error ? (
++          <span role="alert" className="text-danger small ms-1">
++            {error}
++          </span>
++        ) : null}
++      </>
+     );
+   }
+ 

@@ -1,0 +1,25 @@
+diff --git a/src/ResourceNameFilter.tsx b/src/ResourceNameFilter.tsx
+index 53018110..0fa4b985 100644
+--- a/src/ResourceNameFilter.tsx
++++ b/src/ResourceNameFilter.tsx
+@@ -26,10 +26,16 @@ export function matchesResourceName(
+   if (filter === "") {
+     return true
+   }
+-  // a resource matches the query if the resource name contains all tokens in the query
+-  return filter
+-    .split(" ")
+-    .every((token) => resourceName.toLowerCase().includes(token.toLowerCase()))
++  // a resource matches the query if the resource name contains all tokens in the query,
++  // and none of the excluded tokens (those prefixed with "-")
++  const name = resourceName.toLowerCase()
++  return filter.split(" ").every((token) => {
++    if (token.startsWith("-")) {
++      const excluded = token.slice(1)
++      return excluded === "" || !name.includes(excluded.toLowerCase())
++    }
++    return name.includes(token.toLowerCase())
++  })
+ }
+ 
+ export const ResourceNameFilterTextField = styled(InstrumentedTextField)`

@@ -1,0 +1,70 @@
+diff --git a/src/layout/common/Pagination.tsx b/src/layout/common/Pagination.tsx
+index 1a04424..6bc3c67 100644
+--- a/src/layout/common/Pagination.tsx
++++ b/src/layout/common/Pagination.tsx
+@@ -12,6 +12,7 @@ interface Props {
+   offset: number;
+   active: number;
+   className?: string;
++  showFirstLast?: boolean;
+   onChange: (pageNumber: number) => void;
+ }
+ 
+@@ -19,6 +20,7 @@ interface ButtonProps {
+   pageNumber: number;
+   disabled: boolean;
+   content?: JSX.Element | string;
++  label?: string;
+   active: number;
+   onChange: (pageNumber: number) => void;
+ }
+@@ -50,7 +52,9 @@ const PaginationBtn = (btnProps: ButtonProps) => (
+         btnProps.onChange(btnProps.pageNumber);
+       }
+     }}
+-    aria-label={`Open ${isString(btnProps.content) ? btnProps.content : `page ${btnProps.pageNumber}`}`}
++    aria-label={
++      btnProps.label || `Open ${isString(btnProps.content) ? btnProps.content : `page ${btnProps.pageNumber}`}`
++    }
+     disabled={btnProps.disabled}
+     tabIndex={btnProps.disabled ? -1 : 0}
+   >
+@@ -79,6 +83,18 @@ const Pagination = (props: Props) => {
+   return (
+     <nav role="navigation" aria-label="pagination">
+       <ul className={`pagination justify-content-center ${styles.pagination} ${props.className}`}>
++        {props.showFirstLast && (
++          <li className={classnames('page-item', { disabled: currentPage === 1 })}>
++            <PaginationBtn
++              pageNumber={1}
++              disabled={currentPage === 1}
++              content="First"
++              label="Open first page"
++              active={currentPage}
++              onChange={props.onChange}
++            />
++          </li>
++        )}
+         <li className={classnames('page-item', { disabled: currentPage === 1 })}>
+           <PaginationBtn
+             pageNumber={currentPage - 1}
+@@ -131,6 +147,19 @@ const Pagination = (props: Props) => {
+             onChange={props.onChange}
+           />
+         </li>
++
++        {props.showFirstLast && (
++          <li className={classnames('page-item', { disabled: currentPage === totalPages })}>
++            <PaginationBtn
++              pageNumber={totalPages}
++              disabled={currentPage === totalPages}
++              content="Last"
++              label="Open last page"
++              active={currentPage}
++              onChange={props.onChange}
++            />
++          </li>
++        )}
+       </ul>
+     </nav>
+   );

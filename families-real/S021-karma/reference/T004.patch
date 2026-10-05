@@ -1,0 +1,37 @@
+diff --git a/src/Components/InlineEdit/index.tsx b/src/Components/InlineEdit/index.tsx
+index 8b3cb16..1551b30 100644
+--- a/src/Components/InlineEdit/index.tsx
++++ b/src/Components/InlineEdit/index.tsx
+@@ -17,6 +17,7 @@ const InlineEdit: FC<{
+   onEnterEditing?: () => void;
+   onExitEditing?: () => void;
+   placeholder?: string;
++  label?: string;
+ }> = ({
+   className,
+   classNameEditing,
+@@ -25,6 +26,7 @@ const InlineEdit: FC<{
+   onEnterEditing,
+   onExitEditing,
+   placeholder,
++  label,
+ }) => {
+   const ref = useRef<HTMLInputElement | null>(null);
+   const [editedValue, setEditedValue] = useState<string | null>(null);
+@@ -90,6 +92,7 @@ const InlineEdit: FC<{
+         value={val}
+         size={(val || placeholder || "").length + 1}
+         placeholder={placeholder}
++        aria-label={label}
+         onChange={onInput}
+         onKeyDown={onKeyDown}
+       />
+@@ -102,6 +105,8 @@ const InlineEdit: FC<{
+       className={className}
+       onClick={startEditing}
+       onKeyDown={onTextKeyDown}
++      role={label ? "button" : undefined}
++      aria-label={label ? `Edit ${label}` : undefined}
+     >
+       {value === "" && placeholder ? placeholder : value}
+     </span>

@@ -1,0 +1,13 @@
+diff --git a/src/components/health/health-typeahead-filter.tsx b/src/components/health/health-typeahead-filter.tsx
+index 98ea071..811758f 100644
+--- a/src/components/health/health-typeahead-filter.tsx
++++ b/src/components/health/health-typeahead-filter.tsx
+@@ -105,6 +105,8 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+                 addValue(inputValue);
+               } else if (e.key === 'Escape') {
+                 setOpen(false);
++              } else if (e.key === 'Backspace' && inputValue === '' && selected.length > 0) {
++                onChange(selected.slice(0, -1));
+               }
+             }}
+             ref={inputRef}

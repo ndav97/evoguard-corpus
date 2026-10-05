@@ -3,6 +3,7 @@
 // no llegan a ejecutar ningún test (no compilan) y comparación estable con resultados ordenados.
 import { posix } from 'node:path';
 import { runReal, execReal } from './docker.mjs';
+import { scriptPrefix } from './families.mjs';
 
 export const REPORT = '/tmp/evoguard-report.json';
 // Reduce el informe a lo necesario (evita salidas de decenas de MB con mensajes y trazas completos).
@@ -12,6 +13,12 @@ process.stdout.write(JSON.stringify({numTotalTests:j.numTotalTests,numFailedTest
 // Comando de la suite en el paquete (sh -lc). files: rutas relativas al paquete (opcional).
 export function suiteCommand(manifest, files = []) {
   const list = files.map(f => `'${f.replace(/'/g, '')}'`).join(' ');
+  if (manifest.test_mode === 'script') {
+    const prefix = `CI=true ${scriptPrefix(manifest).join(' ')}`;
+    return manifest.runner === 'vitest'
+      ? `${prefix} --run ${list} --reporter=json --outputFile=${REPORT} --maxWorkers=2`
+      : `${prefix} --ci --watchAll=false ${list} --json --outputFile=${REPORT} --maxWorkers=2 --forceExit`;
+  }
   return manifest.runner === 'vitest'
     ? `npx --no-install vitest run ${list} --reporter=json --outputFile=${REPORT} --maxWorkers=2`
     : `npx --no-install jest --ci ${list} --json --outputFile=${REPORT} --maxWorkers=2 --forceExit`;

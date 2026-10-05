@@ -1,0 +1,21 @@
+diff --git a/src/components/health/health-typeahead-filter.tsx b/src/components/health/health-typeahead-filter.tsx
+index 5779f57..ad76ca9 100644
+--- a/src/components/health/health-typeahead-filter.tsx
++++ b/src/components/health/health-typeahead-filter.tsx
+@@ -116,7 +116,15 @@ export const HealthTypeaheadFilter: React.FC<HealthTypeaheadFilterProps> = ({
+                 e.preventDefault();
+                 addValue(inputValue);
+               } else if (e.key === 'Escape') {
+-                setOpen(false);
++                // First Escape closes the suggestions, a second one clears the typed text; only an
++                // Escape with nothing left to do reaches the parents (e.g. to close a modal).
++                if (isOpen) {
++                  e.stopPropagation();
++                  setOpen(false);
++                } else if (inputValue) {
++                  e.stopPropagation();
++                  setInputValue('');
++                }
+               } else if (e.key === 'Backspace' && inputValue === '' && selected.length > 0) {
+                 onChange(selected.slice(0, -1));
+               }

@@ -1,0 +1,16 @@
+diff --git a/src/components/SearchFilter/SearchFilter.tsx b/src/components/SearchFilter/SearchFilter.tsx
+index 8140a00..945c697 100644
+--- a/src/components/SearchFilter/SearchFilter.tsx
++++ b/src/components/SearchFilter/SearchFilter.tsx
+@@ -61,6 +61,11 @@ function SearchFilter(props: ISearchFilterProps) {
+   };
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
++    // Apply a pending change right away so the submitted filter is up to date
++    if (timeout.current !== undefined) {
++      cancelPendingChange();
++      props.onChange(value);
++    }
+     props.submitFilters();
+   };
+   return (

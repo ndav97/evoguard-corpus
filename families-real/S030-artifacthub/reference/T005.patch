@@ -1,0 +1,48 @@
+diff --git a/src/layout/common/Pagination.tsx b/src/layout/common/Pagination.tsx
+index ad6f779..9acb7e5 100644
+--- a/src/layout/common/Pagination.tsx
++++ b/src/layout/common/Pagination.tsx
+@@ -73,6 +73,7 @@ const Pagination = (props: Props) => {
+   const [totalPages, setTotalPages] = useState(Math.ceil(props.total / props.limit));
+   const [active, setActive] = useState<number>(props.active);
+   const [goToValue, setGoToValue] = useState<string>('');
++  const [goToError, setGoToError] = useState<boolean>(false);
+ 
+   useEffect(() => {
+     setTotalPages(Math.ceil(props.total / props.limit));
+@@ -99,6 +100,9 @@ const Pagination = (props: Props) => {
+         props.onChange(pageNumber);
+       }
+       setGoToValue('');
++      setGoToError(false);
++    } else {
++      setGoToError(true);
+     }
+   };
+ 
+@@ -190,14 +194,24 @@ const Pagination = (props: Props) => {
+             type="number"
+             className="form-control form-control-sm w-auto"
+             aria-label="Go to page"
++            aria-invalid={goToError ? 'true' : undefined}
++            aria-describedby={goToError ? 'pagination-goto-error' : undefined}
+             min={1}
+             max={totalPages}
+             value={goToValue}
+-            onChange={(e) => setGoToValue(e.target.value)}
++            onChange={(e) => {
++              setGoToValue(e.target.value);
++              setGoToError(false);
++            }}
+           />
+           <button type="submit" className="btn btn-sm btn-outline-secondary ms-2">
+             Go
+           </button>
++          {goToError && (
++            <small id="pagination-goto-error" role="alert" className="text-danger ms-2">
++              {`Enter a page between 1 and ${totalPages}`}
++            </small>
++          )}
+         </form>
+       )}
+     </nav>

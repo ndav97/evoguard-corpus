@@ -1,0 +1,39 @@
+diff --git a/src/components/ChipGroup/ChipGroup.tsx b/src/components/ChipGroup/ChipGroup.tsx
+index dccdc17..9a8f4bd 100644
+--- a/src/components/ChipGroup/ChipGroup.tsx
++++ b/src/components/ChipGroup/ChipGroup.tsx
+@@ -10,17 +10,21 @@ type Props = {
+ };
+ 
+ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+-  const getLabelType = (labelDescriptor?: null | string): null | string => {
++  const getLabelType = (
++    labelDescriptor: null | string | undefined,
++    total: number,
++  ): null | string => {
+     let label: null | string = null;
++    const singular = total === 1;
+     switch (labelDescriptor) {
+       case "localApps":
+-        label = "Local applications";
++        label = singular ? "Local application" : "Local applications";
+         break;
+       case "units":
+-        label = "Units";
++        label = singular ? "Unit" : "Units";
+         break;
+       case "machines":
+-        label = "Machines";
++        label = singular ? "Machine" : "Machines";
+         break;
+       default:
+         break;
+@@ -39,7 +43,7 @@ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+   };
+ 
+   const numberOfChips = getSumTotal(chips);
+-  const labelType = getLabelType(descriptor);
++  const labelType = getLabelType(descriptor, numberOfChips);
+ 
+   return (
+     <>

@@ -1,0 +1,75 @@
+diff --git a/ui/components/Pagination.tsx b/ui/components/Pagination.tsx
+index 8c54ed4..e428f3a 100644
+--- a/ui/components/Pagination.tsx
++++ b/ui/components/Pagination.tsx
+@@ -29,6 +29,8 @@ export interface Props {
+   perPageOptions?: number[];
+   /** rows per page chosen by the parent; when set, the select is controlled */
+   perPage?: number;
++  /** when set, shows a field to jump to a page (1-based) */
++  onGoToPage?: (page: number) => void;
+   /** starting index */
+   index: number;
+   /** total rows */
+@@ -46,6 +48,7 @@ function UnstyledPagination({
+   onSelect,
+   perPageOptions = [25, 50, 75, 100],
+   perPage,
++  onGoToPage,
+   index,
+   length,
+   totalObjects,
+@@ -67,6 +70,23 @@ function UnstyledPagination({
+   const currentPage = isEmpty ? 1 : Math.floor(index / rowsPerPage) + 1;
+   const pageCount = Math.max(1, Math.ceil(totalObjects / rowsPerPage));
+ 
++  const [pageInput, setPageInput] = React.useState("");
++  const [pageError, setPageError] = React.useState(false);
++  const goToPage = () => {
++    const page = Number(pageInput);
++    if (
++      pageInput.trim() === "" ||
++      !Number.isInteger(page) ||
++      page < 1 ||
++      page > pageCount
++    ) {
++      setPageError(true);
++      return;
++    }
++    setPageError(false);
++    onGoToPage(page);
++  };
++
+   return (
+     <Flex wide align end className={className}>
+       <FormControl>
+@@ -100,6 +120,29 @@ function UnstyledPagination({
+       <Text>
+         Page {currentPage} of {pageCount}
+       </Text>
++      {onGoToPage && (
++        <>
++          <Spacer padding="base" />
++          <Flex align>
++            <label htmlFor="pagination-go-to-page">Page number</label>
++            <Spacer padding="xxs" />
++            <input
++              id="pagination-go-to-page"
++              type="number"
++              min={1}
++              max={pageCount}
++              value={pageInput}
++              onChange={(e) => setPageInput(e.target.value)}
++            />
++            <Button color="inherit" variant="text" onClick={goToPage}>
++              Go
++            </Button>
++          </Flex>
++          {pageError && (
++            <Text role="alert">Enter a page between 1 and {pageCount}</Text>
++          )}
++        </>
++      )}
+       <Spacer padding="base" />
+       <Flex>
+         <Button

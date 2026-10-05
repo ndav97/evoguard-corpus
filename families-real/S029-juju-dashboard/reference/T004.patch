@@ -1,0 +1,59 @@
+diff --git a/src/components/ChipGroup/ChipGroup.tsx b/src/components/ChipGroup/ChipGroup.tsx
+index d0dd7cd..376730a 100644
+--- a/src/components/ChipGroup/ChipGroup.tsx
++++ b/src/components/ChipGroup/ChipGroup.tsx
+@@ -7,9 +7,15 @@ type Props = {
+   chips?: Chip | null;
+   className?: null | string;
+   descriptor?: null | string;
++  onChipClick?: (label: string) => void;
+ };
+ 
+-const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
++const ChipGroup: FC<Props> = ({
++  chips,
++  className,
++  descriptor,
++  onChipClick,
++}: Props) => {
+   const getLabelType = (
+     labelDescriptor: null | string | undefined,
+     total: number,
+@@ -65,14 +71,29 @@ const ChipGroup: FC<Props> = ({ chips, className, descriptor }: Props) => {
+             </strong>
+           )}
+           {sortedChips.map(([label, count]) => {
+-            return (
+-              count > 0 && (
+-                <div className="p-chip" key={label}>
+-                  <span
+-                    className={`status-icon is-${label.toLowerCase()}`}
+-                  >{`${count} ${label}`}</span>
+-                </div>
+-              )
++            if (count <= 0) {
++              return null;
++            }
++            const content = (
++              <span
++                className={`status-icon is-${label.toLowerCase()}`}
++              >{`${count} ${label}`}</span>
++            );
++            return onChipClick ? (
++              <button
++                className="p-chip"
++                key={label}
++                onClick={() => {
++                  onChipClick(label);
++                }}
++                type="button"
++              >
++                {content}
++              </button>
++            ) : (
++              <div className="p-chip" key={label}>
++                {content}
++              </div>
+             );
+           })}
+         </div>

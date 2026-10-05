@@ -1,0 +1,23 @@
+diff --git a/utils/versionSort.ts b/utils/versionSort.ts
+index cfe54f12a99..3600fb534ac 100644
+--- a/utils/versionSort.ts
++++ b/utils/versionSort.ts
+@@ -122,13 +122,16 @@ export const sortByVersionInDecreasingOrder = (versions) => {
+     return;
+   }
+ 
++  // drop empty entries and repeated versions
++  const distinct = [...new Set(versions.filter(Boolean))];
++
+   // add wildcard only in the case of multiple distinct versions
+   let wildCardV = [];
+-  if (versions.length > 1) {
++  if (distinct.length > 1) {
+     wildCardV = [WILDCARD_V];
+   }
+ 
+-  return [...wildCardV, ...[...versions].sort(versionSortComparatorFn).reverse()];
++  return [...wildCardV, ...distinct.sort(versionSortComparatorFn).reverse()];
+ };
+ 
+ /**

@@ -1,0 +1,60 @@
+diff --git a/packages/components/src/components/LabelFilter/LabelFilter.jsx b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+index 85ae1aa..0be0b11 100644
+--- a/packages/components/src/components/LabelFilter/LabelFilter.jsx
++++ b/packages/components/src/components/LabelFilter/LabelFilter.jsx
+@@ -20,6 +20,9 @@ function arrayUnique(arr) {
+   return arr.filter((item, index) => arr.indexOf(item) >= index);
+ }
+ 
++const labelSyntaxURL =
++  'https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set';
++
+ class LabelFilter extends Component {
+   state = {
+     currentFilterValue: '',
+@@ -47,7 +50,7 @@ class LabelFilter extends Component {
+           defaultMessage:
+             'Filters must be of the format labelKey:labelValue and contain accepted label characters'
+         }),
+-        url: 'https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set',
++        url: labelSyntaxURL,
+         urlMessage: intl.formatMessage({
+           id: 'dashboard.labelFilter.syntaxMessage',
+           defaultMessage:
+@@ -63,6 +66,12 @@ class LabelFilter extends Component {
+           id: 'dashboard.labelFilter.invalidLength',
+           defaultMessage:
+             'Filters must be of the format labelKey:labelValue and contain less than 64 characters'
++        }),
++        url: labelSyntaxURL,
++        urlMessage: intl.formatMessage({
++          id: 'dashboard.labelFilter.syntaxMessage',
++          defaultMessage:
++            'See the Kubernetes Label documentation for valid syntax'
+         })
+       });
+       return;
+@@ -93,8 +102,13 @@ class LabelFilter extends Component {
+ 
+   handleChange = event => {
+     const inputValue = event.target.value;
++    // editing the filter dismisses any previous error
+     this.setState({
+-      currentFilterValue: inputValue
++      currentFilterValue: inputValue,
++      isValid: true,
++      filterMessage: null,
++      url: '',
++      urlMessage: ''
+     });
+   };
+ 
+@@ -138,7 +152,7 @@ class LabelFilter extends Component {
+             title={filterMessage}
+             onCloseButtonClick={this.handleCloseFilterError}
+           >
+-            <Link href={url}>{urlMessage}</Link>
++            {url && <Link href={url}>{urlMessage}</Link>}
+           </ActionableNotification>
+         )}
+         <Form onSubmit={this.handleAddFilter} autoComplete="on">

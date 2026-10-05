@@ -1,0 +1,67 @@
+# Familia semi-real S024 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-05 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S024
+slug: weave-gitops
+stratum: semi-real
+repo: weaveworks/weave-gitops
+url: https://github.com/weaveworks/weave-gitops
+license: APACHE-2.0
+domain: GitOps (interfaz de Flux)
+v0:
+  commit: 936e848c4e001355fccdfee61c0d54e4a9917183
+  date: 2026-01-26
+  verified: 2026-10-05 GREEN (231 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: jest
+node: "22"
+workspace: github__weaveworks__weave-gitops          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: ui/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: ui/components/Pagination.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Rango correcto con listas vacías y en la última página
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Indicador de página
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Filas por página controladas por el padre
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Ir a una página concreta
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Separadores de miles y tecla Enter
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-05
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_b
+    V2: openai
+    V3: anthropic
+    V4: google
+    V5: local_a
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

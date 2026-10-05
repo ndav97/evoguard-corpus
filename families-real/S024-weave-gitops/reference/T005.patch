@@ -1,0 +1,52 @@
+diff --git a/ui/components/Pagination.tsx b/ui/components/Pagination.tsx
+index e428f3a..eb060d2 100644
+--- a/ui/components/Pagination.tsx
++++ b/ui/components/Pagination.tsx
+@@ -39,6 +39,9 @@ export interface Props {
+   totalObjects: number;
+ }
+ 
++// numbers are shown with thousands separators (1,234)
++const formatNumber = (value: number) => value.toLocaleString("en-US");
++
+ function UnstyledPagination({
+   className,
+   onForward,
+@@ -114,11 +117,12 @@ function UnstyledPagination({
+       </FormControl>
+       <Spacer padding="base" />
+       <Text>
+-        {firstShown} - {lastShown} out of {totalObjects}
++        {formatNumber(firstShown)} - {formatNumber(lastShown)} out of{" "}
++        {formatNumber(totalObjects)}
+       </Text>
+       <Spacer padding="base" />
+       <Text>
+-        Page {currentPage} of {pageCount}
++        Page {formatNumber(currentPage)} of {formatNumber(pageCount)}
+       </Text>
+       {onGoToPage && (
+         <>
+@@ -133,13 +137,21 @@ function UnstyledPagination({
+               max={pageCount}
+               value={pageInput}
+               onChange={(e) => setPageInput(e.target.value)}
++              onKeyDown={(e) => {
++                if (e.key === "Enter") {
++                  e.preventDefault();
++                  goToPage();
++                }
++              }}
+             />
+             <Button color="inherit" variant="text" onClick={goToPage}>
+               Go
+             </Button>
+           </Flex>
+           {pageError && (
+-            <Text role="alert">Enter a page between 1 and {pageCount}</Text>
++            <Text role="alert">
++              Enter a page between 1 and {formatNumber(pageCount)}
++            </Text>
+           )}
+         </>
+       )}

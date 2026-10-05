@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://evoguard.invalid/schema/real-family.schema.json",
   "title": "real-family",
-  "description": "Manifiesto de una familia semi-real (families-real/Sxxx-slug/family.yaml): base V0 real fijada por commit y tres cambios T001–T003 redactados por el equipo.",
+  "description": "Manifiesto de una familia semi-real (families-real/Sxxx-slug/family.yaml): base V0 real fijada por commit y tres (piloto) o cinco (corpus definitivo) cambios T001–T00n redactados por el equipo.",
   "type": "object",
   "properties": {
     "id": {
@@ -99,7 +99,7 @@
     "turns": {
       "type": "array",
       "minItems": 3,
-      "maxItems": 3,
+      "maxItems": 5,
       "items": {
         "type": "object",
         "properties": {
@@ -107,7 +107,9 @@
             "enum": [
               "T001",
               "T002",
-              "T003"
+              "T003",
+              "T004",
+              "T005"
             ]
           },
           "title": {
@@ -116,15 +118,15 @@
           },
           "request": {
             "type": "string",
-            "pattern": "^turns/T00[1-3]\\.md$"
+            "pattern": "^turns/T00[1-5]\\.md$"
           },
           "hidden_tests": {
             "type": "string",
-            "pattern": "^oracle/T00[1-3]\\.test\\.(jsx?|tsx?)$"
+            "pattern": "^oracle/T00[1-5]\\.test\\.(jsx?|tsx?)$"
           },
           "reference_patch": {
             "type": "string",
-            "pattern": "^reference/T00[1-3]\\.patch$"
+            "pattern": "^reference/T00[1-5]\\.patch$"
           }
         },
         "required": [
@@ -207,6 +209,24 @@
                 "local_a",
                 "local_b"
               ]
+            },
+            "V4": {
+              "enum": [
+                "openai",
+                "anthropic",
+                "google",
+                "local_a",
+                "local_b"
+              ]
+            },
+            "V5": {
+              "enum": [
+                "openai",
+                "anthropic",
+                "google",
+                "local_a",
+                "local_b"
+              ]
             }
           },
           "required": [
@@ -234,6 +254,20 @@
               "pattern": "^[0-9a-f]{40}$"
             },
             "V3": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "V4": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "V5": {
               "type": [
                 "string",
                 "null"
@@ -290,6 +324,13 @@
         }
       },
       "additionalProperties": false
+    },
+    "test_mode": {
+      "enum": [
+        "direct",
+        "script"
+      ],
+      "description": "Cómo se lanza la suite: 'direct' (npx jest/vitest; por defecto) o 'script' (el script test del paquete, p. ej. craco o react-scripts, con los mismos argumentos)."
     }
   },
   "required": [

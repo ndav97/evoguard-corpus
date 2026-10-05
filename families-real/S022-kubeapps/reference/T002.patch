@@ -1,0 +1,33 @@
+diff --git a/src/components/SearchFilter/SearchFilter.tsx b/src/components/SearchFilter/SearchFilter.tsx
+index a2a4338..2afed5b 100644
+--- a/src/components/SearchFilter/SearchFilter.tsx
++++ b/src/components/SearchFilter/SearchFilter.tsx
+@@ -40,6 +40,20 @@ function SearchFilter(props: ISearchFilterProps) {
+       props.onChange(valueCopy);
+     }, 300);
+   };
++  const clearFilter = () => {
++    const hadPendingChange = timeout.current !== undefined;
++    cancelPendingChange();
++    if (value !== "" || hadPendingChange) {
++      setValue("");
++      props.onChange("");
++    }
++  };
++  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
++    if (e.key === "Escape") {
++      e.preventDefault();
++      clearFilter();
++    }
++  };
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     props.submitFilters();
+@@ -61,6 +75,7 @@ function SearchFilter(props: ISearchFilterProps) {
+                 placeholder={props.placeholder}
+                 autoComplete="off"
+                 onChange={handleChange}
++                onKeyDown={handleKeyDown}
+                 value={value}
+               />
+             </CdsInput>
