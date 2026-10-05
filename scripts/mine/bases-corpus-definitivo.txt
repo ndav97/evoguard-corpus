@@ -1,0 +1,41 @@
+# Bases V0 de las familias S021–S060 (corpus definitivo). Formato: ID owner/repo SHA paquete runner gestor node
+S021 prymitive/karma 4d5a17a594d0 ui jest npm 
+S022 vmware-tanzu/kubeapps b70ead2c4768 dashboard jest yarn 
+S023 tektoncd/dashboard 868ba5bbafb7 . vitest npm 24.21.0
+S024 weaveworks/weave-gitops 936e848c4e00 . jest yarn 22.12.0
+S025 grafana/traces-drilldown 47aba3406025 . jest pnpm 22
+S026 netobserv/network-observability-console-plugin aba92a5381ef web jest npm 
+S027 tilt-dev/tilt 3ae48d2c15a5 web jest yarn 20
+S028 meshery/meshery 696f64dd1f95 ui vitest npm 22.13.0
+S029 canonical/juju-dashboard f07e90f270fb . vitest yarn 
+S030 artifacthub/hub c98b3a61f97a web vitest yarn 22.22.2
+S031 cncf/clomonitor dad5b7108536 web vitest yarn 
+S032 Kuadrant/kuadrant-console-plugin 684caec0546c . jest yarn 
+S033 openshift-pipelines/console-plugin 9f09bceba7e5 . jest yarn 
+S034 kubev2v/migration-planner-ui 8dbfb4cd32a2 apps/agent-ui vitest yarn 
+S035 konveyor/tackle2-ui 9b21407e7987 client jest npm 22.22.0
+S036 flyteorg/flyteconsole 04d6a334cb07 packages/oss-console jest yarn 
+S037 apache/airflow 6f5d5d06b177 airflow-core/src/airflow/ui vitest pnpm 22
+S038 amundsen-io/amundsen 469c1b778340 frontend/amundsen_application/static jest npm 12
+S039 kubeflow/model-registry 56b05282dcd5 clients/ui/frontend jest npm 22.0.0
+S040 qdrant/qdrant-web-ui b2232842dad8 . vitest npm 24
+S041 aws/graph-explorer c671c2a359f3 packages/graph-explorer vitest pnpm 24.21.0
+S042 pinterest/querybook 3f26532bfc36 . jest yarn 18.0.0
+S043 VolkovLabs/business-table 4201aa055e62 . jest npm 20
+S044 RedHatInsights/insights-inventory-frontend 3a2b1bfa57bb . jest npm 22.0.0
+S045 project-koku/koku-ui 0207f98fd6fa apps/koku-ui-hccm jest npm 22.20.0
+S046 Enterprise-CMCS/macpro-mdct-mcr 12d75c01fe28 services/ui-src jest yarn 22.19.0
+S047 CMSgov/easi-app fa7ed3920447 . vitest yarn 20.12.2
+S048 betagouv/mon-entreprise 05cb5be511d3 site vitest yarn 24.14.1
+S049 mosip/inji-web a9f4f829d307 inji-web jest npm 
+S050 mitodl/ocw-studio 4909ad7a0344 . jest yarn 24.14.1
+S051 ebi-uniprot/uniprot-website 1442948c7fa8 . jest pnpm 22
+S052 hotosm/fAIr 9eaaf4ec7854 frontend vitest pnpm 
+S053 canonical/snapcraft.io 734bd0eb5cbc . vitest yarn 
+S054 Automattic/sensei f93ac7c7aa4d . jest npm 22
+S055 pods-framework/pods 07ed152f8cf4 . jest npm 22.23.2
+S056 element-hq/element-call 8835a6d75d36 . vitest pnpm 24
+S057 mozilla/pontoon 87ee2de97968 translate vitest npm 24
+S058 openedx/frontend-app-learner-portal-enterprise 3c21d1058c8f . jest npm 24
+S059 openmrs/openmrs-esm-patient-management e7b14cfb17e0 packages/esm-service-queues-app vitest yarn 
+S060 jenkinsci/pipeline-graph-view-plugin 9df19e6ceed2 . vitest npm 23
