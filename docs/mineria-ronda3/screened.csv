@@ -1,0 +1,156 @@
+forge,repo,status,reason,loc,ui_test_files,unit_test_files,ai_share,license,url
+github,aimhubio/aim,aprobado,,94996,17,30,0,APACHE-2.0,https://github.com/aimhubio/aim
+github,akvo/akvo-lumen,descartado,pocos tests de UI (1); pocos tests (7),35923,1,7,0,AGPL-3.0,https://github.com/akvo/akvo-lumen
+github,akvo/akvo-rsr,descartado,pocos tests de UI (3); pocos tests (8); pocos casos de test (68),26797,3,8,0,AGPL-3.0,https://github.com/akvo/akvo-rsr
+github,Altinity/clickhouse-grafana,aprobado,,12803,22,60,0.05,MIT,https://github.com/Altinity/clickhouse-grafana
+github,Altinn/app-frontend-react,aprobado,,82107,120,173,0.01,BSD-3-CLAUSE,https://github.com/Altinn/app-frontend-react
+github,apache/couchdb-fauxton,aprobado,,43154,59,187,0,APACHE-2.0,https://github.com/apache/couchdb-fauxton
+github,apache/inlong,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0),42704,0,0,0,APACHE-2.0,https://github.com/apache/inlong
+github,apache/shenyu-dashboard,descartado,pocos tests de UI (9),42375,9,53,0,APACHE-2.0,https://github.com/apache/shenyu-dashboard
+github,Apicurio/apicurio-registry,descartado,pocos tests de UI (4),30411,4,23,0.03,APACHE-2.0,https://github.com/Apicurio/apicurio-registry
+github,artifacthub/hub,aprobado,,45247,262,264,0,APACHE-2.0,https://github.com/artifacthub/hub
+github,asyncapi/studio,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (4); pocos casos de test (25),9728,0,4,0,APACHE-2.0,https://github.com/asyncapi/studio
+github,aws-solutions/centralized-logging-with-opensearch,descartado,sin lockfile,63290,257,281,0,APACHE-2.0,https://github.com/aws-solutions/centralized-logging-with-opensearch
+github,aws-solutions/distributed-load-testing-on-aws,aprobado,,15855,47,74,0,APACHE-2.0,https://github.com/aws-solutions/distributed-load-testing-on-aws
+github,aws/graph-explorer,aprobado,,48529,50,230,0.01,APACHE-2.0,https://github.com/aws/graph-explorer
+github,bcgov/biohubbc,aprobado,,78723,67,87,0,APACHE-2.0,https://github.com/bcgov/biohubbc
+github,bcgov/foi-flow,aprobado,,64646,43,54,0,APACHE-2.0,https://github.com/bcgov/foi-flow
+github,bcgov/PIMS,descartado,pocos tests de UI (1); pocos tests (2); pocos casos de test (0); sin lockfile,17276,1,2,0,APACHE-2.0,https://github.com/bcgov/PIMS
+github,betagouv/mon-entreprise,aprobado,,53470,23,76,0,MIT,https://github.com/betagouv/mon-entreprise
+github,beyondessential/tamanu,descartado,muy grande (134716 líneas),134716,63,91,0.25,,https://github.com/beyondessential/tamanu
+github,beyondessential/tupaia,descartado,pocos tests (14); pocos casos de test (66),27224,10,14,0.07,GPL-3.0,https://github.com/beyondessential/tupaia
+github,blakeblackshear/frigate,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy grande (135802 líneas),135802,0,0,0,MIT,https://github.com/blakeblackshear/frigate
+github,bluesky-social/ozone,descartado,pocos tests de UI (0); pocos tests (3); pocos casos de test (13),56581,0,3,0.03,APACHE-2.0,https://github.com/bluesky-social/ozone
+github,broadinstitute/seqr,aprobado,,38135,98,107,0,AGPL-3.0,https://github.com/broadinstitute/seqr
+github,buerokratt/Analytics-Module,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); sin lockfile,10382,0,0,0,,https://github.com/buerokratt/Analytics-Module
+github,buerokratt/Service-Module,aprobado,,21915,14,24,0,,https://github.com/buerokratt/Service-Module
+github,buerokratt/Training-Module,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),12592,0,0,0,MIT,https://github.com/buerokratt/Training-Module
+github,cadence-workflow/cadence-web,aprobado,,60230,274,562,0.2,APACHE-2.0,https://github.com/cadence-workflow/cadence-web
+github,canonical/juju-dashboard,aprobado,,39127,203,279,0,LGPL-3.0,https://github.com/canonical/juju-dashboard
+github,canonical/maas-ui,descartado,muy grande (110772 líneas),110772,616,802,0,AGPL-3.0,https://github.com/canonical/maas-ui
+github,canonical/snapcraft.io,aprobado,,32382,108,147,0.13,LGPL-3.0,https://github.com/canonical/snapcraft.io
+github,chainlit/chainlit,descartado,pocos tests de UI (5); pocos tests (6); pocos casos de test (32),18254,5,6,0.11,APACHE-2.0,https://github.com/chainlit/chainlit
+github,chanzuckerberg/cellxgene,descartado,pocos tests de UI (0),22115,0,30,0.01,MIT,https://github.com/chanzuckerberg/cellxgene
+github,chanzuckerberg/czgenepi,descartado,pocos tests de UI (2); pocos tests (6); pocos casos de test (1); inactivo desde 2025-08-20,31819,2,6,0,MIT,https://github.com/chanzuckerberg/czgenepi
+github,chanzuckerberg/napari-hub,aprobado,,15790,16,28,0,MIT,https://github.com/chanzuckerberg/napari-hub
+github,chaos-mesh/chaos-mesh,descartado,sin vitest/jest; pocos tests de UI (4); pocos tests (6); pocos casos de test (24); sin lockfile,23087,4,6,0.04,APACHE-2.0,https://github.com/chaos-mesh/chaos-mesh
+github,cityofaustin/atd-moped,descartado,pocos tests de UI (0); pocos tests (4); pocos casos de test (26),42353,0,4,0,,https://github.com/cityofaustin/atd-moped
+github,CMSgov/easi-app,aprobado,,82339,252,273,0.02,APACHE-2.0,https://github.com/CMSgov/easi-app
+github,cncf/clomonitor,aprobado,,7514,42,43,0,APACHE-2.0,https://github.com/cncf/clomonitor
+github,Codeinwp/otter-blocks,descartado,sin React,,,,,GPL-3.0,https://github.com/Codeinwp/otter-blocks
+github,conductor-oss/conductor,descartado,muy grande (150318 líneas),150318,59,116,0.05,APACHE-2.0,https://github.com/conductor-oss/conductor
+github,curvefi/curve-frontend,descartado,sin vitest/jest; pocos tests de UI (1); pocos tests (5); pocos casos de test (21),22232,1,5,0,MIT,https://github.com/curvefi/curve-frontend
+github,cytoscape/cytoscape-web,descartado,muy grande (100683 líneas),100683,130,314,0.03,MIT,https://github.com/cytoscape/cytoscape-web
+github,digitalservicebund/a2j-rechtsantragstelle,aprobado,,64084,105,649,0,MIT,https://github.com/digitalservicebund/a2j-rechtsantragstelle
+github,dydxprotocol/v4-web,descartado,pocos tests de UI (0); pocos tests (14); muy grande (123047 líneas),123047,0,14,0.02,AGPL-3.0,https://github.com/dydxprotocol/v4-web
+github,ebi-uniprot/uniprot-website,aprobado,,87694,192,282,0,MIT,https://github.com/ebi-uniprot/uniprot-website
+github,ENCODE-DCC/encoded,descartado,"librería, no app",,,,,MIT,https://github.com/ENCODE-DCC/encoded
+github,Enterprise-CMCS/macpro-mdct-mcr,aprobado,,34106,121,156,0.02,CC0-1.0,https://github.com/Enterprise-CMCS/macpro-mdct-mcr
+github,Enterprise-CMCS/macpro-mdct-qmr,aprobado,,86055,178,235,0.02,CC0-1.0,https://github.com/Enterprise-CMCS/macpro-mdct-qmr
+github,Enterprise-CMCS/macpro-mdct-seds,aprobado,,16971,36,41,0,CC0-1.0,https://github.com/Enterprise-CMCS/macpro-mdct-seds
+github,fedspendingtransparency/usaspending-website,descartado,muy grande (136423 líneas),136423,82,295,0,CC0-1.0,https://github.com/fedspendingtransparency/usaspending-website
+github,firebase/firebase-tools-ui,descartado,inactivo desde 2025-06-02,24300,110,116,0,APACHE-2.0,https://github.com/firebase/firebase-tools-ui
+github,flyteorg/flyteconsole,aprobado,,41478,60,107,0,APACHE-2.0,https://github.com/flyteorg/flyteconsole
+github,freeipa/freeipa-webui,descartado,muy grande (125774 líneas),125774,41,41,0.05,GPL-3.0,https://github.com/freeipa/freeipa-webui
+github,google/site-kit-wp,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (528 líneas),528,0,0,0,APACHE-2.0,https://github.com/google/site-kit-wp
+github,hawtio/hawtio-next,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (104 líneas),104,0,0,0,APACHE-2.0,https://github.com/hawtio/hawtio-next
+github,hotosm/fAIr,aprobado,,51121,26,37,0,AGPL-3.0,https://github.com/hotosm/fAIr
+github,hotosm/fmtm,descartado,sin React,,,,,AGPL-3.0,https://github.com/hotosm/fmtm
+github,hyperledger-labs/blockchain-explorer,descartado,inactivo desde 2024-04-17,10692,18,40,0,APACHE-2.0,https://github.com/hyperledger-labs/blockchain-explorer
+github,IFRCGo/go-web-app,descartado,pocos tests de UI (1); pocos tests (5); pocos casos de test (68); muy grande (154981 líneas),154981,1,5,0,MIT,https://github.com/IFRCGo/go-web-app
+github,IndexCoop/index-app,descartado,pocos tests de UI (0); pocos tests (9); pocos casos de test (53),19182,0,9,0,,https://github.com/IndexCoop/index-app
+github,infinispan/infinispan-console,aprobado,,30530,16,28,0,APACHE-2.0,https://github.com/infinispan/infinispan-console
+github,inveniosoftware/invenio-app-rdm,descartado,sin React,,,,,MIT,https://github.com/inveniosoftware/invenio-app-rdm
+github,jenkinsci/blueocean-plugin,aprobado,,16627,19,46,0,MIT,https://github.com/jenkinsci/blueocean-plugin
+github,jenkinsci/pipeline-graph-view-plugin,aprobado,,9953,19,25,0.02,MIT,https://github.com/jenkinsci/pipeline-graph-view-plugin
+github,jupyterhub/jupyterhub,descartado,pocos tests de UI (6); pocos tests (6); pocos casos de test (55),2193,6,6,0,BSD-3-CLAUSE,https://github.com/jupyterhub/jupyterhub
+github,kiali/openshift-servicemesh-plugin,descartado,sin vitest/jest; muy grande (119803 líneas),119803,120,206,0.2,APACHE-2.0,https://github.com/kiali/openshift-servicemesh-plugin
+github,kobotoolbox/kpi,descartado,pocos tests de UI (0); pocos tests (8); pocos casos de test (65); muy grande (164604 líneas),164604,0,8,0.05,AGPL-3.0,https://github.com/kobotoolbox/kpi
+github,konflux-ci/konflux-ui,descartado,muy grande (103541 líneas),103541,449,548,0.06,APACHE-2.0,https://github.com/konflux-ci/konflux-ui
+github,konveyor/mig-ui,descartado,pocos tests de UI (2); pocos tests (2); pocos casos de test (14),26071,2,2,0.01,APACHE-2.0,https://github.com/konveyor/mig-ui
+github,Kuadrant/kuadrant-console-plugin,aprobado,,36258,10,32,0.03,APACHE-2.0,https://github.com/Kuadrant/kuadrant-console-plugin
+github,kubeshop/testkube-dashboard,descartado,inactivo desde 2024-07-01,26571,46,63,0,MIT,https://github.com/kubeshop/testkube-dashboard
+github,kubeshop/tracetest,descartado,inactivo desde 2025-06-03,43895,17,49,0,OTRA,https://github.com/kubeshop/tracetest
+github,kubev2v/migration-planner-ui,aprobado,,26333,13,57,0.16,APACHE-2.0,https://github.com/kubev2v/migration-planner-ui
+github,kubevela/velaux,descartado,sin vitest/jest; pocos tests de UI (1); pocos tests (2); pocos casos de test (2),43742,1,2,0,APACHE-2.0,https://github.com/kubevela/velaux
+github,KusionStack/karpor,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); sin lockfile,11973,0,0,0,APACHE-2.0,https://github.com/KusionStack/karpor
+github,LibrePhotos/librephotos-frontend,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (9),35742,0,1,0.02,MIT,https://github.com/LibrePhotos/librephotos-frontend
+github,lidofinance/ethereum-staking-widget,descartado,pocos tests de UI (1),84021,1,53,0,GPL-3.0,https://github.com/lidofinance/ethereum-staking-widget
+github,litmuschaos/litmus,aprobado,,51800,30,30,0.02,APACHE-2.0,https://github.com/litmuschaos/litmus
+github,lyft/clutch,descartado,sin vitest/jest; sin lockfile; inactivo desde 2025-04-14,13440,20,23,0,APACHE-2.0,https://github.com/lyft/clutch
+github,mage-ai/mage-ai,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (6); pocos casos de test (8); muy grande (199351 líneas),199351,0,6,0.02,APACHE-2.0,https://github.com/mage-ai/mage-ai
+github,marcusolsson/grafana-dynamictext-panel,descartado,pocos tests de UI (9); inactivo desde 2025-08-31,3463,9,20,0,APACHE-2.0,https://github.com/marcusolsson/grafana-dynamictext-panel
+github,marcusolsson/grafana-json-datasource,descartado,pocos tests de UI (0); pocos tests (4); pocos casos de test (27); muy pequeño (1866 líneas),1866,0,4,0,APACHE-2.0,https://github.com/marcusolsson/grafana-json-datasource
+github,mattermost-community/focalboard,descartado,inactivo desde 2025-06-11,34866,128,141,0,APACHE-2.0,https://github.com/mattermost-community/focalboard
+github,meshery/meshery,aprobado,,92322,319,418,0,APACHE-2.0,https://github.com/meshery/meshery
+github,metabrainz/musicbrainz-server,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),80558,0,0,0,GPL-2.0,https://github.com/metabrainz/musicbrainz-server
+github,migtools/crane-ui-plugin,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); inactivo desde 2022-09-15,7303,0,0,0,,https://github.com/migtools/crane-ui-plugin
+github,mitodl/micromasters,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),39751,0,0,0.03,BSD-3-CLAUSE,https://github.com/mitodl/micromasters
+github,mitodl/mit-learn,aprobado,,77655,196,240,0.3,BSD-3-CLAUSE,https://github.com/mitodl/mit-learn
+github,mitodl/ocw-studio,aprobado,,13996,51,71,0.06,BSD-3-CLAUSE,https://github.com/mitodl/ocw-studio
+github,mosip/esignet,aprobado,,2026,15,23,0.02,MPL-2.0,https://github.com/mosip/esignet
+github,mosip/inji-verify,descartado,pocos casos de test (72),5858,14,19,0.01,MPL-2.0,https://github.com/mosip/inji-verify
+github,mosip/inji-web,aprobado,,11036,111,114,0,MIT,https://github.com/mosip/inji-web
+github,NASA-IMPACT/veda-ui,descartado,pocos tests de UI (9),46392,9,21,0,APACHE-2.0,https://github.com/NASA-IMPACT/veda-ui
+github,nasa/earthdata-search,aprobado,,79927,225,592,0,APACHE-2.0,https://github.com/nasa/earthdata-search
+github,navikt/familie-ba-sak-frontend,aprobado,,28615,90,150,0.01,MIT,https://github.com/navikt/familie-ba-sak-frontend
+github,navikt/modiapersonoversikt,aprobado,,46697,45,59,0,MIT,https://github.com/navikt/modiapersonoversikt
+github,navikt/sosialhjelp-innsyn,descartado,pocos tests de UI (3); pocos tests (6); pocos casos de test (49),8998,3,6,0.01,,https://github.com/navikt/sosialhjelp-innsyn
+github,NCI-GDC/gdc-frontend-framework,aprobado,,56447,68,84,0,APACHE-2.0,https://github.com/NCI-GDC/gdc-frontend-framework
+github,neo4j-labs/neodash,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),30576,0,0,0,APACHE-2.0,https://github.com/neo4j-labs/neodash
+github,neo4j/neo4j-browser,aprobado,,67890,62,161,0,GPL-3.0,https://github.com/neo4j/neo4j-browser
+github,newfold-labs/wp-plugin-bluehost,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (1); pocos casos de test (5),5509,0,1,0,LGPL-3.0,https://github.com/newfold-labs/wp-plugin-bluehost
+github,nextstrain/nextclade,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (9); sin lockfile,31526,0,9,0.04,MIT,https://github.com/nextstrain/nextclade
+github,odota/web,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (3); pocos casos de test (4),40242,0,3,0,MIT,https://github.com/odota/web
+github,OlympusDAO/olympus-frontend,aprobado,,33987,27,42,0,MIT,https://github.com/OlympusDAO/olympus-frontend
+github,onaio/reveal-frontend,descartado,inactivo desde 2023-01-17,42716,161,250,0,,https://github.com/onaio/reveal-frontend
+github,opencost/opencost,descartado,sin React,,,,,APACHE-2.0,https://github.com/opencost/opencost
+github,opencrvs/opencrvs-core,aprobado,,58743,18,60,0.05,MPL-2.0,https://github.com/opencrvs/opencrvs-core
+github,OpenFn/lightning,descartado,"librería, no app",,,,,GPL-3.0,https://github.com/OpenFn/lightning
+github,opengovsg/FormSG,descartado,muy grande (103752 líneas); 57 % commits con trazas IA,103752,49,91,0.57,MIT,https://github.com/opengovsg/FormSG
+github,opengovsg/isomer,aprobado,,77803,18,147,0.22,MIT,https://github.com/opengovsg/isomer
+github,opengovsg/postmangovsg,descartado,pocos casos de test (40),21298,16,17,0,,https://github.com/opengovsg/postmangovsg
+github,openimis/openimis-fe_js,descartado,pocos tests de UI (1); pocos tests (4); pocos casos de test (51); sin lockfile,2412,1,4,0,OTRA,https://github.com/openimis/openimis-fe_js
+github,opensearch-project/dashboards-flow-framework,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/dashboards-flow-framework
+github,opensearch-project/dashboards-query-workbench,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/dashboards-query-workbench
+github,opensearch-project/security-dashboards-plugin,descartado,sin React,,,,,APACHE-2.0,https://github.com/opensearch-project/security-dashboards-plugin
+github,openshift-pipelines/console-plugin,aprobado,,65484,28,87,0,APACHE-2.0,https://github.com/openshift-pipelines/console-plugin
+github,openshift/hac-dev,descartado,inactivo desde 2025-04-15,67048,250,281,0,APACHE-2.0,https://github.com/openshift/hac-dev
+github,openshift/nmstate-console-plugin,descartado,pocos tests de UI (3); pocos tests (5); pocos casos de test (19),14719,3,5,0,APACHE-2.0,https://github.com/openshift/nmstate-console-plugin
+github,openstax/rex-web,aprobado,,43607,112,264,0.16,AGPL-3.0,https://github.com/openstax/rex-web
+github,osmcha/osmcha-frontend,descartado,pocos tests de UI (3); pocos tests (5); pocos casos de test (9),10511,3,5,0,ISC,https://github.com/osmcha/osmcha-frontend
+github,otterscan/otterscan,descartado,pocos tests de UI (0); pocos tests (10); pocos casos de test (64),24172,0,10,0.01,MIT,https://github.com/otterscan/otterscan
+github,pagopa/pn-frontend,aprobado,,25325,127,232,0,OTRA,https://github.com/pagopa/pn-frontend
+github,pagopa/selfcare-onboarding-frontend,aprobado,,19052,30,48,0,,https://github.com/pagopa/selfcare-onboarding-frontend
+github,papercups-io/papercups,descartado,pocos tests de UI (1); pocos tests (3); pocos casos de test (32); inactivo desde 2022-05-10,35110,1,3,0,MIT,https://github.com/papercups-io/papercups
+github,parse-community/parse-dashboard,descartado,pocos tests de UI (2),74459,2,30,0,OTRA,https://github.com/parse-community/parse-dashboard
+github,pingcap/tidb-dashboard,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); sin lockfile,4866,0,0,0,APACHE-2.0,https://github.com/pingcap/tidb-dashboard
+github,pinterest/querybook,aprobado,,82774,53,72,0,APACHE-2.0,https://github.com/pinterest/querybook
+github,pods-framework/pods,aprobado,,35514,34,51,0,LGPL-3.0,https://github.com/pods-framework/pods
+github,PrefectHQ/prefect,descartado,48 % commits con trazas IA,87269,324,361,0.48,APACHE-2.0,https://github.com/PrefectHQ/prefect
+github,ProteinsWebTeam/interpro7-client,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy grande (103637 líneas),103637,0,0,0,GPL-3.0,https://github.com/ProteinsWebTeam/interpro7-client
+github,red-hat-storage/odf-console,descartado,pocos tests de UI (0); pocos tests (0); pocos casos de test (0); muy pequeño (1414 líneas),1414,0,0,0,APACHE-2.0,https://github.com/red-hat-storage/odf-console
+github,redhat-developer/gitops-console-plugin,aprobado,,23362,12,27,0,APACHE-2.0,https://github.com/redhat-developer/gitops-console-plugin
+github,RedisGrafana/grafana-redis-app,aprobado,,8267,13,19,0,APACHE-2.0,https://github.com/RedisGrafana/grafana-redis-app
+github,RedisGrafana/grafana-redis-datasource,descartado,sin React,,,,,APACHE-2.0,https://github.com/RedisGrafana/grafana-redis-datasource
+github,reportportal/service-ui,descartado,pocos tests de UI (4); muy grande (255530 líneas),255530,4,82,0.01,APACHE-2.0,https://github.com/reportportal/service-ui
+github,Signalen/frontend,aprobado,,57395,296,457,0,MPL-2.0,https://github.com/Signalen/frontend
+github,skooner-k8s/skooner,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (18); inactivo desde 2024-06-29,8717,0,1,0,APACHE-2.0,https://github.com/skooner-k8s/skooner
+github,SocialGouv/code-du-travail-numerique,aprobado,,62911,386,479,0.03,APACHE-2.0,https://github.com/SocialGouv/code-du-travail-numerique
+github,solana-foundation/explorer,aprobado,,90942,197,479,0.01,MIT,https://github.com/solana-foundation/explorer
+github,starknet-io/starkgate-frontend,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (1); pocos casos de test (4); inactivo desde 2024-01-16,9614,0,1,0,,https://github.com/starknet-io/starkgate-frontend
+github,streamshub/console,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),29569,0,0,0,APACHE-2.0,https://github.com/streamshub/console
+github,suitenumerique/docs,descartado,sin lockfile,13549,18,23,0,MIT,https://github.com/suitenumerique/docs
+github,suitenumerique/meet,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0),36033,0,0,0,MIT,https://github.com/suitenumerique/meet
+github,suitenumerique/people,descartado,sin lockfile,17191,25,27,0,MIT,https://github.com/suitenumerique/people
+github,theforeman/foreman-tasks,descartado,sin React,,,,,GPL-3.0,https://github.com/theforeman/foreman-tasks
+github,tilt-dev/tilt,aprobado,,20641,40,45,0,APACHE-2.0,https://github.com/tilt-dev/tilt
+github,trinodb/trino,descartado,sin vitest/jest; pocos tests de UI (0); pocos tests (0); pocos casos de test (0); sin lockfile,9279,0,0,0,APACHE-2.0,https://github.com/trinodb/trino
+github,trynmaps/metrics-mvp,descartado,pocos tests de UI (0); pocos tests (1); pocos casos de test (1); inactivo desde 2020-07-18,9714,0,1,0,MIT,https://github.com/trynmaps/metrics-mvp
+github,usdigitalresponse/usdr-gost,descartado,sin React,,,,,APACHE-2.0,https://github.com/usdigitalresponse/usdr-gost
+github,verdaccio/verdaccio,descartado,pocos tests de UI (3); pocos tests (3); pocos casos de test (4); muy pequeño (585 líneas),585,3,3,0.03,MIT,https://github.com/verdaccio/verdaccio
+github,vmware-archive/octant,descartado,sin vitest/jest; pocos tests de UI (0); inactivo desde 2023-01-19,15850,0,119,0,APACHE-2.0,https://github.com/vmware-archive/octant
+github,VolkovLabs/business-forms,aprobado,,11834,11,20,0,APACHE-2.0,https://github.com/VolkovLabs/business-forms
+github,VolkovLabs/business-table,aprobado,,20667,82,96,0,APACHE-2.0,https://github.com/VolkovLabs/business-table
+github,VolkovLabs/business-variable,aprobado,,9749,32,45,0,APACHE-2.0,https://github.com/VolkovLabs/business-variable
+github,ydb-platform/ydb-embedded-ui,descartado,muy grande (118725 líneas),118725,51,339,0.08,APACHE-2.0,https://github.com/ydb-platform/ydb-embedded-ui

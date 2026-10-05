@@ -1,0 +1,60 @@
+# Bases V0 de la ronda 3 de minería (2026-10-04), en orden de puntuación. Formato owner/repo@SHA.
+canonical/juju-dashboard@f07e90f270fb10b0fbc8ac868a590cc329d4fc5c   # 93.6 . vitest 39127 líneas; 
+VolkovLabs/business-table@4201aa055e62a84f9737a2c0aff55029cc890e28   # 92.6 . jest 20667 líneas; 
+mosip/inji-web@a9f4f829d3070be34ae11649327ea1561e123a2b   # 90.4 inji-web jest 11036 líneas; 
+mitodl/ocw-studio@4909ad7a0344067033f2abc8dce6dccb3a288977   # 90.2 . jest 13996 líneas; 
+VolkovLabs/business-variable@432bdfdc0131cb28aec96bb67f458aa0815a4ded   # 89.5 . jest 9749 líneas; 
+pagopa/pn-frontend@087ea37438d47399fc462549716e3170babacd6c   # 87 packages/pn-personafisica-webapp vitest 25325 líneas; monorepo (8 paquetes); licencia por revisar
+canonical/snapcraft.io@734bd0eb5cbc477de456f76d9a05ec89319e6b33   # 85.1 . vitest 32382 líneas; IA 13 %
+artifacthub/hub@c98b3a61f97af5ef58525d1944b6143c5e8c5012   # 83 web vitest 45247 líneas; 
+Altinity/clickhouse-grafana@18ab723f0e8c630c097c0746f8c3989b15e9ff09   # 82.5 . jest 12803 líneas; 
+Signalen/frontend@2cfe61a4f46694c5f3b32982650c1d29090229b9   # 81.2 . jest 57395 líneas; 
+cadence-workflow/cadence-web@2236e1e96bc054ec0a4697bfb40ae4ef89bb0700   # 81 . jest 60230 líneas; IA 20 %
+Enterprise-CMCS/macpro-mdct-mcr@12d75c01fe2809a7afa9c4b9e8fb8931dc90c693   # 81 services/ui-src jest 34106 líneas; monorepo (10 paquetes)
+cncf/clomonitor@dad5b71085369a335d87488ceba875cd9621dd7f   # 79.5 web vitest 7514 líneas; 
+navikt/familie-ba-sak-frontend@39215ae2607aabd17100f7dbfbbdcd44b09cb6cb   # 78.3 . vitest 28615 líneas; 
+aws-solutions/distributed-load-testing-on-aws@23a51ce93e2b7001ed3ed3dc853054a4e14a17a1   # 77.8 source/webui vitest 15855 líneas; monorepo (25 paquetes)
+RedisGrafana/grafana-redis-app@f7daa3336b619e123b2db74d227c48c442aadaed   # 76.1 . jest 8267 líneas; 
+Enterprise-CMCS/macpro-mdct-seds@08731788941ecacdd33b649c00a2bd437d507596   # 74.4 services/ui-src vitest 16971 líneas; monorepo (8 paquetes)
+mosip/esignet@db528423dac7898ad546cb7b2f5f867a949676a7   # 73 oidc-ui vitest 2026 líneas; 
+SocialGouv/code-du-travail-numerique@db085890bce15ca32e9eb6f21298625b68256c79   # 73 packages/code-du-travail-frontend jest 62911 líneas; monorepo (5 paquetes)
+tilt-dev/tilt@3ae48d2c15a56e32edd57eee3ec83436faa86900   # 72.8 web jest 20641 líneas; 
+VolkovLabs/business-forms@bafdae0bfc80c1afae42696222d99f09bf5ad1f8   # 72.1 . jest 11834 líneas; 
+nasa/earthdata-search@e21f4e77a85161de7c07da5c8e50941e319910e9   # 70.3 . vitest 79927 líneas; deps de servicios: pg ioredis knex
+broadinstitute/seqr@214df7f78aa8dc0d9042c565b49841c0ecaff2c6   # 67.9 ui jest 38135 líneas; 
+pods-framework/pods@07ed152f8cf42edc0a6bb8262e93cbc9f3f74371   # 66.9 . jest 35514 líneas; 
+digitalservicebund/a2j-rechtsantragstelle@d3cf83335545213fd4be1613be9759576ac2d045   # 66.4 . vitest 64084 líneas; deps de servicios: ioredis
+openstax/rex-web@ce7bcf6c832a1346f52feb1c18183cdf02c09280   # 65.6 . jest 43607 líneas; IA 16 %
+pagopa/selfcare-onboarding-frontend@82b97d35d69105d2413575d1f1ad6b8b19414733   # 65.6 . vitest 19052 líneas; licencia por revisar
+apache/couchdb-fauxton@b7a04ecf1ea2ae39004ee7f8440a7c5921bef5a4   # 64.2 . jest 43154 líneas; 
+jenkinsci/pipeline-graph-view-plugin@9df19e6ceed298d9f7957c68611f96b14ecf40e6   # 63.6 . vitest 9953 líneas; 
+CMSgov/easi-app@fa7ed392044766f2e273e0655ee634ec548b06a7   # 63.3 . vitest 82339 líneas; 
+mitodl/mit-learn@20f3f4c3e0650998e4bd26c96b6042b90d1c1806   # 62.5 frontends/main jest 77655 líneas; monorepo (8 paquetes); IA 30 %
+Kuadrant/kuadrant-console-plugin@684caec0546c861592e2a67898dab2d788ed04f3   # 62.3 . jest 36258 líneas; 
+aws/graph-explorer@c671c2a359f3594eb9df59c5b6bccdcb2d23444e   # 62.2 packages/graph-explorer vitest 48529 líneas; 
+neo4j/neo4j-browser@3928c10fd6f148fd615b391d27d3fd6ce43a9044   # 62.1 . jest 67890 líneas; 
+meshery/meshery@696f64dd1f9593a1b092b396e6539efe6febfe30   # 61 ui vitest 92322 líneas; 
+buerokratt/Service-Module@30e5c96ddc7c07261579d1309d3e7c1b6ffdd768   # 60.1 GUI vitest 21915 líneas; licencia por revisar
+infinispan/infinispan-console@e36ede2b7d2c0064dd93a8edd1a350be10be435a   # 58.3 . jest 30530 líneas; 
+ebi-uniprot/uniprot-website@1442948c7fa836dd77a650d153a533b08029b39e   # 57.9 . jest 87694 líneas; 
+solana-foundation/explorer@81466de713ecad41e064b1a256d1e4aafe77796d   # 57.7 . vitest 90942 líneas; monorepo (19 paquetes)
+kubev2v/migration-planner-ui@8dbfb4cd32a2311db9258ad169c96e573e042c02   # 57.6 apps/agent-ui vitest 26333 líneas; IA 16 %
+OlympusDAO/olympus-frontend@99f56aa43e657f623462d435407d96f9c90b41c7   # 57.3 . vitest 33987 líneas; 
+navikt/modiapersonoversikt@5d5b985fbd28174d63023511e392ea046fc26d21   # 55.7 . vitest 46697 líneas; 
+openshift-pipelines/console-plugin@9f09bceba7e551d5b17e3ee0959d4282a50e136d   # 55.4 . jest 65484 líneas; 
+chanzuckerberg/napari-hub@c2e2e7bfcd21a8030f5c13b9b081a8d939dee307   # 55.2 frontend jest 15790 líneas; 
+redhat-developer/gitops-console-plugin@0a2a15ca903e078d712127fb74492bcce96e83ba   # 54.9 . jest 23362 líneas; muchos snapshots
+Altinn/app-frontend-react@4d7c8d3daf4a1b62a3bc93d288f5993b63e5231c   # 53.8 . jest 82107 líneas; 
+Enterprise-CMCS/macpro-mdct-qmr@8c288886c39c0712e3e305af822bf75e11c44985   # 51.2 services/ui-src jest 86055 líneas; monorepo (11 paquetes)
+opencrvs/opencrvs-core@3710ed3db448468334fc127a4dd7e02f7b75d737   # 49.9 packages/client vitest 58743 líneas; monorepo (22 paquetes)
+bcgov/foi-flow@8bedd9e20f902dfe7041f033dd6085e406f54f71   # 49.4 forms-flow-web jest 64646 líneas; 
+flyteorg/flyteconsole@04d6a334cb0742e0337226ef8b390188c6b2e00d   # 48.4 packages/oss-console jest 41478 líneas; monorepo (8 paquetes)
+NCI-GDC/gdc-frontend-framework@7ac20f5177bb9f1bcd6c52bc41ed0d0862257e7b   # 48.3 packages/portal-proto jest 56447 líneas; monorepo (8 paquetes)
+bcgov/biohubbc@711c4dfbdfb9efe203bf10019438bee9d355a609   # 46.8 app vitest 78723 líneas; monorepo (5 paquetes)
+hotosm/fAIr@9eaaf4ec785487415bc14785aafdc5797c46edbe   # 45.8 frontend vitest 51121 líneas; 
+opengovsg/isomer@7c69d7ee44e6c0137767f1a0a38a5f2b34216c89   # 45.7 apps/studio vitest 77803 líneas; monorepo (16 paquetes); deps de servicios: pg kysely; IA 22 %
+betagouv/mon-entreprise@05cb5be511d35463ed4ab37bcbc6d0bcfea8f0e5   # 45.6 site vitest 53470 líneas; monorepo (8 paquetes)
+litmuschaos/litmus@153f338ce7be1f6d39316c43131b9d30c0a264bc   # 44.9 chaoscenter/web jest 51800 líneas; 
+jenkinsci/blueocean-plugin@e66dee5a419e64ebfe7083febec48c64fbe859ef   # 43.1 blueocean-dashboard jest 16627 líneas; monorepo (12 paquetes)
+pinterest/querybook@3f26532bfc36ccfed422678c20f99800e5ed4cdf   # 36.7 . jest 82774 líneas; 
+aimhubio/aim@6e098e38065364c76b2bb7c028f266e53b647642   # 32.5 aim/web/ui jest 94996 líneas; 

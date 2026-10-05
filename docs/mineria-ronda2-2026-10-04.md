@@ -52,3 +52,30 @@ Resultados en `.artifacts\baselines-ronda2\`. En la ronda 1, 34 de 46 bases veri
   - Maintainerr/Maintainerr: declara Node 26;
   - vmware-tanzu/kubeapps y weaveworks/weave-gitops: último commit en enero de 2026;
   - scratchfoundation/scratch-gui: un solo autor en la ventana.
+
+## Verificación de la ronda 2 (2026-10-04, 15:48–18:51 hora de Lima)
+
+Evidencia en `docs/mineria-ronda2/verificacion/`. De 55 bases, 28 quedaron GREEN y 2 GREEN_WITH_KNOWN_FAILURES. El resto:
+
+| Resultado | N | Causa principal |
+|---|---|---|
+| RED | 7 | Suites que no llegan a ejecutarse en el entorno (Maintainerr pide Node 26; plugins de Mattermost, Yoast, linkerd) o tests de integración con red (scratch-www) |
+| NO_TESTS / NO_REPORT | 11 | El runner directo no encuentra la configuración (che-dashboard, shlink, zipkin, ens, gnomad, homarr) o el script `test` choca con `--maxWorkers` (prometheus, thanos) |
+| INSTALL_FAILED | 4 | insights-remediations, kubeflow/pipelines, content-sources, insights-advisor |
+| FLAKY | 2 | synthetic-monitoring-app (2 tests), listenbrainz (13 tests dependientes de la fecha) |
+| TIMEOUT | 1 | druid |
+
+**Bases utilizables (tope de 3 por organización con el piloto):** karma, sensei, amundsen, insights-inventory, policies-ui, compliance (de la reserva), gazebo, kubeapps, element-call, odh-dashboard, tektoncd/dashboard, kedro-viz (2 suites conocidas), model-registry, traces-drilldown, metrics-drilldown, weave-gitops, image-builder, qdrant-web-ui, netobserv, airflow, koku-ui y tackle2-ui. Son **22**, más las 10 de la ronda 1, en total **32**. Quedan de respaldo, si se relaja el tope por organización, tasks, notifications y edge (RedHatInsights) y logs-drilldown, profiles-drilldown, infinity y oncall (grafana).
+
+No alcanzan para 40 familias con margen, así que se hizo una ronda 3 (`docs/mineria-ronda3/`).
+
+## Ronda 3 (2026-10-04)
+
+Se analizaron 155 candidatos nuevos de administración pública (Singapur, EE. UU., Noruega, Alemania, Francia, Italia, Países Bajos, Canadá), salud e identidad (MOSIP, OpenCRVS), ciencia, educación (MIT ODL, OpenStax), datos y orquestación (Cadence, Flyte, Neo4j, CouchDB), consolas de OpenShift y CNCF, plugins de Grafana de terceros y plugins de WordPress.
+
+**59 aprobados**, todos en la selección (`scripts/mine/repos-v0-ronda3.txt`). Siguiente paso: `scripts\mine\verificar-bases-ronda3.cmd`.
+
+**Avisos:**
+- **Licencia por revisar:** pagopa/pn-frontend, pagopa/selfcare-onboarding-frontend y buerokratt/Service-Module.
+- **Dependencias de servicios:** nasa/earthdata-search, digitalservicebund/a2j-rechtsantragstelle y opengovsg/isomer.
+- **Muchos snapshots:** redhat-developer/gitops-console-plugin.
