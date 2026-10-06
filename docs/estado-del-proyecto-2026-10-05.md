@@ -17,13 +17,33 @@ Sustituye a `estado-del-proyecto-2026-09-27.md`.
 - Aun así toca `generate`, `audit`, `mutants`, `rehearse`, `suite` y el motor de ejecución, así que **hay que repetir los ensayos de S900 y S001–S020 antes de generar.**
 - `npm test` en la máquina virtual de Cowork da 5 archivos en fallo, los mismos antes y después del cambio: las pruebas del oráculo de UI necesitan el Chromium de Playwright, que no está instalado allí. En el PC no aplica.
 
-### Orden de trabajo para cerrar el piloto
-1. Repetir los ensayos de S900 y S001–S020 con el pipeline actual (en el PC, Docker).
-2. Revisión humana de las 60 peticiones del piloto.
-3. Intermediario de Sonnet y banco de modelos locales (S001:V1, S003:V1, S005:V1, S007:V1).
-4. Congelar `config/models.json` y `config/context.json`.
-5. Generar V1–V3 de S001–S020 y auditar.
-6. `npm run analysis` y redacción de resultados del piloto.
+### Plan para cerrar el piloto (2026-10-05)
+
+Preflight de generación de S001 y S011 (2026-10-05, sin Docker): el único bloqueo es que los ensayos están desactualizados por el cambio del pipeline. La configuración de modelos no bloquea.
+
+| Fase | Paso | Quién | Comando o entregable |
+|---|---|---|---|
+| A. Ensayos | A1. Ensayo mínimo (S900) | Tesista, PC | `npm run real:rehearse -- --mini` |
+| | A2. Ensayos de S001–S020 | Tesista, PC | `scripts\real\ensayar-familias.cmd` |
+| | A3. Revisar resultados y corregir lo que falle | Claude | Informe y correcciones |
+| B. Revisión humana | B1. Hoja de revisión de las 60 peticiones (petición, criterios, casilla de veredicto) | Claude | Artefacto de revisión |
+| | B2. Revisión | Tesista | Veredictos; Claude aplica las aclaraciones |
+| C. Proveedores comerciales | C1. Segunda sonda de Sonnet | Tesista, PC | `npm run providers -- probe --rounds=5 --variants=D,E,F` |
+| | C2. Elegir variante (F o D con ≥ 9/10; si no, E declarada) e implementarla en `runner/providers/*` | Claude | Commit y decisión documentada |
+| | C3. Diagnóstico de los tres comerciales (≥ 9/10 cada uno) | Tesista, PC | `npm run providers:diagnose` |
+| D. Modelos locales | D1. Banco en Vast.ai con S001, S003, S005 y S007:V1 | Tesista, GPU | `docs/gpu-vast-ai.md`, `scripts\vast\bench.ps1` |
+| | D2. Elegir `local_a`/`local_b` y ventana (8k, 16k o 32k) | Claude propone, tesista decide | Informe del banco |
+| | D3. Recongelar `config/models.json` (digests) y `config/context.json`; repetir `npm run real:context` si cambia la ventana | Claude + PC | Commit |
+| | D4. Decidir `pi0_model`, `pi0_repetitions` y `money_cutoff_usd` (`config/policy.json`) o declarar que no aplican | Tesista | Decisión documentada |
+| E. Generación | E1. Por familia: `generation:preflight` → `corpus:generate -- Sxxx all` → `corpus:audit -- Sxxx --freeze` | Tesista, PC + GPU | 60 tareas (20 × V1–V3) |
+| | E2. Revisar cada auditoría y clasificar fallos (modelo, transporte, pipeline) | Claude | Registro por familia |
+| F. Análisis | F1. `npm run analysis` | Tesista, PC | Informe de métricas |
+| | F2. Redacción de resultados del piloto y lecciones para el corpus definitivo | Claude | Documento |
+
+**Notas:**
+- **GPU durante la generación:** con la rotación, `local_a` o `local_b` son proveedor inicial en 24 de las 60 tareas, y cualquier reasignación puede pasar por ellos. La instancia de Vast.ai tiene que estar activa durante toda la generación, no solo en el banco.
+- **Orden:** A y B no necesitan modelos y pueden ir en paralelo con C y D. E necesita A, C y D terminadas. B debe terminar antes de E, porque cambiar una petición después de generar invalida esa versión.
+- **Corpus definitivo:** se retoma después de F, con las lecciones del piloto. Pasos: calibrar y corregir S021–S030, imágenes, ensayos, mutantes, contexto y revisión; redactar S031–S060 en tres tandas. Antes de generar hay que confirmar cómo se implementan los **2 episodios por familia** del diseño, porque el pipeline actual genera un solo episodio (`pilot_episodes_per_family: 1`).
 
 ## 1. Decisión del día: corpus solo semi-real
 
