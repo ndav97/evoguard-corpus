@@ -3,10 +3,10 @@
   "family_id": "S017",
   "image_id": "sha256:5c2105f1bf1836f9c63a583d783dadfd6c6205d5664729d068854bdda6a6b839",
   "experimental": false,
-  "started_at": "2026-10-04T05:43:55.093Z",
+  "started_at": "2026-10-07T03:41:06.382Z",
   "versions": {
     "V1": {
-      "task_id": "bef5c897-2ac3-4a8e-84ba-a1896e6c9123",
+      "task_id": "e375aa0e-4d11-4964-9979-9ed079ac04d4",
       "outcomes": [
         {
           "provider": "google",
@@ -64,7 +64,7 @@
       "candidate_commit": "c8c92fe9bd57a3efb179c8a6f1c5e0221d28a71f"
     },
     "V2": {
-      "task_id": "bd665d42-bc18-4558-b2fc-7ceea8e99d7f",
+      "task_id": "84f5cc6b-5e33-4d2a-a980-c88fa19a2487",
       "outcomes": [
         {
           "provider": "local_a",
@@ -83,7 +83,7 @@
       "candidate_commit": "b028e250622fc7c9e576c9d71b09e74790e43960"
     },
     "V3": {
-      "task_id": "58dd2058-c12f-4092-8878-1628923372b1",
+      "task_id": "45b04db4-e7fc-409e-9e5d-db1de6cc2f5c",
       "outcomes": [
         {
           "provider": "local_b",
@@ -109,37 +109,37 @@
       {
         "status": "PASS",
         "total": 933,
-        "seconds": 163
+        "seconds": 169
       },
       {
         "status": "PASS",
         "total": 933,
-        "seconds": 163
+        "seconds": 169
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-04T06:26:43.352Z",
+  "finished_at": "2026-10-07T04:25:17.548Z",
   "sources_sha256": {
-    "runner/execution/engine.mjs": "0c51a7264be6ee492b8a9f73130d32df4e550fefdc253462ee9a88b8fb57de81",
+    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
     "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
     "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
-    "runner/real/families.mjs": "c845a58814f3c490eaf739f8a35d2181bccad723461a96324a355562ff467c4c",
+    "runner/real/families.mjs": "b06114a33396d96c47fad2c5f99cde3ffa36d65612740ea82a942d1c133a0684",
     "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
-    "runner/real/suite.mjs": "da8ea3efcfb8441c2416ec5f3aad461bbe816830765a4619acfd9a5fac6e01c5",
+    "runner/real/suite.mjs": "6c57085aacf43f68f1a29762a92735db24694223072b784dcc26bd5508204b5e",
     "runner/real/prepare.mjs": "44cdce2e0b20ef7755bd8b540aa68e47e7a60198f33467953e2e1c47db80373b",
     "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
     "runner/real/pipeline.mjs": "d6e59a65b107a0ee264f354150d0c92b9b92fc04c6b3014bbdb3576ae9ae0e3e",
-    "runner/real/rehearse.mjs": "ba56e92f9a12dcec5bdaa8e053bbd76a086323b9b94bbf7cd3dc407fa4cd6804",
-    "runner/real/generate.mjs": "0342d7dd45005327583b704a9198426fb5163d6a6f8f0837b11d632a8b4bba59",
-    "runner/real/audit.mjs": "0338f3227dda77d335f5d9566c9d4a856db9dab68a0d9629baf9cd372ef6811f",
+    "runner/real/rehearse.mjs": "d39b1470cf891abb93572416524ce87d9ed37b18cadff0937ce024deba8cec6c",
+    "runner/real/generate.mjs": "fa84d180aca20a5d59f3266e773896eacd651691d81cf197ff0779d9fee8bd36",
+    "runner/real/audit.mjs": "ab9fe8ad14b3d933804b4f58cede2c51b9a189be41f580454f0dd4c3548617e7",
     "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
     "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
     "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",
-    "schema/real-family.schema.json": "e9821c5f738febb5a1f851dc3b3fc61441cbdecd67e8ec391c7e102936585de1"
+    "schema/real-family.schema.json": "3ebf65f6aef2c955fc298bdbbd2dca73977d5d10e8095cc4ff317be7c4ad60a0"
   }
 }
