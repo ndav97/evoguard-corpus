@@ -92,6 +92,17 @@ test('resultado técnico FAIL impide llamar al oráculo en ese intento',async()=
   const r=await runTask(h.options);assert.equal(r.status,'SIMULATED_BLOCKED');
   assert.ok(r.attempts.every(a=>!('independent_oracle' in a.validation)));
 });
+test('la evaluación tras deliver no consume el límite del intento del modelo',async()=>{
+  // Cada etapa tarda menos que el límite, pero todas juntas lo superan: antes del 2026-10-07 era TIMEOUT.
+  const h=harness(async()=>({type:'deliver'}),async()=>{await new Promise(r=>setTimeout(r,40));return {status:'PASS'};});
+  const r=await runTask({...h.options,simulationTimeoutMs:100});
+  assert.equal(r.status,'SIMULATED_ACCEPTED');assert.equal(r.attempts.length,1);
+});
+test('una etapa de evaluación que se cuelga reasigna como TIMEOUT',async()=>{
+  const h=harness(async()=>({type:'deliver'}),async stage=>stage==='development_tests'?new Promise(()=>{}):{status:'PASS'});
+  const r=await runTask({...h.options,simulationTimeoutMs:20});
+  assert.equal(r.status,'SIMULATED_BLOCKED');assert.ok(r.attempts.every(a=>a.reason==='TIMEOUT'));
+});
 test('timeout al preservar candidato no acepta resultado sin evidencia',async()=>{
   const h=harness(async()=>({type:'deliver'}));
   const original=h.options.workspaces.open;

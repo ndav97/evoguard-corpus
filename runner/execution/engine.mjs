@@ -13,6 +13,10 @@ const MODES={
 const MODEL_OUTPUT_ERRORS=new Set(['INVALID_ACTION_JSON','INVALID_ACTION','MODEL_REFUSAL','INCOMPLETE_RESPONSE']);
 const CONTEXT_ERRORS=new Set(['CONTEXT_CORE_TOO_LARGE','CONTEXT_WINDOW_TOO_SMALL']);
 const timeoutError=()=>Object.assign(new Error('Límite temporal del intento'),{code:'ATTEMPT_TIMEOUT'});
+// Desde el 2026-10-07 el límite del intento (policy.timeout_seconds) mide solo el trabajo del modelo: sus respuestas y
+// sus acciones, incluidos sus run_checks. La evaluación del pipeline tras deliver (etapas, snapshot y commit) no lo
+// consume: cada operación tiene su propio límite, porque su duración depende del repositorio y no del modelo.
+const PIPELINE_STEP_MS=30*60000;
 
 function validate(options) {
   const p=options.policy;
@@ -74,6 +78,18 @@ export async function runTask(options) {
             return value;
           } finally {clearTimeout(timer);}
         };
+        // Operaciones del pipeline tras la entrega: límite propio por operación, fuera del presupuesto del modelo.
+        const pipelineLimit=options.simulationTimeoutMs??PIPELINE_STEP_MS;
+        const pipelineBounded=async operation=>{
+          const step=new AbortController();
+          let timer;
+          try {
+            return await Promise.race([
+              Promise.resolve().then(()=>operation({signal:step.signal,timeout:pipelineLimit})),
+              new Promise((_,reject)=>{timer=setTimeout(()=>{step.abort();reject(timeoutError());},pipelineLimit);})
+            ]);
+          } finally {clearTimeout(timer);}
+        };
         const row={provider,assignment:assignment+1,attempt,cycles:0,outcome:'REASSIGN',reason:null,validation:{},snapshot:null,base_commit:workspace.initialization?.baseline_commit??workspace.base_commit??null,candidate_commit:null,started_at:new Date().toISOString()};
         result.attempts.push(row);
         record('attempt_started',{provider,attempt,packet,messages});
@@ -115,8 +131,8 @@ export async function runTask(options) {
           }
           if(delivered) {
             for(const stage of STAGES) {
-              const check=await bounded(opts=>evaluator.check(stage,workspace,opts));
-              if(check?.status==='TIMEOUT') {controller.abort();throw timeoutError();}
+              const check=await pipelineBounded(opts=>evaluator.check(stage,workspace,opts));
+              if(check?.status==='TIMEOUT') throw timeoutError();
               if(!check||!['PASS','FAIL','INFRA_ERROR','NOT_APPLICABLE'].includes(check.status)) throw new Error('Evaluación inválida');
               row.validation[stage]=check.status;
               record('evaluation',{provider,attempt,stage,status:check.status});
@@ -135,11 +151,11 @@ export async function runTask(options) {
             if(STAGES.every(s=>['PASS','NOT_APPLICABLE'].includes(row.validation[s]))&&STAGES.some(s=>row.validation[s]==='PASS')) row.outcome=mode.accepted;
           } else {row.reason??='CYCLE_LIMIT';}
           // Captura fuera del contexto del agente; preserva también los fallos.
-          row.snapshot=await bounded(opts=>workspace.snapshot(opts));
+          row.snapshot=await pipelineBounded(opts=>workspace.snapshot(opts));
           if(typeof row.snapshot!=='string') throw new Error('Snapshot inválido');
           // Referencia aceptada: commit determinista del pipeline dentro del workspace, antes de cerrarlo.
           if(row.outcome===mode.accepted&&options.mode!=='simulation'&&typeof workspace.commit==='function') {
-            row.candidate_commit=await bounded(opts=>workspace.commit(`reference: ${packet.version}`,opts));
+            row.candidate_commit=await pipelineBounded(opts=>workspace.commit(`reference: ${packet.version}`,opts));
           }
           if(row.outcome===mode.accepted) {result.status=mode.accepted;stop=true;}
         } catch(error) {

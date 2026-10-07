@@ -318,3 +318,23 @@ F001 se generó y congeló con el protocolo de acciones 1.0 y con los problemas 
   - **Consecuencias:** runners 13 vitest y 7 jest en total; S020 (formularios clínicos) comparte el área de salud con S004.
 - **Redacción sin ejecutar:** las familias se redactaron en la nube sin poder instalar dependencias (registro de npm bloqueado). Por eso los tests ocultos y las referencias no se han ejecutado: la calibración en el PC es la primera ejecución real.
 - **Regla añadida:** los textos de interfaz que aparecen en la petición no pueden superar 40 caracteres si también están en el parche o en los tests (`docs/autoria-familias-semi-reales.md`).
+
+## Límite del intento sin la evaluación del pipeline — 2026-10-07
+Decisión del tesista a propuesta de Claude.
+
+**Hallazgo.** El ensayo de S014 del 2026-10-06 quedó BLOCKED. En V1, el intento guionado que debía aceptarse (anthropic, reparación) terminó en TIMEOUT tras 2 474 s.
+- **Causa:** el límite del intento (`timeout_seconds`: 1 800 s para los modelos comerciales y 3 600 s para los locales) incluía la evaluación del pipeline después de `deliver`.
+- **Por qué afecta a S014:** su suite tarda unos 520 s (2 274 tests). Un solo `run_checks` del modelo más los tests visibles y el oráculo del pipeline suman unos 27 minutos.
+- **Antecedente:** el 2026-10-04 el ensayo pasó, pero muy cerca del límite.
+- **Consecuencia en la generación:** casi cualquier modelo que ejecutara `run_checks` en S014 acabaría en TIMEOUT por la duración de la suite del repositorio, no por su propio trabajo. Le pasaría al proveedor que la rotación asigne a esa familia, y eso sesgaría la comparación.
+
+**Decisión** (`runner/execution/engine.mjs`):
+- **Límite del intento:** solo mide el trabajo del modelo, es decir, sus respuestas y sus acciones, incluidos sus propios `run_checks`.
+- **Operaciones del pipeline tras `deliver`:** las etapas de evaluación, el snapshot y el commit de la referencia tienen cada una su propio límite de 30 minutos, fuera del presupuesto del modelo.
+- **Una etapa que se cuelga:** por ejemplo, código del modelo que bloquea la suite. Sigue reasignando como TIMEOUT.
+- **Política:** sin cambios (`config/policy.json`). Cambia la semántica de `timeout_seconds`, que ahora es el presupuesto del modelo.
+- **Registros:** `duration_seconds` del intento sigue incluyendo la evaluación. En el análisis, la duración del trabajo del modelo se calcula con los eventos.
+
+**Pruebas:** `tests/execution.test.mjs` incluye dos casos nuevos. En el primero, la evaluación supera el límite del modelo y el intento se acepta; en el segundo, una etapa colgada termina en TIMEOUT.
+
+**Evidencia afectada:** `engine.mjs` forma parte de la huella de los ensayos, así que hay que repetir el ensayo mínimo (S900) y los de S001–S020.
