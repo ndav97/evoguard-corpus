@@ -1,4 +1,4 @@
-# EvoGuard Corpus — Estado del proyecto (2026-10-02, actualizado 2026-10-05)
+# EvoGuard Corpus — Estado del proyecto (2026-10-02, actualizado 2026-10-07)
 
 Sustituye a `estado-del-proyecto-2026-09-27.md`.
 
@@ -16,6 +16,13 @@ Sustituye a `estado-del-proyecto-2026-09-27.md`.
 - El piloto no cambia: sigue con 3 turnos y modo directo, y las pruebas de `tests/real-families.test.mjs` y `tests/strata.test.mjs` pasan (37/37).
 - Aun así toca `generate`, `audit`, `mutants`, `rehearse`, `suite` y el motor de ejecución, así que **hay que repetir los ensayos de S900 y S001–S020 antes de generar.**
 - `npm test` en la máquina virtual de Cowork da 5 archivos en fallo, los mismos antes y después del cambio: las pruebas del oráculo de UI necesitan el Chromium de Playwright, que no está instalado allí. En el PC no aplica.
+
+### Avance de la fase A (2026-10-07)
+- **2026-10-06, primer ensayo mínimo (S900):** falló por un error del cambio de 5 turnos; el bucle recorría V1–V5. Corregido en `a339957`.
+- **2026-10-06/07, ensayos:** S900 y 19 familias en PASS (commit `e88ecba`).
+  - S014 quedó BLOCKED. En V1, el intento que debía aceptarse superó los 30 minutos porque el límite del intento incluía la evaluación del pipeline, y la suite de S014 tarda unos 520 s.
+  - **Decisión del tesista:** el límite del intento mide solo el trabajo del modelo, y la evaluación tiene su propio límite de 30 minutos por operación (`8173e50`, `docs/operational-decisions.md`).
+- **Siguiente paso:** como cambió el motor, hay que repetir `npm run real:rehearse -- --mini` y `scripts\real\ensayar-familias.cmd` (S001–S020, unas 10 h).
 
 ### Plan para cerrar el piloto (2026-10-05)
 
