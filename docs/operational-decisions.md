@@ -385,3 +385,11 @@ Diseño completo en `docs/diseno-linea-base-episodios.md`; configuración en `co
   - piloto (600 turnos): unos 2–4 días continuos;
   - fase final con B y E (6 000 turnos): unas 3–6 semanas sin paralelismo.
   Se decidirá con los tiempos reales del piloto (paralelismo, repeticiones).
+
+## S014: test inestable ajeno al cambio — 2026-10-08
+En el ensayo de S014 del 2026-10-08, el guion aplicó en V2 el parche de referencia correcto y la suite visible falló una vez. Pasó al repetirla.
+- **Test afectado:** `src/components/simulator/Simulator.test.tsx › Receive an interactive message and send the response with correct uuid`.
+- **Por qué es inestable:** usa un uuid aleatorio y no depende de la zona del cambio (`Timer`).
+- **Decisión:** se añade a `known_failures`, con el mismo criterio que S015.
+- **Efecto:** sin este ajuste, en la línea base por episodios un turno correcto podría contar como fallo por azar.
+- **Ensayo:** no hace falta repetirlo por este cambio. La vigencia del ensayo depende del código y de la imagen, y el turno afectado ya se había aceptado tras la reparación.

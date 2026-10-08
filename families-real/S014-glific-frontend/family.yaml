@@ -17,7 +17,10 @@ runner: vitest
 node: "22"
 workspace: github__glific__glific-frontend          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+known_failures:                            # tests que ya fallaban en V0 o inestables ajenos al cambio (excluidos del pass-to-pass)
+  # Inestable (2026-10-08): falló una vez con el parche de referencia correcto en el ensayo de V2; usa un uuid aleatorio
+  # y no depende de la zona del cambio (Timer). Mismo criterio que S015.
+  - "src/components/simulator/Simulator.test.tsx › Receive an interactive message and send the response with correct uuid"
 focus: src/components/UI/Timer/Timer.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001
