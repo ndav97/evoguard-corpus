@@ -156,12 +156,13 @@ test('solo el brazo B está disponible hasta tener EvoGuard UI', () => {
   assert.throws(() => armPacket('E', {}), /pendiente/);
 });
 
-test('plan del piloto: 600 turnos = 200 episodios, en orden repetición → proveedor → familia', () => {
+test('plan del piloto: 300 turnos = 100 episodios (1 repetición), en orden repetición → proveedor → familia', () => {
   const plan = planEpisodes(repoRoot, { phase: 'pilot' });
-  assert.equal(plan.length, 200);
+  assert.equal(plan.length, 100);
   assert.deepEqual(plan.slice(0, 2).map(e => `${e.repetition}:${e.provider}:${e.familyId}`), ['1:openai:S001', '1:openai:S002']);
   assert.deepEqual(plan[20], { ...plan[20], repetition: 1, provider: 'anthropic', familyId: 'S001' });
-  assert.equal(plan.at(-1).repetition, 2);
+  assert.equal(plan.at(-1).repetition, 1);
+  assert.equal(plan.at(-1).provider, 'local_b');
   assert.throws(() => planEpisodes(repoRoot, { phase: 'pilot', arm: 'E' }), /no forma parte/);
 });
 

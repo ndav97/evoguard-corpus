@@ -61,6 +61,19 @@ export function report(records, { names = {}, resamples = 10000, seed = 20261008
     }
     lines.push('');
   }
+  // Costo por modelo y brazo (comerciales: tokens × precios; locales: horas de GPU).
+  const costRows = rows.map(r => {
+    const own = records.filter(x => x.arm === r.arm && x.provider === r.provider);
+    const usd = own.reduce((t, x) => t + (Number.isFinite(x.cost_usd) ? x.cost_usd : 0), 0);
+    const hours = own.reduce((t, x) => { const h = (Date.parse(x.finished_at) - Date.parse(x.started_at)) / 3600000; return t + (h > 0 ? h : 0); }, 0);
+    const cached = own.reduce((t, x) => t + (x.tokens?.cached ?? 0), 0), input = own.reduce((t, x) => t + (x.tokens?.input ?? 0), 0);
+    return { arm: r.arm, provider: r.provider, turns: own.length, usd, hours, cached_share: input ? cached / input : null, unknown: own.reduce((t, x) => t + (x.cost_unknown_calls ?? 0), 0) };
+  });
+  if (costRows.length) {
+    lines.push('## Costo y tiempo', '', '| Brazo | Modelo | Turnos | Costo (USD) | USD por turno | Horas | Min por turno | Entrada cacheada | Llamadas sin tokens |', '|---|---|---|---|---|---|---|---|---|');
+    for (const c of costRows) lines.push(`| ${c.arm} | ${name(c.provider)} | ${c.turns} | ${c.usd.toFixed(2)} | ${c.turns ? (c.usd / c.turns).toFixed(3) : '—'} | ${c.hours.toFixed(1)} | ${c.turns ? ((60 * c.hours) / c.turns).toFixed(1) : '—'} | ${pct(c.cached_share)} | ${c.unknown} |`);
+    lines.push('', 'Los modelos locales no tienen costo por token: su costo es el de la GPU durante sus horas (npm run episode:budget).', '');
+  }
   if (comparisons.length) {
     lines.push('## Comparación emparejada por familia (frente a B)', '', '| Brazo | Modelo | Familias | Δ TEE = TEE(brazo) − TEE(B) | ΔR = TER(B) − TER(brazo) |', '|---|---|---|---|---|');
     for (const c of comparisons) lines.push(`| ${c.arm} | ${name(c.provider)} | ${c.families}${c.missing.length ? ` (faltan ${c.missing.join(', ')})` : ''} | ${pp(c.delta_tee)} | ${pp(c.delta_ter)} |`);

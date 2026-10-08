@@ -32,6 +32,7 @@ import { docker } from '../sandbox/docker.mjs';
 import { execReal } from '../real/docker.mjs';
 import { createEpisodeStore, episodeComplete } from './store.mjs';
 import { summarizeEpisode, turnPassed, TURN_ID } from './metrics.mjs';
+import { loadBudget, turnCost, budgetBlocker } from './budget.mjs';
 
 const sha = text => createHash('sha256').update(text).digest('hex');
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
@@ -40,7 +41,7 @@ export const loadExperiment = root => JSON.parse(readFileSync(join(root, 'config
 
 // Código que ejecuta los episodios: si cambia, hay que repetir su ensayo (episode:rehearse). Las métricas y la
 // configuración de fases no cambian lo que se ejecuta ni lo que se registra, así que no forman parte.
-export const EPISODE_SOURCES = ['runner/episode/run.mjs', 'runner/episode/store.mjs', ...REAL_PIPELINE_SOURCES];
+export const EPISODE_SOURCES = ['runner/episode/run.mjs', 'runner/episode/store.mjs', 'runner/episode/budget.mjs', ...REAL_PIPELINE_SOURCES];
 export const episodeFingerprint = root => Object.fromEntries(EPISODE_SOURCES.map(path => [path, sha(readFileSync(join(root, path)))]));
 const CODE_ROOT = fileURLToPath(new URL('../../', import.meta.url));
 // Huella del código y de los modelos con que se produjo cada registro: el análisis avisa si se mezclan versiones.
@@ -205,6 +206,7 @@ export async function runEpisode({ root, data, base, provider, arm = 'B', experi
   const steps = [];
   const records = [];
   const origin = provenance();
+  const budget = loadBudget(CODE_ROOT);
   const common = { schema_version: '1.0.0', artifact_type: 'episode_turn', experiment, phase, arm, provider, family_id: data.familyId, episode, repetition, turns_total: versions.length, rehearsal, ...origin };
   say(`${data.familyId} · ${provider} · brazo ${arm} · e${episode}-r${repetition}: ${versions.length} turnos`);
   let status = 'COMPLETE';
@@ -255,11 +257,14 @@ export async function runEpisode({ root, data, base, provider, arm = 'B', experi
       calls: ts.calls.length, calls_without_tokens: ts.calls.filter(c => !Number.isFinite(c.tokens?.input)).length,
       transport_retries: ts.retries.length, transport_retry_wait_seconds: ts.retries.reduce((t, r) => t + r.wait / 1000, 0),
       observed_models: [...new Set(ts.calls.map(c => c.observed_model).filter(Boolean))],
-      tokens: { input: sumTokens(ts.calls, 'input'), output: sumTokens(ts.calls, 'output'), reasoning: sumTokens(ts.calls, 'reasoning') },
+      tokens: { input: sumTokens(ts.calls, 'input'), output: sumTokens(ts.calls, 'output'), reasoning: sumTokens(ts.calls, 'reasoning'), cached: sumTokens(ts.calls, 'cached') },
       base_commit: row?.base_commit ?? null, candidate_commit: row?.candidate_commit ?? null,
       patch_sha256: sha(patch), patch_bytes: Buffer.byteLength(patch),
       started_at: started, finished_at: new Date().toISOString()
     };
+    // Costo real del turno (tokens × precios de config/experiment.json); los locales cuentan como horas de GPU.
+    const cost = turnCost(ts.calls, provider, budget);
+    record.cost_usd = cost.usd; record.cost_unknown_calls = cost.unknown_calls;
     record.passed = turnPassed(record);
     // El motor solo vio etapas enmascaradas (nunca FAIL): el resultado real del turno queda también en los eventos.
     ts.event({ type: 'episode_evaluation', note: 'resultado real del turno; las etapas del motor están enmascaradas para que no repare ni reasigne', passed: record.passed, delivered, scope_ok: record.scope_ok, typecheck: record.typecheck, requirements: record.oracle?.requirements ?? null, suite_ok: record.oracle?.suite_ok ?? null, cause: record.oracle?.cause ?? null, infra_error: infra });
@@ -348,6 +353,9 @@ export async function runOne(root, { phase, arm = 'B', familyId, provider, episo
     if (!config.arms.includes(arm)) throw new Error(`el brazo ${arm} no forma parte de la fase ${phase}`);
     armPacket(arm, {});
     const blockers = episodeBlockers(root, familyId, { providers: [provider] });
+    // Tope de gasto (S/ 5 000 menos la reserva): no se inicia un episodio que pudiera superarlo.
+    const overBudget = budgetBlocker(root, provider, config.turns);
+    if (overBudget) blockers.push(overBudget);
     if (blockers.length) throw new Error('el episodio está bloqueado:\n' + blockers.map(b => `- ${b}`).join('\n'));
     data = loadRealFamily(root, familyId);
     if (realVersions(data.manifest).length !== config.turns) throw new Error(`${familyId} tiene ${realVersions(data.manifest).length} turnos y la fase ${phase} pide ${config.turns}`);

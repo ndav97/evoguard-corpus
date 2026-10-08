@@ -393,3 +393,22 @@ En el ensayo de S014 del 2026-10-08, el guion aplicó en V2 el parche de referen
 - **Decisión:** se añade a `known_failures`, con el mismo criterio que S015.
 - **Efecto:** sin este ajuste, en la línea base por episodios un turno correcto podría contar como fallo por azar.
 - **Ensayo:** no hace falta repetirlo por este cambio. La vigencia del ensayo depende del código y de la imagen, y el turno afectado ya se había aceptado tras la reparación.
+
+## Costo mínimo con un límite de S/ 5 000 — 2026-10-08
+El tesista dispone como máximo de **S/ 5 000**, unos 1 453 USD a 3,4413 PEN por USD. El plan con cinco modelos, 2 episodios × 3 repeticiones y generación del corpus con modelos costaba unos 5 000 USD. Ajustes:
+
+**Decisiones del tesista:**
+1. **Referencias del corpus = parches de referencia calibrados**, sin generación con modelos (`corpus:generate` deja de formar parte del plan). Las etiquetas de impacto salen de esos parches, y el código escrito por modelos se estudia en los episodios. Es un cambio metodológico que se declara en la tesis.
+2. **Etiquetas de riesgo (π0) con un modelo local**: nueva fase `pi0` de `config/experiment.json`, 40 familias × 5 turnos × 2 repeticiones, solo GPU.
+3. **Fase final:** 1 episodio por familia, 1 repetición, brazos B y E, cinco modelos (1 000 turnos). I y G se descartan.
+
+**Aplicado por Claude:**
+- **Piloto** con 1 repetición (300 turnos).
+- **Adaptador de modelos:** registra los tokens cacheados (OpenAI `cached_tokens`, Anthropic lectura y escritura de caché, Gemini `cachedContentTokenCount`). En Anthropic, `input` pasa a ser la entrada total.
+- **Presupuesto** (`runner/episode/budget.mjs`, `npm run episode:budget`):
+  - costo real de cada turno en `turn.json`;
+  - gasto acumulado, incluidos los episodios interrumpidos, las horas de GPU y los gastos externos;
+  - **tope**: no se inicia un episodio si el gasto más su proyección pesimista superara el límite menos la reserva del 15 %, es decir, 1 235 USD.
+- **Precios:** son de lista y de terceros; hay que sustituirlos por los de Synterolink.
+- **Estimación total:** unos 1 065 USD (S/ 3 700) sin caché y unos S/ 2 100 con caché efectiva. Detalle en `docs/diseno-linea-base-episodios.md`, secciones 4 y 5.
+- **Calibración:** los 5 primeros episodios de cada modelo comercial del piloto (S001–S005; 45 turnos, unos 50 USD) se ejecutan antes de seguir, para fijar el costo real.

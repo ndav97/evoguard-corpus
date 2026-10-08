@@ -1,14 +1,36 @@
 {
   "schema_version": "1.0.0",
   "decided_at": "2026-10-08",
-  "decision": "Línea base y comparación final por episodios, con las métricas de EvoGenUI-Bench (Peng et al., 2026), los cinco modelos del pool en ambas fases y 60 familias en el corpus definitivo (docs/diseno-linea-base-episodios.md).",
+  "decision": "Línea base y comparación final por episodios, con las métricas de EvoGenUI-Bench (Peng et al., 2026), los cinco modelos del pool en ambas fases y 60 familias en el corpus definitivo. Costo mínimo con un límite de S/ 5 000 (2026-10-08): referencias del corpus = parches de referencia calibrados (sin generación con modelos); etiquetas π0 con un modelo local; piloto con 1 repetición; final con 1 episodio por familia, 1 repetición y brazos B y E (docs/diseno-linea-base-episodios.md).",
   "reference": "Peng, Xia, Wang, Ye, Ning y Wen (2026). EvoGenUI-Bench: Evaluating LLMs as multi-turn generative UI assistants. arXiv:2608.29387.",
-  "providers": ["openai", "anthropic", "google", "local_a", "local_b"],
+  "providers": [
+    "openai",
+    "anthropic",
+    "google",
+    "local_a",
+    "local_b"
+  ],
   "arms": {
-    "B": { "status": "ACTIVE", "context": "textual", "description": "Agente con el paquete del turno (petición, zona del cambio, árbol y archivos de la zona) y su propio historial. Comparador principal y política π0." },
-    "I": { "status": "PENDING", "context": "imports", "description": "Prioridad por dependencias de importación. Pendiente del extractor (OE2)." },
-    "G": { "status": "PENDING", "context": "impact_guide", "description": "Guía de EvoGuard UI solo con la salida de impacto. Pendiente (OE3–OE4)." },
-    "E": { "status": "PENDING", "context": "impact_and_risk_guide", "description": "Guía de EvoGuard UI con impacto y riesgo. Intervención propuesta. Pendiente (OE3–OE4)." }
+    "B": {
+      "status": "ACTIVE",
+      "context": "textual",
+      "description": "Agente con el paquete del turno (petición, zona del cambio, árbol y archivos de la zona) y su propio historial. Comparador principal y política π0."
+    },
+    "I": {
+      "status": "DROPPED",
+      "context": "imports",
+      "description": "Prioridad por dependencias de importación. Pendiente del extractor (OE2). Descartado por presupuesto (2026-10-08)."
+    },
+    "G": {
+      "status": "DROPPED",
+      "context": "impact_guide",
+      "description": "Guía de EvoGuard UI solo con la salida de impacto. Pendiente (OE3–OE4). Descartado por presupuesto (2026-10-08)."
+    },
+    "E": {
+      "status": "PENDING",
+      "context": "impact_and_risk_guide",
+      "description": "Guía de EvoGuard UI con impacto y riesgo. Intervención propuesta. Pendiente (OE3–OE4)."
+    }
   },
   "protocol": {
     "single_model_per_episode": true,
@@ -24,26 +46,78 @@
   "phases": {
     "pilot": {
       "experiment": "linea-base-piloto",
-      "families": ["S001", "S002", "S003", "S004", "S005", "S006", "S007", "S008", "S009", "S010", "S011", "S012", "S013", "S014", "S015", "S016", "S017", "S018", "S019", "S020"],
+      "families": [
+        "S001",
+        "S002",
+        "S003",
+        "S004",
+        "S005",
+        "S006",
+        "S007",
+        "S008",
+        "S009",
+        "S010",
+        "S011",
+        "S012",
+        "S013",
+        "S014",
+        "S015",
+        "S016",
+        "S017",
+        "S018",
+        "S019",
+        "S020"
+      ],
       "turns": 3,
       "episodes_per_family": 1,
+      "repetitions": 1,
+      "arms": [
+        "B"
+      ],
+      "providers": [
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b"
+      ],
+      "turns_planned": 300,
+      "purpose": "Primera línea base por modelo (TP@3). Los 5 primeros episodios de cada modelo comercial (S001–S005) sirven de calibración de costo y tiempo antes de seguir."
+    },
+    "pi0": {
+      "experiment": "etiquetas-pi0",
+      "families": "particiones de entrenamiento y validación del corpus definitivo (40 familias)",
+      "turns": 5,
+      "episodes_per_family": 1,
       "repetitions": 2,
-      "arms": ["B"],
-      "providers": ["openai", "anthropic", "google", "local_a", "local_b"],
-      "turns_planned": 600,
-      "purpose": "Primera línea base por modelo (TP@3), cálculo de varianza para fijar repeticiones y elección del presupuesto de la fase final."
+      "arms": [
+        "B"
+      ],
+      "providers": [
+        "local_a"
+      ],
+      "turns_planned": 400,
+      "purpose": "Etiquetas de riesgo para entrenar EvoGuard UI: qué requisitos rompe el agente base. Con un modelo local (solo cuesta GPU); el proveedor definitivo es el modelo local elegido en el banco. El riesgo se define respecto de ese modelo."
     },
     "final": {
       "experiment": "evaluacion-final",
       "families": "partición de prueba del corpus definitivo (20 familias, nunca usadas para entrenar EvoGuard UI)",
       "turns": 5,
-      "episodes_per_family": 2,
-      "repetitions": 3,
-      "arms": ["B", "E"],
-      "explanatory_arms": ["I", "G"],
-      "providers": ["openai", "anthropic", "google", "local_a", "local_b"],
-      "turns_planned": 6000,
-      "purpose": "Comparación emparejada por familia de TEE (TP@5) y TER entre B y E para cada modelo. Los brazos I y G se deciden con el presupuesto real tras el piloto."
+      "episodes_per_family": 1,
+      "repetitions": 1,
+      "arms": [
+        "B",
+        "E"
+      ],
+      "providers": [
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b"
+      ],
+      "turns_planned": 1000,
+      "purpose": "Comparación emparejada por familia de TEE (TP@5) y TER entre B y E para cada modelo y agrupada para los cinco. Una 2.ª repetición solo si la caché de prompts reduce el costo y el presupuesto lo permite."
     }
   },
   "analysis": {
@@ -51,5 +125,51 @@
     "bootstrap_resamples": 10000,
     "seed": 20261008,
     "intervals": "Wilson al 95 % para proporciones agregadas; bootstrap percentil de familias completas para TEE, TER y las diferencias emparejadas"
+  },
+  "corpus_references": "Las versiones de referencia del corpus son los parches de referencia calibrados de cada familia (reference/T00n.patch, verificados con los tests ocultos). No se generan referencias con modelos (decisión del 2026-10-08, por presupuesto); el código escrito por modelos se estudia en los episodios.",
+  "budget": {
+    "limit_pen": 5000,
+    "usd_to_pen": 3.4413,
+    "rate_date": "2026-10-08",
+    "reserve_fraction": 0.15,
+    "gpu_usd_per_hour": 0.4,
+    "prices_usd_per_million": {
+      "openai": {
+        "input": 4.0,
+        "cached_input": 0.4,
+        "cache_write": 4.0,
+        "output": 20.0,
+        "reasoning_separate": false
+      },
+      "anthropic": {
+        "input": 2.0,
+        "cached_input": 0.2,
+        "cache_write": 2.5,
+        "output": 10.0,
+        "reasoning_separate": false
+      },
+      "google": {
+        "input": 2.0,
+        "cached_input": 0.2,
+        "cache_write": 2.0,
+        "output": 12.0,
+        "reasoning_separate": true
+      }
+    },
+    "prices_note": "Precios de lista de terceros (anotherwrapper, langcopilot; 2026-10-08). La entrada cacheada se asume al 10 % y la escritura de caché de Anthropic al 125 %. Sustituir por las tarifas reales de Synterolink en cuanto se conozcan.",
+    "per_turn_estimate_usd": {
+      "openai": 1.6,
+      "anthropic": 0.8,
+      "google": 0.85,
+      "local": 0.07
+    },
+    "per_turn_ceiling_usd": {
+      "openai": 5.0,
+      "anthropic": 2.5,
+      "google": 2.6,
+      "local": 0.2
+    },
+    "unknown_call_usd": 0.3,
+    "extra_spent_usd": []
   }
 }

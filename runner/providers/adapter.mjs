@@ -47,7 +47,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(config.transport==='openai') {
         raw=await request(`${connection.base_url}/responses`,{model:config.api_model_id,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},{authorization:`Bearer ${apiKey}`});
         metadata.observed_model=raw.model;
-        metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:number(raw.usage?.output_tokens_details?.reasoning_tokens)};
+        metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:number(raw.usage?.output_tokens_details?.reasoning_tokens),cached:number(raw.usage?.input_tokens_details?.cached_tokens),cache_write:null};
         if(raw.status!=='completed')throw providerError('INCOMPLETE_RESPONSE');
         const blocks=raw.output?.filter(o=>o.type==='message').flatMap(o=>o.content??[])??[];
         if(blocks.some(b=>b.type==='refusal'))throw providerError('MODEL_REFUSAL');
@@ -55,13 +55,14 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       } else if(config.transport==='anthropic') {
         raw=await request(`${connection.base_url}/messages`,{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content:input}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning,format:{type:'json_schema',schema:ACTION_SCHEMA}}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
         metadata.observed_model=raw.model;
-        metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:null};
+        // Anthropic informa la lectura y la escritura de caché aparte de input_tokens: se suman para tener la entrada total.
+        {const u=raw.usage??{},read=number(u.cache_read_input_tokens),write=number(u.cache_creation_input_tokens),plain=number(u.input_tokens);metadata.tokens={input:plain===null?null:plain+(read??0)+(write??0),output:number(u.output_tokens),reasoning:null,cached:read,cache_write:write};}
         if(raw.stop_reason!=='end_turn')throw providerError('INCOMPLETE_RESPONSE');
         text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
       } else if(config.transport==='google') {
         raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
-        metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount)};
+        metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
         text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');
       } else {

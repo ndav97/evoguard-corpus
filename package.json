@@ -36,7 +36,8 @@
     "episode:rehearse": "node runner/episode/rehearse.mjs",
     "episode:plan": "node runner/episode/run.mjs plan",
     "episode:run": "node --env-file-if-exists=.env runner/episode/run.mjs",
-    "episode:analyze": "node runner/episode/analyze.mjs"
+    "episode:analyze": "node runner/episode/analyze.mjs",
+    "episode:budget": "node runner/episode/budget.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
