@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:9010daa4324f531f8116a3e674bd523bf1b67c4cecad2cb47df21ef7192d7691",
+  "image_id": "sha256:6c3135e58455a928a79eea11d1d794034a7134ab893986c9c58dbd49301afda7",
   "experimental": false,
-  "started_at": "2026-10-06T19:46:59.488Z",
+  "started_at": "2026-10-07T14:45:23.367Z",
   "versions": {
     "V1": {
-      "task_id": "5161311a-b974-468d-948e-8658d98d412f",
+      "task_id": "447b25bd-78b3-43b7-ae12-a05d4dc21814",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "ae64c3bee0aa473634d276bdb40fa505f7050867"
     },
     "V2": {
-      "task_id": "a22666a0-06e8-4f30-9ba9-dcbecfc05371",
+      "task_id": "517648cd-cb8d-48b2-a7b3-f00f26520f2d",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "26370cea92758617ff23dce2f32ada956669084b"
     },
     "V3": {
-      "task_id": "f8f80545-66dc-4962-94a7-22df9e577cc9",
+      "task_id": "2e0f6d51-9caf-44a6-9436-9b56062f9eee",
       "outcomes": [
         {
           "provider": "google",
@@ -119,7 +119,7 @@
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-06T19:47:49.724Z",
+  "finished_at": "2026-10-07T14:46:16.704Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {
@@ -133,7 +133,7 @@
     }
   },
   "sources_sha256": {
-    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",

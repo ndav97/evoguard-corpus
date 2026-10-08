@@ -3,10 +3,10 @@
   "family_id": "S001",
   "image_id": "sha256:15f30254fcfcf3dfcece5ce7c57eb534622206b689a6a96ff387bdb6e2a1b215",
   "experimental": false,
-  "started_at": "2026-10-06T19:48:47.147Z",
+  "started_at": "2026-10-07T14:47:17.439Z",
   "versions": {
     "V1": {
-      "task_id": "5f11a491-be1f-448c-9c26-f76c8f707c10",
+      "task_id": "d3eca83c-82af-41e8-996a-78b47667e3eb",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -64,7 +64,7 @@
       "candidate_commit": "d645ad730e6fec8a1dbb3b65b25cef1f6df762dc"
     },
     "V2": {
-      "task_id": "002dadfd-3d58-4962-802b-3f309f077323",
+      "task_id": "0680b41d-85ab-412a-bb4a-f496daf01bd0",
       "outcomes": [
         {
           "provider": "google",
@@ -83,7 +83,7 @@
       "candidate_commit": "66300dace21af7bd68ec1306474bd6816e0e4c6c"
     },
     "V3": {
-      "task_id": "e8b4a847-5788-4f87-a05f-d05f86c712e1",
+      "task_id": "b80d0379-3eb2-47a6-b2ba-f2586f2d8de1",
       "outcomes": [
         {
           "provider": "local_a",
@@ -109,19 +109,19 @@
       {
         "status": "PASS",
         "total": 515,
-        "seconds": 47
+        "seconds": 39
       },
       {
         "status": "PASS",
         "total": 515,
-        "seconds": 45
+        "seconds": 39
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-06T20:00:48.484Z",
+  "finished_at": "2026-10-07T14:57:58.438Z",
   "sources_sha256": {
-    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",

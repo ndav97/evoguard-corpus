@@ -3,10 +3,10 @@
   "family_id": "S002",
   "image_id": "sha256:1f5723cd18c02ded5e5cc1a117ce6c827dc0d416ea8376679d4e2bf7caa38a7e",
   "experimental": false,
-  "started_at": "2026-10-06T20:00:48.905Z",
+  "started_at": "2026-10-07T14:57:58.872Z",
   "versions": {
     "V1": {
-      "task_id": "e1b4827b-b0c8-4dc4-a299-f33e8732116f",
+      "task_id": "8fed41c6-3191-48e8-b3f9-803ec18d1bff",
       "outcomes": [
         {
           "provider": "google",
@@ -64,7 +64,7 @@
       "candidate_commit": "6680338860d03d0e0d69a69abad729c717af920d"
     },
     "V2": {
-      "task_id": "47121601-ecf3-48c5-a816-5dcb79549a02",
+      "task_id": "52abb70b-ff95-4081-8265-e1502424e5f0",
       "outcomes": [
         {
           "provider": "local_a",
@@ -83,7 +83,7 @@
       "candidate_commit": "12f5ca62defb0b60b2f2d666ee458dc9166deb02"
     },
     "V3": {
-      "task_id": "3d762965-ab4b-4911-a8e2-8574c71ede25",
+      "task_id": "12c09469-1396-4952-b4dc-553761d69786",
       "outcomes": [
         {
           "provider": "local_b",
@@ -109,19 +109,19 @@
       {
         "status": "PASS",
         "total": 429,
-        "seconds": 44
+        "seconds": 43
       },
       {
         "status": "PASS",
         "total": 429,
-        "seconds": 44
+        "seconds": 41
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-06T20:11:57.129Z",
+  "finished_at": "2026-10-07T15:08:37.587Z",
   "sources_sha256": {
-    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
