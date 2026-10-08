@@ -105,13 +105,24 @@ export const failAll = (position, cause) => ({ status: 'FAIL', cause, requiremen
 
 // Oráculo con distinción entre infraestructura y código del agente: si la suite agota su tiempo, se repite una vez;
 // si vuelve a agotarlo con Docker respondiendo, el turno falla por el código (bucle, test que no termina…).
+// Tests inestables de la suite del repositorio: si los requisitos del turno pasan y solo falla la suite, se repite
+// el oráculo una vez y la suite cuenta como rota solo si vuelve a fallar (se registra suite_retry).
 export async function measureOracle(deps, args, position) {
   let report;
   for (let attempt = 1; attempt <= 2; attempt++) {
     report = await deps.runRealOracle(args);
     const summary = summarizeOracle(report, position);
-    if (!(summary.status === 'INFRA_ERROR' && summary.error === 'TIMEOUT')) return { report, summary };
-    if (!(deps.dockerHealthy ?? dockerHealthy)()) return { report, summary };
+    if (summary.status === 'INFRA_ERROR' && summary.error === 'TIMEOUT') {
+      if (!(deps.dockerHealthy ?? dockerHealthy)()) return { report, summary };
+      continue;
+    }
+    if (summary.status !== 'INFRA_ERROR' && !summary.cause && summary.suite_ok === false && Object.values(summary.requirements).every(Boolean)) {
+      const again = await deps.runRealOracle(args);
+      const second = summarizeOracle(again, position);
+      if (second.status === 'INFRA_ERROR') return { report: again, summary: second };
+      return { report: again, summary: { ...second, suite_retry: { first_suite_failing: summary.suite_failing, first_suite_broken: summary.suite_broken, confirmed: second.suite_ok === false } } };
+    }
+    return { report, summary };
   }
   return { report, summary: failAll(position, 'oracle_timeout') };
 }

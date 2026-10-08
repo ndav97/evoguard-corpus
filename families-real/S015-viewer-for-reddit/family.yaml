@@ -23,6 +23,8 @@ hidden_tests_dir: evoguard           # donde se copian los tests ocultos al eval
 known_failures:
   - "components/layout/Sidebar/SidebarNav.test.tsx › SidebarNav collapse behavior can toggle Navigation section collapse"
   - "components/layout/Sidebar/SidebarNav.test.tsx › SidebarNav collapse behavior toggles Navigation by keyboard"
+  # Inestable (2026-10-08): margen de 1 ms; falló con el parche correcto en la suite visible de V1. Ajeno a la zona del cambio (SubscriptionFilterList).
+  - "lib/actions/auth/auth.test.ts › auth actions getAuthStatus returns authenticated when expiration is one millisecond in future"
 focus: components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001

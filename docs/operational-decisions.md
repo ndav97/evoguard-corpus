@@ -412,3 +412,17 @@ El tesista dispone como máximo de **S/ 5 000**, unos 1 453 USD a 3,4413 PEN por
 - **Precios:** son de lista y de terceros; hay que sustituirlos por los de Synterolink.
 - **Estimación total:** unos 1 065 USD (S/ 3 700) sin caché y unos S/ 2 100 con caché efectiva. Detalle en `docs/diseno-linea-base-episodios.md`, secciones 4 y 5.
 - **Calibración:** los 5 primeros episodios de cada modelo comercial del piloto (S001–S005; 45 turnos, unos 50 USD) se ejecutan antes de seguir, para fijar el costo real.
+
+## Tests inestables de los repositorios: exclusiones y repetición del oráculo en episodios — 2026-10-08
+Los ensayos del 2026-10-08 fallaron en S014 y S015 por tests inestables de la suite del propio repositorio, ajenos a la zona del cambio, aun con el parche de referencia correcto:
+- **S014:** `ChatInterface.test.tsx › … date range filter` (depende de la fecha). Se suma al `Simulator.test.tsx` excluido antes ese mismo día.
+- **S015:** `auth.test.ts › … expiration is one millisecond in future` (margen de 1 ms).
+
+**Decisiones:**
+1. **Exclusiones:** estos tests pasan a `known_failures`, con el mismo criterio que S015 (2026-10-04).
+2. **Repetición del oráculo en episodios** (`runner/episode/run.mjs`, `measureOracle`):
+   - se aplica cuando en un turno pasan todos los tests ocultos y solo falla la suite del repositorio;
+   - el oráculo se repite una vez, y la suite cuenta como rota solo si vuelve a fallar;
+   - se registra en `oracle.suite_retry` de `turn.json`;
+   - así un test inestable no convierte en fallo un turno correcto de la línea base.
+3. **Ensayos:** los de S014 y S015 se repiten. El lanzador los retoma solos.

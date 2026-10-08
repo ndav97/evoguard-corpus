@@ -21,6 +21,8 @@ known_failures:                            # tests que ya fallaban en V0 o inest
   # Inestable (2026-10-08): falló una vez con el parche de referencia correcto en el ensayo de V2; usa un uuid aleatorio
   # y no depende de la zona del cambio (Timer). Mismo criterio que S015.
   - "src/components/simulator/Simulator.test.tsx › Receive an interactive message and send the response with correct uuid"
+  # Inestable (2026-10-08): depende de la fecha; falló una vez con el parche de referencia correcto en el oráculo de V1 y pasó en las demás ejecuciones. Ajeno a la zona del cambio (Timer).
+  - "src/containers/Chat/ChatInterface/ChatInterface.test.tsx › Chat interface with filters should show filtered messages after applying date range filter"
 focus: src/components/UI/Timer/Timer.tsx                 # zona que tocan los tres cambios
 turns:
   - id: T001

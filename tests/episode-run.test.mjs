@@ -236,3 +236,17 @@ test('registro del turno: tokens aunque haya llamadas fallidas, reintentos de tr
   assert.equal(t1.transport_retries, 1); assert.equal(t1.transport_retry_wait_seconds, 15);
   assert.match(t1.code_sha256, /^[a-f0-9]{64}$/); assert.match(t1.models_sha256, /^[a-f0-9]{64}$/);
 });
+
+test('suite inestable: si solo falla la suite, el oráculo se repite y cuenta el segundo resultado', async () => {
+  const run = (suite) => ({ status: 'FAIL', runs: [{ hidden: { T001: { tests: 1, failing: [], compile_error: false } }, suite_failing: suite ? [] : ['x › inestable'], suite_broken: [] }] });
+  const seq = list => { let i = 0; return async () => list[i++]; };
+  let r = await measureOracle({ runRealOracle: seq([run(false), run(true)]), dockerHealthy: () => true }, {}, 1);
+  assert.equal(r.summary.suite_ok, true); assert.equal(r.summary.suite_retry.confirmed, false);
+  r = await measureOracle({ runRealOracle: seq([run(false), run(false)]), dockerHealthy: () => true }, {}, 1);
+  assert.equal(r.summary.suite_ok, false); assert.equal(r.summary.suite_retry.confirmed, true);
+  // Si además falla un requisito, no se repite: el turno ya no aprueba.
+  const hiddenFail = { status: 'FAIL', runs: [{ hidden: { T001: { tests: 1, failing: ['y'], compile_error: false } }, suite_failing: ['x'], suite_broken: [] }] };
+  let calls = 0;
+  r = await measureOracle({ runRealOracle: async () => { calls++; return hiddenFail; }, dockerHealthy: () => true }, {}, 1);
+  assert.equal(calls, 1);
+});
