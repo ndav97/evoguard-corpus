@@ -338,3 +338,18 @@ Decisión del tesista a propuesta de Claude.
 **Pruebas:** `tests/execution.test.mjs` incluye dos casos nuevos. En el primero, la evaluación supera el límite del modelo y el intento se acepta; en el segundo, una etapa colgada termina en TIMEOUT.
 
 **Evidencia afectada:** `engine.mjs` forma parte de la huella de los ensayos, así que hay que repetir el ensayo mínimo (S900) y los de S001–S020.
+
+## Ensayos colgados por Docker y lanzador con vigilante — 2026-10-08
+**Hallazgo.** La segunda ronda de ensayos (2026-10-07) pasó S900 y S001–S011. Después falló de forma repetida:
+- **S012:** V2 terminó en INFRA_ERROR y la familia tardó unas 18 horas.
+- **S013:** V1 terminó en INFRA_ERROR y tardó unas 3 horas.
+- **S014:** quedó colgado hasta que el tesista detuvo el script.
+
+**Patrón.** Tras una entrega, la suite visible del pipeline se colgaba dentro del contenedor. S013 tarda unos 60 s y no terminó en 30 minutos. El límite de cada etapa cortó el intento como TIMEOUT. Al abrir el contenedor del siguiente proveedor, `docker` se quedó bloqueado horas, sin respetar su propio límite, hasta que se interrumpió a mano; la tarea terminó entonces en INFRA_ERROR. En la ronda del 2026-10-06, las mismas familias e imágenes pasaron. Por eso es un fallo del motor de Docker Desktop y no del código ni de las familias.
+
+**Decisión.** No se toca el código que forma parte de la huella de los ensayos, para no invalidar los de S001–S011. Cambia solo el lanzador `scripts\real\ensayar-familias.ps1`:
+- **Retoma:** se salta los ensayos vigentes, es decir, en PASS con la misma huella del pipeline y la misma imagen. Lo comprueba `runner/real/rehearsal-status.mjs`. Con `-Repetir` se fuerzan todos.
+- **Vigilante:** cada familia tiene un límite de `-LimiteMinutos`, 150 por defecto (la más lenta, S014, tarda unos 85). Si lo supera, se termina el proceso con sus hijos, incluido `docker`.
+- **Reintento:** si una familia falla, se reinicia Docker Desktop (y WSL) cuando no responde o cuando se superó el límite. Después se eliminan los contenedores de EvoGuard que queden y se reintenta una vez.
+- **Comprobación de Docker:** `docker info` se ejecuta también con límite de tiempo.
+- **Registro:** la salida de cada ensayo queda en `.artifacts\real\ensayo-<familia>-<fecha>-<intento>.log`. Antes no quedaba en la transcripción.
