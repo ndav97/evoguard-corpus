@@ -30,33 +30,47 @@ Sustituye a `estado-del-proyecto-2026-09-27.md`.
     - guarda la salida de cada ensayo.
 - **Siguiente paso:** volver a lanzar `scripts\real\ensayar-familias.cmd`. Solo ensayará S012–S020 (unas 6 h).
 
-### Línea base por episodios (decisión del 2026-10-08)
-La línea base y la comparación final se miden con las métricas de **EvoGenUI-Bench** (Peng et al., 2026): TP, **TP@n (episodios exitosos, equivalente a la TEE)**, CPT y APR, más la TER. Se usan los **cinco modelos** en ambas fases y se **mantienen 60 familias**.
-- **Episodio:** un solo modelo recorre una familia turno a turno, sobre su propia salida, sin reasignación ni reparación. El oráculo mide cada turno sin mostrarse al modelo.
-- **Por qué no sirve la generación del corpus:** reasigna, repara y parte de referencias aceptadas, así que infla el éxito. Su papel es aportar las referencias y las etiquetas de impacto para entrenar EvoGuard UI.
+### Línea base por episodios y presupuesto (decisiones del 2026-10-08)
+**Métricas.** La línea base y la comparación final usan las métricas de **EvoGenUI-Bench** (Peng et al., 2026): TP, **TP@n (episodios exitosos, equivalente a la TEE)**, CPT y APR, más la TER. Se usan los **cinco modelos** en ambas fases y se **mantienen 60 familias**.
+- **Episodio:** un solo modelo recorre una familia sobre su propia salida, sin reasignación ni reparación. El oráculo mide sin mostrarse al modelo.
 - **Diseño:** `docs/diseno-linea-base-episodios.md` y `config/experiment.json`.
-- **Código:** `runner/episode/` (commit `70c7e80`), sin tocar la huella de los ensayos. Tiene 30 pruebas y pasó una revisión independiente: 2 hallazgos altos, ya corregidos.
-- **Piloto:** S001–S020 × 3 turnos × 5 modelos × 2 repeticiones = **600 turnos** (unos 2–4 días continuos).
-- **Fase final:** 20 familias de prueba × 2 episodios × 5 turnos × 5 modelos × 3 repeticiones × brazos B y E = **6 000 turnos** (unas 3–6 semanas sin paralelismo). Se ajustará con los tiempos del piloto.
+- **Código:** `runner/episode/`; 34 pruebas y una revisión independiente.
 
-### Plan para cerrar el piloto (actualizado 2026-10-08)
+**Presupuesto máximo: S/ 5 000** (≈ 1 453 USD). Decisiones de costo mínimo (`b52ea52`):
+1. **Referencias del corpus = parches de referencia calibrados.** **No se generan referencias con modelos**: `corpus:generate` sale del plan. Es un cambio metodológico que se declara en la tesis.
+2. **Etiquetas de riesgo π0 con un modelo local:** fase `pi0`, 400 turnos, solo GPU.
+3. **Piloto** con 1 repetición: 300 turnos.
+4. **Final:** 1 episodio × 1 repetición, brazos B y E, cinco modelos: 1 000 turnos. I y G se descartan.
+5. **Tope de gasto en el código.** El ejecutor no inicia un episodio que superaría 1 235 USD (el límite menos un 15 % de reserva). Se consulta con `npm run episode:budget`.
+
+| Fase | Turnos | Costo típico |
+|---|---|---|
+| Piloto | 300 | ~200 USD |
+| π0 (local) | 400 | ~25 USD |
+| Final | 1 000 | ~675 USD |
+| GPU extra y reserva | | ~165 USD |
+| **Total** | | **≈ 1 065 USD ≈ S/ 3 700** |
+
+Si la caché de prompts funciona, el total baja a unos S/ 2 100. Los precios son de lista y de terceros: hay que sustituirlos por los de Synterolink en `config/experiment.json`.
+
+### Plan para cerrar el piloto (actualizado 2026-10-08, costo mínimo)
 
 | Fase | Paso | Quién | Comando o entregable |
 |---|---|---|---|
-| A. Ensayos | A1. Ensayos de S900 y S001–S020 (en curso; S012 y S013 en PASS el 2026-10-08) | Tesista, PC | `scripts\real\ensayar-familias.cmd` (retoma solo) |
+| A. Ensayos | A1. Ensayos de S900 y S001–S020 (en curso; S012 y S013 en PASS) | Tesista, PC | `scripts\real\ensayar-familias.cmd` (retoma solo) |
 | | A2. Ensayo del ejecutor de episodios (sin modelos, unos 20 min) | Tesista, PC | `scripts\episode\ensayar-episodios.cmd` |
 | B. Revisión humana | Hoja de revisión de las 60 peticiones y veredictos | Claude prepara, tesista revisa | Artefacto de revisión |
-| C. Proveedores comerciales | Segunda sonda de Sonnet, elección de variante y diagnóstico de los tres (≥ 9/10) | PC + Claude | `npm run providers -- probe --rounds=5 --variants=D,E,F`, `npm run providers:diagnose` |
-| D. Modelos locales | Banco en Vast.ai; elegir `local_a`/`local_b` y ventana; recongelar modelos y contexto; decidir π0 y el tope de gasto | GPU + Claude + tesista | `docs/gpu-vast-ai.md` |
-| **E. Línea base (brazo B)** | **200 episodios: 5 modelos × 20 familias × 2 repeticiones** | Tesista, PC (+ GPU para los locales) | `scripts\episode\linea-base-piloto.cmd` (primero `-Proveedores openai,anthropic,google`) |
-| F. Generación del corpus | V1–V3 de S001–S020 y auditoría (referencias para entrenar EvoGuard UI) | Tesista, PC + GPU | `corpus:generate` y `corpus:audit` |
-| G. Análisis | Tabla por modelo al estilo del paper; métricas del corpus; redacción de resultados del piloto | PC + Claude | `npm run episode:analyze -- --experiment linea-base-piloto`, `npm run analysis` |
+| C. Proveedores comerciales | Sonda de Sonnet, variante con **caché activada**, diagnóstico de los tres; **precios reales de Synterolink** | PC + Claude | `npm run providers -- probe …`, `npm run providers:diagnose` |
+| D. Modelos locales | Banco en Vast.ai, elección de `local_a`/`local_b` (y del modelo π0), recongelar modelos y contexto | GPU + Claude + tesista | `docs/gpu-vast-ai.md` |
+| **E. Calibración de costo** | 5 episodios × 3 comerciales (S001–S005; 45 turnos, unos 50 USD); revisar costo y tiempo reales | Tesista, PC | `scripts\episode\linea-base-piloto.cmd -Proveedores openai,anthropic,google -Familias S001,S002,S003,S004,S005` y `npm run episode:budget` |
+| **F. Línea base del piloto** | Los 100 episodios restantes (5 modelos × 20 familias) | Tesista, PC + GPU | `scripts\episode\linea-base-piloto.cmd` |
+| G. Análisis | Tabla por modelo al estilo del paper, costo por modelo y redacción de resultados del piloto | PC + Claude | `npm run episode:analyze -- --experiment linea-base-piloto` |
 
 **Notas:**
-- **Orden:** A y B no necesitan modelos. E y F necesitan C y D, y B tiene que terminar antes de E y de F.
-- **GPU:** los modelos locales necesitan la GPU de Vast.ai durante toda la línea base y toda la generación. Para ahorrar, se puede empezar por los modelos comerciales.
-- **Corpus definitivo:** se retoma después de G. Antes hay que definir el segundo episodio por familia (`episodes_per_family: 2`) y los brazos I, G y E, que necesitan EvoGuard UI.
-- **S014:** un test inestable ajeno al cambio (`Simulator.test.tsx`, uuid aleatorio) pasó a `known_failures` (`3d47e7f`).
+- **Orden:** A y B no necesitan modelos. E necesita C y D.
+- **Calibración:** con sus resultados se confirman el costo por turno, el tiempo y si la caché funciona, antes de seguir.
+- **Corpus definitivo:** se retoma después de G. Sin generación con modelos, cada familia necesita autoría, calibración, imagen y ensayo. Después vienen las fases π0 (modelo local) y final.
+- **S014:** un test inestable ajeno al cambio pasó a `known_failures` (`3d47e7f`).
 
 ## 1. Decisión del día: corpus solo semi-real
 
