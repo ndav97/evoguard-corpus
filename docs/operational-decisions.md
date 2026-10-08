@@ -353,3 +353,35 @@ Decisión del tesista a propuesta de Claude.
 - **Reintento:** si una familia falla, se reinicia Docker Desktop (y WSL) cuando no responde o cuando se superó el límite. Después se eliminan los contenedores de EvoGuard que queden y se reintenta una vez.
 - **Comprobación de Docker:** `docker info` se ejecuta también con límite de tiempo.
 - **Registro:** la salida de cada ensayo queda en `.artifacts\real\ensayo-<familia>-<fecha>-<intento>.log`. Antes no quedaba en la transcripción.
+
+## Línea base por episodios con las métricas de EvoGenUI-Bench — 2026-10-08
+**Decisión del tesista:**
+- Obtener una línea base por modelo con las métricas del paper de referencia (Peng et al., 2026): TP, TP@n (episodios exitosos, equivalente a la TEE del plan), CPT y APR, más la TER del plan.
+- Repetir la misma medición con EvoGuard UI.
+- Usar **los cinco modelos** en la línea base y en la comparación final.
+- **Mantener 60 familias** en el corpus definitivo.
+
+Diseño completo en `docs/diseno-linea-base-episodios.md`; configuración en `config/experiment.json`.
+
+**Por qué es una medición aparte.** La generación del corpus reasigna, repara y parte de referencias aceptadas, así que su éxito no sirve como línea base. Un **episodio** es una familia recorrida por un solo modelo, turno a turno, sobre su propia salida y sin rescate. El oráculo mide cada turno sin mostrarse al modelo.
+
+**Implementación** (`runner/episode/`): no cambia ningún archivo de la huella de los ensayos, así que los de S001–S020 siguen vigentes.
+- **Motor:** se reutiliza con `singleProvider`. Un evaluador envolvente ejecuta el oráculo y el control de alcance, guarda el resultado real y nunca devuelve FAIL al motor, de modo que este no repara ni reasigna.
+- **Workspace:** el parche se calcula respecto de la base del turno, no de HEAD. Si el agente hace su propio commit, el pipeline rehace el suyo sobre la base y la historia se reproduce por hash.
+- **Código que impide medir** (sin informe de la suite, suite que agota su tiempo dos veces con Docker sano, parche de más de 12 MiB): cuenta como fallo de todos los requisitos, no como infraestructura.
+- **Registros:** van a `runs/episodes/`, con los informes privados en `evaluator/episodes/`. Cada registro guarda la huella del código y de los modelos.
+- **Análisis:** `npm run episode:analyze` genera la tabla por modelo al estilo de la tabla 2 del paper y la comparación emparejada por familia, con bootstrap de familias.
+- **Lanzadores:** `scripts\episode\ensayar-episodios.cmd` y `scripts\episode\linea-base-piloto.cmd`, con vigilante, reanudación y reintento.
+
+**Revisión independiente** del código antes de guardarlo:
+- 2 hallazgos altos, ya corregidos: la suite colgada por el código del agente se contaba como infraestructura, y si el agente movía HEAD el parche quedaba incompleto.
+- 6 medios y 6 bajos, corregidos o documentados.
+- 30 pruebas unitarias. El ensayo con Docker (`episode:rehearse`) cubre cuatro escenarios con resultado conocido.
+
+**Pendientes y riesgos:**
+- **Brazos I, G y E:** necesitan EvoGuard UI.
+- **Segundo episodio por familia** en la fase final: falta definirlo.
+- **Duración:**
+  - piloto (600 turnos): unos 2–4 días continuos;
+  - fase final con B y E (6 000 turnos): unas 3–6 semanas sin paralelismo.
+  Se decidirá con los tiempos reales del piloto (paralelismo, repeticiones).
