@@ -1,4 +1,4 @@
-# EvoGuard Corpus — Estado del proyecto (2026-10-02, actualizado 2026-10-07)
+# EvoGuard Corpus — Estado del proyecto (2026-10-02, actualizado 2026-10-08, tarde)
 
 Sustituye a `estado-del-proyecto-2026-09-27.md`.
 
@@ -22,35 +22,41 @@ Sustituye a `estado-del-proyecto-2026-09-27.md`.
 - **2026-10-06/07, ensayos:** S900 y 19 familias en PASS (commit `e88ecba`).
   - S014 quedó BLOCKED. En V1, el intento que debía aceptarse superó los 30 minutos porque el límite del intento incluía la evaluación del pipeline, y la suite de S014 tarda unos 520 s.
   - **Decisión del tesista:** el límite del intento mide solo el trabajo del modelo, y la evaluación tiene su propio límite de 30 minutos por operación (`8173e50`, `docs/operational-decisions.md`).
-- **Siguiente paso:** como cambió el motor, hay que repetir `npm run real:rehearse -- --mini` y `scripts\real\ensayar-familias.cmd` (S001–S020, unas 10 h).
+- **2026-10-07/08, segunda ronda:** S900 y S001–S011 en PASS (`70a24ce`). En S012–S014 Docker Desktop se colgó: la suite y `docker create` quedaron bloqueados durante horas. No es un fallo del código ni de las familias, que pasaron el día 6 con las mismas imágenes.
+  - **Corrección en el lanzador** (`411a3b8`), sin tocar código de la huella:
+    - se salta los ensayos vigentes;
+    - pone un límite de 150 minutos por familia;
+    - si una familia falla, reinicia Docker cuando no responde, elimina los contenedores que queden y la reintenta una vez;
+    - guarda la salida de cada ensayo.
+- **Siguiente paso:** volver a lanzar `scripts\real\ensayar-familias.cmd`. Solo ensayará S012–S020 (unas 6 h).
 
-### Plan para cerrar el piloto (2026-10-05)
+### Línea base por episodios (decisión del 2026-10-08)
+La línea base y la comparación final se miden con las métricas de **EvoGenUI-Bench** (Peng et al., 2026): TP, **TP@n (episodios exitosos, equivalente a la TEE)**, CPT y APR, más la TER. Se usan los **cinco modelos** en ambas fases y se **mantienen 60 familias**.
+- **Episodio:** un solo modelo recorre una familia turno a turno, sobre su propia salida, sin reasignación ni reparación. El oráculo mide cada turno sin mostrarse al modelo.
+- **Por qué no sirve la generación del corpus:** reasigna, repara y parte de referencias aceptadas, así que infla el éxito. Su papel es aportar las referencias y las etiquetas de impacto para entrenar EvoGuard UI.
+- **Diseño:** `docs/diseno-linea-base-episodios.md` y `config/experiment.json`.
+- **Código:** `runner/episode/` (commit `70c7e80`), sin tocar la huella de los ensayos. Tiene 30 pruebas y pasó una revisión independiente: 2 hallazgos altos, ya corregidos.
+- **Piloto:** S001–S020 × 3 turnos × 5 modelos × 2 repeticiones = **600 turnos** (unos 2–4 días continuos).
+- **Fase final:** 20 familias de prueba × 2 episodios × 5 turnos × 5 modelos × 3 repeticiones × brazos B y E = **6 000 turnos** (unas 3–6 semanas sin paralelismo). Se ajustará con los tiempos del piloto.
 
-Preflight de generación de S001 y S011 (2026-10-05, sin Docker): el único bloqueo es que los ensayos están desactualizados por el cambio del pipeline. La configuración de modelos no bloquea.
+### Plan para cerrar el piloto (actualizado 2026-10-08)
 
 | Fase | Paso | Quién | Comando o entregable |
 |---|---|---|---|
-| A. Ensayos | A1. Ensayo mínimo (S900) | Tesista, PC | `npm run real:rehearse -- --mini` |
-| | A2. Ensayos de S001–S020 | Tesista, PC | `scripts\real\ensayar-familias.cmd` |
-| | A3. Revisar resultados y corregir lo que falle | Claude | Informe y correcciones |
-| B. Revisión humana | B1. Hoja de revisión de las 60 peticiones (petición, criterios, casilla de veredicto) | Claude | Artefacto de revisión |
-| | B2. Revisión | Tesista | Veredictos; Claude aplica las aclaraciones |
-| C. Proveedores comerciales | C1. Segunda sonda de Sonnet | Tesista, PC | `npm run providers -- probe --rounds=5 --variants=D,E,F` |
-| | C2. Elegir variante (F o D con ≥ 9/10; si no, E declarada) e implementarla en `runner/providers/*` | Claude | Commit y decisión documentada |
-| | C3. Diagnóstico de los tres comerciales (≥ 9/10 cada uno) | Tesista, PC | `npm run providers:diagnose` |
-| D. Modelos locales | D1. Banco en Vast.ai con S001, S003, S005 y S007:V1 | Tesista, GPU | `docs/gpu-vast-ai.md`, `scripts\vast\bench.ps1` |
-| | D2. Elegir `local_a`/`local_b` y ventana (8k, 16k o 32k) | Claude propone, tesista decide | Informe del banco |
-| | D3. Recongelar `config/models.json` (digests) y `config/context.json`; repetir `npm run real:context` si cambia la ventana | Claude + PC | Commit |
-| | D4. Decidir `pi0_model`, `pi0_repetitions` y `money_cutoff_usd` (`config/policy.json`) o declarar que no aplican | Tesista | Decisión documentada |
-| E. Generación | E1. Por familia: `generation:preflight` → `corpus:generate -- Sxxx all` → `corpus:audit -- Sxxx --freeze` | Tesista, PC + GPU | 60 tareas (20 × V1–V3) |
-| | E2. Revisar cada auditoría y clasificar fallos (modelo, transporte, pipeline) | Claude | Registro por familia |
-| F. Análisis | F1. `npm run analysis` | Tesista, PC | Informe de métricas |
-| | F2. Redacción de resultados del piloto y lecciones para el corpus definitivo | Claude | Documento |
+| A. Ensayos | A1. Ensayos de S900 y S001–S020 (en curso; S012 y S013 en PASS el 2026-10-08) | Tesista, PC | `scripts\real\ensayar-familias.cmd` (retoma solo) |
+| | A2. Ensayo del ejecutor de episodios (sin modelos, unos 20 min) | Tesista, PC | `scripts\episode\ensayar-episodios.cmd` |
+| B. Revisión humana | Hoja de revisión de las 60 peticiones y veredictos | Claude prepara, tesista revisa | Artefacto de revisión |
+| C. Proveedores comerciales | Segunda sonda de Sonnet, elección de variante y diagnóstico de los tres (≥ 9/10) | PC + Claude | `npm run providers -- probe --rounds=5 --variants=D,E,F`, `npm run providers:diagnose` |
+| D. Modelos locales | Banco en Vast.ai; elegir `local_a`/`local_b` y ventana; recongelar modelos y contexto; decidir π0 y el tope de gasto | GPU + Claude + tesista | `docs/gpu-vast-ai.md` |
+| **E. Línea base (brazo B)** | **200 episodios: 5 modelos × 20 familias × 2 repeticiones** | Tesista, PC (+ GPU para los locales) | `scripts\episode\linea-base-piloto.cmd` (primero `-Proveedores openai,anthropic,google`) |
+| F. Generación del corpus | V1–V3 de S001–S020 y auditoría (referencias para entrenar EvoGuard UI) | Tesista, PC + GPU | `corpus:generate` y `corpus:audit` |
+| G. Análisis | Tabla por modelo al estilo del paper; métricas del corpus; redacción de resultados del piloto | PC + Claude | `npm run episode:analyze -- --experiment linea-base-piloto`, `npm run analysis` |
 
 **Notas:**
-- **GPU durante la generación:** con la rotación, `local_a` o `local_b` son proveedor inicial en 24 de las 60 tareas, y cualquier reasignación puede pasar por ellos. La instancia de Vast.ai tiene que estar activa durante toda la generación, no solo en el banco.
-- **Orden:** A y B no necesitan modelos y pueden ir en paralelo con C y D. E necesita A, C y D terminadas. B debe terminar antes de E, porque cambiar una petición después de generar invalida esa versión.
-- **Corpus definitivo:** se retoma después de F, con las lecciones del piloto. Pasos: calibrar y corregir S021–S030, imágenes, ensayos, mutantes, contexto y revisión; redactar S031–S060 en tres tandas. Antes de generar hay que confirmar cómo se implementan los **2 episodios por familia** del diseño, porque el pipeline actual genera un solo episodio (`pilot_episodes_per_family: 1`).
+- **Orden:** A y B no necesitan modelos. E y F necesitan C y D, y B tiene que terminar antes de E y de F.
+- **GPU:** los modelos locales necesitan la GPU de Vast.ai durante toda la línea base y toda la generación. Para ahorrar, se puede empezar por los modelos comerciales.
+- **Corpus definitivo:** se retoma después de G. Antes hay que definir el segundo episodio por familia (`episodes_per_family: 2`) y los brazos I, G y E, que necesitan EvoGuard UI.
+- **S014:** un test inestable ajeno al cambio (`Simulator.test.tsx`, uuid aleatorio) pasó a `known_failures` (`3d47e7f`).
 
 ## 1. Decisión del día: corpus solo semi-real
 
