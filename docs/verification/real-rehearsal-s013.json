@@ -3,10 +3,10 @@
   "family_id": "S013",
   "image_id": "sha256:f4c8b72facf36654a7724781d285914d51f894b2aa1f8298cbc1d6dedee3954e",
   "experimental": false,
-  "started_at": "2026-10-07T01:14:04.781Z",
+  "started_at": "2026-10-08T16:40:29.427Z",
   "versions": {
     "V1": {
-      "task_id": "29cb260f-de56-4a48-a762-591a54087a33",
+      "task_id": "4336862f-b88b-4f34-aef8-a258df500780",
       "outcomes": [
         {
           "provider": "local_a",
@@ -64,7 +64,7 @@
       "candidate_commit": "91f433dc11e7461d9ef6a5bda318a4b76fc81290"
     },
     "V2": {
-      "task_id": "1a8840b6-6a68-4524-88a3-8d4580ba0f82",
+      "task_id": "973bae4e-c263-4f7d-ac63-ed3c4c10c81d",
       "outcomes": [
         {
           "provider": "local_b",
@@ -83,7 +83,7 @@
       "candidate_commit": "2f98bc305eaff1f53ed3668aff3eb8f174a5bbc9"
     },
     "V3": {
-      "task_id": "a8bec1f5-25b3-4665-be5d-fc8bc2e88cfa",
+      "task_id": "d2e21060-670d-4f53-a4d7-526c2097fcd9",
       "outcomes": [
         {
           "provider": "openai",
@@ -109,19 +109,19 @@
       {
         "status": "PASS",
         "total": 173,
-        "seconds": 61
+        "seconds": 62
       },
       {
         "status": "PASS",
         "total": 173,
-        "seconds": 62
+        "seconds": 65
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-07T01:30:02.507Z",
+  "finished_at": "2026-10-08T16:56:21.122Z",
   "sources_sha256": {
-    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",

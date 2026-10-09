@@ -3,10 +3,10 @@
   "family_id": "S017",
   "image_id": "sha256:5c2105f1bf1836f9c63a583d783dadfd6c6205d5664729d068854bdda6a6b839",
   "experimental": false,
-  "started_at": "2026-10-07T03:41:06.382Z",
+  "started_at": "2026-10-08T21:07:45.811Z",
   "versions": {
     "V1": {
-      "task_id": "e375aa0e-4d11-4964-9979-9ed079ac04d4",
+      "task_id": "18f49e18-ed15-44d3-a9e3-158f0238eb2d",
       "outcomes": [
         {
           "provider": "google",
@@ -64,7 +64,7 @@
       "candidate_commit": "c8c92fe9bd57a3efb179c8a6f1c5e0221d28a71f"
     },
     "V2": {
-      "task_id": "84f5cc6b-5e33-4d2a-a980-c88fa19a2487",
+      "task_id": "aec41600-63f0-45ba-93ed-3db5606cc8c9",
       "outcomes": [
         {
           "provider": "local_a",
@@ -83,7 +83,7 @@
       "candidate_commit": "b028e250622fc7c9e576c9d71b09e74790e43960"
     },
     "V3": {
-      "task_id": "45b04db4-e7fc-409e-9e5d-db1de6cc2f5c",
+      "task_id": "d2089299-ba46-4783-9ab4-047ecea7938d",
       "outcomes": [
         {
           "provider": "local_b",
@@ -109,19 +109,19 @@
       {
         "status": "PASS",
         "total": 933,
-        "seconds": 169
+        "seconds": 153
       },
       {
         "status": "PASS",
         "total": 933,
-        "seconds": 169
+        "seconds": 154
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-07T04:25:17.548Z",
+  "finished_at": "2026-10-08T21:48:04.338Z",
   "sources_sha256": {
-    "runner/execution/engine.mjs": "66f7d494255353191235ed1a34060f9b5eae64fbb9af25cca57d6001b48a3a7c",
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
