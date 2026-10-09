@@ -6,6 +6,21 @@ import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
 import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
 export {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION};
 const TRANSPORT={openai:'openai',anthropic:'anthropic',google:'google',local_a:'ollama',local_b:'ollama'};
+// Anthropic (Sonnet 5 vía Synterolink): transporte F de la sonda del 2026-10-09 (10/10 válidas). Herramienta nativa en
+// modo estricto con razonamiento adaptativo: el intermediario no aplica output_config.format y la herramienta sí.
+export const ANTHROPIC_TOOL={name:'runner_action',description:'Submit the next runner action (protocol 1.1). Call it exactly once per turn.',input_schema:ACTION_SCHEMA,strict:true};
+// Caché de prompts de Anthropic: la entrada (el mismo JSON que reciben los demás modelos) se parte en bloques de texto
+// (cabecera, un bloque por mensaje, cierre) con cache_control en el último mensaje. La concatenación es idéntica a la
+// entrada; en la llamada siguiente el prefijo coincide en un límite de bloque y se lee de caché.
+export function anthropicBlocks(context,input){
+  const head=`{"response_contract":${JSON.stringify(RESPONSE_CONTRACT)},"packet":${JSON.stringify(context.packet)},"messages":[`;
+  const messages=(context.messages??[]).map((m,i)=>(i?',':'')+JSON.stringify(m));
+  const tail=`],"attempt":${JSON.stringify(context.attempt)},"cycle":${JSON.stringify(context.cycle)}}`;
+  const blocks=messages.length?[head,...messages,tail]:[head+tail];
+  if(blocks.join('')!==input)return [{type:'text',text:input}];
+  const marked=messages.length?blocks.length-2:0;
+  return blocks.map((text,i)=>i===marked?{type:'text',text,cache_control:{type:'ephemeral'}}:{type:'text',text});
+}
 const number=value=>Number.isFinite(value)&&value>=0?value:null;
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
@@ -53,12 +68,20 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         if(blocks.some(b=>b.type==='refusal'))throw providerError('MODEL_REFUSAL');
         text=blocks.filter(b=>b.type==='output_text').map(b=>b.text).join('');
       } else if(config.transport==='anthropic') {
-        raw=await request(`${connection.base_url}/messages`,{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content:input}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning,format:{type:'json_schema',schema:ACTION_SCHEMA}}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
+        const content=managed?input:anthropicBlocks(context,input);
+        raw=await request(`${connection.base_url}/messages`,{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning},tools:[ANTHROPIC_TOOL],tool_choice:{type:'auto'}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
         metadata.observed_model=raw.model;
         // Anthropic informa la lectura y la escritura de caché aparte de input_tokens: se suman para tener la entrada total.
         {const u=raw.usage??{},read=number(u.cache_read_input_tokens),write=number(u.cache_creation_input_tokens),plain=number(u.input_tokens);metadata.tokens={input:plain===null?null:plain+(read??0)+(write??0),output:number(u.output_tokens),reasoning:null,cached:read,cache_write:write};}
-        if(raw.stop_reason!=='end_turn')throw providerError('INCOMPLETE_RESPONSE');
-        text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
+        // Una acción por respuesta: si propone varias llamadas a la herramienta, cuenta la primera (se registra cuántas).
+        const uses=raw.content?.filter(b=>b.type==='tool_use'&&b.name===ANTHROPIC_TOOL.name)??[];
+        if(uses.length){
+          if(raw.stop_reason!=='tool_use')throw providerError('INCOMPLETE_RESPONSE');
+          metadata.tool_uses=uses.length;text=JSON.stringify(uses[0].input);
+        } else {
+          if(raw.stop_reason!=='end_turn')throw providerError('INCOMPLETE_RESPONSE');
+          text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
+        }
       } else if(config.transport==='google') {
         raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;

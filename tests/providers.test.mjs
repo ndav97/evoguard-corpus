@@ -27,12 +27,13 @@ for(const provider of Object.keys(models)) test(`${provider}: petición propia, 
   assert.ok((provider==='google'?request.url:request.body).includes(config.api_model_id));assert.equal(observation.tokens.input,7);
   assert.equal(observation.cost_usd,null);assert.ok(!JSON.stringify(observation).includes('FAKE_TEST_KEY'));
   const body=JSON.parse(request.body);
-  const visible=JSON.parse(provider==='openai'?body.input:provider==='google'?body.contents[0].parts[0].text:body.messages.at(-1).content);
+  const last=body.messages?.at(-1)?.content;
+  const visible=JSON.parse(provider==='openai'?body.input:provider==='google'?body.contents[0].parts[0].text:Array.isArray(last)?last.map(b=>b.text).join(''):last);
   assert.equal(visible.response_contract.schema.additionalProperties,false);
   assert.deepEqual(visible.response_contract.schema.required,['type','path','content','find','replace','argv']);
   assert.match(visible.response_contract.instruction,/No Markdown/);
   if(provider==='openai'){assert.equal(body.store,false);assert.equal(body.text.format.strict,true);assert.equal(body.reasoning.effort,'medium');}
-  if(provider==='anthropic'){assert.equal(body.output_config.format.type,'json_schema');assert.equal(request.headers['anthropic-version'],'2023-06-01');}
+  if(provider==='anthropic'){assert.equal(body.output_config.format,undefined);assert.equal(body.tools[0].strict,true);assert.equal(body.tool_choice.type,'auto');assert.equal(request.headers['anthropic-version'],'2023-06-01');}
   if(provider==='google'){assert.ok(request.url.endsWith(':generateContent'));assert.equal(request.headers['x-goog-api-key'],'FAKE_TEST_KEY');}
   if(config.transport==='ollama'){assert.equal(body.options.num_ctx,8192);assert.equal(body.stream,false);}
 });
@@ -142,4 +143,19 @@ test('Sonnet via Synterolink conserva Messages y autenticación Anthropic',async
   await adapter.next({...context,provider:'anthropic'});
   assert.equal(record.access_provider,'synterolink');
   assert.equal(credentialsFromEnv({anthropic:config},{ANTHROPIC_API_KEY:'DIRECT_ONLY'}).anthropic,undefined);
+});
+
+test('anthropic: transporte con herramienta nativa (primera acción), caché por bloques idénticos a la entrada',async()=>{
+  const config=models.anthropic;let body,observation;
+  const ctx={provider:'anthropic',attempt:1,cycle:3,packet:{request:'x'},messages:[{role:'user',content:{source:'workspace'}},{role:'assistant',content:{type:'list_files',path:''}},{role:'tool',content:{status:'PASS',output:'a'}}]};
+  const second={type:'deliver',path:'',content:'',find:'',replace:'',argv:[]};
+  const adapter=createProviderAdapter({provider:'anthropic',config,apiKey:'FAKE_TEST_KEY',onCall:r=>observation=r,fetchImpl:async(url,options)=>{body=JSON.parse(options.body);return Response.json({model:'claude-sonnet-5',stop_reason:'tool_use',content:[{type:'thinking',thinking:'…'},{type:'tool_use',name:'runner_action',input:{type:'read_file',path:'src/a.ts',content:'',find:'',replace:'',argv:[]}},{type:'tool_use',name:'runner_action',input:second}],usage:{input_tokens:100,cache_read_input_tokens:900,cache_creation_input_tokens:50,output_tokens:20}});}});
+  assert.deepEqual(await adapter.next(ctx),{type:'read_file',path:'src/a.ts'});
+  assert.equal(observation.tool_uses,2);
+  assert.deepEqual(observation.tokens,{input:1050,output:20,reasoning:null,cached:900,cache_write:50});
+  const blocks=body.messages[0].content;
+  const expected=JSON.stringify({response_contract:JSON.parse(blocks.map(b=>b.text).join('')).response_contract,packet:ctx.packet,messages:ctx.messages,attempt:1,cycle:3});
+  assert.equal(blocks.map(b=>b.text).join(''),expected,'el modelo recibe exactamente la misma entrada');
+  assert.equal(blocks.length,5);
+  assert.deepEqual(blocks.map(b=>Boolean(b.cache_control)),[false,false,false,true,false],'marca de caché en el último mensaje');
 });

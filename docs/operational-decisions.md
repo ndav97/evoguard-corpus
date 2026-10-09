@@ -432,3 +432,23 @@ La repetición del ensayo de S014 falló dos veces en V1, aun con el parche de r
 - **Comportamiento:** pasaron en todas las ejecuciones hasta las ~13:00 de Lima y fallaron en las de las 17:48 y las 19:26. Dependen de la hora del día, no del azar.
 - **Decisión:** como son ajenos a la zona del cambio (`Timer`), pasan a `known_failures`, con el mismo criterio que los demás inestables de S014.
 - **Riesgo que queda:** S014 acumula 8 tests excluidos y una suite de unos 9 minutos. Si vuelve a fallar por otro test dependiente del tiempo, conviene valorar sustituir la familia.
+
+## Transporte de Claude Sonnet 5: herramienta nativa estricta y caché de prompts — 2026-10-09
+**Segunda sonda** (`npm run providers -- probe --rounds=5 --variants=D,E,F`, `.artifacts/providers/probe-anthropic-2026-10-09T19-53-35-801Z.json`):
+
+| Variante | Válidas | Varias llamadas a la herramienta | Mediana |
+|---|---|---|---|
+| D: herramienta, razonamiento adaptativo | 10/10 | 2 | 8,6 s |
+| E: herramienta forzada | 10/10 | 4 | 6,7 s |
+| F: herramienta estricta, razonamiento adaptativo | 10/10 | 4 | 7,1 s |
+
+**Decisión:** se adopta **F**, según el criterio del 2026-09-29: la primera de F y D con ≥ 9/10. Conserva el razonamiento, así que no hay diferencia de configuración que declarar frente a los otros modelos. Cambios en `runner/providers/adapter.mjs`:
+- **Petición:** `tools: [runner_action (strict)]`, `tool_choice: auto`, `thinking: adaptive` y `output_config.effort`, sin `format`, que el intermediario ignoraba.
+- **Varias acciones en una respuesta:** cuenta la **primera** (protocolo de una acción por respuesta) y se registra `tool_uses`. Sin llamada a la herramienta se mantiene la ruta de texto, con las normalizaciones registradas.
+- **Caché de prompts:**
+  - la entrada se envía en bloques de texto (cabecera, un bloque por mensaje y cierre) con `cache_control` en el último mensaje;
+  - la concatenación es **idéntica** a la entrada de los demás modelos;
+  - si Synterolink aplica la caché, `turn.json` registrará los tokens leídos de caché, que se cobran al 10 %.
+- **Pruebas:** `tests/providers.test.mjs`.
+- **Ensayos:** el adaptador no forma parte de la huella, así que siguen vigentes.
+- **Siguiente paso:** `npm run providers:diagnose` (≥ 9/10 en los tres comerciales).
