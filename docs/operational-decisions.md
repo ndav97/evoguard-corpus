@@ -426,3 +426,9 @@ Los ensayos del 2026-10-08 fallaron en S014 y S015 por tests inestables de la su
    - se registra en `oracle.suite_retry` de `turn.json`;
    - así un test inestable no convierte en fallo un turno correcto de la línea base.
 3. **Ensayos:** los de S014 y S015 se repiten. El lanzador los retoma solos.
+
+## S014: tests dependientes de la hora del día — 2026-10-08 (noche)
+La repetición del ensayo de S014 falló dos veces en V1, aun con el parche de referencia correcto. Los tests responsables son 6 de `src/containers/Trigger/Trigger.test.tsx` (creación de disparadores diarios, semanales, mensuales y por hora, y validación de fechas).
+- **Comportamiento:** pasaron en todas las ejecuciones hasta las ~13:00 de Lima y fallaron en las de las 17:48 y las 19:26. Dependen de la hora del día, no del azar.
+- **Decisión:** como son ajenos a la zona del cambio (`Timer`), pasan a `known_failures`, con el mismo criterio que los demás inestables de S014.
+- **Riesgo que queda:** S014 acumula 8 tests excluidos y una suite de unos 9 minutos. Si vuelve a fallar por otro test dependiente del tiempo, conviene valorar sustituir la familia.
