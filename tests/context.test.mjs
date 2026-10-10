@@ -108,7 +108,9 @@ function fakeFetch(config, promptTokens, seen) {
     return Response.json({ modelVersion: config.api_model_id, candidates: [{ finishReason: 'STOP', content: { parts: [{ text: action }] } }], usageMetadata: { promptTokenCount: promptTokens, candidatesTokenCount: 3 } });
   };
 }
-const visibleInput = (config, body) => JSON.parse(config.transport === 'openai' ? body.input : config.transport === 'google' ? body.contents[0].parts[0].text : body.messages.at(-1).content);
+const visibleInput = (config, body) => JSON.parse(config.transport === 'openai' ? body.input : config.transport === 'google' ? body.contents[0].parts[0].text : anthropicText(body.messages.at(-1).content));
+// Anthropic recibe la entrada en bloques de texto (caché por bloques); su concatenación es la entrada completa.
+const anthropicText = content => typeof content === 'string' ? content : content.map(b => b.text).join('');
 
 test('los modelos comerciales reciben paquete completo e historial íntegro, sin ventana', async () => {
   // ~200 KB de historial: muy por encima del presupuesto local, dentro del tope de 1 MB por llamada de los comerciales.

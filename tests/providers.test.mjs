@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createProviderAdapter,createProviderPool} from '../runner/providers/adapter.mjs';
+import {createProviderAdapter,createProviderPool,completeActionFields} from '../runner/providers/adapter.mjs';
 import {requestJson} from '../runner/providers/http.mjs';
 import {createServer} from 'node:http';
 import {connectionFor,credentialsFromEnv} from '../runner/providers/connection.mjs';
@@ -158,4 +158,35 @@ test('anthropic: transporte con herramienta nativa (primera acción), caché por
   assert.equal(blocks.map(b=>b.text).join(''),expected,'el modelo recibe exactamente la misma entrada');
   assert.equal(blocks.length,5);
   assert.deepEqual(blocks.map(b=>Boolean(b.cache_control)),[false,false,false,true,false],'marca de caché en el último mensaje');
+});
+
+test('completa campos vacíos omitidos, igual para todos los proveedores; no corrige claves desconocidas',async()=>{
+  const edit={type:'edit_file',path:'src/a.ts',find:'x',replace:'y'};
+  const r=completeActionFields(JSON.stringify(edit));
+  assert.deepEqual(r.filled,['argv','content']);
+  assert.deepEqual(JSON.parse(r.text),{...edit,argv:[],content:''});
+  assert.deepEqual(completeActionFields('```json\n'+JSON.stringify({type:'read_file',path:'a.ts'})+'\n```').filled,['argv','content','find','replace']);
+  const complete=JSON.stringify({type:'list_files',path:'',argv:[],content:'',find:'',replace:''});
+  assert.deepEqual(completeActionFields(complete),{text:complete,filled:[]});
+  for(const bad of [JSON.stringify({action:'write_file',path:'a',content:'b'}),JSON.stringify({type:'write_file',path:'a',content:'b',extra:1}),'no json','[1]'])
+    assert.deepEqual(completeActionFields(bad),{text:bad,filled:[]});
+  for(const provider of ['openai','anthropic','google']){
+    const config=models[provider],text=JSON.stringify(edit);
+    const response=structuredClone(fixtures[config.transport]);
+    if(config.transport==='openai')response.output[0].content[0].text=text;
+    else if(config.transport==='anthropic')response.content[0].text=text;
+    else response.candidates[0].content.parts[0].text=text;
+    let observation;
+    const adapter=createProviderAdapter({provider,config,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(response)});
+    assert.deepEqual(await adapter.next({...context,provider}),{type:'edit_file',path:'src/a.ts',find:'x',replace:'y'});
+    assert.deepEqual(observation.filled_fields,['argv','content']);
+    const wrong=structuredClone(response),bad=JSON.stringify({action:'edit_file',path:'src/a.ts',find:'x',replace:'y'});
+    if(config.transport==='openai')wrong.output[0].content[0].text=bad;else if(config.transport==='anthropic')wrong.content[0].text=bad;else wrong.candidates[0].content.parts[0].text=bad;
+    const a2=createProviderAdapter({provider,config,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(wrong)});
+    await assert.rejects(a2.next({...context,provider}),e=>e.code==='INVALID_ACTION');
+    assert.equal(observation.filled_fields,undefined);
+  }
+});
+test('comerciales con 16384 tokens de salida (el razonamiento se descuenta del mismo límite)',()=>{
+  for(const p of ['openai','anthropic','google'])assert.equal(models[p].max_output_tokens,16384,p);
 });

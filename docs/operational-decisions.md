@@ -452,3 +452,39 @@ La repetición del ensayo de S014 falló dos veces en V1, aun con el parche de r
 - **Pruebas:** `tests/providers.test.mjs`.
 - **Ensayos:** el adaptador no forma parte de la huella, así que siguen vigentes.
 - **Siguiente paso:** `npm run providers:diagnose` (≥ 9/10 en los tres comerciales).
+
+## Lote de calibración y dos correcciones de transporte — 2026-10-10
+**Diagnóstico de proveedores** (`npm run providers:diagnose`, dos ejecuciones del 2026-10-09):
+
+| Modelo | Acciones válidas |
+|---|---|
+| GPT-5.6 Sol | 20/20 |
+| Claude Sonnet 5 | 19/20 |
+| Gemini 3.1 Pro | 18/20 |
+
+Los tres cumplen el umbral de ≥ 9/10.
+
+**Lote de calibración** (5 familias × 3 comerciales, `linea-base-piloto -Proveedores openai,anthropic,google -Familias S001…S005`): 14 de 15 episodios completados. El episodio S005 · google quedó detenido en T003, probablemente porque el PC se suspendió durante la noche. Costo ≈ 31 USD.
+
+Las llamadas revelaron dos problemas que penalizan el formato de la respuesta y no la capacidad de programar, y que afectan de forma desigual a los proveedores.
+
+1. **Salida truncada.**
+   - Con `max_output_tokens = 4096` hubo 62 respuestas incompletas de Gemini y 21 de GPT; el razonamiento se descuenta del mismo límite.
+   - En S003, Gemini agotó 25 ciclos en dos turnos, con 23 y 24 de ellos perdidos por errores de salida.
+   - **Decisión:** `max_output_tokens = 16384` para los tres comerciales (`config/models.json`). Solo se paga lo usado.
+2. **Campos vacíos omitidos.**
+   - El protocolo exige los seis campos de la acción, incluso vacíos, y el esquema estricto se pide a cada proveedor, pero Synterolink no lo hace cumplir.
+   - Hubo 81 rechazos `INVALID_ACTION` de GPT y 14 de Sonnet por omitir campos vacíos.
+   - **Decisión:** en el adaptador (`completeActionFields`), si la respuesta es un objeto JSON con `type` y solo claves del protocolo, los campos ausentes se completan con `""` o `[]` antes de validar.
+   - Se aplica igual a todos los proveedores y queda registrado en la llamada (`filled_fields`).
+   - Una clave desconocida o mal escrita (`action` en lugar de `type`) sigue siendo una acción inválida del modelo.
+
+**Validez y ensayos:**
+- Ninguno de los dos cambios toca `REAL_PIPELINE_SOURCES` (`protocol/actions.mjs` queda intacto), así que los ensayos de las 20 familias siguen vigentes.
+- **Pruebas:** `tests/providers.test.mjs`, con 20 pruebas.
+- Se corrige también `tests/context.test.mjs`: la entrada de Anthropic va en bloques desde el commit 2757b5b.
+
+**Datos:**
+- Los resultados del lote del 2026-10-10 se apartan como diagnóstico en `runs/episodes-diagnostico/calibracion-2026-10-10`; no forman parte de la línea base.
+- Su costo se anota en `budget.extra_spent_usd`.
+- El lote de calibración se repite con las correcciones.

@@ -22,6 +22,24 @@ export function anthropicBlocks(context,input){
   return blocks.map((text,i)=>i===marked?{type:'text',text,cache_control:{type:'ephemeral'}}:{type:'text',text});
 }
 const number=value=>Number.isFinite(value)&&value>=0?value:null;
+// Campos vacíos omitidos (decisión 2026-10-10): el protocolo exige los seis campos de la acción, incluso vacíos, y el
+// esquema estricto se pide a cada proveedor, pero Synterolink no lo hace cumplir. Si la respuesta es un objeto JSON con
+// «type» y solo claves del protocolo, los campos ausentes se completan con su valor vacío ("" o []) antes de validar.
+// Igual para todos los proveedores y registrado en la llamada (filled_fields). Una clave desconocida o mal escrita
+// («action» en lugar de «type») no se completa: sigue siendo una acción inválida del modelo.
+const ACTION_FIELDS={argv:[],content:'',find:'',path:'',replace:''};
+export function completeActionFields(text){
+  if(typeof text!=='string')return {text,filled:[]};
+  const trimmed=text.trim(),fence=trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/);
+  let action;
+  try{action=JSON.parse(fence?fence[1]:trimmed);}catch{return {text,filled:[]};}
+  if(!action||typeof action!=='object'||Array.isArray(action)||typeof action.type!=='string')return {text,filled:[]};
+  if(Object.keys(action).some(k=>k!=='type'&&!(k in ACTION_FIELDS)))return {text,filled:[]};
+  const filled=Object.keys(ACTION_FIELDS).filter(k=>!(k in action));
+  if(!filled.length)return {text,filled};
+  for(const k of filled)action[k]=structuredClone(ACTION_FIELDS[k]);
+  return {text:JSON.stringify(action),filled};
+}
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
@@ -101,8 +119,10 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       }
       if(typeof metadata.observed_model!=='string'||!metadata.observed_model)throw providerError('MODEL_METADATA_MISSING');
       let parsed;
+      const original=text,completed=completeActionFields(text);
+      if(completed.filled.length){metadata.filled_fields=completed.filled;text=completed.text;}
       try {parsed=parseAction(text);}
-      catch(error) {metadata.rejected_output=rejectedSample(text);throw error;}
+      catch(error) {metadata.rejected_output=rejectedSample(original);throw error;}
       metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;if(parsed.discarded_chars)metadata.discarded_chars=parsed.discarded_chars;
       metadata.status='PASS';return parsed.action;
     } catch(error) {

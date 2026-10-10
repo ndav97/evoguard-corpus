@@ -12,9 +12,9 @@
   ],
   "selected_from": "6aadd8a1-1480-83e9-b6ec-da02364ae366",
   "models": {
-    "openai": {"display_name":"GPT-5.6 Sol","api_model_id":"gpt-5.6-sol","transport":"openai","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":4096,"reasoning":"medium","temperature":null,"seed":null,"digest":null},
-    "anthropic": {"display_name":"Claude Sonnet 5","api_model_id":"claude-sonnet-5","transport":"anthropic","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":4096,"reasoning":"high","temperature":null,"seed":null,"digest":null},
-    "google": {"display_name":"Gemini 3.1 Pro","api_model_id":"gemini-3.1-pro-preview","transport":"google","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1beta","context":null,"max_output_tokens":4096,"reasoning":"high","temperature":null,"seed":null,"digest":null},
+    "openai": {"display_name":"GPT-5.6 Sol","api_model_id":"gpt-5.6-sol","transport":"openai","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":16384,"reasoning":"medium","temperature":null,"seed":null,"digest":null},
+    "anthropic": {"display_name":"Claude Sonnet 5","api_model_id":"claude-sonnet-5","transport":"anthropic","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":16384,"reasoning":"high","temperature":null,"seed":null,"digest":null},
+    "google": {"display_name":"Gemini 3.1 Pro","api_model_id":"gemini-3.1-pro-preview","transport":"google","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1beta","context":null,"max_output_tokens":16384,"reasoning":"high","temperature":null,"seed":null,"digest":null},
     "local_a": {"display_name":"Qwen2.5-Coder 7B","api_model_id":"qwen2.5-coder:7b","transport":"ollama","context":8192,"max_output_tokens":1024,"reasoning":null,"temperature":0,"seed":42,"digest":"dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364"},
     "local_b": {"display_name":"Granite 3.3 8B","api_model_id":"granite3.3:8b","transport":"ollama","context":8192,"max_output_tokens":1024,"reasoning":null,"temperature":0,"seed":42,"digest":"fd429f23b90980ed1bef53b990894e7b0199331f6ae90c5650240a7d5b70f1f7"}
   }
