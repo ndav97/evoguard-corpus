@@ -170,6 +170,9 @@
       "local": 0.2
     },
     "unknown_call_usd": 0.3,
-    "extra_spent_usd": []
+    "extra_spent_usd": [
+      {"date": "2026-10-09", "concept": "providers:diagnose (2 ejecuciones) y sonda de transporte de Sonnet", "usd": 0.6},
+      {"date": "2026-10-10", "concept": "lote de calibración antes de las correcciones de transporte (14 episodios + 1 interrumpido; 8 llamadas HTTP 502 sin tokens a 0,3 USD); apartado en runs/episodes-diagnostico/calibracion-2026-10-10", "usd": 33.87}
+    ]
   }
 }
