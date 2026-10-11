@@ -582,3 +582,42 @@ Diagnósticos de `gemini-3.8-flash` por VNAIPro, todos sobre los mismos 10 pedid
 - **Pruebas:** `tests/providers.test.mjs`.
 
 **Siguiente paso:** repetir los 5 episodios de calibración de Gemini y S003 · openai.
+
+## Tercer modelo comercial descartado; modelos abiertos para una RTX 3090 — 2026-10-11
+**Gemini 3.8 Flash por VNAIPro en la calibración:**
+
+| Resultado | Detalle |
+|---|---|
+| Turnos aprobados | 2 de 12 |
+| Episodios sin fallos | 0 de 4 |
+| S004 | No terminó en 5 intentos: errores de red, HTTP 524 de la pasarela y reintentos agotados (42 de 159 llamadas fallidas) |
+| Comportamiento | En la mayoría de los turnos agotó los 25 ciclos explorando el historial de git y las dependencias, sin editar |
+| Costo | 32,59 USD (cota superior con la tarifa de Gemini Pro) |
+
+- **Decisión del tesista:** no hay un tercer modelo comercial.
+- **Datos:** los episodios se apartan en `runs/episodes-diagnostico/gemini-vnaipro` y su costo se anota en `budget.extra_spent_usd`.
+- **Credencial:** la clave `VNAIPRO_API_KEY` queda sin uso y debe regenerarse, porque se expuso en una conversación.
+
+**Modelos abiertos dimensionados para la GPU real (RTX 3090, 24 GB):**
+- Los locales anteriores (Qwen2.5-Coder 7B y Granite 3.3 8B, con 8 192 tokens de contexto) se eligieron para la GPU del tesista y no corrieron ningún episodio. Se reemplazan por tres modelos de familias distintas:
+
+| Ranura | Modelo | Fabricante |
+|---|---|---|
+| `google` | Gemma 4 26B (`gemma4:26b`), MoE | Google |
+| `local_a` | Qwen3-Coder 30B (`qwen3-coder:30b`), MoE | Alibaba |
+| `local_b` | Devstral 24B (`devstral:24b`) | Mistral |
+
+- **Contexto gestionado de 32 768 tokens** (`config/context.json`, `PROVISIONAL` hasta el banco), con 4 096 de salida, temperatura 0 y semilla 42.
+- **Huellas (`digest`):** quedan pendientes del banco (`digest_status: PENDING_BENCH`); con la huella de ceros, la inferencia falla con `MODEL_DIGEST_MISMATCH`.
+- **Respaldos del banco:** `gemma4:31b`, `codestral:22b`, `gpt-oss:20b` y `deepseek-coder-v2:16b` (`config/local-bench.json`).
+- **Regla de selección:** ≥ 9/10 acciones válidas, rendimiento en las tareas del banco y tiempo por turno dentro del límite.
+
+**Por qué Gemma ocupa la ranura `google`:** las cinco ranuras del anillo (`openai`, `anthropic`, `google`, `local_a`, `local_b`) forman parte del motor y de la huella de los ensayos. Agregar una sexta obligaría a repetir los ensayos de las 20 familias. Gemma es un modelo de Google, así que la etiqueta sigue siendo fiel.
+- **Cambios en el transporte:** la ranura `google` admite ahora el transporte `ollama` (`adapter.mjs`, `connection.mjs`), y el presupuesto la cuenta como local (`budget.mjs`).
+- **Diferencia que queda:** el motor asigna 1 800 s de trabajo del modelo por intento a la ranura `google` y 3 600 s a las `local_*`. Gemma 4 26B es MoE con ≈ 4B parámetros activos y es el más rápido de los tres; el banco debe confirmar que sus turnos quedan claramente por debajo de 1 800 s. Si no, se repetirán los ensayos con el límite por transporte.
+
+**Ensayos:**
+- Los de las familias siguen vigentes, porque no cambia `REAL_PIPELINE_SOURCES`.
+- El del ejecutor de episodios debe repetirse, porque cambian `run.mjs` y `budget.mjs`: `scripts\episode\ensayar-episodios.cmd`.
+
+**Pruebas:** proveedores, contexto, banco y episodios en verde. La única excepción es la prueba del registro del banco, que falla en la VM de trabajo por no poder borrar, igual que antes.

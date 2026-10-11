@@ -6,12 +6,14 @@ import {requestJson} from '../runner/providers/http.mjs';
 import {createServer} from 'node:http';
 import {connectionFor,credentialsFromEnv} from '../runner/providers/connection.mjs';
 const models=JSON.parse(readFileSync(new URL('../config/models.json',import.meta.url))).models;
+// Transporte de Gemini (API): la ranura google usa Gemma por Ollama desde el 2026-10-11, pero el transporte sigue probado.
+const GEMINI={display_name:'Gemini 3.8 Flash',api_model_id:'gemini-3.8-flash',transport:'google',gemini_tool:true,access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta',context:null,max_output_tokens:16384,reasoning:'high',temperature:null,seed:null,digest:null};
 const action=JSON.stringify({type:'tool',argv:['node','--version']});
 const fixtures={
   openai:{id:'r1',model:'gpt-5.6-sol',status:'completed',output:[{type:'message',content:[{type:'output_text',text:action}]}],usage:{input_tokens:7,output_tokens:3}},
   anthropic:{id:'a1',model:'claude-sonnet-5',stop_reason:'end_turn',content:[{type:'text',text:action}],usage:{input_tokens:7,output_tokens:3}},
   google:{modelVersion:'gemini-3.8-flash',candidates:[{finishReason:'STOP',content:{parts:[{text:action}]}}],usageMetadata:{promptTokenCount:7,candidatesTokenCount:3}},
-  ollama:{model:'qwen2.5-coder:7b',done:true,done_reason:'stop',message:{content:action},prompt_eval_count:7,eval_count:3}
+  ollama:{model:models.local_a.api_model_id,done:true,done_reason:'stop',message:{content:action},prompt_eval_count:7,eval_count:3}
 };
 const context={provider:'openai',attempt:1,cycle:1,packet:{request:'test'},messages:[],oracle:'PRIVATE_CANARY'};
 for(const provider of Object.keys(models)) test(`${provider}: petición propia, acción validada y métricas observadas`,async()=>{
@@ -24,18 +26,18 @@ for(const provider of Object.keys(models)) test(`${provider}: petición propia, 
   }});
   assert.deepEqual(await adapter.next({...context,provider}),{type:'tool',argv:['node','--version']});
   assert.equal(request.redirect,'error');assert.ok(!request.body.includes('PRIVATE_CANARY'));
-  assert.ok((provider==='google'?request.url:request.body).includes(config.api_model_id));assert.equal(observation.tokens.input,7);
+  assert.ok((config.transport==='google'?request.url:request.body).includes(config.api_model_id));assert.equal(observation.tokens.input,7);
   assert.equal(observation.cost_usd,null);assert.ok(!JSON.stringify(observation).includes('FAKE_TEST_KEY'));
   const body=JSON.parse(request.body);
   const last=body.messages?.at(-1)?.content;
-  const visible=JSON.parse(provider==='openai'?body.input:provider==='google'?body.contents[0].parts[0].text:Array.isArray(last)?last.map(b=>b.text).join(''):last);
+  const visible=JSON.parse(provider==='openai'?body.input:config.transport==='google'?body.contents[0].parts[0].text:Array.isArray(last)?last.map(b=>b.text).join(''):last);
   assert.equal(visible.response_contract.schema.additionalProperties,false);
   assert.deepEqual(visible.response_contract.schema.required,['type','path','content','find','replace','argv']);
   assert.match(visible.response_contract.instruction,/No Markdown/);
   if(provider==='openai'){assert.equal(body.store,false);assert.equal(body.text.format.strict,true);assert.equal(body.reasoning.effort,'medium');}
   if(provider==='anthropic'){assert.equal(body.output_config.format,undefined);assert.equal(body.tools[0].strict,true);assert.equal(body.tool_choice.type,'auto');assert.equal(request.headers['anthropic-version'],'2023-06-01');}
-  if(provider==='google'){assert.ok(request.url.endsWith(':generateContent'));assert.equal(request.headers['x-goog-api-key'],'FAKE_TEST_KEY');}
-  if(config.transport==='ollama'){assert.equal(body.options.num_ctx,8192);assert.equal(body.stream,false);}
+  if(config.transport==='google'){assert.ok(request.url.endsWith(':generateContent'));assert.equal(request.headers['x-goog-api-key'],'FAKE_TEST_KEY');}
+  if(config.transport==='ollama'){assert.equal(body.options.num_ctx,config.context);assert.equal(body.stream,false);}
 });
 test('rechaza truncamiento, rechazo y JSON con campos extra antes de ejecutar herramientas',async()=>{
   for(const patch of [{status:'incomplete'},{output:[{type:'message',content:[{type:'refusal',refusal:'no'}]}]},{output:[{type:'message',content:[{type:'output_text',text:'{"type":"deliver","argv":[],"secret":"x"}'}]}]}]) {
@@ -52,9 +54,9 @@ test('no hace red sin credenciales ni filtra cuerpos de error',async()=>{
 });
 test('digest local distinto y contexto excesivo bloquean inferencia',async()=>{
   let calls=0;
-  const adapter=createProviderAdapter({provider:'local_a',config:models.local_a,fetchImpl:async()=>{calls++;return Response.json({models:[{name:'qwen2.5-coder:7b',digest:'wrong'}]});}});
+  const adapter=createProviderAdapter({provider:'local_a',config:models.local_a,fetchImpl:async()=>{calls++;return Response.json({models:[{name:models.local_a.api_model_id,digest:'wrong'}]});}});
   await assert.rejects(adapter.next({...context,provider:'local_a'}),/MODEL_DIGEST/);
-  await assert.rejects(adapter.next({...context,provider:'local_a',packet:{request:'x'.repeat(40000)}}),/CONTEXT_CORE_TOO_LARGE/);
+  await assert.rejects(adapter.next({...context,provider:'local_a',packet:{request:'x'.repeat(200000)}}),/CONTEXT_CORE_TOO_LARGE/);
   assert.equal(calls,1);
 });
 test('señal cancelada evita iniciar solicitudes',async()=>{
@@ -85,14 +87,14 @@ test('pool dirige cada etiqueta al transporte elegido y no inventa tokens ausent
 });
 test('proveedores rechazan respuestas truncadas aunque contengan JSON válido',async()=>{
   for(const [provider,patch] of [['anthropic',{stop_reason:'max_tokens'}],['google',{candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:action}]}}]}],['local_a',{done_reason:'length'}]]) {
-    const config=models[provider];
+    const config=provider==='google'?GEMINI:models[provider];
     const adapter=createProviderAdapter({provider,config,apiKey:'fake',fetchImpl:async url=>url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
     await assert.rejects(adapter.next({...context,provider}),/INCOMPLETE_RESPONSE/);
   }
 });
 test('conserva uso observado en respuestas incompletas de los cuatro transportes',async()=>{
   for(const [provider,patch] of [['openai',{status:'incomplete'}],['anthropic',{stop_reason:'max_tokens'}],['google',{candidates:[]}],['local_a',{done_reason:'length'}]]) {
-    const config=models[provider];let record;
+    const config=provider==='google'?GEMINI:models[provider];let record;
     const adapter=createProviderAdapter({provider,config,apiKey:'fake',onCall:r=>record=r,fetchImpl:async url=>url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
     await assert.rejects(adapter.next({...context,provider}));
     assert.equal(record.tokens.input,7);assert.equal(record.tokens.output,3);assert.equal(record.observed_model,config.api_model_id);
@@ -117,10 +119,10 @@ test('rechaza destinos no autorizados y rutas Synterolink no confirmadas',()=>{
   for(const base_url of ['http://api.synterolink.com/v1','https://api.synterolink.com.evil.test/v1','https://user:secret@api.synterolink.com/v1','https://api.synterolink.com/v1?key=secret']) {
     assert.throws(()=>connectionFor('openai',{...models.openai,access_provider:'synterolink',base_url}),/CONNECTION/);
   }
-  assert.throws(()=>connectionFor('google',{...models.google,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1'}),/CONNECTION/);
+  assert.throws(()=>connectionFor('google',{...GEMINI,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1'}),/CONNECTION/);
 });
 test('Gemini via Synterolink usa v1beta y clave específica antes de la común',async()=>{
-  const config={...models.google,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1beta'};
+  const config={...GEMINI,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1beta'};
   const keys=credentialsFromEnv({google:config},{SYNTEROLINK_GOOGLE_API_KEY:'SPECIFIC',SYNTEROLINK_API_KEY:'COMMON',GEMINI_API_KEY:'DIRECT_ONLY'});
   const adapter=createProviderAdapter({provider:'google',config,apiKey:keys.google,fetchImpl:async(url,options)=>{
     assert.equal(url,'https://api.synterolink.com/v1beta/models/gemini-3.8-flash:generateContent');
@@ -171,7 +173,7 @@ test('completa campos vacíos omitidos, igual para todos los proveedores; no cor
   for(const bad of [JSON.stringify({action:'write_file',path:'a',content:'b'}),JSON.stringify({type:'write_file',path:'a',content:'b',extra:1}),'no json','[1]'])
     assert.deepEqual(completeActionFields(bad),{text:bad,filled:[]});
   for(const provider of ['openai','anthropic','google']){
-    const config=models[provider],text=JSON.stringify(edit);
+    const config=provider==='google'?GEMINI:models[provider],text=JSON.stringify(edit);
     const response=structuredClone(fixtures[config.transport]);
     if(config.transport==='openai')response.output[0].content[0].text=text;
     else if(config.transport==='anthropic')response.content[0].text=text;
@@ -188,7 +190,7 @@ test('completa campos vacíos omitidos, igual para todos los proveedores; no cor
   }
 });
 test('comerciales con 16384 tokens de salida (el razonamiento se descuenta del mismo límite)',()=>{
-  for(const p of ['openai','anthropic','google'])assert.equal(models[p].max_output_tokens,16384,p);
+  for(const p of ['openai','anthropic'])assert.equal(models[p].max_output_tokens,16384,p);
 });
 test('openai en flujo (SSE): toma la respuesta del evento terminal y registra el motivo de cierre',async()=>{
   const final={...fixtures.openai,usage:{input_tokens:11,output_tokens:5,output_tokens_details:{reasoning_tokens:2}}};
@@ -211,7 +213,7 @@ test('openai en flujo (SSE): toma la respuesta del evento terminal y registra el
 test('gemini y anthropic registran el motivo de cierre',async()=>{
   let observation;
   const g=structuredClone(fixtures.google);g.candidates[0].finishReason='MALFORMED_FUNCTION_CALL';
-  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(g)});
+  const a=createProviderAdapter({provider:'google',config:GEMINI,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(g)});
   await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='INCOMPLETE_RESPONSE');
   assert.equal(observation.finish_reason,'MALFORMED_FUNCTION_CALL');
   const b=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(fixtures.anthropic)});
@@ -220,44 +222,48 @@ test('gemini y anthropic registran el motivo de cierre',async()=>{
 test('gemini desactiva los filtros configurables y registra categorías de seguridad activadas',async()=>{
   let request,observation;
   const g=structuredClone(fixtures.google);g.candidates[0].finishReason='SAFETY';g.candidates[0].safetyRatings=[{category:'HARM_CATEGORY_DANGEROUS_CONTENT',probability:'MEDIUM',blocked:true},{category:'HARM_CATEGORY_HARASSMENT',probability:'NEGLIGIBLE'}];
-  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',onCall:o=>observation=o,fetchImpl:async(url,options)=>{request=JSON.parse(options.body);return Response.json(g);}});
+  const a=createProviderAdapter({provider:'google',config:GEMINI,apiKey:'K',onCall:o=>observation=o,fetchImpl:async(url,options)=>{request=JSON.parse(options.body);return Response.json(g);}});
   await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='INCOMPLETE_RESPONSE');
   assert.ok(request.safetySettings.length>=4&&request.safetySettings.every(s=>s.threshold==='BLOCK_NONE'));
   assert.equal(observation.finish_reason,'SAFETY');assert.deepEqual(observation.safety_categories,['HARM_CATEGORY_DANGEROUS_CONTENT']);
 });
 test('gemini por VNAIPro: formato nativo v1beta, clave propia y destino confirmado',async()=>{
-  assert.deepEqual(connectionFor('google',models.google),{access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta',credential_env:['VNAIPRO_API_KEY']});
-  assert.equal(credentialsFromEnv({google:models.google},{VNAIPRO_API_KEY:'k1',SYNTEROLINK_API_KEY:'k2'}).google,'k1');
-  assert.throws(()=>connectionFor('google',{...models.google,base_url:'https://evil.example/v1beta'}),e=>e.code==='CONNECTION_UNCONFIRMED');
+  assert.deepEqual(connectionFor('google',GEMINI),{access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta',credential_env:['VNAIPRO_API_KEY']});
+  assert.equal(credentialsFromEnv({google:GEMINI},{VNAIPRO_API_KEY:'k1',SYNTEROLINK_API_KEY:'k2'}).google,'k1');
+  assert.throws(()=>connectionFor('google',{...GEMINI,base_url:'https://evil.example/v1beta'}),e=>e.code==='CONNECTION_UNCONFIRMED');
   assert.throws(()=>connectionFor('openai',{...models.openai,access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta'}),e=>e.code==='CONNECTION_UNCONFIRMED');
   let url,headers;
-  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async(u,o)=>{url=u;headers=o.headers;return Response.json(fixtures.google);}});
+  const a=createProviderAdapter({provider:'google',config:GEMINI,apiKey:'K',fetchImpl:async(u,o)=>{url=u;headers=o.headers;return Response.json(fixtures.google);}});
   await a.next({...context,provider:'google'});
   assert.equal(url,'https://apikey.vnaipro.app/v1beta/models/gemini-3.8-flash:generateContent');assert.equal(headers['x-goog-api-key'],'K');
 });
 test('VNAIPro: si responde otro modelo, la llamada es MODEL_MISMATCH',async()=>{
   const g=structuredClone(fixtures.google);g.modelVersion='gemini-2.0-flash';
-  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async()=>Response.json(g)});
+  const a=createProviderAdapter({provider:'google',config:GEMINI,apiKey:'K',fetchImpl:async()=>Response.json(g)});
   await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='MODEL_MISMATCH');
   const ok=structuredClone(fixtures.google);ok.modelVersion='gemini-3.8-flash-001';
-  const b=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async()=>Response.json(ok)});
+  const b=createProviderAdapter({provider:'google',config:GEMINI,apiKey:'K',fetchImpl:async()=>Response.json(ok)});
   await b.next({...context,provider:'google'});
 });
 test('gemini: json_schema=false omite el esquema y conserva la respuesta JSON',async()=>{
   let body;
-  const a=createProviderAdapter({provider:'google',config:{...models.google,gemini_tool:false,json_schema:false},apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
+  const a=createProviderAdapter({provider:'google',config:{...GEMINI,gemini_tool:false,json_schema:false},apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
   await a.next({...context,provider:'google'});
   assert.equal(body.generationConfig.responseMimeType,'application/json');assert.equal(body.generationConfig.responseJsonSchema,undefined);
-  const b=createProviderAdapter({provider:'google',config:{...models.google,gemini_tool:false},apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
+  const b=createProviderAdapter({provider:'google',config:{...GEMINI,gemini_tool:false},apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
   await b.next({...context,provider:'google'});assert.ok(body.generationConfig.responseJsonSchema);
 });
 test('gemini_tool: pide la función runner_action en modo ANY y toma sus argumentos',async()=>{
   let body,observation;
   const args={type:'read_file',path:'src/a.ts',content:'',find:'',replace:'',argv:[]};
   const g=structuredClone(fixtures.google);g.candidates[0].content.parts=[{thought:true,text:'pensando'},{functionCall:{name:'runner_action',args}}];
-  const a=createProviderAdapter({provider:'google',config:{...models.google,gemini_tool:true},apiKey:'K',onCall:o=>observation=o,fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(g);}});
+  const a=createProviderAdapter({provider:'google',config:{...GEMINI,gemini_tool:true},apiKey:'K',onCall:o=>observation=o,fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(g);}});
   assert.deepEqual(await a.next({...context,provider:'google'}),{type:'read_file',path:'src/a.ts'});
   assert.equal(body.tools[0].functionDeclarations[0].name,'runner_action');assert.equal(body.toolConfig.functionCallingConfig.mode,'ANY');
   assert.equal(body.generationConfig.responseMimeType,undefined);assert.equal(observation.tool_uses,1);
 });
-test('gemini usa la función runner_action por configuración (diagnóstico 9/10 del 2026-10-11)',()=>{assert.equal(models.google.gemini_tool,true);});
+test('ranura google: Gemma 4 por Ollama con contexto gestionado de 32K; locales medianos para la RTX 3090',()=>{
+  assert.equal(models.google.transport,'ollama');assert.equal(models.google.api_model_id,'gemma4:26b');
+  for(const p of ['google','local_a','local_b']){assert.equal(models[p].context,32768,p);assert.equal(models[p].max_output_tokens,4096,p);}
+  assert.deepEqual(connectionFor('google',models.google).credential_env,[]);
+});

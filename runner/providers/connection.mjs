@@ -9,7 +9,8 @@ const direct={
 };
 export function connectionFor(provider,config) {
   if(!Object.hasOwn(direct,provider))throw providerError('CONNECTION_INVALID');
-  const access=config.access_provider??(provider.startsWith('local_')?'ollama':provider);
+  const viaOllama=provider.startsWith('local_')||(provider==='google'&&config.transport==='ollama');
+  const access=config.access_provider??(viaOllama?'ollama':provider);
   if(access==='synterolink') {
     const expectedBase=provider==='google'?'https://api.synterolink.com/v1beta':'https://api.synterolink.com/v1';
     if(!['openai','anthropic','google'].includes(provider)||config.transport!==provider||config.base_url!==expectedBase)throw providerError('CONNECTION_UNCONFIRMED');
@@ -21,9 +22,10 @@ export function connectionFor(provider,config) {
     if(provider!=='google'||config.transport!=='google'||config.base_url!=='https://apikey.vnaipro.app/v1beta')throw providerError('CONNECTION_UNCONFIRMED');
     return {access_provider:access,base_url:config.base_url,credential_env:['VNAIPRO_API_KEY']};
   }
-  const expected=provider.startsWith('local_')?'ollama':provider;
-  if(access!==expected||(config.base_url!==undefined&&config.base_url!==direct[provider].base_url))throw providerError('CONNECTION_INVALID');
-  return {access_provider:access,...direct[provider],...(provider.startsWith('local_')?{base_url:ollamaBase()}:{})};
+  const expected=viaOllama?'ollama':provider;
+  if(access!==expected||(!viaOllama&&config.base_url!==undefined&&config.base_url!==direct[provider].base_url))throw providerError('CONNECTION_INVALID');
+  if(viaOllama)return {access_provider:'ollama',base_url:ollamaBase(),credential_env:[]};
+  return {access_provider:access,...direct[provider]};
 }
 export function credentialsFromEnv(models,env) {
   return Object.fromEntries(Object.entries(models).map(([provider,config])=>{

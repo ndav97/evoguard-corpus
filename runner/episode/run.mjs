@@ -345,7 +345,7 @@ export function planEpisodes(root, { phase = 'pilot', arm = 'B', providers, fami
 function modelAdapterFactory(root, provider) {
   const models = JSON.parse(readFileSync(join(root, 'config/models.json'), 'utf8')).models;
   const credentials = credentialsFromEnv(models, process.env);
-  if (!provider.startsWith('local_') && !credentials[provider]) throw new Error(`Faltan credenciales de ${provider} (usar .env con SYNTEROLINK_API_KEY)`);
+  if (models[provider]?.transport !== 'ollama' && !credentials[provider]) throw new Error(`Faltan credenciales de ${provider} (usar .env con SYNTEROLINK_API_KEY)`);
   return ({ turn }) => withRetries(createProviderPool({ models, credentials, onCall: call => turn.call(call) }), {
     before: context => turn.track(context),
     onRetry: ({ context, code, wait, retry }) => { turn.retry({ cycle: context.cycle, code, wait, retry }); log(`  ${context.provider} c${context.cycle}: ${code}; reintento en ${wait / 1000}s`); }

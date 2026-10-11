@@ -5,7 +5,9 @@ import {createHash} from 'node:crypto';
 import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
 import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
 export {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION};
-const TRANSPORT={openai:'openai',anthropic:'anthropic',google:'google',local_a:'ollama',local_b:'ollama'};
+// La ranura google admite Gemini (API) o un modelo abierto de Google servido por Ollama (Gemma, decisión 2026-10-11).
+const TRANSPORT={openai:['openai'],anthropic:['anthropic'],google:['google','ollama'],local_a:['ollama'],local_b:['ollama']};
+export const isOllamaConfig=config=>config?.transport==='ollama';
 // Anthropic (Sonnet 5 vía Synterolink): transporte F de la sonda del 2026-10-09 (10/10 válidas). Herramienta nativa en
 // modo estricto con razonamiento adaptativo: el intermediario no aplica output_config.format y la herramienta sí.
 export const ANTHROPIC_TOOL={name:'runner_action',description:'Submit the next runner action (protocol 1.1). Call it exactly once per turn.',input_schema:ACTION_SCHEMA,strict:true};
@@ -46,15 +48,15 @@ export function completeActionFields(text){
   return {text:JSON.stringify(action),filled};
 }
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
-  if(TRANSPORT[provider]!==config?.transport||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
+  if(!TRANSPORT[provider]?.includes(config?.transport)||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
   const connection=connectionFor(provider,config);
   if(config.transport==='ollama'&&(!Number.isInteger(config.context)||config.context<4096||config.context>262144||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
   // Ventana limitada => contexto gestionado (config/context.json). Comerciales: contexto completo, sin cambios.
-  const managed=contextPolicy.applies_to.includes(provider);
+  const managed=contextPolicy.applies_to.includes(provider)&&config.transport==='ollama';
   if(managed!==(config.context!==null))throw providerError('CONTEXT_POLICY_MISMATCH');
   if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');
-  return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=provider.startsWith('local_')?3600000:1800000}={}) {
+  return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=config.transport==='ollama'?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
     if(!Number.isInteger(timeout)||timeout<1)throw providerError('INVALID_TIMEOUT');
     signal?.throwIfAborted();

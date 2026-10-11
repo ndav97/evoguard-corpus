@@ -30,6 +30,10 @@ function heavyHistory(outputLines = 3000) {
 // Política con la proporción típica medida en pruebas previas (~3,2 B/token), para ejercitar la ventana.
 const calibrated = structuredClone(policy);
 calibrated.estimator.bytes_per_token = 3.2;
+// Ventana pequeña (8 192 tokens, la de los locales de 7–8B hasta 2026-10-11) para ejercitar recortes y omisiones.
+const small = structuredClone(calibrated);
+small.budget = { context_tokens: 8192, output_reserve_tokens: 1024, template_reserve_tokens: 512, input_tokens: 6656 };
+const smallConfig = config => ({ ...config, context: 8192, max_output_tokens: 1024 });
 
 test('la política alcanza exactamente a los modelos con ventana limitada', () => {
   const limited = Object.entries(models).filter(([, config]) => config.context !== null).map(([provider]) => provider);
@@ -56,8 +60,8 @@ test('el núcleo de V0–V3 cabe en el presupuesto con requisitos y ui_contract 
 
 test('con historial pesado conserva feedback y el paso más reciente, y declara lo omitido', () => {
   for (const version of ['V0', 'V3']) {
-    const { input, trace } = build({ packet: makePacket(data, version), messages: heavyHistory(), attempt: 2, cycle: 25 }, calibrated);
-    assert.ok(trace.estimated_tokens <= policy.budget.input_tokens);
+    const { input, trace } = build({ packet: makePacket(data, version), messages: heavyHistory(), attempt: 2, cycle: 25 }, small);
+    assert.ok(trace.estimated_tokens <= small.budget.input_tokens);
     const visible = JSON.parse(input);
     const text = JSON.stringify(visible.history);
     assert.match(text, /FEEDBACK_VISIBLE/);
@@ -81,7 +85,8 @@ test('la entrada es determinista y no serializa campos privados del contexto', (
 });
 
 test('núcleo excesivo o ventana sin el último paso se rechazan, nunca se recortan en silencio', () => {
-  assert.throws(() => build({ packet: { request: 'x'.repeat(40000) }, messages: [], attempt: 1, cycle: 1 }), /CONTEXT_CORE_TOO_LARGE/);
+  assert.throws(() => build({ packet: { request: 'x'.repeat(40000) }, messages: [], attempt: 1, cycle: 1 }, small), /CONTEXT_CORE_TOO_LARGE/);
+  assert.throws(() => build({ packet: { request: 'x'.repeat(200000) }, messages: [], attempt: 1, cycle: 1 }), /CONTEXT_CORE_TOO_LARGE/);
   const tight = structuredClone(policy);
   const coreBytes = Buffer.byteLength(overhead + build({ packet: { request: 'r' }, messages: [], attempt: 1, cycle: 1 }).input);
   tight.budget.input_tokens = estimateTokens('a'.repeat(coreBytes + 150), policy);
@@ -116,8 +121,8 @@ test('los modelos comerciales reciben paquete completo e historial íntegro, sin
   // ~200 KB de historial: muy por encima del presupuesto local, dentro del tope de 1 MB por llamada de los comerciales.
   const messages = heavyHistory(500);
   const packet = makePacket(data, 'V3');
-  for (const provider of ['openai', 'anthropic', 'google']) {
-    const config = models[provider];
+  const gemini = { display_name: 'Gemini', api_model_id: 'gemini-3.8-flash', transport: 'google', access_provider: 'vnaipro', base_url: 'https://apikey.vnaipro.app/v1beta', context: null, max_output_tokens: 16384, reasoning: 'high', temperature: null, seed: null, digest: null };
+  for (const [provider, config] of [['openai', models.openai], ['anthropic', models.anthropic], ['google', gemini]]) {
     const seen = [];
     let observation;
     const adapter = createProviderAdapter({ provider, config, apiKey: 'FAKE', fetchImpl: fakeFetch(config, 50000, seen), onCall: r => observation = r });
@@ -131,14 +136,14 @@ test('los modelos comerciales reciben paquete completo e historial íntegro, sin
 
 test('los locales reciben contexto gestionado y registran la traza por llamada', async () => {
   for (const provider of policy.applies_to) {
-    const config = models[provider];
+    const config = smallConfig(models[provider]);
     const seen = [];
     let observation;
-    const adapter = createProviderAdapter({ provider, config, fetchImpl: fakeFetch(config, 900, seen), onCall: r => observation = r, contextPolicy: calibrated });
+    const adapter = createProviderAdapter({ provider, config, fetchImpl: fakeFetch(config, 900, seen), onCall: r => observation = r, contextPolicy: small });
     await adapter.next({ provider, attempt: 2, cycle: 25, packet: makePacket(data, 'V2'), messages: heavyHistory() });
     const visible = visibleInput(config, seen[0]);
     assert.ok(visible.history.omitted_steps > 0);
-    assert.equal(observation.context.budget_tokens, policy.budget.input_tokens);
+    assert.equal(observation.context.budget_tokens, small.budget.input_tokens);
     assert.match(observation.context.input_sha256, /^[a-f0-9]{64}$/);
     assert.equal(seen[0].options.num_ctx, 8192);
   }

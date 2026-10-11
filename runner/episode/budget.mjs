@@ -11,7 +11,10 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const loadBudget = root => JSON.parse(readFileSync(join(root, 'config/experiment.json'), 'utf8')).budget;
-const isLocal = provider => provider.startsWith('local_');
+// Local = servido por Ollama en la GPU (sin costo por token): las ranuras local_* y cualquier otra cuya configuración
+// use el transporte ollama (la ranura google con Gemma desde el 2026-10-11).
+const OLLAMA_SLOTS = (() => { try { const m = JSON.parse(readFileSync(fileURLToPath(new URL('../../config/models.json', import.meta.url)), 'utf8')).models; return new Set(Object.keys(m).filter(p => m[p].transport === 'ollama')); } catch { return new Set(); } })();
+export const isLocal = provider => provider.startsWith('local_') || OLLAMA_SLOTS.has(provider);
 const round = (x, d = 2) => (x === null || x === undefined ? null : +x.toFixed(d));
 
 export function limits(budget) {

@@ -34,7 +34,7 @@ test('Ollama siempre en 127.0.0.1; el puerto del túnel se valida', () => {
 });
 
 test('un local con contexto distinto del calibrado no pasa con la política de producción', () => {
-  const config = { ...models.local_a, context: 32768, max_output_tokens: 4096 };
+  const config = { ...models.local_a, context: 8192, max_output_tokens: 1024 };
   assert.throws(() => createProviderAdapter({ provider: 'local_a', config }), /CONTEXT_POLICY_MISMATCH/);
 });
 

@@ -1,17 +1,18 @@
 {
   "schema_version": "1.0.0",
-  "status": "CALIBRATED",
+  "status": "PROVISIONAL",
   "scope": "context_limited_models",
   "applies_to": [
+    "google",
     "local_a",
     "local_b"
   ],
-  "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Solo los modelos con ventana limitada (locales de 8192 tokens) reciben un contexto gestionado; es una restricción propia de esos modelos y se registra por llamada.",
+  "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Los modelos abiertos servidos por Ollama en la GPU (RTX 3090, 24 GB) reciben un contexto gestionado de 32 768 tokens; es una restricción propia de esos modelos y se registra por llamada. Provisional hasta el banco del 2026-10 (antes: 8 192 tokens para modelos de 7–8B).",
   "budget": {
-    "context_tokens": 8192,
-    "output_reserve_tokens": 1024,
+    "context_tokens": 32768,
+    "output_reserve_tokens": 4096,
     "template_reserve_tokens": 512,
-    "input_tokens": 6656
+    "input_tokens": 28160
   },
   "estimator": {
     "method": "utf8_bytes_per_token_lower_bound",
