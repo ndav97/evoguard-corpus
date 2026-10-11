@@ -488,3 +488,35 @@ Las llamadas revelaron dos problemas que penalizan el formato de la respuesta y 
 - Los resultados del lote del 2026-10-10 se apartan como diagnóstico en `runs/episodes-diagnostico/calibracion-2026-10-10`; no forman parte de la línea base.
 - Su costo se anota en `budget.extra_spent_usd`.
 - El lote de calibración se repite con las correcciones.
+
+## Lote de calibración repetido, flujo para GPT y regla de invalidación por transporte — 2026-10-10 (noche)
+**Lote de calibración con las correcciones:**
+
+| Modelo | Episodios sin fallos | Turnos | Costo |
+|---|---|---|---|
+| Gemini | 5/5 | 15/15 | 7,5 USD |
+| Sonnet | 4/5 | 14/15 | 3,4 USD |
+| GPT | 4/5 | 14/15 | 9,5 USD |
+
+El promedio es de ≈ 0,46 USD por turno.
+- **Fallo de Sonnet en S001 T003:** es real. Cumplió los requisitos, pero hubo una regresión en la suite y agotó los ciclos.
+- **Fallo de GPT en S003 T003 (TIMEOUT):** se debió al transporte. De los 30 minutos del intento, ~21 se perdieron en 7 errores HTTP 524 de Synterolink, que corta las conexiones sin datos durante ~2 minutos, más las esperas de reintento. En el lote hubo 19 errores 524, todos de GPT.
+
+**Decisiones:**
+1. **Flujo (SSE) para la API Responses de OpenAI** (`requestSse` en `runner/providers/http.mjs`).
+   - Llegan eventos mientras el modelo razona, así que el intermediario no corta la conexión.
+   - Se toma la respuesta del evento terminal, idéntica a la respuesta sin flujo.
+   - Si el intermediario responde JSON, se interpreta como respuesta normal.
+   - Un evento `error` del flujo (`STREAM_ERROR`) es transitorio y se reintenta.
+2. **Motivo de cierre** (`finish_reason`) registrado en cada llamada de los tres comerciales.
+   - Diagnóstico del 2026-10-11 02:20 UTC: Gemini tuvo 7 de 10 respuestas incompletas, cortas y de motivo desconocido.
+   - Con el motivo registrado se podrá distinguir un fallo del modelo de uno del intermediario.
+3. **Regla de invalidación por transporte:**
+   - Un turno que termina en TIMEOUT, en el que más de la mitad del tiempo del intento se perdió en errores de transporte y esperas de reintento, se invalida.
+   - El episodio completo se aparta en `runs/episodes-diagnostico/invalidados-transporte` y se repite.
+   - Su costo se anota en `budget.extra_spent_usd`.
+   - **Aplicada a:** S003 · openai (3,35 USD).
+
+**Pruebas:** `tests/providers.test.mjs` (23). Sin cambios en `REAL_PIPELINE_SOURCES`.
+
+**Siguiente paso:** `npm run providers:diagnose`; después se repite S003 · openai.

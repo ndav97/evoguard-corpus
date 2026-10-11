@@ -1,4 +1,4 @@
-import {requestJson,providerError} from './http.mjs';
+import {requestJson,requestSse,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
 import {ollamaBase} from './ollama.mjs';
 import {createHash} from 'node:crypto';
@@ -78,9 +78,10 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(Buffer.byteLength(input)>1048576)throw providerError('INPUT_TOO_LARGE');
       let raw,text;
       if(config.transport==='openai') {
-        raw=await request(`${connection.base_url}/responses`,{model:config.api_model_id,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},{authorization:`Bearer ${apiKey}`});
+        raw=await requestSse(`${connection.base_url}/responses`,{body:{model:config.api_model_id,stream:true,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},headers:{authorization:`Bearer ${apiKey}`},signal:combined,fetchImpl});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:number(raw.usage?.output_tokens_details?.reasoning_tokens),cached:number(raw.usage?.input_tokens_details?.cached_tokens),cache_write:null};
+        metadata.finish_reason=raw.status==='completed'?'completed':`${raw.status}${raw.incomplete_details?.reason?':'+raw.incomplete_details.reason:''}`;
         if(raw.status!=='completed')throw providerError('INCOMPLETE_RESPONSE');
         const blocks=raw.output?.filter(o=>o.type==='message').flatMap(o=>o.content??[])??[];
         if(blocks.some(b=>b.type==='refusal'))throw providerError('MODEL_REFUSAL');
@@ -92,6 +93,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         // Anthropic informa la lectura y la escritura de caché aparte de input_tokens: se suman para tener la entrada total.
         {const u=raw.usage??{},read=number(u.cache_read_input_tokens),write=number(u.cache_creation_input_tokens),plain=number(u.input_tokens);metadata.tokens={input:plain===null?null:plain+(read??0)+(write??0),output:number(u.output_tokens),reasoning:null,cached:read,cache_write:write};}
         // Una acción por respuesta: si propone varias llamadas a la herramienta, cuenta la primera (se registra cuántas).
+        metadata.finish_reason=raw.stop_reason??null;
         const uses=raw.content?.filter(b=>b.type==='tool_use'&&b.name===ANTHROPIC_TOOL.name)??[];
         if(uses.length){
           if(raw.stop_reason!=='tool_use')throw providerError('INCOMPLETE_RESPONSE');
@@ -104,6 +106,8 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
+        // Motivo de cierre registrado (diagnóstico 2026-10-10: respuestas incompletas cortas de Gemini sin motivo conocido).
+        metadata.finish_reason=raw.candidates?.length===1?(raw.candidates[0].finishReason??null):`candidates:${raw.candidates?.length??0}${raw.promptFeedback?.blockReason?':'+raw.promptFeedback.blockReason:''}`;
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
         text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');
       } else {

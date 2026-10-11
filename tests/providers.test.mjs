@@ -190,3 +190,30 @@ test('completa campos vacíos omitidos, igual para todos los proveedores; no cor
 test('comerciales con 16384 tokens de salida (el razonamiento se descuenta del mismo límite)',()=>{
   for(const p of ['openai','anthropic','google'])assert.equal(models[p].max_output_tokens,16384,p);
 });
+test('openai en flujo (SSE): toma la respuesta del evento terminal y registra el motivo de cierre',async()=>{
+  const final={...fixtures.openai,usage:{input_tokens:11,output_tokens:5,output_tokens_details:{reasoning_tokens:2}}};
+  const events=[{type:'response.created',response:{status:'in_progress'}},{type:'response.output_text.delta',delta:'{"ty'},{type:'response.completed',response:final}];
+  const sse=events.map(e=>`event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`).join('');
+  let request,observation;
+  const chunks=[sse.slice(0,37),sse.slice(37,120),sse.slice(120)];
+  const adapter=createProviderAdapter({provider:'openai',config:models.openai,apiKey:'K',onCall:o=>observation=o,fetchImpl:async(url,options)=>{request=options;
+    return new Response(new ReadableStream({start(c){for(const x of chunks)c.enqueue(new TextEncoder().encode(x));c.close();}}),{headers:{'content-type':'text/event-stream'}});}});
+  assert.deepEqual(await adapter.next(context),{type:'tool',argv:['node','--version']});
+  const body=JSON.parse(request.body);assert.equal(body.stream,true);assert.equal(request.headers.accept,'text/event-stream');
+  assert.equal(observation.tokens.input,11);assert.equal(observation.finish_reason,'completed');
+  const incomplete=`data: ${JSON.stringify({type:'response.incomplete',response:{...fixtures.openai,status:'incomplete',incomplete_details:{reason:'max_output_tokens'}}})}\n\n`;
+  const a2=createProviderAdapter({provider:'openai',config:models.openai,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>new Response(incomplete,{headers:{'content-type':'text/event-stream'}})});
+  await assert.rejects(a2.next(context),e=>e.code==='INCOMPLETE_RESPONSE');
+  assert.equal(observation.finish_reason,'incomplete:max_output_tokens');
+  const a3=createProviderAdapter({provider:'openai',config:models.openai,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>new Response('event: x\ndata: {"type":"response.created"}\n\n',{headers:{'content-type':'text/event-stream'}})});
+  await assert.rejects(a3.next(context),e=>e.code==='EMPTY_RESPONSE');
+});
+test('gemini y anthropic registran el motivo de cierre',async()=>{
+  let observation;
+  const g=structuredClone(fixtures.google);g.candidates[0].finishReason='MALFORMED_FUNCTION_CALL';
+  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(g)});
+  await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='INCOMPLETE_RESPONSE');
+  assert.equal(observation.finish_reason,'MALFORMED_FUNCTION_CALL');
+  const b=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(fixtures.anthropic)});
+  await b.next({...context,provider:'anthropic'});assert.equal(observation.finish_reason,'end_turn');
+});
