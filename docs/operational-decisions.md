@@ -531,3 +531,24 @@ El promedio es de ≈ 0,46 USD por turno.
 - Se registran las categorías activadas (`safety_categories`), para que cualquier bloqueo restante quede visible.
 - Un bloqueo no configurable sigue contando como respuesta incompleta.
 - **Pruebas:** `tests/providers.test.mjs`.
+
+## Gemini pasa de Synterolink a VNAIPro — 2026-10-11
+**Diagnósticos de la noche del 2026-10-10:** con Synterolink, Gemini obtuvo 3/10, 2/10, 1/10 y, con `--max-output=4096`, 2/10.
+- Las respuestas empezaban a escribirse y se cortaban con `finishReason: SAFETY`, sin valoraciones de seguridad, sin `finishMessage` y sin `promptFeedback`.
+- Desactivar los filtros configurables (`BLOCK_NONE`) no cambió nada, y bajar el límite de salida tampoco.
+- El día anterior el mismo pedido obtuvo 10/10.
+- **Conclusión:** es un corte del intermediario.
+
+**Decisión:**
+- Gemini 3.1 Pro (`gemini-3.1-pro-preview`) se consume por **VNAIPro**, una pasarela New API, en formato nativo de Gemini: `https://apikey.vnaipro.app/v1beta`, `x-goog-api-key`, credencial `VNAIPRO_API_KEY`.
+- **Sin cambios:** el modelo, el razonamiento, el límite de salida, `safetySettings` y el protocolo.
+- GPT y Sonnet siguen por Synterolink.
+
+**Datos y presupuesto:**
+- Los 5 episodios de calibración de Gemini hechos por Synterolink (afectados por 29 respuestas incompletas) se apartan a `runs/episodes-diagnostico/gemini-synterolink` y se repiten por VNAIPro.
+- Su costo se anota en `budget.extra_spent_usd`.
+- **Precio:** se mantiene la tabla de Google (2 USD/M de entrada y 12 USD/M de salida) hasta confirmar la tarifa de VNAIPro, que en el informe de costos se marca como estimada.
+
+**Pruebas:** `tests/providers.test.mjs` (24).
+
+**Siguiente paso:** `npm run providers:diagnose -- google`, con el criterio de ≥ 9/10.

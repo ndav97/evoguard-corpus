@@ -44,7 +44,7 @@ Rutas basadas en los tres ejemplos OpenCode proporcionados por el usuario:
 |---|---|---|
 | GPT-5.6 Sol | https://api.synterolink.com/v1/responses | Authorization: Bearer |
 | Claude Sonnet 5 | https://api.synterolink.com/v1/messages | x-api-key + anthropic-version |
-| Gemini 3.1 Pro | https://api.synterolink.com/v1beta/models/gemini-3.1-pro-preview:generateContent | x-goog-api-key |
+| Gemini 3.1 Pro (VNAIPro desde 2026-10-11, `VNAIPRO_API_KEY`) | https://apikey.vnaipro.app/v1beta/models/gemini-3.1-pro-preview:generateContent | x-goog-api-key |
 
 Se mantienen los identificadores elegidos. El ejemplo Anthropic no enumera modelos; el acceso a claude-sonnet-5 debe confirmarse con la clave. No se copian los otros modelos del catálogo ni se elevan automáticamente los límites de generación. El ejemplo Gemini utiliza opciones propias del SDK; nuestro adaptador REST mantiene thinkingLevel high como parámetro preparatorio explícito.
 

@@ -225,3 +225,13 @@ test('gemini desactiva los filtros configurables y registra categorías de segur
   assert.ok(request.safetySettings.length>=4&&request.safetySettings.every(s=>s.threshold==='BLOCK_NONE'));
   assert.equal(observation.finish_reason,'SAFETY');assert.deepEqual(observation.safety_categories,['HARM_CATEGORY_DANGEROUS_CONTENT']);
 });
+test('gemini por VNAIPro: formato nativo v1beta, clave propia y destino confirmado',async()=>{
+  assert.deepEqual(connectionFor('google',models.google),{access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta',credential_env:['VNAIPRO_API_KEY']});
+  assert.equal(credentialsFromEnv({google:models.google},{VNAIPRO_API_KEY:'k1',SYNTEROLINK_API_KEY:'k2'}).google,'k1');
+  assert.throws(()=>connectionFor('google',{...models.google,base_url:'https://evil.example/v1beta'}),e=>e.code==='CONNECTION_UNCONFIRMED');
+  assert.throws(()=>connectionFor('openai',{...models.openai,access_provider:'vnaipro',base_url:'https://apikey.vnaipro.app/v1beta'}),e=>e.code==='CONNECTION_UNCONFIRMED');
+  let url,headers;
+  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async(u,o)=>{url=u;headers=o.headers;return Response.json(fixtures.google);}});
+  await a.next({...context,provider:'google'});
+  assert.equal(url,'https://apikey.vnaipro.app/v1beta/models/gemini-3.1-pro-preview:generateContent');assert.equal(headers['x-goog-api-key'],'K');
+});

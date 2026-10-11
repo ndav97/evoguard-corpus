@@ -173,7 +173,8 @@
     "extra_spent_usd": [
       {"date": "2026-10-09", "concept": "providers:diagnose (2 ejecuciones) y sonda de transporte de Sonnet", "usd": 0.6},
       {"date": "2026-10-10", "concept": "lote de calibración antes de las correcciones de transporte (14 episodios + 1 interrumpido; 8 llamadas HTTP 502 sin tokens a 0,3 USD); apartado en runs/episodes-diagnostico/calibracion-2026-10-10", "usd": 33.87},
-      {"date": "2026-10-10", "concept": "episodio S003 · openai invalidado por transporte (HTTP 524 de Synterolink: ~21 de 30 min del intento de T003); apartado en runs/episodes-diagnostico/invalidados-transporte", "usd": 3.35}
+      {"date": "2026-10-10", "concept": "episodio S003 · openai invalidado por transporte (HTTP 524 de Synterolink: ~21 de 30 min del intento de T003); apartado en runs/episodes-diagnostico/invalidados-transporte", "usd": 3.35},
+      {"date": "2026-10-11", "concept": "5 episodios de calibración de Gemini por Synterolink (cortes SAFETY del intermediario); apartados en runs/episodes-diagnostico/gemini-synterolink", "usd": 7.54}
     ]
   }
 }
