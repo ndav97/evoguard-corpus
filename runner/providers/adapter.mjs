@@ -147,6 +147,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;if(parsed.discarded_chars)metadata.discarded_chars=parsed.discarded_chars;
       metadata.status='PASS';return parsed.action;
     } catch(error) {
+      if(typeof error.detail==='string'&&error.detail)metadata.error_detail=error.detail;
       metadata.error_code=combined.aborted?'REQUEST_ABORTED':(/^[A-Z_0-9]+$/.test(error.code??'')?error.code:'INVALID_RESPONSE');
       throw providerError(metadata.error_code);
     } finally {clearTimeout(timer);metadata.duration_ms=Date.now()-started;onCall(metadata);}
