@@ -562,3 +562,23 @@ El promedio es de ≈ 0,46 USD por turno.
 - **Control de revendedor:** con VNAIPro, el modelo que responde (`observed_model`) debe empezar por el pedido; si no, la llamada es `MODEL_MISMATCH`.
 - **Precio:** la tarifa de VNAIPro aún no está confirmada. Se conserva la tabla de Google Pro (2 USD/M de entrada y 12 USD/M de salida) como cota superior.
 - **Pruebas:** `tests/providers.test.mjs`.
+
+## Gemini 3.8 Flash: acción como llamada a función — 2026-10-11
+Diagnósticos de `gemini-3.8-flash` por VNAIPro, todos sobre los mismos 10 pedidos:
+
+| Variante | Válidas | Errores |
+|---|---|---|
+| JSON con esquema | 5/10 | 5 `MALFORMED_FUNCTION_CALL` |
+| JSON sin esquema | 3/10 | 7 `MALFORMED_FUNCTION_CALL` |
+| Función `runner_action` en modo ANY (`--gemini-tool`) | **9/10** | 1 `MALFORMED_FUNCTION_CALL` |
+
+- **Variantes de VNAIPro:** la pasarela reparte las llamadas entre `gemini-3.8-flash`, `-tiered` y `-n`. Con la función, las tres responden bien.
+- **Diagnóstico:** el modelo intentaba responder con una llamada a función desde el primer token (18–24 tokens) aunque no tuviera ninguna declarada.
+
+**Decisión:**
+- `gemini_tool: true` en `config/models.json`. La acción se pide como la función `runner_action` (`parametersJsonSchema` = esquema del protocolo; `toolConfig` en modo ANY) y se toma de los argumentos de la primera llamada (`tool_uses`), igual que la herramienta nativa de Sonnet.
+- Se mantienen el protocolo, el validador, el razonamiento y el límite de salida.
+- Ninguno de estos cambios toca `REAL_PIPELINE_SOURCES`, así que los ensayos siguen vigentes.
+- **Pruebas:** `tests/providers.test.mjs`.
+
+**Siguiente paso:** repetir los 5 episodios de calibración de Gemini y S003 · openai.

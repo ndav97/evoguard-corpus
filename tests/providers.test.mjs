@@ -260,3 +260,4 @@ test('gemini_tool: pide la función runner_action en modo ANY y toma sus argumen
   assert.equal(body.tools[0].functionDeclarations[0].name,'runner_action');assert.equal(body.toolConfig.functionCallingConfig.mode,'ANY');
   assert.equal(body.generationConfig.responseMimeType,undefined);assert.equal(observation.tool_uses,1);
 });
+test('gemini usa la función runner_action por configuración (diagnóstico 9/10 del 2026-10-11)',()=>{assert.equal(models.google.gemini_tool,true);});
