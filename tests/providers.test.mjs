@@ -217,3 +217,11 @@ test('gemini y anthropic registran el motivo de cierre',async()=>{
   const b=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>Response.json(fixtures.anthropic)});
   await b.next({...context,provider:'anthropic'});assert.equal(observation.finish_reason,'end_turn');
 });
+test('gemini desactiva los filtros configurables y registra categorías de seguridad activadas',async()=>{
+  let request,observation;
+  const g=structuredClone(fixtures.google);g.candidates[0].finishReason='SAFETY';g.candidates[0].safetyRatings=[{category:'HARM_CATEGORY_DANGEROUS_CONTENT',probability:'MEDIUM',blocked:true},{category:'HARM_CATEGORY_HARASSMENT',probability:'NEGLIGIBLE'}];
+  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',onCall:o=>observation=o,fetchImpl:async(url,options)=>{request=JSON.parse(options.body);return Response.json(g);}});
+  await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='INCOMPLETE_RESPONSE');
+  assert.ok(request.safetySettings.length>=4&&request.safetySettings.every(s=>s.threshold==='BLOCK_NONE'));
+  assert.equal(observation.finish_reason,'SAFETY');assert.deepEqual(observation.safety_categories,['HARM_CATEGORY_DANGEROUS_CONTENT']);
+});

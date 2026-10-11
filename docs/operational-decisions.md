@@ -520,3 +520,14 @@ El promedio es de ≈ 0,46 USD por turno.
 **Pruebas:** `tests/providers.test.mjs` (23). Sin cambios en `REAL_PIPELINE_SOURCES`.
 
 **Siguiente paso:** `npm run providers:diagnose`; después se repite S003 · openai.
+
+## Gemini: filtros de seguridad y confirmación del flujo de GPT — 2026-10-11
+**Diagnóstico** (`npm run providers:diagnose -- google openai`, 02:33 UTC):
+- **Gemini:** 8 de 10 respuestas cerradas con `finishReason: SAFETY` sobre código ordinario (falsos positivos de los filtros de contenido).
+- **GPT:** 9 de 10 válidas, las 10 en flujo (`streamed: true`). El flujo funciona a través de Synterolink.
+
+**Decisión:**
+- Gemini recibe `safetySettings` con umbral `BLOCK_NONE` en las cuatro categorías configurables: acoso, discurso de odio, contenido sexual explícito y contenido peligroso.
+- Se registran las categorías activadas (`safety_categories`), para que cualquier bloqueo restante quede visible.
+- Un bloqueo no configurable sigue contando como respuesta incompleta.
+- **Pruebas:** `tests/providers.test.mjs`.

@@ -22,6 +22,10 @@ export function anthropicBlocks(context,input){
   return blocks.map((text,i)=>i===marked?{type:'text',text,cache_control:{type:'ephemeral'}}:{type:'text',text});
 }
 const number=value=>Number.isFinite(value)&&value>=0?value:null;
+// Gemini cerró respuestas con finishReason SAFETY al trabajar sobre código ordinario (diagnóstico 2026-10-11: 8 de 10).
+// Los filtros de contenido configurables se desactivan para que un falso positivo no cuente como fallo del modelo; las
+// categorías activadas se registran (safety_categories) para que cualquier bloqueo restante sea visible.
+export const GEMINI_SAFETY=['HARM_CATEGORY_HARASSMENT','HARM_CATEGORY_HATE_SPEECH','HARM_CATEGORY_SEXUALLY_EXPLICIT','HARM_CATEGORY_DANGEROUS_CONTENT'].map(category=>({category,threshold:'BLOCK_NONE'}));
 // Campos vacíos omitidos (decisión 2026-10-10): el protocolo exige los seis campos de la acción, incluso vacíos, y el
 // esquema estricto se pide a cada proveedor, pero Synterolink no lo hace cumplir. Si la respuesta es un objeto JSON con
 // «type» y solo claves del protocolo, los campos ausentes se completan con su valor vacío ("" o []) antes de validar.
@@ -103,10 +107,11 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
           text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
         }
       } else if(config.transport==='google') {
-        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA}},{'x-goog-api-key':apiKey});
+        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA},safetySettings:GEMINI_SAFETY},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
         // Motivo de cierre registrado (diagnóstico 2026-10-10: respuestas incompletas cortas de Gemini sin motivo conocido).
+        {const flagged=(raw.candidates?.[0]?.safetyRatings??[]).filter(r=>r.blocked||['MEDIUM','HIGH'].includes(r.probability)).map(r=>r.category);if(flagged.length)metadata.safety_categories=flagged;}
         metadata.finish_reason=raw.candidates?.length===1?(raw.candidates[0].finishReason??null):`candidates:${raw.candidates?.length??0}${raw.promptFeedback?.blockReason?':'+raw.promptFeedback.blockReason:''}`;
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
         text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');

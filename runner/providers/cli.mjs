@@ -29,7 +29,7 @@ async function diagnose(args) {
     const config=models[provider];
     const row=report.providers[provider]={model:config.api_model_id,calls:[],summary:null};
     if(config.transport!=='ollama'&&!credentials[provider]){row.summary={status:'CREDENTIAL_MISSING'};console.log(`${provider}: sin credencial`);continue;}
-    const adapter=createProviderAdapter({provider,config,apiKey:credentials[provider],onCall:call=>row.calls.push({status:call.status,error_code:call.error_code,observed_model:call.observed_model,duration_ms:call.duration_ms,tokens:call.tokens,normalization:call.normalization??null,finish_reason:call.finish_reason??null,filled_fields:call.filled_fields??null,streamed:call.streamed??null,discarded_chars:call.discarded_chars??null,action_type:call.action_type??null,rejected_output:call.rejected_output??null})});
+    const adapter=createProviderAdapter({provider,config,apiKey:credentials[provider],onCall:call=>row.calls.push({status:call.status,error_code:call.error_code,observed_model:call.observed_model,duration_ms:call.duration_ms,tokens:call.tokens,normalization:call.normalization??null,finish_reason:call.finish_reason??null,safety_categories:call.safety_categories??null,filled_fields:call.filled_fields??null,streamed:call.streamed??null,discarded_chars:call.discarded_chars??null,action_type:call.action_type??null,rejected_output:call.rejected_output??null})});
     for(let round=0;round<rounds;round++) for(const scenario of SCENARIOS) {
       try {await adapter.next({provider,attempt:1,cycle:round+1,packet,messages:scenario.messages},{timeout:300000});} catch { /* registrado en onCall */ }
       row.calls.at(-1).scenario=scenario.name;
