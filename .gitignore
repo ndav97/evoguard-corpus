@@ -10,3 +10,7 @@ coverage/
 runs/preflight/
 runs/**/workspace/
 runs/**/secrets/
+runs/episodes/
+runs/episodes-diagnostico/
+evaluator/episodes/
+evaluator/episodes-diagnostico/
