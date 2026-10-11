@@ -24,11 +24,13 @@ async function diagnose(args) {
   const providers=selected.length?selected:['openai','anthropic','google'];
   if(providers.some(p=>!models[p])||!Number.isInteger(rounds)||rounds<1||rounds>20)throw Error('Uso: providers diagnose [proveedor...] [--rounds=N]');
   const packet=makePacket(loadCorpus(root),'V0');
-  const report={artifact_type:'provider_protocol_diagnosis',max_output_override:Number(args.find(a=>/^--max-output=\d+$/.test(a))?.split('=')[1]??0)||null,experimental:false,created_at:new Date().toISOString(),protocol_version:'1.1',rounds,providers:{}};
+  const report={artifact_type:'provider_protocol_diagnosis',json_schema_off:args.includes('--json-schema=off'),max_output_override:Number(args.find(a=>/^--max-output=\d+$/.test(a))?.split('=')[1]??0)||null,experimental:false,created_at:new Date().toISOString(),protocol_version:'1.1',rounds,providers:{}};
   for(const provider of providers) {
     // --max-output=N: solo para diagnosticar (A/B del límite de salida); no cambia config/models.json.
     const maxOutput=Number(args.find(a=>/^--max-output=\d+$/.test(a))?.split('=')[1]??0);
-    const config=maxOutput?{...models[provider],max_output_tokens:maxOutput}:models[provider];
+    // --json-schema=off: Gemini sin esquema de respuesta (solo JSON), para diagnosticar pasarelas que lo traducen mal.
+    const noSchema=args.includes('--json-schema=off');
+    const config={...models[provider],...(maxOutput?{max_output_tokens:maxOutput}:{}),...(noSchema?{json_schema:false}:{})};
     const row=report.providers[provider]={model:config.api_model_id,calls:[],summary:null};
     if(config.transport!=='ollama'&&!credentials[provider]){row.summary={status:'CREDENTIAL_MISSING'};console.log(`${provider}: sin credencial`);continue;}
     const adapter=createProviderAdapter({provider,config,apiKey:credentials[provider],onCall:call=>row.calls.push({status:call.status,error_code:call.error_code,observed_model:call.observed_model,duration_ms:call.duration_ms,tokens:call.tokens,normalization:call.normalization??null,finish_reason:call.finish_reason??null,safety_categories:call.safety_categories??null,finish_detail:call.finish_detail??null,filled_fields:call.filled_fields??null,streamed:call.streamed??null,discarded_chars:call.discarded_chars??null,action_type:call.action_type??null,rejected_output:call.rejected_output??null})});

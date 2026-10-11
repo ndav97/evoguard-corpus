@@ -243,3 +243,11 @@ test('VNAIPro: si responde otro modelo, la llamada es MODEL_MISMATCH',async()=>{
   const b=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async()=>Response.json(ok)});
   await b.next({...context,provider:'google'});
 });
+test('gemini: json_schema=false omite el esquema y conserva la respuesta JSON',async()=>{
+  let body;
+  const a=createProviderAdapter({provider:'google',config:{...models.google,json_schema:false},apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
+  await a.next({...context,provider:'google'});
+  assert.equal(body.generationConfig.responseMimeType,'application/json');assert.equal(body.generationConfig.responseJsonSchema,undefined);
+  const b=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
+  await b.next({...context,provider:'google'});assert.ok(body.generationConfig.responseJsonSchema);
+});

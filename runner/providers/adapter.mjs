@@ -107,7 +107,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
           text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
         }
       } else if(config.transport==='google') {
-        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',responseJsonSchema:ACTION_SCHEMA},safetySettings:GEMINI_SAFETY},{'x-goog-api-key':apiKey});
+        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',...(config.json_schema===false?{}:{responseJsonSchema:ACTION_SCHEMA})},safetySettings:GEMINI_SAFETY},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
         // Motivo de cierre registrado (diagnóstico 2026-10-10: respuestas incompletas cortas de Gemini sin motivo conocido).
