@@ -111,6 +111,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
         // Motivo de cierre registrado (diagnóstico 2026-10-10: respuestas incompletas cortas de Gemini sin motivo conocido).
+        {const c=raw.candidates?.[0];if(c&&c.finishReason!=='STOP')metadata.finish_detail={message:typeof c.finishMessage==='string'?c.finishMessage.slice(0,500):null,safety_ratings:c.safetyRatings??null,prompt_feedback:raw.promptFeedback??null,parts:(c.content?.parts??[]).map(p=>p.thought?'thought':typeof p.text==='string'?'text':Object.keys(p)[0]??'?')};}
         {const flagged=(raw.candidates?.[0]?.safetyRatings??[]).filter(r=>r.blocked||['MEDIUM','HIGH'].includes(r.probability)).map(r=>r.category);if(flagged.length)metadata.safety_categories=flagged;}
         metadata.finish_reason=raw.candidates?.length===1?(raw.candidates[0].finishReason??null):`candidates:${raw.candidates?.length??0}${raw.promptFeedback?.blockReason?':'+raw.promptFeedback.blockReason:''}`;
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
