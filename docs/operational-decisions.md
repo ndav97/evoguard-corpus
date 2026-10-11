@@ -552,3 +552,13 @@ El promedio es de ≈ 0,46 USD por turno.
 **Pruebas:** `tests/providers.test.mjs` (24).
 
 **Siguiente paso:** `npm run providers:diagnose -- google`, con el criterio de ≥ 9/10.
+
+## Cambio de modelo: Gemini 3.1 Pro → Gemini 3.8 Flash (VNAIPro) — 2026-10-11
+- **Disponibilidad:** VNAIPro no ofrece Gemini 3.1 Pro: devuelve `model_not_found` («No available channel… group gemini Ultra (distributor)»). La cuenta solo da acceso a `gemini-3.6-flash`, `gemini-3.7-flash` y `gemini-3.8-flash` (`scripts/providers/vnaipro-check.mjs`).
+- **Decisión del tesista:** se usa `gemini-3.8-flash`. Se mantienen el razonamiento `high`, los 16 384 tokens de salida, `safetySettings` y el protocolo.
+- **Consecuencia metodológica:**
+  - El tercer modelo comercial pasa de la gama Pro a la Flash. La comparación queda entre modelos de distinta gama, y así debe declararse en el plan y en el informe.
+  - La línea base y la comparación final usan el mismo modelo, así que la mejora medida con EvoGuard UI no se ve afectada.
+- **Control de revendedor:** con VNAIPro, el modelo que responde (`observed_model`) debe empezar por el pedido; si no, la llamada es `MODEL_MISMATCH`.
+- **Precio:** la tarifa de VNAIPro aún no está confirmada. Se conserva la tabla de Google Pro (2 USD/M de entrada y 12 USD/M de salida) como cota superior.
+- **Pruebas:** `tests/providers.test.mjs`.

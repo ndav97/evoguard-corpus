@@ -10,7 +10,7 @@ const action=JSON.stringify({type:'tool',argv:['node','--version']});
 const fixtures={
   openai:{id:'r1',model:'gpt-5.6-sol',status:'completed',output:[{type:'message',content:[{type:'output_text',text:action}]}],usage:{input_tokens:7,output_tokens:3}},
   anthropic:{id:'a1',model:'claude-sonnet-5',stop_reason:'end_turn',content:[{type:'text',text:action}],usage:{input_tokens:7,output_tokens:3}},
-  google:{modelVersion:'gemini-3.1-pro-preview',candidates:[{finishReason:'STOP',content:{parts:[{text:action}]}}],usageMetadata:{promptTokenCount:7,candidatesTokenCount:3}},
+  google:{modelVersion:'gemini-3.8-flash',candidates:[{finishReason:'STOP',content:{parts:[{text:action}]}}],usageMetadata:{promptTokenCount:7,candidatesTokenCount:3}},
   ollama:{model:'qwen2.5-coder:7b',done:true,done_reason:'stop',message:{content:action},prompt_eval_count:7,eval_count:3}
 };
 const context={provider:'openai',attempt:1,cycle:1,packet:{request:'test'},messages:[],oracle:'PRIVATE_CANARY'};
@@ -123,7 +123,7 @@ test('Gemini via Synterolink usa v1beta y clave específica antes de la común',
   const config={...models.google,access_provider:'synterolink',base_url:'https://api.synterolink.com/v1beta'};
   const keys=credentialsFromEnv({google:config},{SYNTEROLINK_GOOGLE_API_KEY:'SPECIFIC',SYNTEROLINK_API_KEY:'COMMON',GEMINI_API_KEY:'DIRECT_ONLY'});
   const adapter=createProviderAdapter({provider:'google',config,apiKey:keys.google,fetchImpl:async(url,options)=>{
-    assert.equal(url,'https://api.synterolink.com/v1beta/models/gemini-3.1-pro-preview:generateContent');
+    assert.equal(url,'https://api.synterolink.com/v1beta/models/gemini-3.8-flash:generateContent');
     assert.equal(options.headers['x-goog-api-key'],'SPECIFIC');return Response.json(fixtures.google);
   }});
   assert.equal((await adapter.next({...context,provider:'google'})).type,'tool');
@@ -233,5 +233,13 @@ test('gemini por VNAIPro: formato nativo v1beta, clave propia y destino confirma
   let url,headers;
   const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async(u,o)=>{url=u;headers=o.headers;return Response.json(fixtures.google);}});
   await a.next({...context,provider:'google'});
-  assert.equal(url,'https://apikey.vnaipro.app/v1beta/models/gemini-3.1-pro-preview:generateContent');assert.equal(headers['x-goog-api-key'],'K');
+  assert.equal(url,'https://apikey.vnaipro.app/v1beta/models/gemini-3.8-flash:generateContent');assert.equal(headers['x-goog-api-key'],'K');
+});
+test('VNAIPro: si responde otro modelo, la llamada es MODEL_MISMATCH',async()=>{
+  const g=structuredClone(fixtures.google);g.modelVersion='gemini-2.0-flash';
+  const a=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async()=>Response.json(g)});
+  await assert.rejects(a.next({...context,provider:'google'}),e=>e.code==='MODEL_MISMATCH');
+  const ok=structuredClone(fixtures.google);ok.modelVersion='gemini-3.8-flash-001';
+  const b=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async()=>Response.json(ok)});
+  await b.next({...context,provider:'google'});
 });

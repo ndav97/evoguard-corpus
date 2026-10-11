@@ -6,7 +6,7 @@ El pool elegido se registra en `config/models.json`, separando display_name y ap
 |---|---|---|
 | openai | GPT-5.6 Sol | gpt-5.6-sol |
 | anthropic | Claude Sonnet 5 | claude-sonnet-5 |
-| google | Gemini 3.1 Pro | gemini-3.1-pro-preview |
+| google | Gemini 3.8 Flash (desde 2026-10-11; antes Gemini 3.1 Pro) | gemini-3.8-flash |
 | local_a | Qwen2.5-Coder 7B | qwen2.5-coder:7b |
 | local_b | Granite 3.3 8B | granite3.3:8b |
 
@@ -44,7 +44,7 @@ Rutas basadas en los tres ejemplos OpenCode proporcionados por el usuario:
 |---|---|---|
 | GPT-5.6 Sol | https://api.synterolink.com/v1/responses | Authorization: Bearer |
 | Claude Sonnet 5 | https://api.synterolink.com/v1/messages | x-api-key + anthropic-version |
-| Gemini 3.1 Pro (VNAIPro desde 2026-10-11, `VNAIPRO_API_KEY`) | https://apikey.vnaipro.app/v1beta/models/gemini-3.1-pro-preview:generateContent | x-goog-api-key |
+| Gemini 3.8 Flash (VNAIPro desde 2026-10-11, `VNAIPRO_API_KEY`) | https://apikey.vnaipro.app/v1beta/models/gemini-3.8-flash:generateContent | x-goog-api-key |
 
 Se mantienen los identificadores elegidos. El ejemplo Anthropic no enumera modelos; el acceso a claude-sonnet-5 debe confirmarse con la clave. No se copian los otros modelos del catálogo ni se elevan automáticamente los límites de generación. El ejemplo Gemini utiliza opciones propias del SDK; nuestro adaptador REST mantiene thinkingLevel high como parámetro preparatorio explícito.
 

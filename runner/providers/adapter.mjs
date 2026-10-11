@@ -128,6 +128,8 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         await verifyLocal();text=raw.message?.content;
       }
       if(typeof metadata.observed_model!=='string'||!metadata.observed_model)throw providerError('MODEL_METADATA_MISSING');
+      // Revendedor (VNAIPro): el modelo que responde debe ser el pedido (se admite un sufijo de versión).
+      if(connection.access_provider==='vnaipro'&&!metadata.observed_model.startsWith(config.api_model_id))throw providerError('MODEL_MISMATCH');
       let parsed;
       const original=text,completed=completeActionFields(text);
       if(completed.filled.length){metadata.filled_fields=completed.filled;text=completed.text;}
