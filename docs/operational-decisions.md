@@ -621,3 +621,9 @@ Diagnósticos de `gemini-3.8-flash` por VNAIPro, todos sobre los mismos 10 pedid
 - El del ejecutor de episodios debe repetirse, porque cambian `run.mjs` y `budget.mjs`: `scripts\episode\ensayar-episodios.cmd`.
 
 **Pruebas:** proveedores, contexto, banco y episodios en verde. La única excepción es la prueba del registro del banco, que falla en la VM de trabajo por no poder borrar, igual que antes.
+
+## Banco local sin el manifiesto del contenedor sintético — 2026-10-11
+- **Problema:** `npm run bench:selftest` falló con «Verificación obsoleta: cambiaron controles o payload». El manifiesto `config/container.json` es del contenedor del estrato sintético (F001), que quedó obsoleto al archivar ese estrato (las rutas pasaron a `archive/sintetico/…`).
+- **Alcance:** el banco exigía ese manifiesto aunque solo corriera tareas semi-reales (`Sxxx:V1`), que usan la imagen de su propia familia.
+- **Decisión:** `runner/bench/local.mjs` lee el manifiesto solo si hay tareas sintéticas (V0–V3).
+- **Autoprueba:** `bench:selftest` sigue dependiendo del estrato sintético y queda fuera de uso; el banco real no la necesita.

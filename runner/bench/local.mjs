@@ -100,7 +100,10 @@ function summarize(result, privateRecords, calls) {
 export async function runBench(root, { models, tasks, adapterFactory, config: override, outputs = true } = {}) {
   const config = override ?? JSON.parse(readFileSync(join(root, 'config/local-bench.json'), 'utf8'));
   const data = loadCorpus(root);
-  const lock = readContainerLock(root);
+  // El contenedor sintético (F001, archivado) solo hace falta para las tareas V0–V3. Las tareas semi-reales (Sxxx:V1)
+  // usan la imagen de su familia, así que no exigen ese manifiesto, que quedó obsoleto al archivar el estrato sintético.
+  const synthetic = (tasks ?? config.tasks).some(v => VERSIONS.includes(v));
+  const lock = synthetic ? readContainerLock(root) : { image_id: null };
   const candidates = config.candidates.filter(c => !models || models.includes(c.id)).map(c => ({ ...config.defaults, ...c }));
   const selectedTasks = (tasks ?? config.tasks).filter(v => VERSIONS.includes(v) || REAL_TASK.test(v));
   if (!candidates.length || !selectedTasks.length) throw new Error('Sin candidatos o tareas seleccionados');
