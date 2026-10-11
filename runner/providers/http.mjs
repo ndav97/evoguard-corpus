@@ -25,7 +25,7 @@ export async function requestJson(url,{body,headers={},signal,fetchImpl=fetch}={
 // Respuestas en flujo (SSE) de la API Responses de OpenAI (decisión 2026-10-10): Synterolink corta con HTTP 524 las
 // conexiones sin datos durante ~2 minutos, algo frecuente cuando GPT razona mucho. En flujo llegan eventos mientras el
 // modelo trabaja; se devuelve el objeto `response` del evento terminal (completed, incomplete o failed), idéntico al de
-// la respuesta sin flujo. Si el intermediario responde JSON en lugar de eventos, se interpreta como respuesta normal.
+// la respuesta sin flujo ({response, streamed}). Si el intermediario responde JSON en lugar de eventos, se interpreta como respuesta normal.
 const SSE_LIMIT=16777216;
 export async function requestSse(url,{body,headers={},signal,fetchImpl=fetch}={}) {
   signal?.throwIfAborted();
@@ -53,9 +53,9 @@ export async function requestSse(url,{body,headers={},signal,fetchImpl=fetch}={}
       }
       if(streaming&&buffer.trim())consume(buffer);
     } finally {await reader.cancel();}
-    if(!streaming) {try {return JSON.parse(whole);}catch {throw providerError('INVALID_JSON_RESPONSE');}}
+    if(!streaming) {try {return {response:JSON.parse(whole),streamed:false};}catch {throw providerError('INVALID_JSON_RESPONSE');}}
     if(!terminal)throw providerError('EMPTY_RESPONSE');
-    return terminal;
+    return {response:terminal,streamed:true};
   } catch(error) {
     if(signal?.aborted)throw providerError('REQUEST_ABORTED');
     if(/^HTTP_\d+$|^(RESPONSE_TOO_LARGE|EMPTY_RESPONSE|INVALID_JSON_RESPONSE|STREAM_ERROR)$/.test(error.code??''))throw error;

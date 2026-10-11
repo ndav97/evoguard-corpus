@@ -78,7 +78,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(Buffer.byteLength(input)>1048576)throw providerError('INPUT_TOO_LARGE');
       let raw,text;
       if(config.transport==='openai') {
-        raw=await requestSse(`${connection.base_url}/responses`,{body:{model:config.api_model_id,stream:true,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},headers:{authorization:`Bearer ${apiKey}`},signal:combined,fetchImpl});
+        ({response:raw,streamed:metadata.streamed}=await requestSse(`${connection.base_url}/responses`,{body:{model:config.api_model_id,stream:true,store:false,instructions:INSTRUCTION,input,reasoning:{effort:config.reasoning},max_output_tokens:config.max_output_tokens,text:{format:{type:'json_schema',name:'runner_action',strict:true,schema:ACTION_SCHEMA}}},headers:{authorization:`Bearer ${apiKey}`},signal:combined,fetchImpl}));
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.usage?.input_tokens),output:number(raw.usage?.output_tokens),reasoning:number(raw.usage?.output_tokens_details?.reasoning_tokens),cached:number(raw.usage?.input_tokens_details?.cached_tokens),cache_write:null};
         metadata.finish_reason=raw.status==='completed'?'completed':`${raw.status}${raw.incomplete_details?.reason?':'+raw.incomplete_details.reason:''}`;

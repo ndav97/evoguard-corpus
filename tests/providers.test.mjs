@@ -200,7 +200,7 @@ test('openai en flujo (SSE): toma la respuesta del evento terminal y registra el
     return new Response(new ReadableStream({start(c){for(const x of chunks)c.enqueue(new TextEncoder().encode(x));c.close();}}),{headers:{'content-type':'text/event-stream'}});}});
   assert.deepEqual(await adapter.next(context),{type:'tool',argv:['node','--version']});
   const body=JSON.parse(request.body);assert.equal(body.stream,true);assert.equal(request.headers.accept,'text/event-stream');
-  assert.equal(observation.tokens.input,11);assert.equal(observation.finish_reason,'completed');
+  assert.equal(observation.tokens.input,11);assert.equal(observation.finish_reason,'completed');assert.equal(observation.streamed,true);
   const incomplete=`data: ${JSON.stringify({type:'response.incomplete',response:{...fixtures.openai,status:'incomplete',incomplete_details:{reason:'max_output_tokens'}}})}\n\n`;
   const a2=createProviderAdapter({provider:'openai',config:models.openai,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>new Response(incomplete,{headers:{'content-type':'text/event-stream'}})});
   await assert.rejects(a2.next(context),e=>e.code==='INCOMPLETE_RESPONSE');
