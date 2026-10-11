@@ -251,3 +251,12 @@ test('gemini: json_schema=false omite el esquema y conserva la respuesta JSON',a
   const b=createProviderAdapter({provider:'google',config:models.google,apiKey:'K',fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(fixtures.google);}});
   await b.next({...context,provider:'google'});assert.ok(body.generationConfig.responseJsonSchema);
 });
+test('gemini_tool: pide la función runner_action en modo ANY y toma sus argumentos',async()=>{
+  let body,observation;
+  const args={type:'read_file',path:'src/a.ts',content:'',find:'',replace:'',argv:[]};
+  const g=structuredClone(fixtures.google);g.candidates[0].content.parts=[{thought:true,text:'pensando'},{functionCall:{name:'runner_action',args}}];
+  const a=createProviderAdapter({provider:'google',config:{...models.google,gemini_tool:true},apiKey:'K',onCall:o=>observation=o,fetchImpl:async(u,o)=>{body=JSON.parse(o.body);return Response.json(g);}});
+  assert.deepEqual(await a.next({...context,provider:'google'}),{type:'read_file',path:'src/a.ts'});
+  assert.equal(body.tools[0].functionDeclarations[0].name,'runner_action');assert.equal(body.toolConfig.functionCallingConfig.mode,'ANY');
+  assert.equal(body.generationConfig.responseMimeType,undefined);assert.equal(observation.tool_uses,1);
+});

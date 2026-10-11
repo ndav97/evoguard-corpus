@@ -25,6 +25,7 @@ const number=value=>Number.isFinite(value)&&value>=0?value:null;
 // Gemini cerró respuestas con finishReason SAFETY al trabajar sobre código ordinario (diagnóstico 2026-10-11: 8 de 10).
 // Los filtros de contenido configurables se desactivan para que un falso positivo no cuente como fallo del modelo; las
 // categorías activadas se registran (safety_categories) para que cualquier bloqueo restante sea visible.
+export const GEMINI_TOOL={name:'runner_action',description:'Submit the next runner action (protocol 1.1). Call it exactly once per turn.'};
 export const GEMINI_SAFETY=['HARM_CATEGORY_HARASSMENT','HARM_CATEGORY_HATE_SPEECH','HARM_CATEGORY_SEXUALLY_EXPLICIT','HARM_CATEGORY_DANGEROUS_CONTENT'].map(category=>({category,threshold:'BLOCK_NONE'}));
 // Campos vacíos omitidos (decisión 2026-10-10): el protocolo exige los seis campos de la acción, incluso vacíos, y el
 // esquema estricto se pide a cada proveedor, pero Synterolink no lo hace cumplir. Si la respuesta es un objeto JSON con
@@ -107,7 +108,11 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
           text=raw.content?.filter(b=>b.type==='text').map(b=>b.text).join('');
         }
       } else if(config.transport==='google') {
-        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig:{maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},responseMimeType:'application/json',...(config.json_schema===false?{}:{responseJsonSchema:ACTION_SCHEMA})},safetySettings:GEMINI_SAFETY},{'x-goog-api-key':apiKey});
+        // gemini_tool: la acción se pide como llamada a la función runner_action (modo ANY), igual que la herramienta de
+        // Sonnet. Diagnóstico 2026-10-11: Gemini 3.8 Flash por VNAIPro devolvía MALFORMED_FUNCTION_CALL con JSON en texto.
+        const generationConfig={maxOutputTokens:config.max_output_tokens,thinkingConfig:{thinkingLevel:config.reasoning},...(config.gemini_tool?{}:{responseMimeType:'application/json',...(config.json_schema===false?{}:{responseJsonSchema:ACTION_SCHEMA})})};
+        const toolFields=config.gemini_tool?{tools:[{functionDeclarations:[{name:GEMINI_TOOL.name,description:GEMINI_TOOL.description,parametersJsonSchema:ACTION_SCHEMA}]}],toolConfig:{functionCallingConfig:{mode:'ANY',allowedFunctionNames:[GEMINI_TOOL.name]}}}:{};
+        raw=await request(`${connection.base_url}/models/${encodeURIComponent(config.api_model_id)}:generateContent`,{systemInstruction:{parts:[{text:INSTRUCTION}]},contents:[{role:'user',parts:[{text:input}]}],generationConfig,...toolFields,safetySettings:GEMINI_SAFETY},{'x-goog-api-key':apiKey});
         metadata.observed_model=raw.modelVersion;
         metadata.tokens={input:number(raw.usageMetadata?.promptTokenCount),output:number(raw.usageMetadata?.candidatesTokenCount),reasoning:number(raw.usageMetadata?.thoughtsTokenCount),cached:number(raw.usageMetadata?.cachedContentTokenCount),cache_write:null};
         // Motivo de cierre registrado (diagnóstico 2026-10-10: respuestas incompletas cortas de Gemini sin motivo conocido).
@@ -115,7 +120,9 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         {const flagged=(raw.candidates?.[0]?.safetyRatings??[]).filter(r=>r.blocked||['MEDIUM','HIGH'].includes(r.probability)).map(r=>r.category);if(flagged.length)metadata.safety_categories=flagged;}
         metadata.finish_reason=raw.candidates?.length===1?(raw.candidates[0].finishReason??null):`candidates:${raw.candidates?.length??0}${raw.promptFeedback?.blockReason?':'+raw.promptFeedback.blockReason:''}`;
         if(raw.candidates?.length!==1||raw.candidates[0].finishReason!=='STOP')throw providerError('INCOMPLETE_RESPONSE');
-        text=raw.candidates[0].content?.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');
+        {const parts=raw.candidates[0].content?.parts??[],calls=parts.filter(p=>p.functionCall?.name===GEMINI_TOOL.name);
+         if(calls.length){metadata.tool_uses=calls.length;text=JSON.stringify(calls[0].functionCall.args??{});}
+         else text=parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');}
       } else {
         await verifyLocal();
         raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
