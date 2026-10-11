@@ -1,0 +1,589 @@
+{
+  "artifact_type": "local_model_bench",
+  "experimental": false,
+  "run_id": "2026-10-11-ddfe54d3",
+  "protocol_version": "1.1",
+  "image_id": null,
+  "ollama": "http://127.0.0.1:11435",
+  "started_at": "2026-10-11T20:39:15.436Z",
+  "candidates": [
+    {
+      "id": "devstral24-32k",
+      "model": "devstral:24b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9",
+      "tasks": {
+        "S001:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REPAIR",
+              "reason": "development_tests",
+              "cycles": 25,
+              "duration_s": 542,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "FAIL"
+              }
+            },
+            {
+              "attempt": 2,
+              "outcome": "REPAIR",
+              "reason": "development_tests",
+              "cycles": 25,
+              "duration_s": 632,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "FAIL"
+              }
+            },
+            {
+              "attempt": 3,
+              "outcome": "REASSIGN",
+              "reason": "TECHNICAL_FAILURE",
+              "cycles": 25,
+              "duration_s": 238,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 9,
+            "edit_file": 47,
+            "run_checks": 16,
+            "deliver": 2,
+            "technical_failure": 1
+          },
+          "loops": 10,
+          "invalid_outputs": [],
+          "calls": 75,
+          "tokens": {
+            "input": 1110777,
+            "output": 9019
+          },
+          "median_call_s": 5.1,
+          "max_context_estimate": 28107,
+          "context_omitted_steps": 8,
+          "wall_s": 1416,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-devstral24-32k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 768,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 9,
+            "edit_file": 11,
+            "run_checks": 5
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 25,
+          "tokens": {
+            "input": 294619,
+            "output": 4604
+          },
+          "median_call_s": 9.4,
+          "max_context_estimate": 24793,
+          "context_omitted_steps": 0,
+          "wall_s": 772,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-devstral24-32k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "INFRA_ERROR",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "INFRA_ERROR",
+              "reason": "INFRA_ERROR",
+              "cycles": 5,
+              "duration_s": 114,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 2,
+            "edit_file": 2
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 8,
+          "tokens": {
+            "input": 48131,
+            "output": 615
+          },
+          "median_call_s": 8.1,
+          "max_context_estimate": 25498,
+          "context_omitted_steps": 0,
+          "wall_s": 118,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-devstral24-32k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 5,
+              "duration_s": 129,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 2,
+            "write_file": 1,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 5,
+          "tokens": {
+            "input": 34474,
+            "output": 1170
+          },
+          "median_call_s": 3.6,
+          "max_context_estimate": 14585,
+          "context_omitted_steps": 0,
+          "wall_s": 133,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-devstral24-32k-S007-V1"
+        }
+      },
+      "quantization": "Q4_K_M",
+      "bytes_per_token": 2.67,
+      "accepted": 0
+    },
+    {
+      "id": "qwen3coder30-32k",
+      "model": "qwen3-coder:30b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
+      "tasks": {
+        "S001:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 192,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 22
+          },
+          "loops": 7,
+          "invalid_outputs": [
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 182109,
+            "output": 10232
+          },
+          "median_call_s": 2.6,
+          "max_context_estimate": 17203,
+          "context_omitted_steps": 0,
+          "wall_s": 195,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-qwen3coder30-32k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 1074,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 5
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 247069,
+            "output": 82064
+          },
+          "median_call_s": 52.9,
+          "max_context_estimate": 19281,
+          "context_omitted_steps": 0,
+          "wall_s": 1079,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-qwen3coder30-32k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 622,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 3
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 316951,
+            "output": 44575
+          },
+          "median_call_s": 32.2,
+          "max_context_estimate": 26194,
+          "context_omitted_steps": 0,
+          "wall_s": 626,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-qwen3coder30-32k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 1017,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 2
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 184843,
+            "output": 80287
+          },
+          "median_call_s": 43.9,
+          "max_context_estimate": 14753,
+          "context_omitted_steps": 0,
+          "wall_s": 1021,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-qwen3coder30-32k-S007-V1"
+        }
+      },
+      "quantization": "Q4_K_M",
+      "bytes_per_token": 2.87,
+      "accepted": 0
+    },
+    {
+      "id": "gemma4-26b-32k",
+      "model": "gemma4:26b",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c",
+      "tasks": {
+        "S001:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 606,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 2,
+            "list_files": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION",
+            "INVALID_ACTION"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 171295,
+            "output": 71654
+          },
+          "median_call_s": 22.7,
+          "max_context_estimate": 13815,
+          "context_omitted_steps": 0,
+          "wall_s": 609,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-gemma4-26b-32k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 798,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 2
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 261739,
+            "output": 94332
+          },
+          "median_call_s": 33.7,
+          "max_context_estimate": 19668,
+          "context_omitted_steps": 0,
+          "wall_s": 802,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-gemma4-26b-32k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 509,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 8,
+            "list_files": 1,
+            "edit_file": 6,
+            "write_file": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INVALID_ACTION",
+            "INVALID_ACTION"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 399489,
+            "output": 50379
+          },
+          "median_call_s": 17.2,
+          "max_context_estimate": 28106,
+          "context_omitted_steps": 6,
+          "wall_s": 512,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-gemma4-26b-32k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 769,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 7,
+            "tool": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE",
+            "INCOMPLETE_RESPONSE"
+          ],
+          "calls": 25,
+          "tokens": {
+            "input": 235010,
+            "output": 89174
+          },
+          "median_call_s": 34.4,
+          "max_context_estimate": 17356,
+          "context_omitted_steps": 0,
+          "wall_s": 773,
+          "logs": "artifacts/bench/2026-10-11-ddfe54d3-gemma4-26b-32k-S007-V1"
+        }
+      },
+      "quantization": "Q4_K_M",
+      "bytes_per_token": 2.73,
+      "accepted": 0
+    }
+  ],
+  "finished_at": "2026-10-11T22:56:59.603Z"
+}
