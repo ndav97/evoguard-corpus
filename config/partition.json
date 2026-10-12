@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0.0",
+  "decided_at": "2026-10-12",
+  "status": "FROZEN",
+  "rule": "Prueba = 20 familias de S021–S060 sorteadas con SHA-256(semilla:id), estratificadas por ejecutor de tests; S001–S020 (piloto, banco y ajustes) siempre en entrenamiento/validación. Fijada antes de ver resultados del piloto.",
+  "seed": "evoguard-ui/particion/2026-10-12",
+  "strata_quota": {
+    "jest": 12,
+    "vitest": 8
+  },
+  "test": [
+    "S021",
+    "S023",
+    "S025",
+    "S026",
+    "S027",
+    "S028",
+    "S034",
+    "S035",
+    "S036",
+    "S037",
+    "S038",
+    "S039",
+    "S040",
+    "S043",
+    "S044",
+    "S049",
+    "S052",
+    "S053",
+    "S054",
+    "S060"
+  ],
+  "train_validation": [
+    "S001",
+    "S002",
+    "S003",
+    "S004",
+    "S005",
+    "S006",
+    "S007",
+    "S008",
+    "S009",
+    "S010",
+    "S011",
+    "S012",
+    "S013",
+    "S014",
+    "S015",
+    "S016",
+    "S017",
+    "S018",
+    "S019",
+    "S020",
+    "S022",
+    "S024",
+    "S029",
+    "S030",
+    "S031",
+    "S032",
+    "S033",
+    "S041",
+    "S042",
+    "S045",
+    "S046",
+    "S047",
+    "S048",
+    "S050",
+    "S051",
+    "S055",
+    "S056",
+    "S057",
+    "S058",
+    "S059"
+  ],
+  "candidates": {
+    "S021": {
+      "runner": "jest",
+      "repo": "prymitive/karma"
+    },
+    "S022": {
+      "runner": "jest",
+      "repo": "vmware-tanzu/kubeapps"
+    },
+    "S023": {
+      "runner": "vitest",
+      "repo": "tektoncd/dashboard"
+    },
+    "S024": {
+      "runner": "jest",
+      "repo": "weaveworks/weave-gitops"
+    },
+    "S025": {
+      "runner": "jest",
+      "repo": "grafana/traces-drilldown"
+    },
+    "S026": {
+      "runner": "jest",
+      "repo": "netobserv/network-observability-console-plugin"
+    },
+    "S027": {
+      "runner": "jest",
+      "repo": "tilt-dev/tilt"
+    },
+    "S028": {
+      "runner": "vitest",
+      "repo": "meshery/meshery"
+    },
+    "S029": {
+      "runner": "vitest",
+      "repo": "canonical/juju-dashboard"
+    },
+    "S030": {
+      "runner": "vitest",
+      "repo": "artifacthub/hub"
+    },
+    "S031": {
+      "runner": "vitest",
+      "repo": "cncf/clomonitor"
+    },
+    "S032": {
+      "runner": "jest",
+      "repo": "Kuadrant/kuadrant-console-plugin"
+    },
+    "S033": {
+      "runner": "jest",
+      "repo": "openshift-pipelines/console-plugin"
+    },
+    "S034": {
+      "runner": "vitest",
+      "repo": "kubev2v/migration-planner-ui"
+    },
+    "S035": {
+      "runner": "jest",
+      "repo": "konveyor/tackle2-ui"
+    },
+    "S036": {
+      "runner": "jest",
+      "repo": "flyteorg/flyteconsole"
+    },
+    "S037": {
+      "runner": "vitest",
+      "repo": "apache/airflow"
+    },
+    "S038": {
+      "runner": "jest",
+      "repo": "amundsen-io/amundsen"
+    },
+    "S039": {
+      "runner": "jest",
+      "repo": "kubeflow/model-registry"
+    },
+    "S040": {
+      "runner": "vitest",
+      "repo": "qdrant/qdrant-web-ui"
+    },
+    "S041": {
+      "runner": "vitest",
+      "repo": "aws/graph-explorer"
+    },
+    "S042": {
+      "runner": "jest",
+      "repo": "pinterest/querybook"
+    },
+    "S043": {
+      "runner": "jest",
+      "repo": "VolkovLabs/business-table"
+    },
+    "S044": {
+      "runner": "jest",
+      "repo": "RedHatInsights/insights-inventory-frontend"
+    },
+    "S045": {
+      "runner": "jest",
+      "repo": "project-koku/koku-ui"
+    },
+    "S046": {
+      "runner": "jest",
+      "repo": "Enterprise-CMCS/macpro-mdct-mcr"
+    },
+    "S047": {
+      "runner": "vitest",
+      "repo": "CMSgov/easi-app"
+    },
+    "S048": {
+      "runner": "vitest",
+      "repo": "betagouv/mon-entreprise"
+    },
+    "S049": {
+      "runner": "jest",
+      "repo": "mosip/inji-web"
+    },
+    "S050": {
+      "runner": "jest",
+      "repo": "mitodl/ocw-studio"
+    },
+    "S051": {
+      "runner": "jest",
+      "repo": "ebi-uniprot/uniprot-website"
+    },
+    "S052": {
+      "runner": "vitest",
+      "repo": "hotosm/fAIr"
+    },
+    "S053": {
+      "runner": "vitest",
+      "repo": "canonical/snapcraft.io"
+    },
+    "S054": {
+      "runner": "jest",
+      "repo": "Automattic/sensei"
+    },
+    "S055": {
+      "runner": "jest",
+      "repo": "pods-framework/pods"
+    },
+    "S056": {
+      "runner": "vitest",
+      "repo": "element-hq/element-call"
+    },
+    "S057": {
+      "runner": "vitest",
+      "repo": "mozilla/pontoon"
+    },
+    "S058": {
+      "runner": "jest",
+      "repo": "openedx/frontend-app-learner-portal-enterprise"
+    },
+    "S059": {
+      "runner": "vitest",
+      "repo": "openmrs/openmrs-esm-patient-management"
+    },
+    "S060": {
+      "runner": "vitest",
+      "repo": "jenkinsci/pipeline-graph-view-plugin"
+    }
+  },
+  "validation_split": "Se define en OE3 dentro de train_validation; nunca con familias de prueba."
+}

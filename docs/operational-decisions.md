@@ -693,3 +693,21 @@ Los digests de los tres modelos locales se fijan en `config/models.json` con los
 bytes/token (antes 3.31 con los modelos de 7–8B). `config/context.json` pasa de PROVISIONAL a CALIBRATED; presupuesto
 sin cambios (32 768 / 4 096 / 512 / 28 160). El ensayo de episodios del 2026-10-11 (4 escenarios PASS) sigue vigente:
 las huellas de sus 23 fuentes coinciden con el código actual.
+
+## 2026-10-12 — Partición de prueba fijada y línea base con un solo código
+
+**Partición** (`config/partition.json`, `runner/partition/split.mjs`, prueba en `tests/partition.test.mjs`). Se fija
+antes de ver resultados del piloto:
+- **Prueba (20 familias, fase final B vs E):** S021 S023 S025 S026 S027 S028 S034 S035 S036 S037 S038 S039 S040
+  S043 S044 S049 S052 S053 S054 S060. Sorteo reproducible con SHA-256(`evoguard-ui/particion/2026-10-12`:id),
+  estratificado por ejecutor de tests (12 jest, 8 vitest), solo entre S021–S060.
+- **Entrenamiento/validación (40):** S001–S020 y las 20 restantes de S021–S060. S001–S020 se usaron en el piloto,
+  el banco de modelos y los ajustes del adaptador, por eso nunca pueden ser de prueba. La división
+  entrenamiento/validación se define en OE3 dentro de estas 40.
+- Cada familia es un repositorio distinto: no hay código compartido entre particiones.
+
+**Episodios comerciales repetidos.** Los 10 episodios de GPT y Claude del piloto (S001–S005) se corrieron el
+2026-10-10 con una versión anterior del ejecutor (huella `e7fdde6f…` frente a `f2200990…`). Los cambios no afectan a
+los comerciales, pero para que la línea base use un único código se apartan en
+`runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10` (su gasto, 15.78 USD, pasa a `extra_spent_usd`) y se
+repiten con `linea-base-piloto.cmd -Proveedores openai,anthropic`.
