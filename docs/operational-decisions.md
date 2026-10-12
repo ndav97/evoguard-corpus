@@ -698,9 +698,13 @@ las huellas de sus 23 fuentes coinciden con el código actual.
 
 **Partición** (`config/partition.json`, `runner/partition/split.mjs`, prueba en `tests/partition.test.mjs`). Se fija
 antes de ver resultados del piloto:
-- **Prueba (20 familias, fase final B vs E):** S021 S023 S025 S026 S027 S028 S034 S035 S036 S037 S038 S039 S040
-  S043 S044 S049 S052 S053 S054 S060. Sorteo reproducible con SHA-256(`evoguard-ui/particion/2026-10-12`:id),
-  estratificado por ejecutor de tests (12 jest, 8 vitest), solo entre S021–S060.
+- **Prueba (20 familias, fase final B vs E):** S021 S023 S025 S026 S027 S028 S033 S034 S035 S036 S037 S038 S039
+  S040 S043 S044 S047 S049 S052 S060. Sorteo reproducible con SHA-256(`evoguard-ui/particion/2026-10-12`:id) por
+  grupos de organización, estratificado por ejecutor de tests (12 jest, 8 vitest), solo entre S021–S060.
+- **Misma organización, misma partición** (criterio de la selección del 2026-10-05): S054 (Automattic, con S017),
+  S057 (Mozilla, con S005), S058 (Open edX, con S002) y S059 (OpenMRS, con S020) no pueden ser de prueba; S029 y
+  S053 (Canonical) van juntas. La revisión 1.0 de la partición, del mismo día, no aplicaba esta regla y dejaba S053
+  y S054 en prueba; se corrigió (revisión 1.1) antes de usar ninguna familia de prueba.
 - **Entrenamiento/validación (40):** S001–S020 y las 20 restantes de S021–S060. S001–S020 se usaron en el piloto,
   el banco de modelos y los ajustes del adaptador, por eso nunca pueden ser de prueba. La división
   entrenamiento/validación se define en OE3 dentro de estas 40.

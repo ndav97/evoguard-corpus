@@ -21,7 +21,15 @@ test('ninguna familia del piloto, el banco o los ajustes queda en prueba; las fa
   assert.deepEqual(experiment.phases.pi0.families, partition.train_validation);
 });
 test('el sorteo es reproducible con la semilla y respeta los estratos', () => {
-  const { test: again, quota } = split(Object.entries(partition.candidates).map(([id, m]) => ({ id, runner: m.runner })));
+  const { test: again, quota } = split(Object.entries(partition.candidates).map(([id, m]) => ({ id, runner: m.runner, repo: m.repo })), partition.pilot_repos);
   assert.equal(new Set(Object.values(partition.candidates).map(c => c.repo)).size, 40, 'un repositorio por familia');
   assert.deepEqual(again, partition.test); assert.deepEqual(quota, partition.strata_quota);
+});
+test('familias de una misma organización quedan en la misma partición', () => {
+  const org = r => r.split('/')[0].toLowerCase();
+  const repos = { ...partition.pilot_repos, ...Object.fromEntries(Object.entries(partition.candidates).map(([id, c]) => [id, c.repo])) };
+  const side = id => partition.test.includes(id) ? 'test' : 'train';
+  const byOrg = {};
+  for (const [id, r] of Object.entries(repos)) (byOrg[org(r)] ??= []).push(id);
+  for (const ids of Object.values(byOrg)) assert.equal(new Set(ids.map(side)).size, 1, ids.join(','));
 });

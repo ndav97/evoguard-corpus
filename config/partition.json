@@ -1,13 +1,20 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "decided_at": "2026-10-12",
   "status": "FROZEN",
-  "rule": "Prueba = 20 familias de S021–S060 sorteadas con SHA-256(semilla:id), estratificadas por ejecutor de tests; S001–S020 (piloto, banco y ajustes) siempre en entrenamiento/validación. Fijada antes de ver resultados del piloto.",
+  "rule": "Prueba = 20 familias de S021–S060 sorteadas con SHA-256(semilla:id) por grupos de organización, estratificadas por ejecutor de tests. S001–S020 (piloto, banco y ajustes) y las familias de S021–S060 que comparten organización con ellas quedan siempre en entrenamiento/validación; familias de una misma organización van a la misma partición. Fijada antes de ver resultados del piloto.",
+  "revision": "1.1 (2026-10-12): la 1.0 del mismo día no agrupaba por organización y dejaba en prueba S053 (canonical, con S029) y S054 (Automattic, con S017 del piloto). Se corrigió antes de usar ninguna familia de prueba.",
   "seed": "evoguard-ui/particion/2026-10-12",
   "strata_quota": {
     "jest": 12,
     "vitest": 8
   },
+  "excluded_by_organization": [
+    "S054",
+    "S057",
+    "S058",
+    "S059"
+  ],
   "test": [
     "S021",
     "S023",
@@ -15,6 +22,7 @@
     "S026",
     "S027",
     "S028",
+    "S033",
     "S034",
     "S035",
     "S036",
@@ -24,10 +32,9 @@
     "S040",
     "S043",
     "S044",
+    "S047",
     "S049",
     "S052",
-    "S053",
-    "S054",
     "S060"
   ],
   "train_validation": [
@@ -57,15 +64,15 @@
     "S030",
     "S031",
     "S032",
-    "S033",
     "S041",
     "S042",
     "S045",
     "S046",
-    "S047",
     "S048",
     "S050",
     "S051",
+    "S053",
+    "S054",
     "S055",
     "S056",
     "S057",
@@ -234,5 +241,27 @@
       "repo": "jenkinsci/pipeline-graph-view-plugin"
     }
   },
-  "validation_split": "Se define en OE3 dentro de train_validation; nunca con familias de prueba."
+  "pilot_repos": {
+    "S001": "kopia/htmlui",
+    "S002": "openedx/frontend-app-gradebook",
+    "S003": "authelia/authelia",
+    "S004": "medplum/medplum",
+    "S005": "mozilla/fx-private-relay",
+    "S006": "morpheus65535/bazarr",
+    "S007": "plausible/analytics",
+    "S008": "wger-project/react",
+    "S009": "gethomepage/homepage",
+    "S010": "argoproj/argo-cd",
+    "S011": "jaegertracing/jaeger-ui",
+    "S012": "navidrome/navidrome",
+    "S013": "traefik/traefik",
+    "S014": "glific/glific-frontend",
+    "S015": "gregrickaby/viewer-for-reddit",
+    "S016": "kawalcovid19/wargabantuwarga.com",
+    "S017": "Automattic/studio",
+    "S018": "processing/p5.js-web-editor",
+    "S019": "usememos/memos",
+    "S020": "openmrs/openmrs-esm-form-builder"
+  },
+  "validation_split": "Se define en OE3 dentro de train_validation (30 de entrenamiento y 10 de validación); nunca con familias de prueba."
 }
