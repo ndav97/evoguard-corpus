@@ -82,7 +82,9 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
-      if(!runtime){const v=await request(`${ollamaBase()}/api/version`).catch(()=>null);runtime={ollama_version:typeof v?.version==='string'?v.version:null};}
+      // Si Ollama no responde (túnel caído) el error de red se propaga y se reintenta como transporte; no se
+      // confunde con una versión distinta ni se guarda una versión vacía.
+      if(!runtime){const v=await request(`${ollamaBase()}/api/version`);runtime={ollama_version:typeof v?.version==='string'?v.version:null};}
       metadata.runtime=runtime;
       if(config.ollama_version&&runtime.ollama_version!==config.ollama_version)throw providerError('OLLAMA_VERSION_MISMATCH');
       const tags=await request(`${ollamaBase()}/api/tags`);
