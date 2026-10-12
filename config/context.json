@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "status": "PROVISIONAL",
+  "status": "CALIBRATED",
   "scope": "context_limited_models",
   "applies_to": [
     "google",
     "local_a",
     "local_b"
   ],
-  "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Los modelos abiertos servidos por Ollama en la GPU (RTX 3090, 24 GB) reciben un contexto gestionado de 32 768 tokens; es una restricción propia de esos modelos y se registra por llamada. Provisional hasta el banco del 2026-10 (antes: 8 192 tokens para modelos de 7–8B).",
+  "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Los modelos abiertos servidos por Ollama en la GPU (RTX 3090, 24 GB) reciben un contexto gestionado de 32 768 tokens; es una restricción propia de esos modelos y se registra por llamada. Calibrado el 2026-10-12 con los tokenizadores de Gemma 4 26B, Qwen3-Coder 30B y Devstral 24B en Ollama 0.40.3 (antes: 8 192 tokens para modelos de 7–8B).",
   "budget": {
     "context_tokens": 32768,
     "output_reserve_tokens": 4096,
@@ -16,13 +16,13 @@
   },
   "estimator": {
     "method": "utf8_bytes_per_token_lower_bound",
-    "bytes_per_token": 3.31,
+    "bytes_per_token": 3.64,
     "safety_factor": 0.8,
     "calibration": {
       "evidence": "docs/verification/context-calibration.json",
-      "measured_at": "2026-09-25T02:49:20.395Z",
-      "minimum_bytes_per_token": 3.3149,
-      "samples": 16
+      "measured_at": "2026-10-12T17:27:49.553Z",
+      "minimum_bytes_per_token": 3.6445,
+      "samples": 24
     }
   },
   "history": {

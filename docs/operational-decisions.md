@@ -686,3 +686,10 @@ válidas (72/100). Sus fallos son del propio modelo (confunde `edit_file` con `w
 archivos completos); se conserva la familia Alibaba en el anillo y se declara como excepción a la regla de selección.
 Los digests de los tres modelos locales se fijan en `config/models.json` con los observados en la instancia del
 2026-10-12 (iguales a los del banco del 2026-10-11).
+
+## 2026-10-12 — Contexto calibrado y ensayo de episodios vigente
+
+`npm run context:calibrate -- --write` con los tres modelos locales (24 muestras, Ollama 0.40.3): mínimo 3.64
+bytes/token (antes 3.31 con los modelos de 7–8B). `config/context.json` pasa de PROVISIONAL a CALIBRATED; presupuesto
+sin cambios (32 768 / 4 096 / 512 / 28 160). El ensayo de episodios del 2026-10-11 (4 escenarios PASS) sigue vigente:
+las huellas de sus 23 fuentes coinciden con el código actual.

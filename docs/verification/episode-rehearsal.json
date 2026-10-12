@@ -2,8 +2,8 @@
   "artifact_type": "episode_rehearsal",
   "family_id": "S001",
   "image_id": "sha256:15f30254fcfcf3dfcece5ce7c57eb534622206b689a6a96ff387bdb6e2a1b215",
-  "experiment": "ensayo-episodios-1791547569689",
-  "started_at": "2026-10-09T12:06:09.689Z",
+  "experiment": "ensayo-episodios-1791749803933",
+  "started_at": "2026-10-11T20:16:43.933Z",
   "scenarios": {
     "ideal": {
       "ok": true,
@@ -49,7 +49,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1791547569689\\B\\openai\\S001\\e1-r1"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1791749803933\\B\\openai\\S001\\e1-r1"
     },
     "sin_entrega": {
       "ok": true,
@@ -95,7 +95,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1791547569689\\B\\openai\\S001\\e1-r2"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1791749803933\\B\\openai\\S001\\e1-r2"
     },
     "regresion": {
       "ok": true,
@@ -141,7 +141,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1791547569689\\B\\openai\\S001\\e1-r3"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1791749803933\\B\\openai\\S001\\e1-r3"
     },
     "head_movido": {
       "ok": true,
@@ -187,15 +187,15 @@
         true,
         true
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1791547569689\\B\\openai\\S001\\e1-r4"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1791749803933\\B\\openai\\S001\\e1-r4"
     }
   },
   "status": "PASS",
-  "finished_at": "2026-10-09T12:15:09.131Z",
+  "finished_at": "2026-10-11T20:27:26.013Z",
   "sources_sha256": {
-    "runner/episode/run.mjs": "df476fc06c1ccffe3815d2db5cd79ffa780ae4ea5fb69225261e2d29f1d18a28",
+    "runner/episode/run.mjs": "2ac8292dff188bcb0efcaeeac4683bdc68bb7eb59854af63d82aa9dc1b9e200a",
     "runner/episode/store.mjs": "b874e4e07a9cc93fe24cdfe4b0a1ddfe47bbb944fcc1de4b0add92a5cbe0ff47",
-    "runner/episode/budget.mjs": "1ece299cdb79f6d1a34a9240a3c3ac00e8a09c2ef985f27ad6965579071a8890",
+    "runner/episode/budget.mjs": "663428271707ee976a40357191bc63004f95e7cb7abc19b40c545754c9e93608",
     "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
