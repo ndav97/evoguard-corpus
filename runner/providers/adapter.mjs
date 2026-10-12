@@ -172,6 +172,10 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       metadata.status='PASS';return parsed.action;
     } catch(error) {
       if(typeof error.detail==='string'&&error.detail)metadata.error_detail=error.detail;
+      // Ollama corta con HTTP 500 cuando el modelo repite el mismo token sin fin (decisión 2026-10-12): es una salida
+      // degenerada del modelo, no un fallo de infraestructura; se trata como respuesta incompleta (el motor da aviso
+      // y sigue con el siguiente ciclo) en lugar de reintentar la misma entrada.
+      if(error.code==='HTTP_500'&&/token repeat limit/i.test(metadata.error_detail??'')){metadata.finish_reason='repeat_limit';error=providerError('INCOMPLETE_RESPONSE');}
       metadata.error_code=combined.aborted?'REQUEST_ABORTED':(/^[A-Z_0-9]+$/.test(error.code??'')?error.code:'INVALID_RESPONSE');
       throw providerError(metadata.error_code);
     } finally {clearTimeout(timer);metadata.duration_ms=Date.now()-started;onCall(metadata);}

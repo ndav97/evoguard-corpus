@@ -314,3 +314,14 @@ test('Ollama: think:false solo para modelos con modo de pensamiento y reasoning 
   await assert.rejects(adapter.next({...context,provider:'local_a'}),{code:'INCOMPLETE_RESPONSE'});
   assert.equal(record.finish_reason,'length');assert.match(JSON.stringify(record.rejected_output),/write_file/);
 });
+test('Ollama: HTTP 500 por repetición de tokens cuenta como respuesta incompleta del modelo',async()=>{
+  const config=models.local_b;let record;
+  const adapter=createProviderAdapter({provider:'local_b',config,onCall:r=>record=r,fetchImpl:async url=>{
+    if(url.endsWith('/api/version'))return Response.json({version:config.ollama_version});
+    if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
+    if(url.endsWith('/api/show'))return Response.json({capabilities:['completion']});
+    return new Response(JSON.stringify({error:'prediction aborted, token repeat limit reached'}),{status:500});
+  }});
+  await assert.rejects(adapter.next({...context,provider:'local_b'}),{code:'INCOMPLETE_RESPONSE'});
+  assert.equal(record.error_code,'INCOMPLETE_RESPONSE');assert.equal(record.finish_reason,'repeat_limit');assert.match(record.error_detail,/token repeat limit/);
+});

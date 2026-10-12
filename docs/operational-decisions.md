@@ -666,3 +666,17 @@ Cambios en el adaptador (no tocan protocolo, motor ni las huellas de los ensayos
   cuerpo (`error_detail`).
 
 Siguiente paso: repetir el banco completo en una instancia nueva antes de decidir reemplazos.
+
+## 2026-10-12 — Segundo banco local (Ollama 0.40.3, con los cambios del adaptador)
+
+`docs/verification/local-bench/2026-10-12-806ce7a2.json`. Acciones válidas por llamada (sin errores de red):
+
+| Modelo | Aceptadas | Llamadas válidas | Observación |
+|---|---|---|---|
+| Gemma 4 26B | 1/4 (S005, oráculo PASS) | 99/100 | `think:false` resolvió el truncado; 64–155 s por tarea |
+| Devstral 24B | 0/4 | 109/113 | trabaja y entrega; S005 cae siempre por «token repeat limit» |
+| Qwen3-Coder 30B | 0/4 | 72/100 | usa `edit_file` con el archivo completo en `content`; se trunca a 4096 tokens |
+
+El HTTP 500 de Devstral era `prediction aborted, token repeat limit reached`: salida degenerada del modelo. Desde
+ahora el adaptador lo registra como INCOMPLETE_RESPONSE (`finish_reason: repeat_limit`): el motor avisa al modelo y
+continúa, en vez de reintentar la misma entrada y terminar en INFRA_ERROR.
