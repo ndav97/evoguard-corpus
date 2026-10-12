@@ -47,8 +47,8 @@
       "reasoning": null,
       "temperature": 0,
       "seed": 42,
-      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
-      "digest_status": "PENDING_BENCH",
+      "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c",
+      "digest_status": "VERIFIED_BENCH_2026-10-12",
       "ollama_version": "0.40.3"
     },
     "local_a": {
@@ -60,8 +60,8 @@
       "reasoning": null,
       "temperature": 0,
       "seed": 42,
-      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
-      "digest_status": "PENDING_BENCH",
+      "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
+      "digest_status": "VERIFIED_BENCH_2026-10-12",
       "ollama_version": "0.40.3"
     },
     "local_b": {
@@ -73,8 +73,8 @@
       "reasoning": null,
       "temperature": 0,
       "seed": 42,
-      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
-      "digest_status": "PENDING_BENCH",
+      "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9",
+      "digest_status": "VERIFIED_BENCH_2026-10-12",
       "ollama_version": "0.40.3"
     }
   }

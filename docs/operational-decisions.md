@@ -680,3 +680,9 @@ Siguiente paso: repetir el banco completo en una instancia nueva antes de decidi
 El HTTP 500 de Devstral era `prediction aborted, token repeat limit reached`: salida degenerada del modelo. Desde
 ahora el adaptador lo registra como INCOMPLETE_RESPONSE (`finish_reason: repeat_limit`): el motor avisa al modelo y
 continúa, en vez de reintentar la misma entrada y terminar en INFRA_ERROR.
+
+**Decisión del autor (2026-10-12): se mantiene Qwen3-Coder 30B** pese a no cumplir el umbral de ≥ 9/10 acciones
+válidas (72/100). Sus fallos son del propio modelo (confunde `edit_file` con `write_file` y se trunca al reescribir
+archivos completos); se conserva la familia Alibaba en el anillo y se declara como excepción a la regla de selección.
+Los digests de los tres modelos locales se fijan en `config/models.json` con los observados en la instancia del
+2026-10-12 (iguales a los del banco del 2026-10-11).
