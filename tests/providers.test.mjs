@@ -21,6 +21,7 @@ for(const provider of Object.keys(models)) test(`${provider}: petición propia, 
   const config=models[provider];
   const response=structuredClone(fixtures[config.transport]);if(config.transport==='ollama')response.model=config.api_model_id;
   const adapter=createProviderAdapter({provider,config,apiKey:'FAKE_TEST_KEY',onCall:r=>observation=r,fetchImpl:async(url,options)=>{
+    if(url.endsWith('/api/version'))return Response.json({version:config.ollama_version??'0.0.0'});
     if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
     request={url,...options};return Response.json(response);
   }});
@@ -54,7 +55,7 @@ test('no hace red sin credenciales ni filtra cuerpos de error',async()=>{
 });
 test('digest local distinto y contexto excesivo bloquean inferencia',async()=>{
   let calls=0;
-  const adapter=createProviderAdapter({provider:'local_a',config:models.local_a,fetchImpl:async()=>{calls++;return Response.json({models:[{name:models.local_a.api_model_id,digest:'wrong'}]});}});
+  const adapter=createProviderAdapter({provider:'local_a',config:models.local_a,fetchImpl:async url=>{if(url.endsWith('/api/version'))return Response.json({version:models.local_a.ollama_version});calls++;return Response.json({models:[{name:models.local_a.api_model_id,digest:'wrong'}]});}});
   await assert.rejects(adapter.next({...context,provider:'local_a'}),/MODEL_DIGEST/);
   await assert.rejects(adapter.next({...context,provider:'local_a',packet:{request:'x'.repeat(200000)}}),/CONTEXT_CORE_TOO_LARGE/);
   assert.equal(calls,1);
@@ -88,14 +89,14 @@ test('pool dirige cada etiqueta al transporte elegido y no inventa tokens ausent
 test('proveedores rechazan respuestas truncadas aunque contengan JSON válido',async()=>{
   for(const [provider,patch] of [['anthropic',{stop_reason:'max_tokens'}],['google',{candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:action}]}}]}],['local_a',{done_reason:'length'}]]) {
     const config=provider==='google'?GEMINI:models[provider];
-    const adapter=createProviderAdapter({provider,config,apiKey:'fake',fetchImpl:async url=>url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
+    const adapter=createProviderAdapter({provider,config,apiKey:'fake',fetchImpl:async url=>url.endsWith('/api/version')?Response.json({version:config.ollama_version??'0.0.0'}):url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
     await assert.rejects(adapter.next({...context,provider}),/INCOMPLETE_RESPONSE/);
   }
 });
 test('conserva uso observado en respuestas incompletas de los cuatro transportes',async()=>{
   for(const [provider,patch] of [['openai',{status:'incomplete'}],['anthropic',{stop_reason:'max_tokens'}],['google',{candidates:[]}],['local_a',{done_reason:'length'}]]) {
     const config=provider==='google'?GEMINI:models[provider];let record;
-    const adapter=createProviderAdapter({provider,config,apiKey:'fake',onCall:r=>record=r,fetchImpl:async url=>url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
+    const adapter=createProviderAdapter({provider,config,apiKey:'fake',onCall:r=>record=r,fetchImpl:async url=>url.endsWith('/api/version')?Response.json({version:config.ollama_version??'0.0.0'}):url.endsWith('/api/tags')?Response.json({models:[{name:config.api_model_id,digest:config.digest}]}):Response.json({...fixtures[config.transport],...patch})});
     await assert.rejects(adapter.next({...context,provider}));
     assert.equal(record.tokens.input,7);assert.equal(record.tokens.output,3);assert.equal(record.observed_model,config.api_model_id);
   }
@@ -266,4 +267,17 @@ test('ranura google: Gemma 4 por Ollama con contexto gestionado de 32K; locales 
   assert.equal(models.google.transport,'ollama');assert.equal(models.google.api_model_id,'gemma4:26b');
   for(const p of ['google','local_a','local_b']){assert.equal(models[p].context,32768,p);assert.equal(models[p].max_output_tokens,4096,p);}
   assert.deepEqual(connectionFor('google',models.google).credential_env,[]);
+});
+test('Ollama fijado: registra la versión y rechaza una instancia con otra versión antes de generar',async()=>{
+  const config=models.local_a;let chat=0,record;
+  const make=version=>createProviderAdapter({provider:'local_a',config,onCall:r=>record=r,fetchImpl:async url=>{
+    if(url.endsWith('/api/version'))return Response.json({version});
+    if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
+    chat++;return Response.json({...fixtures.ollama,model:config.api_model_id});
+  }});
+  assert.equal(config.ollama_version,'0.40.3');
+  await make('0.40.3').next({...context,provider:'local_a'});
+  assert.deepEqual(record.runtime,{ollama_version:'0.40.3'});assert.equal(chat,1);
+  await assert.rejects(make('0.41.0').next({...context,provider:'local_a'}),{code:'OLLAMA_VERSION_MISMATCH'});
+  assert.equal(chat,1);assert.equal(record.error_code,'OLLAMA_VERSION_MISMATCH');
 });

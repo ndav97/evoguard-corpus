@@ -56,6 +56,9 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
   const managed=contextPolicy.applies_to.includes(provider)&&config.transport==='ollama';
   if(managed!==(config.context!==null))throw providerError('CONTEXT_POLICY_MISMATCH');
   if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');
+  // Entorno local fijado (decisión 2026-10-12): la versión de Ollama se registra en cada llamada y, si models.json la
+  // fija (ollama_version), una instancia con otra versión se rechaza antes de generar.
+  let runtime=null;
   return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=config.transport==='ollama'?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
     if(!Number.isInteger(timeout)||timeout<1)throw providerError('INVALID_TIMEOUT');
@@ -67,6 +70,9 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
+      if(!runtime){const v=await request(`${ollamaBase()}/api/version`).catch(()=>null);runtime={ollama_version:typeof v?.version==='string'?v.version:null};}
+      metadata.runtime=runtime;
+      if(config.ollama_version&&runtime.ollama_version!==config.ollama_version)throw providerError('OLLAMA_VERSION_MISMATCH');
       const tags=await request(`${ollamaBase()}/api/tags`);
       if(!tags.models?.some(m=>m.name===config.api_model_id&&m.digest===config.digest))throw providerError('MODEL_DIGEST_MISMATCH');
     };

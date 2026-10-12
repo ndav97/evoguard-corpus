@@ -105,6 +105,7 @@ test('el recorte conserva inicio y final con aviso explícito', () => {
 
 function fakeFetch(config, promptTokens, seen) {
   return async (url, options) => {
+    if (url.endsWith('/api/version')) return Response.json({ version: config.ollama_version ?? '0.0.0' });
     if (url.endsWith('/api/tags')) return Response.json({ models: [{ name: config.api_model_id, digest: config.digest }] });
     seen.push(JSON.parse(options.body));
     if (config.transport === 'ollama') return Response.json({ model: config.api_model_id, done: true, done_reason: 'stop', message: { content: action }, prompt_eval_count: promptTokens, eval_count: 3 });

@@ -627,3 +627,19 @@ Diagnósticos de `gemini-3.8-flash` por VNAIPro, todos sobre los mismos 10 pedid
 - **Alcance:** el banco exigía ese manifiesto aunque solo corriera tareas semi-reales (`Sxxx:V1`), que usan la imagen de su propia familia.
 - **Decisión:** `runner/bench/local.mjs` lee el manifiesto solo si hay tareas sintéticas (V0–V3).
 - **Autoprueba:** `bench:selftest` sigue dependiendo del estrato sintético y queda fuera de uso; el banco real no la necesita.
+
+## 2026-10-12 — Entorno de GPU fijado entre instancias de Vast.ai
+
+Las instancias de Vast.ai se destruyen y se rentan de nuevo entre sesiones. Para que cambiar de instancia no cambie
+las condiciones del experimento:
+
+- **Versión de Ollama fijada en 0.40.3** (`ollama_version` en cada modelo local de `config/models.json`, la misma
+  usada en el banco del 2026-10-11). `prepare.ps1` la pasa a `setup-instance.sh`, que reinstala Ollama si la versión
+  es otra y aborta si el servidor no queda en la versión fijada.
+- **El adaptador verifica la versión** (`/api/version`) antes de generar: con otra versión la llamada falla con
+  `OLLAMA_VERSION_MISMATCH` sin enviar el turno al modelo. La versión observada queda en cada llamada (`runtime`).
+- **Ficha de entorno por sesión**: `prepare.ps1` guarda en `docs/verification/gpu-sessions/` la GPU, memoria,
+  driver, versión de CUDA, versión de Ollama y digests de los modelos de la instancia.
+- **Regla operativa**: siempre RTX 3090 de 24 GB; no se cambia de instancia a mitad de un episodio y, cuando sea
+  posible, cada fase (piloto, brazo B, brazo E) corre en una misma instancia. Diferencias numéricas menores entre
+  GPU/driver con temperatura 0 son posibles y se declaran como amenaza a la validez; los pesos son idénticos (digest).

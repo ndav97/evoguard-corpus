@@ -12,10 +12,70 @@
   ],
   "selected_from": "6aadd8a1-1480-83e9-b6ec-da02364ae366",
   "models": {
-    "openai": {"display_name":"GPT-5.6 Sol","api_model_id":"gpt-5.6-sol","transport":"openai","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":16384,"reasoning":"medium","temperature":null,"seed":null,"digest":null},
-    "anthropic": {"display_name":"Claude Sonnet 5","api_model_id":"claude-sonnet-5","transport":"anthropic","access_provider":"synterolink","base_url":"https://api.synterolink.com/v1","context":null,"max_output_tokens":16384,"reasoning":"high","temperature":null,"seed":null,"digest":null},
-    "google": {"display_name":"Gemma 4 26B","api_model_id":"gemma4:26b","transport":"ollama","context":32768,"max_output_tokens":4096,"reasoning":null,"temperature":0,"seed":42,"digest":"0000000000000000000000000000000000000000000000000000000000000000","digest_status":"PENDING_BENCH"},
-    "local_a": {"display_name":"Qwen3-Coder 30B","api_model_id":"qwen3-coder:30b","transport":"ollama","context":32768,"max_output_tokens":4096,"reasoning":null,"temperature":0,"seed":42,"digest":"0000000000000000000000000000000000000000000000000000000000000000","digest_status":"PENDING_BENCH"},
-    "local_b": {"display_name":"Devstral 24B","api_model_id":"devstral:24b","transport":"ollama","context":32768,"max_output_tokens":4096,"reasoning":null,"temperature":0,"seed":42,"digest":"0000000000000000000000000000000000000000000000000000000000000000","digest_status":"PENDING_BENCH"}
+    "openai": {
+      "display_name": "GPT-5.6 Sol",
+      "api_model_id": "gpt-5.6-sol",
+      "transport": "openai",
+      "access_provider": "synterolink",
+      "base_url": "https://api.synterolink.com/v1",
+      "context": null,
+      "max_output_tokens": 16384,
+      "reasoning": "medium",
+      "temperature": null,
+      "seed": null,
+      "digest": null
+    },
+    "anthropic": {
+      "display_name": "Claude Sonnet 5",
+      "api_model_id": "claude-sonnet-5",
+      "transport": "anthropic",
+      "access_provider": "synterolink",
+      "base_url": "https://api.synterolink.com/v1",
+      "context": null,
+      "max_output_tokens": 16384,
+      "reasoning": "high",
+      "temperature": null,
+      "seed": null,
+      "digest": null
+    },
+    "google": {
+      "display_name": "Gemma 4 26B",
+      "api_model_id": "gemma4:26b",
+      "transport": "ollama",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "reasoning": null,
+      "temperature": 0,
+      "seed": 42,
+      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "digest_status": "PENDING_BENCH",
+      "ollama_version": "0.40.3"
+    },
+    "local_a": {
+      "display_name": "Qwen3-Coder 30B",
+      "api_model_id": "qwen3-coder:30b",
+      "transport": "ollama",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "reasoning": null,
+      "temperature": 0,
+      "seed": 42,
+      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "digest_status": "PENDING_BENCH",
+      "ollama_version": "0.40.3"
+    },
+    "local_b": {
+      "display_name": "Devstral 24B",
+      "api_model_id": "devstral:24b",
+      "transport": "ollama",
+      "context": 32768,
+      "max_output_tokens": 4096,
+      "reasoning": null,
+      "temperature": 0,
+      "seed": 42,
+      "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "digest_status": "PENDING_BENCH",
+      "ollama_version": "0.40.3"
+    }
   }
 }
