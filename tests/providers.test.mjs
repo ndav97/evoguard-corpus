@@ -170,9 +170,9 @@ test('completa campos vacíos omitidos, igual para todos los proveedores; no cor
   assert.deepEqual(JSON.parse(r.text),{...edit,argv:[],content:''});
   assert.deepEqual(completeActionFields('```json\n'+JSON.stringify({type:'read_file',path:'a.ts'})+'\n```').filled,['argv','content','find','replace']);
   const complete=JSON.stringify({type:'list_files',path:'',argv:[],content:'',find:'',replace:''});
-  assert.deepEqual(completeActionFields(complete),{text:complete,filled:[]});
+  assert.deepEqual(completeActionFields(complete),{text:complete,filled:[],cleared:[]});
   for(const bad of [JSON.stringify({action:'write_file',path:'a',content:'b'}),JSON.stringify({type:'write_file',path:'a',content:'b',extra:1}),'no json','[1]'])
-    assert.deepEqual(completeActionFields(bad),{text:bad,filled:[]});
+    assert.deepEqual(completeActionFields(bad),{text:bad,filled:[],cleared:[]});
   for(const provider of ['openai','anthropic','google']){
     const config=provider==='google'?GEMINI:models[provider],text=JSON.stringify(edit);
     const response=structuredClone(fixtures[config.transport]);
@@ -273,11 +273,44 @@ test('Ollama fijado: registra la versión y rechaza una instancia con otra versi
   const make=version=>createProviderAdapter({provider:'local_a',config,onCall:r=>record=r,fetchImpl:async url=>{
     if(url.endsWith('/api/version'))return Response.json({version});
     if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
-    chat++;return Response.json({...fixtures.ollama,model:config.api_model_id});
+    if(url.endsWith('/api/chat'))chat++;return Response.json({...fixtures.ollama,model:config.api_model_id});
   }});
   assert.equal(config.ollama_version,'0.40.3');
   await make('0.40.3').next({...context,provider:'local_a'});
   assert.deepEqual(record.runtime,{ollama_version:'0.40.3'});assert.equal(chat,1);
   await assert.rejects(make('0.41.0').next({...context,provider:'local_a'}),{code:'OLLAMA_VERSION_MISMATCH'});
   assert.equal(chat,1);assert.equal(record.error_code,'OLLAMA_VERSION_MISMATCH');
+});
+test('vacía campos que el tipo no usa (read_file con contenido, run_checks con argv) sin cambiar la intención',()=>{
+  const read=completeActionFields(JSON.stringify({type:'read_file',path:'src/a.ts',content:'copia del archivo',find:'',replace:'',argv:[]}));
+  assert.deepEqual(read.cleared,['content']);assert.deepEqual(JSON.parse(read.text).content,'');
+  const checks=completeActionFields(JSON.stringify({type:'run_checks',path:'',content:'',find:'',replace:'',argv:['npx','vitest','run']}));
+  assert.deepEqual(checks.cleared,['argv']);assert.deepEqual(JSON.parse(checks.text).argv,[]);
+  const editWithFind=completeActionFields(JSON.stringify({type:'edit_file',path:'a.ts',content:'z',find:'x',replace:'y',argv:[]}));
+  assert.deepEqual(editWithFind.cleared,['content']);
+  const editWithoutFind=JSON.stringify({type:'edit_file',path:'a.ts',content:'archivo completo',find:'',replace:'',argv:[]});
+  assert.deepEqual(completeActionFields(editWithoutFind),{text:editWithoutFind,filled:[],cleared:[]},'edit_file sin find sigue inválido');
+});
+test('Ollama: think:false solo para modelos con modo de pensamiento y reasoning null; truncado deja muestra',async()=>{
+  for(const capabilities of [['completion','thinking'],['completion']]){
+    const config=models.local_a;let body,record;
+    const adapter=createProviderAdapter({provider:'local_a',config,onCall:r=>record=r,fetchImpl:async(url,options)=>{
+      if(url.endsWith('/api/version'))return Response.json({version:config.ollama_version});
+      if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
+      if(url.endsWith('/api/show'))return Response.json({capabilities});
+      body=JSON.parse(options.body);return Response.json({...fixtures.ollama,model:config.api_model_id});
+    }});
+    await adapter.next({...context,provider:'local_a'});
+    if(capabilities.includes('thinking')){assert.equal(body.think,false);assert.equal(record.think,false);}
+    else {assert.ok(!('think' in body));assert.ok(!('think' in record));}
+  }
+  const config=models.local_a;let record;
+  const adapter=createProviderAdapter({provider:'local_a',config,onCall:r=>record=r,fetchImpl:async url=>{
+    if(url.endsWith('/api/version'))return Response.json({version:config.ollama_version});
+    if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
+    if(url.endsWith('/api/show'))return Response.json({capabilities:['completion']});
+    return Response.json({...fixtures.ollama,model:config.api_model_id,done_reason:'length',message:{content:'{"type":"write_file","content":"aaa'}});
+  }});
+  await assert.rejects(adapter.next({...context,provider:'local_a'}),{code:'INCOMPLETE_RESPONSE'});
+  assert.equal(record.finish_reason,'length');assert.match(JSON.stringify(record.rejected_output),/write_file/);
 });

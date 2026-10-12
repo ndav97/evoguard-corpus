@@ -107,6 +107,7 @@ function fakeFetch(config, promptTokens, seen) {
   return async (url, options) => {
     if (url.endsWith('/api/version')) return Response.json({ version: config.ollama_version ?? '0.0.0' });
     if (url.endsWith('/api/tags')) return Response.json({ models: [{ name: config.api_model_id, digest: config.digest }] });
+    if (url.endsWith('/api/show')) return Response.json({ capabilities: ['completion'] });
     seen.push(JSON.parse(options.body));
     if (config.transport === 'ollama') return Response.json({ model: config.api_model_id, done: true, done_reason: 'stop', message: { content: action }, prompt_eval_count: promptTokens, eval_count: 3 });
     if (config.transport === 'openai') return Response.json({ model: config.api_model_id, status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: action }] }], usage: { input_tokens: promptTokens, output_tokens: 3 } });

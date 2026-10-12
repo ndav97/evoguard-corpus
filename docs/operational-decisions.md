@@ -643,3 +643,26 @@ las condiciones del experimento:
 - **Regla operativa**: siempre RTX 3090 de 24 GB; no se cambia de instancia a mitad de un episodio y, cuando sea
   posible, cada fase (piloto, brazo B, brazo E) corre en una misma instancia. Diferencias numéricas menores entre
   GPU/driver con temperatura 0 son posibles y se declaran como amenaza a la validez; los pesos son idénticos (digest).
+
+## 2026-10-12 — Banco local del 2026-10-11: fallos de formato, no de capacidad
+
+Resultado del banco (4 tareas semi-reales, `docs/verification/local-bench/2026-10-11-ddfe54d3.json`): 0/4 para los
+tres modelos. La revisión de `calls.jsonl` muestra que la mayoría de los ciclos se perdieron por la salida, no por
+el código:
+
+- **Gemma 4 26B**: piensa por defecto en Ollama; gastaba la reserva de 4096 tokens de salida pensando
+  (INCOMPLETE_RESPONSE en 47 de 100 llamadas) y enviaba `run_checks` con `argv`.
+- **Qwen3-Coder 30B**: devolvía `read_file` con el contenido del archivo copiado en `content`, o `edit_file` con el
+  archivo completo y sin `find`; con temperatura 0 repetía la misma salida inválida hasta agotar los 25 ciclos.
+- **Devstral 24B**: sí trabajó (ediciones y checks); falló por regresiones reales y por un HTTP 500 de Ollama en S005.
+
+Cambios en el adaptador (no tocan protocolo, motor ni las huellas de los ensayos):
+
+- `reasoning: null` se respeta en Ollama: a los modelos con capacidad `thinking` (`/api/show`) se les envía
+  `think: false` y la llamada registra `think`.
+- Los campos que el tipo de acción no usa y llegan con valor se vacían (`cleared_fields`), igual para todos los
+  proveedores. No se corrige nada que cambie la intención: `edit_file` sin `find` sigue siendo inválido.
+- Las respuestas truncadas registran `finish_reason` y una muestra (`rejected_output`); los errores HTTP guardan el
+  cuerpo (`error_detail`).
+
+Siguiente paso: repetir el banco completo en una instancia nueva antes de decidir reemplazos.

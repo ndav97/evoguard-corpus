@@ -36,17 +36,29 @@ export const GEMINI_SAFETY=['HARM_CATEGORY_HARASSMENT','HARM_CATEGORY_HATE_SPEEC
 // («action» en lugar de «type») no se completa: sigue siendo una acción inválida del modelo.
 const ACTION_FIELDS={argv:[],content:'',find:'',path:'',replace:''};
 export function completeActionFields(text){
-  if(typeof text!=='string')return {text,filled:[]};
+  if(typeof text!=='string')return {text,filled:[],cleared:[]};
   const trimmed=text.trim(),fence=trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/);
   let action;
-  try{action=JSON.parse(fence?fence[1]:trimmed);}catch{return {text,filled:[]};}
-  if(!action||typeof action!=='object'||Array.isArray(action)||typeof action.type!=='string')return {text,filled:[]};
-  if(Object.keys(action).some(k=>k!=='type'&&!(k in ACTION_FIELDS)))return {text,filled:[]};
+  try{action=JSON.parse(fence?fence[1]:trimmed);}catch{return {text,filled:[],cleared:[]};}
+  if(!action||typeof action!=='object'||Array.isArray(action)||typeof action.type!=='string')return {text,filled:[],cleared:[]};
+  if(Object.keys(action).some(k=>k!=='type'&&!(k in ACTION_FIELDS)))return {text,filled:[],cleared:[]};
   const filled=Object.keys(ACTION_FIELDS).filter(k=>!(k in action));
-  if(!filled.length)return {text,filled};
   for(const k of filled)action[k]=structuredClone(ACTION_FIELDS[k]);
-  return {text:JSON.stringify(action),filled};
+  // Campos que el tipo elegido no usa y llegaron con valor (decisión 2026-10-12, banco local): se vacían porque el tipo
+  // define la acción sin ambigüedad (p. ej. read_file con el contenido del archivo copiado, run_checks con argv).
+  // No se corrige nada que cambie la intención: edit_file sin find sigue siendo inválido.
+  const unused=UNUSED_FIELDS[action.type]?.(action)??[];
+  const cleared=unused.filter(k=>Array.isArray(ACTION_FIELDS[k])?Array.isArray(action[k])&&action[k].length>0:typeof action[k]==='string'&&action[k]!=='');
+  for(const k of cleared)action[k]=structuredClone(ACTION_FIELDS[k]);
+  if(!filled.length&&!cleared.length)return {text,filled,cleared};
+  return {text:JSON.stringify(action),filled,cleared};
 }
+const ALL=['argv','content','find','path','replace'];
+const UNUSED_FIELDS={
+  read_file:()=>['argv','content','find','replace'],list_files:()=>['argv','content','find','replace'],
+  write_file:()=>['argv','find','replace'],edit_file:a=>typeof a.find==='string'&&a.find!==''?['argv','content']:['argv'],
+  tool:()=>['content','find','path','replace'],run_checks:()=>ALL,deliver:()=>ALL,technical_failure:()=>ALL
+};
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(!TRANSPORT[provider]?.includes(config?.transport)||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
@@ -58,7 +70,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
   if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');
   // Entorno local fijado (decisión 2026-10-12): la versión de Ollama se registra en cada llamada y, si models.json la
   // fija (ollama_version), una instancia con otra versión se rechaza antes de generar.
-  let runtime=null;
+  let runtime=null,thinking;
   return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=config.transport==='ollama'?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
     if(!Number.isInteger(timeout)||timeout<1)throw providerError('INVALID_TIMEOUT');
@@ -133,10 +145,14 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
          else text=parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('');}
       } else {
         await verifyLocal();
-        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
+        if(thinking===undefined){const show=await request(`${ollamaBase()}/api/show`,{model:config.api_model_id}).catch(()=>null);thinking=Array.isArray(show?.capabilities)&&show.capabilities.includes('thinking');}
+        // reasoning:null => sin razonamiento: los modelos con modo de pensamiento (Gemma 4) lo tienen activo por defecto en
+        // Ollama y gastaban la reserva de salida pensando (decisión 2026-10-12).
+        const thinkField=thinking&&config.reasoning==null?{think:false}:{};if(thinking)metadata.think=config.reasoning==null?false:true;
+        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
-        if(raw.done!==true||raw.done_reason!=='stop')throw providerError('INCOMPLETE_RESPONSE');
+        if(raw.done!==true||raw.done_reason!=='stop'){metadata.finish_reason=raw.done_reason??null;metadata.rejected_output=rejectedSample(raw.message?.content??'');throw providerError('INCOMPLETE_RESPONSE');}
         if(raw.model!==config.api_model_id)throw providerError('MODEL_MISMATCH');
         // Control posterior: los tokens reales (incluida la plantilla) deben respetar la estimación y la ventana.
         if(metadata.tokens.input===null||metadata.tokens.input>trace.estimated_tokens+contextPolicy.budget.template_reserve_tokens||metadata.tokens.input>config.context-config.max_output_tokens)throw providerError('CONTEXT_ESTIMATE_VIOLATION');
@@ -147,7 +163,9 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(connection.access_provider==='vnaipro'&&!metadata.observed_model.startsWith(config.api_model_id))throw providerError('MODEL_MISMATCH');
       let parsed;
       const original=text,completed=completeActionFields(text);
-      if(completed.filled.length){metadata.filled_fields=completed.filled;text=completed.text;}
+      if(completed.filled.length)metadata.filled_fields=completed.filled;
+      if(completed.cleared.length)metadata.cleared_fields=completed.cleared;
+      text=completed.text;
       try {parsed=parseAction(text);}
       catch(error) {metadata.rejected_output=rejectedSample(original);throw error;}
       metadata.normalization=parsed.normalization;metadata.action_type=parsed.action.type;if(parsed.discarded_chars)metadata.discarded_chars=parsed.discarded_chars;
