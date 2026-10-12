@@ -6,16 +6,19 @@ import { loadContextPolicy } from './context/policy.mjs';
 
 const FROZEN_KEYS = ['display_name', 'api_model_id', 'transport', 'context', 'max_output_tokens', 'reasoning', 'temperature', 'seed', 'digest'];
 
-// Modelos congelados y política de contexto calibrada (comunes a ambos estratos).
+// Modelos congelados y política de contexto calibrada (comunes a ambos estratos). El contexto de cada modelo local
+// debe coincidir con el presupuesto de config/context.json (32 768 desde el 2026-10-11; antes 8 192 fijo).
 export function modelBlockers(root, ring) {
   const blockers = [];
+  let policy = null;
+  try { policy = loadContextPolicy(pathToFileURL(join(root, '/'))); } catch { /* se informa abajo */ }
   try {
     const models = JSON.parse(readFileSync(join(root, 'config/models.json'), 'utf8'));
     if (models.status !== 'INFERENCE_PARAMETERS_FROZEN') blockers.push('Modelos: parámetros de inferencia no congelados.');
     for (const provider of ring) {
       const config = models.models?.[provider];
       if (!config || !FROZEN_KEYS.every(key => key in config) || !config.api_model_id) blockers.push(`Modelos: configuración incompleta de ${provider}.`);
-      else if (config.transport === 'ollama' && (!/^[a-f0-9]{64}$/.test(config.digest ?? '') || config.context !== 8192)) blockers.push(`Modelos: ${provider} sin digest o contexto fijado.`);
+      else if (config.transport === 'ollama' && (!/^[a-f0-9]{64}$/.test(config.digest ?? '') || config.context !== policy?.budget?.context_tokens)) blockers.push(`Modelos: ${provider} sin digest o contexto fijado.`);
     }
   } catch (error) { blockers.push(`Modelos: ${error.message}`); }
   try {
