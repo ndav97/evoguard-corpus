@@ -87,8 +87,10 @@ function steps(messages) {
 }
 
 function compressStep(step, level, h) {
-  const argLimit = level === 'recent' ? h.argument_recent_bytes : h.argument_old_bytes;
-  const outLimit = level === 'recent' ? h.tool_output_recent_bytes : h.tool_output_old_bytes;
+  // Niveles (2026-10-12): «recent» casi íntegro, «mid» recortado a pocos KB y «old» mínimo. Un paso baja de nivel solo
+  // si no cabe en el presupuesto, como hacen los agentes reales al truncar primero lo más antiguo.
+  const argLimit = level === 'recent' ? h.argument_recent_bytes : level === 'mid' ? (h.argument_mid_bytes ?? h.argument_old_bytes) : h.argument_old_bytes;
+  const outLimit = level === 'recent' ? h.tool_output_recent_bytes : level === 'mid' ? (h.tool_output_mid_bytes ?? h.tool_output_old_bytes) : h.tool_output_old_bytes;
   const out = [];
   let clipped = 0;
   if (step.action) {
@@ -184,7 +186,8 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
     let clipped = 0;
     for (let position = history.length - 1; position >= 0; position--) {
       const step = history[position];
-      const levels = history.length - 1 - position < h.recent_steps ? ['recent', 'old'] : ['old'];
+      const mid = Number.isInteger(h.tool_output_mid_bytes) ? ['mid'] : [];
+      const levels = history.length - 1 - position < h.recent_steps ? ['recent', ...mid, 'old'] : [...mid, 'old'];
       let added = false;
       for (const level of levels) {
         const candidate = compressStep(step, level, h);

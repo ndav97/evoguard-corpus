@@ -31,15 +31,17 @@
     "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12)."
   },
   "history": {
-    "recent_steps": 2,
-    "tool_output_recent_bytes": 3000,
+    "recent_steps": 25,
+    "tool_output_recent_bytes": 24000,
     "tool_output_old_bytes": 400,
-    "argument_recent_bytes": 3000,
+    "argument_recent_bytes": 24000,
     "argument_old_bytes": 200,
     "feedback_latest_bytes": 3000,
     "feedback_old_bytes": 600,
     "head_fraction": 0.4,
-    "workspace_bytes": 6000
+    "workspace_bytes": 6000,
+    "tool_output_mid_bytes": 3000,
+    "argument_mid_bytes": 3000
   },
   "packet": {
     "omit_from_message": [
@@ -50,5 +52,6 @@
       "task": "TASK.json",
       "products": "fixtures/products.json"
     }
-  }
+  },
+  "history_note": "2026-10-12: con 3 000 bytes por salida, los modelos abiertos nunca veían completo un archivo de más de 3 KB (Gemma releyó 21 veces el mismo archivo de 6 KB en S003 T002) y sus propias escrituras se recortaban; los comerciales ven el historial completo. Ahora cada paso se conserva casi íntegro (24 000 bytes) mientras quepa en la ventana; si no cabe, baja a 3 000 y luego a 400 bytes, empezando por los más antiguos (recent_steps 25 = todo el turno)."
 }

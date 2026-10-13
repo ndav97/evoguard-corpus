@@ -168,7 +168,22 @@ test('protocolo 1.1: la vista del workspace se conserva o se reduce al árbol, n
   const write = [{ role: 'assistant', content: { type: 'write_file', path: 'src/App.tsx', content: 'y'.repeat(20000) } }, { role: 'tool', content: { status: 'PASS', output: 'escrito' } }];
   for (let i = 0; i < 4; i++) messages.push(...structuredClone(write));
   const trimmed = JSON.parse(build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 9 }, calibrated).input);
-  assert.ok(trimmed.history.messages.filter(m => m.role === 'assistant').every(m => m.content.content.length < 20000), 'el contenido de write_file se recorta en el historial');
+  const writes = trimmed.history.messages.filter(m => m.role === 'assistant').map(m => m.content.content.length);
+  assert.equal(writes.at(-1), 20000, 'la escritura más reciente se conserva íntegra si cabe');
+  assert.ok(writes.slice(0, -1).some(n => n < 20000) || trimmed.history.omitted_steps > 0, 'las anteriores se recortan u omiten para caber en la ventana');
+});
+
+test('2026-10-12: un archivo de 6 KB leído se ve completo; al no caber, los pasos antiguos bajan de nivel', () => {
+  const file = 'línea de código '.repeat(400);
+  const read = [{ role: 'assistant', content: { type: 'read_file', path: 'src/a.tsx' } }, { role: 'tool', content: { status: 'PASS', output: file } }];
+  const messages = [...structuredClone(read)];
+  const one = JSON.parse(build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 2 }, calibrated).input);
+  assert.equal(one.history.messages.at(-1).content.output, file, 'la lectura reciente llega completa');
+  for (let i = 0; i < 12; i++) messages.push(...structuredClone(read));
+  const many = JSON.parse(build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 14 }, calibrated).input);
+  assert.equal(many.history.messages.at(-1).content.output, file, 'la más reciente sigue completa');
+  const outs = many.history.messages.filter(m => m.role === 'tool').map(m => m.content.output.length);
+  assert.ok(outs.length < 13 || outs.some(n => n < file.length), 'las antiguas se comprimen u omiten');
 });
 
 test('bytes por token propios de un modelo: solo cambian la ranura indicada', async () => {

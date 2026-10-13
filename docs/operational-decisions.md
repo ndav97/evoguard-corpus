@@ -754,3 +754,18 @@ una repetición por condición, esa variación se declara como amenaza a la vali
 Los 5–6 episodios de Qwen3-Coder ya corridos con temperatura 0 se apartan en
 `runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12` y se repiten; Gemma ya se repetía y Devstral no
 había empezado. Cada llamada registra el muestreo usado (`parameters.sampling`).
+
+## 2026-10-12 — Historial de los modelos abiertos: los pasos se conservan casi íntegros mientras quepan
+
+Muchos `CYCLE_LIMIT` de Gemma no eran del modelo sino de la política de contexto: cada salida de herramienta se
+recortaba a 3 000 bytes (40 % inicial y final, el centro omitido) y, a los dos pasos, a 400. Un archivo de 6 KB nunca
+se veía completo; en S003 T002 Gemma leyó 21 veces el mismo `PasswordMeter.tsx` (6 286 bytes) buscando la parte que
+faltaba. Sus propias escrituras también se recortaban. Los comerciales reciben el historial completo, así que esto
+era una desventaja propia de la configuración, no del modelo; los límites venían de la ventana de 8 192 tokens.
+
+Ahora (`config/context.json`, `runner/context/policy.mjs`): cada paso se conserva hasta 24 000 bytes de salida y de
+argumentos mientras quepa en la ventana de 32 768 tokens; si no cabe, baja a 3 000 y luego a 400 bytes, empezando por
+los pasos más antiguos (`recent_steps` 25 = todo el turno), como truncan el historial los agentes reales. Los 5
+episodios de Gemma corridos con la política anterior se apartan en
+`runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12` y el piloto local se repite completo con la
+configuración final.
