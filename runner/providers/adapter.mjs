@@ -79,7 +79,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
   if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');
   // Entorno local fijado (decisión 2026-10-12): la versión de Ollama se registra en cada llamada y, si models.json la
   // fija (ollama_version), una instancia con otra versión se rechaza antes de generar.
-  let runtime=null,thinking;
+  let runtime=null,thinking,learnedRatio=null;
   return {provider,exactModel:config.api_model_id,async next(context,{signal,timeout=config.transport==='ollama'?3600000:1800000}={}) {
     if(context.provider!==provider)throw providerError('PROVIDER_MISMATCH');
     if(!Number.isInteger(timeout)||timeout<1)throw providerError('INVALID_TIMEOUT');
@@ -103,9 +103,18 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
       if(config.transport!=='ollama'&&(!apiKey||typeof apiKey!=='string'))throw providerError('CREDENTIAL_MISSING');
       // Allowlist outer context: never serialize the coordinator or its private fields.
       let input,trace;
-      if(managed) {
-        try {({input,trace}=buildContextInput({packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle},{policy:contextPolicy,responseContract:RESPONSE_CONTRACT,overhead:INSTRUCTION+JSON.stringify(ACTION_SCHEMA)}));}
+      // Estimador autocorregido (2026-10-12): con el historial casi íntegro, el contenido real (código escapado en JSON)
+      // llegó a 2,1 bytes por token en Gemma. Cada llamada registra la proporción observada y las siguientes usan la
+      // menor vista en el turno (con 3 % de margen); si aun así una llamada excede la estimación, se reconstruye la
+      // entrada una vez con esa proporción en lugar de abortar el episodio.
+      const build=()=>{
+        const pol=learnedRatio&&learnedRatio<contextPolicy.estimator.bytes_per_token*contextPolicy.estimator.safety_factor
+          ?{...contextPolicy,estimator:{...contextPolicy.estimator,bytes_per_token:learnedRatio*0.97/contextPolicy.estimator.safety_factor}}:contextPolicy;
+        try {return buildContextInput({packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle},{policy:pol,responseContract:RESPONSE_CONTRACT,overhead:INSTRUCTION+JSON.stringify(ACTION_SCHEMA)});}
         catch(error) {throw providerError(/^CONTEXT_/.test(error.code??'')?error.code:'CONTEXT_POLICY_ERROR');}
+      };
+      if(managed) {
+        ({input,trace}=build());
       } else {
         input=JSON.stringify({response_contract:RESPONSE_CONTRACT,packet:context.packet,messages:context.messages,attempt:context.attempt,cycle:context.cycle});
         trace={policy:'full_context',input_bytes:Buffer.byteLength(input),input_sha256:createHash('sha256').update(input).digest('hex')};
@@ -160,13 +169,23 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         // reasoning:null => sin razonamiento: los modelos con modo de pensamiento (Gemma 4) lo tienen activo por defecto en
         // Ollama y gastaban la reserva de salida pensando (decisión 2026-10-12).
         const thinkField=thinking&&config.reasoning==null?{think:false}:{};if(thinking)metadata.think=config.reasoning==null?false:true;
-        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed,...samplingOptions(config.sampling)}});
+        const send=()=>request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed,...samplingOptions(config.sampling)}});
+        const exceeds=tokens=>managed&&(tokens===null||tokens>trace.estimated_tokens+contextPolicy.budget.template_reserve_tokens||tokens>config.context-config.max_output_tokens);
+        raw=await send();
+        if(managed&&number(raw.prompt_eval_count)){const r=trace.input_bytes/number(raw.prompt_eval_count);if(!learnedRatio||r<learnedRatio)learnedRatio=r;}
+        if(exceeds(number(raw.prompt_eval_count))){
+          metadata.context_rebuilt={first_input_tokens:number(raw.prompt_eval_count),first_estimated_tokens:trace.estimated_tokens};
+          ({input,trace}=build());metadata.context=trace;
+          raw=await send();
+          if(number(raw.prompt_eval_count)){const r=trace.input_bytes/number(raw.prompt_eval_count);if(r<learnedRatio)learnedRatio=r;}
+        }
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
+        if(exceeds(metadata.tokens.input))throw providerError('CONTEXT_ESTIMATE_VIOLATION');
         if(raw.done!==true||raw.done_reason!=='stop'){metadata.finish_reason=raw.done_reason??null;metadata.rejected_output=rejectedSample(raw.message?.content??'');throw providerError('INCOMPLETE_RESPONSE');}
         if(raw.model!==config.api_model_id)throw providerError('MODEL_MISMATCH');
         // Control posterior: los tokens reales (incluida la plantilla) deben respetar la estimación y la ventana.
-        if(metadata.tokens.input===null||metadata.tokens.input>trace.estimated_tokens+contextPolicy.budget.template_reserve_tokens||metadata.tokens.input>config.context-config.max_output_tokens)throw providerError('CONTEXT_ESTIMATE_VIOLATION');
+        if(!managed&&metadata.tokens.input===null)throw providerError('CONTEXT_ESTIMATE_VIOLATION');
         await verifyLocal();text=raw.message?.content;
       }
       if(typeof metadata.observed_model!=='string'||!metadata.observed_model)throw providerError('MODEL_METADATA_MISSING');

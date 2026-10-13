@@ -769,3 +769,15 @@ los pasos más antiguos (`recent_steps` 25 = todo el turno), como truncan el his
 episodios de Gemma corridos con la política anterior se apartan en
 `runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12` y el piloto local se repite completo con la
 configuración final.
+
+## 2026-10-12 — Estimador autocorregido al conservar el historial casi íntegro
+
+Con el historial casi íntegro, la ventana se llena de verdad y el código escapado dentro del JSON de entrada es muy
+denso en tokens: Gemma llegó a 2,13 bytes por token (30 969 tokens reales frente a 28 110 estimados) y el primer
+episodio se cortó dos veces por `CONTEXT_ESTIMATE_VIOLATION`, con respuestas truncadas porque la entrada dejaba poco
+espacio de salida. Cambios:
+- Bytes por token por modelo: Gemma 2,6 (efectivo 2,08), Qwen3-Coder 3,2 (2,56), Devstral 2,9 (2,32).
+- El adaptador registra en cada llamada la proporción real y las siguientes del turno usan la menor observada (3 %
+  de margen). Si una llamada aún excede la estimación, se reconstruye la entrada una vez con esa proporción
+  (`context_rebuilt` en el registro) en vez de abortar; solo si vuelve a exceder es error.
+Los episodios iniciados con el estimador anterior se apartan y el piloto local vuelve a empezar.

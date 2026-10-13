@@ -25,10 +25,11 @@
       "samples": 24
     },
     "by_provider": {
-      "google": 3.0,
-      "local_b": 3.2
+      "google": 2.6,
+      "local_a": 3.2,
+      "local_b": 2.9
     },
-    "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12)."
+    "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12). Revisado el mismo día al conservar el historial casi íntegro: con la ventana llena, Gemma llegó a 2,13 bytes/token (código escapado en JSON). Valores: Gemma 2,6 (efectivo 2,08), Qwen3-Coder 3,2 (2,56), Devstral 2,9 (2,32); además el adaptador corrige la estimación con la proporción observada en el turno y, si una llamada la excede, reconstruye la entrada una vez."
   },
   "history": {
     "recent_steps": 25,

@@ -153,8 +153,25 @@ test('los locales reciben contexto gestionado y registran la traza por llamada',
 
 test('tokens reales por encima de la estimación se rechazan como violación de contexto', async () => {
   const config = models.local_a;
-  const adapter = createProviderAdapter({ provider: 'local_a', config, fetchImpl: fakeFetch(config, 7100, []) });
-  await assert.rejects(adapter.next({ provider: 'local_a', attempt: 1, cycle: 1, packet: { request: 'breve' }, messages: [] }), /CONTEXT_ESTIMATE_VIOLATION/);
+  const seen = [];
+  const adapter = createProviderAdapter({ provider: 'local_a', config, fetchImpl: fakeFetch(config, 30000, seen) });
+  await assert.rejects(adapter.next({ provider: 'local_a', attempt: 1, cycle: 1, packet: { request: 'breve' }, messages: [] }), /CONTEXT_(ESTIMATE_VIOLATION|CORE_TOO_LARGE)/);
+  assert.ok(seen.length <= 2, 'como mucho una reconstrucción antes de rechazar');
+});
+
+test('si una llamada excede la estimación, la entrada se reconstruye una vez con la proporción observada', async () => {
+  const config = models.local_a, seen = [];
+  let n = 0, record;
+  const base = fakeFetch(config, 0, seen);
+  const fetchImpl = async (url, options) => {
+    const res = await base(url, options);
+    if (!url.endsWith('/api/chat')) return res;
+    const body = await res.json(); n++;
+    return Response.json({ ...body, prompt_eval_count: n === 1 ? 7100 : 100 });
+  };
+  const adapter = createProviderAdapter({ provider: 'local_a', config, fetchImpl, onCall: r => record = r });
+  await adapter.next({ provider: 'local_a', attempt: 1, cycle: 1, packet: { request: 'breve' }, messages: [] });
+  assert.equal(n, 2); assert.equal(record.context_rebuilt.first_input_tokens, 7100); assert.equal(record.tokens.input, 100);
 });
 
 test('protocolo 1.1: la vista del workspace se conserva o se reduce al árbol, nunca se pierde', () => {
@@ -191,6 +208,6 @@ test('bytes por token propios de un modelo: solo cambian la ranura indicada', as
   const policy = load();
   assert.equal(policyFor(policy, 'google').estimator.bytes_per_token, policy.estimator.by_provider.google);
   assert.equal(policyFor(policy, 'local_b').estimator.bytes_per_token, policy.estimator.by_provider.local_b);
-  assert.equal(policyFor(policy, 'local_a').estimator.bytes_per_token, policy.estimator.bytes_per_token);
-  assert.ok(policy.estimator.by_provider.google * policy.estimator.safety_factor <= 2.55, 'cubre el mínimo observado de Gemma');
+  assert.equal(policyFor(policy, 'local_a').estimator.bytes_per_token, policy.estimator.by_provider.local_a);
+  assert.ok(policy.estimator.by_provider.google * policy.estimator.safety_factor <= 2.13, 'cubre el mínimo observado de Gemma');
 });
