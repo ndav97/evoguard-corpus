@@ -59,6 +59,14 @@ const UNUSED_FIELDS={
   write_file:()=>['argv','find','replace'],edit_file:a=>typeof a.find==='string'&&a.find!==''?['argv','content']:['argv'],
   tool:()=>['content','find','path','replace'],run_checks:()=>ALL,deliver:()=>ALL,technical_failure:()=>ALL
 };
+// Muestreo recomendado por cada fabricante para los modelos abiertos (decisión 2026-10-12: rendimiento como en uso
+// real, con semilla fija). Solo se admiten estas opciones de Ollama.
+const SAMPLING_KEYS=['top_p','top_k','min_p','repeat_penalty'];
+export function samplingOptions(sampling){
+  if(sampling==null)return {};
+  if(typeof sampling!=='object'||Object.keys(sampling).some(k=>!SAMPLING_KEYS.includes(k)||!Number.isFinite(sampling[k])))throw providerError('INVALID_LOCAL_CONFIG');
+  return {...sampling};
+}
 export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,onCall=()=>{},contextPolicy=loadContextPolicy()}) {
   if(!TRANSPORT[provider]?.includes(config?.transport)||!config?.api_model_id||!Number.isInteger(config.max_output_tokens)||config.max_output_tokens<1)throw providerError('INVALID_MODEL_CONFIG');
   config=structuredClone(config);
@@ -80,7 +88,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
     const timer=setTimeout(()=>controller.abort(),timeout);
     const combined=signal?AbortSignal.any([signal,controller.signal]):controller.signal;
     const started=Date.now();
-    const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
+    const metadata={provider,access_provider:connection.access_provider,base_url:connection.base_url,display_name:config.display_name,requested_model:config.api_model_id,observed_model:null,started_at:new Date(started).toISOString(),parameters:{context:config.context,max_output_tokens:config.max_output_tokens,reasoning:config.reasoning,temperature:config.temperature,seed:config.seed,...(config.sampling?{sampling:samplingOptions(config.sampling)}:{})},digest:config.digest,tokens:{input:null,output:null,reasoning:null},cost_usd:null,status:'ERROR',error_code:null,protocol_version:PROTOCOL_VERSION};
     const request=(url,body,headers)=>requestJson(url,{body,headers,signal:combined,fetchImpl});
     const verifyLocal=async()=>{
       // Si Ollama no responde (túnel caído) el error de red se propaga y se reintenta como transporte; no se
@@ -152,7 +160,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         // reasoning:null => sin razonamiento: los modelos con modo de pensamiento (Gemma 4) lo tienen activo por defecto en
         // Ollama y gastaban la reserva de salida pensando (decisión 2026-10-12).
         const thinkField=thinking&&config.reasoning==null?{think:false}:{};if(thinking)metadata.think=config.reasoning==null?false:true;
-        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed}});
+        raw=await request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed,...samplingOptions(config.sampling)}});
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
         if(raw.done!==true||raw.done_reason!=='stop'){metadata.finish_reason=raw.done_reason??null;metadata.rejected_output=rejectedSample(raw.message?.content??'');throw providerError('INCOMPLETE_RESPONSE');}

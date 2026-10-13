@@ -325,3 +325,20 @@ test('Ollama: HTTP 500 por repetición de tokens cuenta como respuesta incomplet
   await assert.rejects(adapter.next({...context,provider:'local_b'}),{code:'INCOMPLETE_RESPONSE'});
   assert.equal(record.error_code,'INCOMPLETE_RESPONSE');assert.equal(record.finish_reason,'repeat_limit');assert.match(record.error_detail,/token repeat limit/);
 });
+test('modelos abiertos: muestreo recomendado por su fabricante, con semilla fija, enviado a Ollama',async()=>{
+  for(const provider of ['google','local_a','local_b']){
+    const config=models[provider];let body,record;
+    const adapter=createProviderAdapter({provider,config,onCall:r=>record=r,fetchImpl:async(url,options)=>{
+      if(url.endsWith('/api/version'))return Response.json({version:config.ollama_version});
+      if(url.endsWith('/api/tags'))return Response.json({models:[{name:config.api_model_id,digest:config.digest}]});
+      if(url.endsWith('/api/show'))return Response.json({capabilities:['completion']});
+      body=JSON.parse(options.body);return Response.json({...fixtures.ollama,model:config.api_model_id});
+    }});
+    await adapter.next({...context,provider});
+    assert.ok(config.temperature>0,provider);assert.equal(body.options.temperature,config.temperature);assert.equal(body.options.seed,42);
+    for(const [k,v] of Object.entries(config.sampling))assert.equal(body.options[k],v,`${provider} ${k}`);
+    assert.deepEqual(record.parameters.sampling,config.sampling);
+  }
+  assert.deepEqual(models.local_a.sampling,{top_p:0.8,top_k:20,repeat_penalty:1.05});assert.equal(models.local_a.temperature,0.7);
+  assert.equal(models.local_b.temperature,0.15);assert.equal(models.google.temperature,1);
+});

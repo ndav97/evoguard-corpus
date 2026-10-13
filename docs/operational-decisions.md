@@ -732,3 +732,25 @@ sintéticas y no cubre código real de esos tokenizadores. Qwen3-Coder sí queda
   `runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12` y se repiten completos, no solo los tres
   cortados. Qwen3-Coder no cambia y conserva sus episodios; Devstral aún no había empezado.
 - Resultado de los 17 episodios apartados (solo diagnóstico): 1 episodio exitoso (S015), 10 de 51 turnos aprobados.
+
+## 2026-10-12 — Muestreo recomendado por cada fabricante en los modelos abiertos
+
+Decisión del autor: los modelos deben rendir como los usaría un desarrollador, no en su configuración más
+reproducible. Con temperatura 0, los modelos abiertos caían en bucles (Devstral repetía tokens hasta el corte de
+Ollama; Qwen3-Coder repetía la misma respuesta inválida decenas de veces). Desde ahora usan el muestreo que recomienda
+su fabricante, con la semilla 42 fija:
+
+| Modelo | Muestreo | Fuente |
+|---|---|---|
+| Gemma 4 26B | temperatura 1,0; top_p 0,95; top_k 64 | [Ollama, gemma4](https://ollama.com/library/gemma4) |
+| Qwen3-Coder 30B | temperatura 0,7; top_p 0,8; top_k 20; repeat_penalty 1,05 | [Ficha de Qwen3-Coder-30B-A3B-Instruct](https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct) |
+| Devstral 24B | temperatura 0,15 | [Ficha de Devstral-Small-2505](https://huggingface.co/mistralai/Devstral-Small-2505) |
+
+Lo que no cambia, por la GPU de 24 GB: cuantización Q4_K_M, ventana de 32 768 tokens, salida de 4 096 y Gemma sin
+modo de razonamiento (gastaría la salida). Los comerciales siguen igual (GPT-5.6 Sol con razonamiento medio y Claude
+Sonnet 5 con razonamiento alto). Con muestreo, una misma entrada puede dar respuestas distintas entre ejecuciones; con
+una repetición por condición, esa variación se declara como amenaza a la validez.
+
+Los 5–6 episodios de Qwen3-Coder ya corridos con temperatura 0 se apartan en
+`runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12` y se repiten; Gemma ya se repetía y Devstral no
+había empezado. Cada llamada registra el muestreo usado (`parameters.sampling`).

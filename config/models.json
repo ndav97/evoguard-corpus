@@ -45,11 +45,16 @@
       "context": 32768,
       "max_output_tokens": 4096,
       "reasoning": null,
-      "temperature": 0,
+      "temperature": 1.0,
       "seed": 42,
       "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c",
       "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3"
+      "ollama_version": "0.40.3",
+      "sampling": {
+        "top_p": 0.95,
+        "top_k": 64
+      },
+      "sampling_source": "https://ollama.com/library/gemma4 (configuración estándar de Gemma 4)"
     },
     "local_a": {
       "display_name": "Qwen3-Coder 30B",
@@ -58,11 +63,17 @@
       "context": 32768,
       "max_output_tokens": 4096,
       "reasoning": null,
-      "temperature": 0,
+      "temperature": 0.7,
       "seed": 42,
       "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
       "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3"
+      "ollama_version": "0.40.3",
+      "sampling": {
+        "top_p": 0.8,
+        "top_k": 20,
+        "repeat_penalty": 1.05
+      },
+      "sampling_source": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct (Best Practices)"
     },
     "local_b": {
       "display_name": "Devstral 24B",
@@ -71,11 +82,13 @@
       "context": 32768,
       "max_output_tokens": 4096,
       "reasoning": null,
-      "temperature": 0,
+      "temperature": 0.15,
       "seed": 42,
       "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9",
       "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3"
+      "ollama_version": "0.40.3",
+      "sampling": {},
+      "sampling_source": "https://huggingface.co/mistralai/Devstral-Small-2505 (ejemplo de vLLM)"
     }
   }
 }
