@@ -170,3 +170,12 @@ test('protocolo 1.1: la vista del workspace se conserva o se reduce al árbol, n
   const trimmed = JSON.parse(build({ packet: makePacket(data, 'V3'), messages, attempt: 1, cycle: 9 }, calibrated).input);
   assert.ok(trimmed.history.messages.filter(m => m.role === 'assistant').every(m => m.content.content.length < 20000), 'el contenido de write_file se recorta en el historial');
 });
+
+test('bytes por token propios de un modelo: solo cambian la ranura indicada', async () => {
+  const { policyFor, loadContextPolicy: load } = await import('../runner/context/policy.mjs');
+  const policy = load();
+  assert.equal(policyFor(policy, 'google').estimator.bytes_per_token, policy.estimator.by_provider.google);
+  assert.equal(policyFor(policy, 'local_b').estimator.bytes_per_token, policy.estimator.by_provider.local_b);
+  assert.equal(policyFor(policy, 'local_a').estimator.bytes_per_token, policy.estimator.bytes_per_token);
+  assert.ok(policy.estimator.by_provider.google * policy.estimator.safety_factor <= 2.55, 'cubre el mínimo observado de Gemma');
+});

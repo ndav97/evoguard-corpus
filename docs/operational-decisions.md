@@ -715,3 +715,20 @@ antes de ver resultados del piloto:
 los comerciales, pero para que la línea base use un único código se apartan en
 `runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10` (su gasto, 15.78 USD, pasa a `extra_spent_usd`) y se
 repiten con `linea-base-piloto.cmd -Proveedores openai,anthropic`.
+
+## 2026-10-12 — Estimador de contexto por modelo; los episodios de Gemma se repiten
+
+Tres episodios de Gemma 4 en el piloto (S013, S017 y S019) se cortaron dos veces por `CONTEXT_ESTIMATE_VIOLATION`:
+el modelo recibió más tokens de los que el estimador garantizaba (hasta 11 402 reales frente a 10 452 estimados),
+aunque lejos de la ventana de 32 768. En 839 llamadas reales del piloto, Gemma llegó a 2,55 bytes por token; en el
+banco, Devstral llegó a 2,81. El valor general (3,64 × factor 0,8 = 2,91 efectivo) se había calibrado con muestras
+sintéticas y no cubre código real de esos tokenizadores. Qwen3-Coder sí queda cubierto (mínimo real 3,12).
+
+- `config/context.json` admite `estimator.by_provider`: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56).
+  La ventana es de tokens, así que la conversión desde bytes es propia de cada tokenizador. Cada llamada registra el
+  `bytes_per_token` usado. Un `context:calibrate -- --write` futuro debe conservar este bloque.
+- Con el estimador nuevo, Gemma recibe algo menos de historial cuando la ventana se llena (64 llamadas tuvieron pasos
+  omitidos). Para que todo el piloto de Gemma use la misma política, sus 20 episodios se apartan en
+  `runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12` y se repiten completos, no solo los tres
+  cortados. Qwen3-Coder no cambia y conserva sus episodios; Devstral aún no había empezado.
+- Resultado de los 17 episodios apartados (solo diagnóstico): 1 episodio exitoso (S015), 10 de 51 turnos aprobados.

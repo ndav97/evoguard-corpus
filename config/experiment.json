@@ -178,7 +178,9 @@
       {"date": "2026-10-10", "concept": "episodio S003 · openai invalidado por transporte (HTTP 524 de Synterolink: ~21 de 30 min del intento de T003); apartado en runs/episodes-diagnostico/invalidados-transporte", "usd": 3.35},
       {"date": "2026-10-11", "concept": "5 episodios de calibración de Gemini por Synterolink (cortes SAFETY del intermediario); apartados en runs/episodes-diagnostico/gemini-synterolink", "usd": 7.54},
       {"date": "2026-10-11", "concept": "Gemini 3.8 Flash por VNAIPro: 5 familias de calibración (incluidos 5 intentos interrumpidos de S004), cota superior con la tarifa de Gemini Pro; apartados en runs/episodes-diagnostico/gemini-vnaipro", "usd": 32.59},
-      {"date": "2026-10-12", "concept": "10 episodios comerciales del piloto (S001–S005 · GPT y Claude) corridos con una versión anterior del ejecutor; apartados en runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10 y repetidos para que la línea base use un solo código", "usd": 15.78}
+      {"date": "2026-10-12", "concept": "10 episodios comerciales del piloto (S001–S005 · GPT y Claude) corridos con una versión anterior del ejecutor; apartados en runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10 y repetidos para que la línea base use un solo código", "usd": 15.78},
+      {"date": "2026-10-12", "concept": "Vast.ai: banco de modelos locales y preparación de instancias (11 y 12 de octubre), según el panel de Vast.ai", "usd": 3.0},
+      {"date": "2026-10-12", "concept": "GPU de los 20 episodios de Gemma 4 corridos con el estimador de contexto general (~4 h); apartados en runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12 y repetidos con el estimador propio de Gemma", "usd": 1.0}
     ]
   }
 }

@@ -2,7 +2,7 @@ import {requestJson,requestSse,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
 import {ollamaBase} from './ollama.mjs';
 import {createHash} from 'node:crypto';
-import {buildContextInput,loadContextPolicy} from '../context/policy.mjs';
+import {buildContextInput,loadContextPolicy,policyFor} from '../context/policy.mjs';
 import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
 export {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION};
 // La ranura google admite Gemini (API) o un modelo abierto de Google servido por Ollama (Gemma, decisión 2026-10-11).
@@ -65,6 +65,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
   const connection=connectionFor(provider,config);
   if(config.transport==='ollama'&&(!Number.isInteger(config.context)||config.context<4096||config.context>262144||!/^[a-f0-9]{64}$/.test(config.digest??'')))throw providerError('INVALID_LOCAL_CONFIG');
   // Ventana limitada => contexto gestionado (config/context.json). Comerciales: contexto completo, sin cambios.
+  contextPolicy=policyFor(contextPolicy,provider);
   const managed=contextPolicy.applies_to.includes(provider)&&config.transport==='ollama';
   if(managed!==(config.context!==null))throw providerError('CONTEXT_POLICY_MISMATCH');
   if(managed&&(contextPolicy.budget.context_tokens!==config.context||contextPolicy.budget.output_reserve_tokens!==config.max_output_tokens))throw providerError('CONTEXT_POLICY_MISMATCH');

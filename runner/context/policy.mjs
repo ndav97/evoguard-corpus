@@ -22,7 +22,15 @@ export function validatePolicy(policy) {
   if (!b || b.input_tokens !== b.context_tokens - b.output_reserve_tokens - b.template_reserve_tokens || b.input_tokens <= 0) throw new Error('Presupuesto de contexto inconsistente');
   if (!e || e.method !== 'utf8_bytes_per_token_lower_bound' || !positive(e.bytes_per_token) || !(e.safety_factor > 0 && e.safety_factor <= 1)) throw new Error('Estimador de contexto inválido');
   if (policy.status === 'CALIBRATED' && !e.calibration) throw new Error('Política CALIBRATED sin evidencia de calibración');
+  if (e.by_provider !== undefined && (typeof e.by_provider !== 'object' || !Object.values(e.by_provider).every(positive))) throw new Error('Estimador por proveedor inválido');
   if (!h || !Number.isInteger(h.recent_steps) || h.recent_steps < 1 || !['tool_output_recent_bytes', 'tool_output_old_bytes', 'argument_recent_bytes', 'argument_old_bytes', 'feedback_latest_bytes', 'feedback_old_bytes'].every(k => Number.isInteger(h[k]) && h[k] > 0) || !(h.head_fraction > 0 && h.head_fraction < 1)) throw new Error('Límites de historial inválidos');
+}
+
+// Bytes por token propios de un modelo (decisión 2026-10-12): la ventana es de tokens y cada tokenizador convierte
+// distinto. Si config/context.json fija un valor para la ranura, sustituye al general solo para ese modelo.
+export function policyFor(policy, provider) {
+  const own = policy?.estimator?.by_provider?.[provider];
+  return own ? { ...policy, estimator: { ...policy.estimator, bytes_per_token: own } } : policy;
 }
 
 const bytes = text => Buffer.byteLength(text, 'utf8');
@@ -207,6 +215,7 @@ export function buildContextInput(context, { policy = loadContextPolicy(), respo
   const input = render(feedbackItems, included, omitted);
   const trace = {
     policy_status: policy.status,
+    bytes_per_token: policy.estimator.bytes_per_token,
     budget_tokens: budget,
     estimated_tokens: estimateTokens(overhead + input, policy),
     input_bytes: bytes(input),

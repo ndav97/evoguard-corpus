@@ -23,7 +23,12 @@
       "measured_at": "2026-10-12T17:27:49.553Z",
       "minimum_bytes_per_token": 3.6445,
       "samples": 24
-    }
+    },
+    "by_provider": {
+      "google": 3.0,
+      "local_b": 3.2
+    },
+    "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12)."
   },
   "history": {
     "recent_steps": 2,
