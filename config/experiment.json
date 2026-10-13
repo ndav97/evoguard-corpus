@@ -181,7 +181,8 @@
       {"date": "2026-10-12", "concept": "10 episodios comerciales del piloto (S001–S005 · GPT y Claude) corridos con una versión anterior del ejecutor; apartados en runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10 y repetidos para que la línea base use un solo código", "usd": 15.78},
       {"date": "2026-10-12", "concept": "Vast.ai: banco de modelos locales y preparación de instancias (11 y 12 de octubre), según el panel de Vast.ai", "usd": 3.0},
       {"date": "2026-10-12", "concept": "GPU de los 20 episodios de Gemma 4 corridos con el estimador de contexto general (~4 h); apartados en runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12 y repetidos con el estimador propio de Gemma", "usd": 1.0},
-      {"date": "2026-10-12", "concept": "GPU de los 7 episodios de Qwen3-Coder corridos con temperatura 0 (2,6 h); apartados en runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12 y repetidos con el muestreo recomendado", "usd": 0.66}
+      {"date": "2026-10-12", "concept": "GPU de los 7 episodios de Qwen3-Coder corridos con temperatura 0 (2,6 h); apartados en runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12 y repetidos con el muestreo recomendado", "usd": 0.66},
+      {"date": "2026-10-12", "concept": "GPU de 6 episodios de Gemma 4 corridos con el historial recortado a 3 000 bytes (~0,6 h); apartados en runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12", "usd": 0.15}
     ]
   }
 }
