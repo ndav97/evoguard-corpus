@@ -10,9 +10,9 @@
   "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Los modelos abiertos servidos por Ollama en la GPU (RTX 3090, 24 GB) reciben un contexto gestionado de 32 768 tokens; es una restricción propia de esos modelos y se registra por llamada. Calibrado el 2026-10-12 con los tokenizadores de Gemma 4 26B, Qwen3-Coder 30B y Devstral 24B en Ollama 0.40.3 (antes: 8 192 tokens para modelos de 7–8B).",
   "budget": {
     "context_tokens": 32768,
-    "output_reserve_tokens": 4096,
+    "output_reserve_tokens": 8192,
     "template_reserve_tokens": 512,
-    "input_tokens": 28160
+    "input_tokens": 24064
   },
   "estimator": {
     "method": "utf8_bytes_per_token_lower_bound",
@@ -54,5 +54,6 @@
       "products": "fixtures/products.json"
     }
   },
-  "history_note": "2026-10-12: con 3 000 bytes por salida, los modelos abiertos nunca veían completo un archivo de más de 3 KB (Gemma releyó 21 veces el mismo archivo de 6 KB en S003 T002) y sus propias escrituras se recortaban; los comerciales ven el historial completo. Ahora cada paso se conserva casi íntegro (24 000 bytes) mientras quepa en la ventana; si no cabe, baja a 3 000 y luego a 400 bytes, empezando por los más antiguos (recent_steps 25 = todo el turno)."
+  "history_note": "2026-10-12: con 3 000 bytes por salida, los modelos abiertos nunca veían completo un archivo de más de 3 KB (Gemma releyó 21 veces el mismo archivo de 6 KB en S003 T002) y sus propias escrituras se recortaban; los comerciales ven el historial completo. Ahora cada paso se conserva casi íntegro (24 000 bytes) mientras quepa en la ventana; si no cabe, baja a 3 000 y luego a 400 bytes, empezando por los más antiguos (recent_steps 25 = todo el turno).",
+  "budget_note": "2026-10-14: reserva de salida de 4 096 → 8 192 tokens (entrada 28 160 → 24 064) para π0 y la fase final. El piloto usó 4 096."
 }

@@ -265,7 +265,7 @@ test('gemini_tool: pide la función runner_action en modo ANY y toma sus argumen
 });
 test('ranura google: Gemma 4 por Ollama con contexto gestionado de 32K; locales medianos para la RTX 3090',()=>{
   assert.equal(models.google.transport,'ollama');assert.equal(models.google.api_model_id,'gemma4:26b');
-  for(const p of ['google','local_a','local_b']){assert.equal(models[p].context,32768,p);assert.equal(models[p].max_output_tokens,4096,p);}
+  for(const p of ['google','local_a','local_b']){assert.equal(models[p].context,32768,p);assert.equal(models[p].max_output_tokens,8192,p);}
   assert.deepEqual(connectionFor('google',models.google).credential_env,[]);
 });
 test('Ollama fijado: registra la versión y rechaza una instancia con otra versión antes de generar',async()=>{

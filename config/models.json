@@ -43,7 +43,7 @@
       "api_model_id": "gemma4:26b",
       "transport": "ollama",
       "context": 32768,
-      "max_output_tokens": 4096,
+      "max_output_tokens": 8192,
       "reasoning": null,
       "temperature": 1.0,
       "seed": 42,
@@ -54,14 +54,15 @@
         "top_p": 0.95,
         "top_k": 64
       },
-      "sampling_source": "https://ollama.com/library/gemma4 (configuración estándar de Gemma 4)"
+      "sampling_source": "https://ollama.com/library/gemma4 (configuración estándar de Gemma 4)",
+      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
     },
     "local_a": {
       "display_name": "Qwen3-Coder 30B",
       "api_model_id": "qwen3-coder:30b",
       "transport": "ollama",
       "context": 32768,
-      "max_output_tokens": 4096,
+      "max_output_tokens": 8192,
       "reasoning": null,
       "temperature": 0.7,
       "seed": 42,
@@ -73,14 +74,15 @@
         "top_k": 20,
         "repeat_penalty": 1.05
       },
-      "sampling_source": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct (Best Practices)"
+      "sampling_source": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct (Best Practices)",
+      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
     },
     "local_b": {
       "display_name": "Devstral 24B",
       "api_model_id": "devstral:24b",
       "transport": "ollama",
       "context": 32768,
-      "max_output_tokens": 4096,
+      "max_output_tokens": 8192,
       "reasoning": null,
       "temperature": 0.15,
       "seed": 42,
@@ -88,7 +90,8 @@
       "digest_status": "VERIFIED_BENCH_2026-10-12",
       "ollama_version": "0.40.3",
       "sampling": {},
-      "sampling_source": "https://huggingface.co/mistralai/Devstral-Small-2505 (ejemplo de vLLM)"
+      "sampling_source": "https://huggingface.co/mistralai/Devstral-Small-2505 (ejemplo de vLLM)",
+      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
     }
   }
 }

@@ -95,8 +95,9 @@
         "B"
       ],
       "providers": [
-        "local_a"
+        "google"
       ],
+      "provider_decision": "2026-10-14: Gemma 4 26B (ranura google) en lugar de Qwen3-Coder: en el piloto tuvo mejor TP (25 % frente a 17 %), más turnos entregados (30/60 frente a 18/60) y la mitad de minutos por turno (6,0 frente a 12,3). El riesgo se define respecto de Gemma 4.",
       "turns_planned": 400,
       "purpose": "Etiquetas de riesgo para entrenar EvoGuard UI: qué requisitos rompe el agente base. Con un modelo local (solo cuesta GPU); el proveedor definitivo es el modelo local elegido en el banco. El riesgo se define respecto de ese modelo."
     },
@@ -182,7 +183,8 @@
       {"date": "2026-10-12", "concept": "Vast.ai: banco de modelos locales y preparación de instancias (11 y 12 de octubre), según el panel de Vast.ai", "usd": 3.0},
       {"date": "2026-10-12", "concept": "GPU de los 20 episodios de Gemma 4 corridos con el estimador de contexto general (~4 h); apartados en runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12 y repetidos con el estimador propio de Gemma", "usd": 1.0},
       {"date": "2026-10-12", "concept": "GPU de los 7 episodios de Qwen3-Coder corridos con temperatura 0 (2,6 h); apartados en runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12 y repetidos con el muestreo recomendado", "usd": 0.66},
-      {"date": "2026-10-12", "concept": "GPU de 6 episodios de Gemma 4 corridos con el historial recortado a 3 000 bytes (~0,6 h); apartados en runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12", "usd": 0.15}
+      {"date": "2026-10-12", "concept": "GPU de 6 episodios de Gemma 4 corridos con el historial recortado a 3 000 bytes (~0,6 h); apartados en runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12", "usd": 0.15},
+      {"date": "2026-10-14", "concept": "Ajuste a la factura real de Vast.ai (panel: 9,68 USD en total, instancia destruida). Lo registrado sumaba 14,93 USD: GPU de turnos 10,12 a 0,40 USD/h estimados + 4,81 de banco, preparación y episodios apartados. Se resta la diferencia.", "usd": -5.25}
     ]
   }
 }

@@ -781,3 +781,20 @@ espacio de salida. Cambios:
   de margen). Si una llamada aún excede la estimación, se reconstruye la entrada una vez con esa proporción
   (`context_rebuilt` en el registro) en vez de abortar; solo si vuelve a exceder es error.
 Los episodios iniciados con el estimador anterior se apartan y el piloto local vuelve a empezar.
+
+## 2026-10-14 — Cierre del piloto: modelo de π0, salida de los modelos abiertos y factura de Vast.ai
+
+Línea base piloto completa (100/100 episodios válidos; resultados en `docs/resultados/linea-base-piloto-2026-10-14/`).
+Decisiones del tesista tomadas con esos datos, antes de π0 y de la fase final:
+
+- **π0 con Gemma 4 26B** (ranura `google`) en lugar de Qwen3-Coder (`local_a`): en el piloto Gemma tuvo mejor TP
+  (25 % frente a 17 %), más turnos entregados (30/60 frente a 18/60) y la mitad de minutos por turno (6,0 frente a
+  12,3). Las etiquetas de riesgo se definen respecto de Gemma 4. `config/experiment.json` → `phases.pi0.providers`.
+- **Salida de 8 192 tokens para los tres modelos abiertos** (antes 4 096) desde π0 y en toda la fase final, igual en
+  los brazos B y E. Motivo: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas
+  al reescribir archivos completos dentro de `edit_file`. La ventana sigue en 32 768: la entrada gestionada baja de
+  28 160 a 24 064 tokens (`config/context.json`, `config/models.json`). El piloto queda como se corrió (4 096,
+  registrado en cada llamada); la hipótesis se mide entre B y E de la fase final, con la misma configuración.
+- **Factura real de Vast.ai: 9,68 USD** en total (instancia destruida). Lo registrado sumaba 14,93 USD (10,12 de GPU
+  de turnos a 0,40 USD/h estimados + 4,81 de banco, preparación y episodios apartados); se anota un ajuste de
+  −5,25 USD en `extra_spent_usd`. Se mantiene 0,40 USD/h en las proyecciones como estimación conservadora.
