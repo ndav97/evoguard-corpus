@@ -1,0 +1,2 @@
+{"recorded_at":"2026-10-12T17:49:47Z","instance":"C.55579718","gpu":"NVIDIA GeForce RTX 3090, 24576 MiB, 550.144.03","cuda":"12.4","ollama_version":"0.40.3","disk":"105G","models":[{"name": "devstral:24b", "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9"}, {"name": "qwen3-coder:30b", "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca"}, {"name": "gemma4:26b", "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c"}]
+}
