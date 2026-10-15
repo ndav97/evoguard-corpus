@@ -1,0 +1,39 @@
+diff --git a/src/utils/other/mask.tsx b/src/utils/other/mask.tsx
+index 6ce2e5af..c507d06d 100644
+--- a/src/utils/other/mask.tsx
++++ b/src/utils/other/mask.tsx
+@@ -9,6 +9,7 @@ export const maskMap = {
+   percentage: convertToThousandsSeparatedString,
+   ratio: convertToThousandsSeparatedRatioString,
+   currency: convertToThousandsSeparatedString,
++  integer: convertToThousandsSeparatedIntegerString,
+ };
+ 
+ interface MaskedValue {
+@@ -107,6 +108,26 @@ export function convertToThousandsSeparatedString(
+   return { isValid: true, maskedValue: maskValue };
+ }
+ 
++/**
++ * Converts a whole number-like string to a comma separated value.
++ * Values with a fractional part are invalid and returned as entered.
++ * @param {String} value
++ * @returns {MaskedValue}
++ */
++export function convertToThousandsSeparatedIntegerString(
++  value: string
++): MaskedValue {
++  const cleanedInput = cleanStandardNumericalInput(value);
++  if (!cleanedInput.isValid || cleanedInput.cleanedValue === "")
++    return { isValid: false, maskedValue: value };
++
++  const numericValue = Number(cleanedInput.cleanedValue);
++  if (!Number.isInteger(numericValue))
++    return { isValid: false, maskedValue: value };
++
++  return convertToThousandsSeparatedString(cleanedInput.cleanedValue, 0);
++}
++
+ /**
+  * Splits a string with a : and converts each side to a comma-separated string
+  * @param {String} value

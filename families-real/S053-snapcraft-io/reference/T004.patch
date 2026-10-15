@@ -1,0 +1,106 @@
+diff --git a/static/js/publisher/utils/formatGitCommit.tsx b/static/js/publisher/utils/formatGitCommit.tsx
+index 405a42ac8..eb6dd7929 100644
+--- a/static/js/publisher/utils/formatGitCommit.tsx
++++ b/static/js/publisher/utils/formatGitCommit.tsx
+@@ -1,3 +1,5 @@
++import { useEffect, useRef, useState } from "react";
++
+ /**
+  * Normalizes a git commit ID: trims it and lowercases it
+  * @param commitId - The git commit ID
+@@ -105,6 +107,65 @@ interface GitCommitLinkProps {
+   githubRepository?: string | null;
+   showLink?: boolean;
+   length?: number;
++  showCopyButton?: boolean;
++}
++
++type CopyState = "idle" | "copied" | "failed";
++
++const COPY_FEEDBACK_MS = 2000;
++
++function CopyCommitButton({ commitId }: { commitId: string }) {
++  const [copyState, setCopyState] = useState<CopyState>("idle");
++  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
++
++  useEffect(
++    () => () => {
++      if (resetTimer.current) {
++        clearTimeout(resetTimer.current);
++      }
++    },
++    [],
++  );
++
++  const showFeedback = (state: CopyState) => {
++    setCopyState(state);
++    if (resetTimer.current) {
++      clearTimeout(resetTimer.current);
++    }
++    resetTimer.current = setTimeout(
++      () => setCopyState("idle"),
++      COPY_FEEDBACK_MS,
++    );
++  };
++
++  const copy = async () => {
++    try {
++      await navigator.clipboard.writeText(commitId);
++      showFeedback("copied");
++    } catch {
++      showFeedback("failed");
++    }
++  };
++
++  return (
++    <>
++      <button
++        type="button"
++        className="p-button--base is-small u-no-margin--bottom"
++        aria-label="Copy commit ID"
++        onClick={copy}
++      >
++        {copyState === "copied" ? "Copied" : "Copy"}
++      </button>
++      <span role="status" className="u-off-screen">
++        {copyState === "copied"
++          ? "Commit ID copied"
++          : copyState === "failed"
++            ? "Could not copy commit ID"
++            : ""}
++      </span>
++    </>
++  );
+ }
+ 
+ export function GitCommitLink({
+@@ -112,11 +173,12 @@ export function GitCommitLink({
+   githubRepository,
+   showLink = true,
+   length,
++  showCopyButton = false,
+ }: GitCommitLinkProps): React.JSX.Element {
+   const formattedCommitId = formatCommitId(commitId, length);
+   const commitUrl = createGitHubCommitUrl(githubRepository, commitId);
+ 
+-  return !formattedCommitId ? (
++  const commitDisplay = !formattedCommitId ? (
+     <span
+       className="p-text--code"
+       aria-label="No commit data available for this build"
+@@ -137,4 +199,15 @@ export function GitCommitLink({
+       {formattedCommitId}
+     </a>
+   );
++
++  const fullCommitId = normalizeCommitId(commitId);
++  if (!showCopyButton || !fullCommitId) {
++    return commitDisplay;
++  }
++
++  return (
++    <span className="git-commit">
++      {commitDisplay} <CopyCommitButton commitId={fullCommitId} />
++    </span>
++  );
+ }

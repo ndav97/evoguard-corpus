@@ -1,0 +1,77 @@
+diff --git a/src/routes/utils/sort.ts b/src/routes/utils/sort.ts
+index 023e76bb..d29733a8 100644
+--- a/src/routes/utils/sort.ts
++++ b/src/routes/utils/sort.ts
+@@ -9,12 +9,20 @@ interface BaseSortOptions<T> {
+   direction?: SortDirection;
+   key?: SortKeyFn<T>;
+   natural?: boolean;
++  thenBy?: SortCriterion<T>[];
++}
++
++export interface SortCriterion<T> {
++  key: keyof T | SortKeyFn<T>;
++  direction?: SortDirection;
+ }
+ 
+ interface ObjectSortOptions<T> {
+   direction?: SortDirection;
+   key?: keyof T | SortKeyFn<T>;
+   natural?: boolean;
++  // Criteria used, in order, when the main key ties.
++  thenBy?: SortCriterion<T>[];
+ }
+ 
+ // Case-insensitive, with numbers inside text compared by value ("item 2" < "item 10").
+@@ -35,8 +43,7 @@ function compareValues(a: any, b: any, natural: boolean) {
+ 
+ type SortOptions<T> = T extends string ? BaseSortOptions<T> : ObjectSortOptions<T>;
+ 
+-function getValueForItem<T>(item: T, options: SortOptions<T>): any {
+-  const sortKey = (options as ObjectSortOptions<T>)?.key;
++function getValueForItem<T>(item: T, sortKey: keyof T | SortKeyFn<T> | undefined): any {
+   if (typeof sortKey === 'function') {
+     return sortKey(item);
+   }
+@@ -50,19 +57,30 @@ function isMissing(value: unknown) {
+   return value === undefined || value === null || (typeof value === 'number' && isNaN(value));
+ }
+ 
+-// Items without a value always go last, whatever the direction.
++function compareByCriterion<T>(a: T, b: T, criterion: Partial<SortCriterion<T>>, natural: boolean) {
++  const aVal = getValueForItem(a, criterion.key);
++  const bVal = getValueForItem(b, criterion.key);
++  // Items without a value always go last, whatever the direction.
++  const aMissing = isMissing(aVal);
++  const bMissing = isMissing(bVal);
++  if (aMissing || bMissing) {
++    return aMissing === bMissing ? 0 : aMissing ? 1 : -1;
++  }
++  const order = compareValues(aVal, bVal, natural);
++  // `asc` has always put the greater values first; keep that behavior.
++  return (criterion.direction ?? SortDirection.asc) === SortDirection.asc ? -order : order;
++}
++
+ export function sort<T>(array: T[], options: SortOptions<T>): T[] {
+-  const { direction = SortDirection.asc, natural = false } = options || {};
++  const { direction = SortDirection.asc, key, natural = false, thenBy = [] } = (options || {}) as ObjectSortOptions<T>;
++  const criteria: Partial<SortCriterion<T>>[] = [{ key, direction }, ...thenBy];
+   return [...array].sort((a, b) => {
+-    const aMissing = isMissing(getValueForItem(a, options));
+-    const bMissing = isMissing(getValueForItem(b, options));
+-    if (aMissing || bMissing) {
+-      return aMissing === bMissing ? 0 : aMissing ? 1 : -1;
++    for (const criterion of criteria) {
++      const result = compareByCriterion(a, b, criterion, natural);
++      if (result !== 0) {
++        return result;
++      }
+     }
+-
+-    const aVal = direction === SortDirection.asc ? getValueForItem(a, options) : getValueForItem(b, options);
+-    const bVal = direction === SortDirection.asc ? getValueForItem(b, options) : getValueForItem(a, options);
+-
+-    return -compareValues(aVal, bVal, natural);
++    return 0;
+   });
+ }

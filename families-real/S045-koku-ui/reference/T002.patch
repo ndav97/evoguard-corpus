@@ -1,0 +1,39 @@
+diff --git a/src/routes/utils/sort.ts b/src/routes/utils/sort.ts
+index ca8136c2..ebbfd593 100644
+--- a/src/routes/utils/sort.ts
++++ b/src/routes/utils/sort.ts
+@@ -3,21 +3,28 @@ export const enum SortDirection {
+   desc,
+ }
+ 
+-interface BaseSortOptions {
++export type SortKeyFn<T> = (item: T) => unknown;
++
++interface BaseSortOptions<T> {
+   direction?: SortDirection;
++  key?: SortKeyFn<T>;
+ }
+ 
+-interface ObjectSortOptions<T> extends BaseSortOptions {
+-  key?: keyof T;
++interface ObjectSortOptions<T> {
++  direction?: SortDirection;
++  key?: keyof T | SortKeyFn<T>;
+ }
+ 
+-type SortOptions<T> = T extends string ? BaseSortOptions : ObjectSortOptions<T>;
++type SortOptions<T> = T extends string ? BaseSortOptions<T> : ObjectSortOptions<T>;
+ 
+-function getValueForItem<T>(item: T, options: SortOptions<T>) {
++function getValueForItem<T>(item: T, options: SortOptions<T>): any {
++  const sortKey = (options as ObjectSortOptions<T>)?.key;
++  if (typeof sortKey === 'function') {
++    return sortKey(item);
++  }
+   if (typeof item === 'string') {
+     return item;
+   }
+-  const sortKey = (options as ObjectSortOptions<T>).key;
+   return item[sortKey];
+ }
+ 

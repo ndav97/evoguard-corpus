@@ -1,0 +1,67 @@
+# Familia semi-real S046 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S046
+slug: macpro-mdct-mcr
+stratum: semi-real
+repo: Enterprise-CMCS/macpro-mdct-mcr
+url: https://github.com/Enterprise-CMCS/macpro-mdct-mcr
+license: CC0-1.0
+domain: Informes de atención gestionada de Medicaid
+v0:
+  commit: 12d75c01fe2809a7afa9c4b9e8fb8931dc90c693
+  date: 2026-10-02
+  verified: 2026-10-05 GREEN (1274 tests, 2 ejecuciones idénticas, sin red)
+package_path: services/ui-src
+package_manager: yarn
+runner: jest
+node: "22"
+workspace: github__Enterprise-CMCS__macpro-mdct-mcr          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: services/ui-src/src/utils/other/mask.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Máscara de números enteros
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Abreviaturas k, M y B
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Negativos entre paréntesis
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Sin cero negativo
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Decimales fijos al mostrar respuestas
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: anthropic
+    V2: google
+    V3: local_a
+    V4: local_b
+    V5: openai
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

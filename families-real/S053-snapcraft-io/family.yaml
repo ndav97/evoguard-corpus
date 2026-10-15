@@ -1,0 +1,67 @@
+# Familia semi-real S053 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S053
+slug: snapcraft-io
+stratum: semi-real
+repo: canonical/snapcraft.io
+url: https://github.com/canonical/snapcraft.io
+license: LGPL-3.0
+domain: Tienda y portal de publicación de paquetes snap
+v0:
+  commit: 734bd0eb5cbc477de456f76d9a05ec89319e6b33
+  date: 2026-10-01
+  verified: 2026-10-05 GREEN (960 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: vitest
+node: "24"
+workspace: github__canonical__snapcraft.io          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: static/js/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: static/js/publisher/utils/formatGitCommit.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Validar el identificador del commit
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Longitud configurable del identificador
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Normalizar el repositorio
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Copiar el identificador
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Commits de GitLab y Bitbucket
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_a
+    V2: local_b
+    V3: openai
+    V4: anthropic
+    V5: google
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

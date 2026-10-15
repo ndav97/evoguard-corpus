@@ -1,0 +1,49 @@
+diff --git a/src/utils/other/mask.tsx b/src/utils/other/mask.tsx
+index a522d8d4..e7545abb 100644
+--- a/src/utils/other/mask.tsx
++++ b/src/utils/other/mask.tsx
+@@ -94,6 +94,22 @@ export function expandAbbreviatedNumber(value: string): string {
+   return prefix + expanded;
+ }
+ 
++/**
++ * Accounting notation: "(1,234)" or "($1,234)" means a negative amount.
++ * Returns the value with a leading minus sign instead of the parentheses.
++ * @param {String} value
++ * @returns {String}
++ */
++export function convertParenthesesToNegative(value: string): string {
++  const match = /^\(\s*(\$?)\s*([^()$\s-][^()]*?)\s*\)$/.exec(value.trim());
++  if (!match) return value;
++  const [, dollar, number] = match;
++  return dollar + "-" + number;
++}
++
++const prepareNumericInput = (value: string) =>
++  expandAbbreviatedNumber(convertParenthesesToNegative(value));
++
+ /**
+  * Converts a number-like string to a comma seperated value
+  * @param {String} value
+@@ -104,9 +120,7 @@ export function convertToThousandsSeparatedString(
+   fixedDecimalPlaces?: number | undefined
+ ): MaskedValue {
+   // Check value validity, and if invalid, bypass all masking and return user-inputted value
+-  const cleanedInput = cleanStandardNumericalInput(
+-    expandAbbreviatedNumber(value)
+-  );
++  const cleanedInput = cleanStandardNumericalInput(prepareNumericInput(value));
+   if (!cleanedInput.isValid) return { isValid: false, maskedValue: value };
+ 
+   // If valid, take cleaned value and continue to masking
+@@ -143,9 +157,7 @@ export function convertToThousandsSeparatedString(
+ export function convertToThousandsSeparatedIntegerString(
+   value: string
+ ): MaskedValue {
+-  const cleanedInput = cleanStandardNumericalInput(
+-    expandAbbreviatedNumber(value)
+-  );
++  const cleanedInput = cleanStandardNumericalInput(prepareNumericInput(value));
+   if (!cleanedInput.isValid || cleanedInput.cleanedValue === "")
+     return { isValid: false, maskedValue: value };
+ 

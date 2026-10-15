@@ -1,0 +1,113 @@
+diff --git a/static/js/publisher/utils/formatGitCommit.tsx b/static/js/publisher/utils/formatGitCommit.tsx
+index eb6dd7929..835fc04fd 100644
+--- a/static/js/publisher/utils/formatGitCommit.tsx
++++ b/static/js/publisher/utils/formatGitCommit.tsx
+@@ -94,6 +94,63 @@ export function createGitHubCommitUrl(
+   return `https://github.com/${repository}/commit/${normalizedCommitId}`;
+ }
+ 
++export type GitHost = "GitHub" | "GitLab" | "Bitbucket";
++
++const GITLAB_REPOSITORY_PATTERN =
++  /^(?:(?:https?:\/\/)?(?:www\.)?gitlab\.com\/|git@gitlab\.com:)((?:[\w.-]+\/)+[\w.-]+?)(?:\.git)?\/?$/i;
++const BITBUCKET_REPOSITORY_PATTERN =
++  /^(?:(?:https?:\/\/)?(?:www\.)?bitbucket\.org\/|git@bitbucket\.org:)([\w.-]+\/[\w.-]+?)(?:\.git)?\/?$/i;
++
++const hasDotSegments = (path: string) =>
++  path.split("/").some((part) => part === "." || part === "..");
++
++/**
++ * Creates the URL of a commit on GitHub, GitLab or Bitbucket
++ * @param repository - A GitHub reference (see normalizeGitHubRepository),
++ * or a gitlab.com / bitbucket.org URL or SSH remote
++ * @param commitId - The git commit ID
++ * @returns The URL and the host name, or null if invalid
++ */
++export function createCommitUrl(
++  repository?: string | null,
++  commitId?: string | null,
++): { url: string; host: GitHost } | null {
++  const normalizedCommitId = normalizeCommitId(commitId);
++  if (!repository || typeof repository !== "string" || !normalizedCommitId) {
++    return null;
++  }
++
++  const trimmed = repository.trim();
++
++  const gitlab = GITLAB_REPOSITORY_PATTERN.exec(trimmed);
++  if (gitlab) {
++    return hasDotSegments(gitlab[1])
++      ? null
++      : {
++          url: `https://gitlab.com/${gitlab[1]}/-/commit/${normalizedCommitId}`,
++          host: "GitLab",
++        };
++  }
++
++  const bitbucket = BITBUCKET_REPOSITORY_PATTERN.exec(trimmed);
++  if (bitbucket) {
++    return hasDotSegments(bitbucket[1])
++      ? null
++      : {
++          url: `https://bitbucket.org/${bitbucket[1]}/commits/${normalizedCommitId}`,
++          host: "Bitbucket",
++        };
++  }
++
++  // A GitLab or Bitbucket reference that did not match is not a GitHub one
++  if (/^(?:https?:\/\/|git@)?(?:www\.)?(?:gitlab\.com|bitbucket\.org)\b/i.test(trimmed)) {
++    return null;
++  }
++
++  const githubUrl = createGitHubCommitUrl(trimmed, normalizedCommitId);
++  return githubUrl ? { url: githubUrl, host: "GitHub" } : null;
++}
++
+ /**
+  * React component for displaying a git commit ID with optional GitHub link
+  * @param commitId - The git commit ID
+@@ -105,6 +162,8 @@ export function createGitHubCommitUrl(
+ interface GitCommitLinkProps {
+   commitId?: string | null;
+   githubRepository?: string | null;
++  /** Repository on GitHub, GitLab or Bitbucket; takes precedence over githubRepository */
++  repository?: string | null;
+   showLink?: boolean;
+   length?: number;
+   showCopyButton?: boolean;
+@@ -171,12 +230,13 @@ function CopyCommitButton({ commitId }: { commitId: string }) {
+ export function GitCommitLink({
+   commitId,
+   githubRepository,
++  repository,
+   showLink = true,
+   length,
+   showCopyButton = false,
+ }: GitCommitLinkProps): React.JSX.Element {
+   const formattedCommitId = formatCommitId(commitId, length);
+-  const commitUrl = createGitHubCommitUrl(githubRepository, commitId);
++  const commitLink = createCommitUrl(repository ?? githubRepository, commitId);
+ 
+   const commitDisplay = !formattedCommitId ? (
+     <span
+@@ -185,16 +245,16 @@ export function GitCommitLink({
+     >
+       -
+     </span>
+-  ) : !showLink || !githubRepository || !commitUrl ? (
++  ) : !showLink || !commitLink ? (
+     <span className="p-text--code">{formattedCommitId}</span>
+   ) : (
+     <a
+-      href={commitUrl}
++      href={commitLink.url}
+       target="_blank"
+       rel="noopener noreferrer"
+       className="p-text--code"
+-      title={`View commit ${formattedCommitId} on GitHub`}
+-      aria-label={`View commit ${formattedCommitId} on GitHub`}
++      title={`View commit ${formattedCommitId} on ${commitLink.host}`}
++      aria-label={`View commit ${formattedCommitId} on ${commitLink.host}`}
+     >
+       {formattedCommitId}
+     </a>

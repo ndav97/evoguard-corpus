@@ -1,0 +1,82 @@
+diff --git a/static/js/components/widgets/BooleanField.tsx b/static/js/components/widgets/BooleanField.tsx
+index 9d29176c..5387f44c 100644
+--- a/static/js/components/widgets/BooleanField.tsx
++++ b/static/js/components/widgets/BooleanField.tsx
+@@ -21,6 +21,9 @@ interface Props {
+   allowUnset?: boolean
+   unsetLabel?: string
+   disabled?: boolean
++  /** With a legend, the options are grouped in a fieldset named by it */
++  legend?: string
++  description?: string
+ }
+ 
+ /**
+@@ -36,6 +39,8 @@ export default function BooleanField(props: Props): JSX.Element {
+     allowUnset = false,
+     unsetLabel = "Not set",
+     disabled = false,
++    legend,
++    description,
+   } = props
+ 
+   const handleChange = (event: any): void => {
+@@ -61,24 +66,40 @@ export default function BooleanField(props: Props): JSX.Element {
+   const selected: BooleanValue | undefined =
+     allowUnset && (value === null || value === undefined) ? null : value
+ 
++  const radios = options.map(([option, label]) => (
++    <React.Fragment key={toRadioValue(option)}>
++      <input
++        type="radio"
++        id={radioOptionId(name, option)}
++        name={name}
++        value={toRadioValue(option)}
++        checked={selected === option}
++        onChange={handleChange}
++        disabled={disabled}
++      />
++      <label className="px-2" htmlFor={radioOptionId(name, option)}>
++        {label}
++      </label>
++    </React.Fragment>
++  ))
++
++  if (!legend) {
++    return <div className={disabled ? "text-muted" : undefined}>{radios}</div>
++  }
++
++  const descriptionId = `${name}_description`
+   return (
+-    <div className={disabled ? "text-muted" : undefined}>
+-      {options.map(([option, label]) => (
+-        <React.Fragment key={toRadioValue(option)}>
+-          <input
+-            type="radio"
+-            id={radioOptionId(name, option)}
+-            name={name}
+-            value={toRadioValue(option)}
+-            checked={selected === option}
+-            onChange={handleChange}
+-            disabled={disabled}
+-          />
+-          <label className="px-2" htmlFor={radioOptionId(name, option)}>
+-            {label}
+-          </label>
+-        </React.Fragment>
+-      ))}
+-    </div>
++    <fieldset
++      className={disabled ? "text-muted" : undefined}
++      aria-describedby={description ? descriptionId : undefined}
++    >
++      <legend className="h6">{legend}</legend>
++      {radios}
++      {description ? (
++        <small id={descriptionId} className="form-text">
++          {description}
++        </small>
++      ) : null}
++    </fieldset>
+   )
+ }

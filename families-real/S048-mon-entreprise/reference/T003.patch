@@ -1,0 +1,51 @@
+diff --git a/source/lib/navigation/pathUtils.ts b/source/lib/navigation/pathUtils.ts
+index 4b25a408e..2c285109e 100644
+--- a/source/lib/navigation/pathUtils.ts
++++ b/source/lib/navigation/pathUtils.ts
+@@ -16,7 +16,8 @@ export function matchPath(
+ 	pathname: string
+ ): { params: Record<string, string> } | null {
+ 	const normalizedPattern = stripTrailingSlash(pattern)
+-	const normalizedPath = stripTrailingSlash(pathname)
++	// The query string and the hash are not part of the path
++	const normalizedPath = stripTrailingSlash(pathname.split(/[?#]/)[0] || '/')
+ 
+ 	if (normalizedPattern.endsWith('/*')) {
+ 		const prefix = normalizedPattern.slice(0, -2)
+@@ -74,12 +75,15 @@ function matchSegments(
+ 	return isOptional ? matchSegments(restPattern, pathParts) : null
+ }
+ 
++type SearchValue = string | number | boolean | null | undefined
++
+ export function generatePath(
+ 	pattern: string,
+-	params?: Record<string, string>
++	params?: Record<string, string>,
++	search?: Record<string, SearchValue>
+ ): string {
+ 	if (!params) {
+-		return pattern
++		return pattern + toQueryString(search)
+ 	}
+ 
+ 	const path = pattern
+@@ -91,5 +95,17 @@ export function generatePath(
+ 			encodeURIComponent(params[key] ?? '')
+ 		)
+ 
+-	return path === '' ? '/' : path
++	return (path === '' ? '/' : path) + toQueryString(search)
++}
++
++function toQueryString(search?: Record<string, SearchValue>): string {
++	const searchParams = new URLSearchParams()
++	Object.entries(search ?? {}).forEach(([key, value]) => {
++		if (value !== undefined && value !== null) {
++			searchParams.append(key, String(value))
++		}
++	})
++	const query = searchParams.toString()
++
++	return query ? `?${query}` : ''
+ }

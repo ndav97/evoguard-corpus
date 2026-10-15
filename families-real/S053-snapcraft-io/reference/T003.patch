@@ -1,0 +1,66 @@
+diff --git a/static/js/publisher/utils/formatGitCommit.tsx b/static/js/publisher/utils/formatGitCommit.tsx
+index 461239bec..405a42ac8 100644
+--- a/static/js/publisher/utils/formatGitCommit.tsx
++++ b/static/js/publisher/utils/formatGitCommit.tsx
+@@ -45,9 +45,37 @@ export function formatCommitId(
+   return normalized.substring(0, visibleLength);
+ }
+ 
++const GITHUB_REPOSITORY_PATTERN =
++  /^(?:(?:https?:\/\/)?(?:www\.)?github\.com\/|git@github\.com:)?([\w.-]+)\/([\w.-]+?)(?:\.git)?\/?$/i;
++
++/**
++ * Normalizes a GitHub repository reference to the "owner/repo" format
++ * @param githubRepository - "owner/repo", a github.com URL or an SSH remote
++ * @returns "owner/repo" or null if it is not a GitHub repository reference
++ */
++export function normalizeGitHubRepository(
++  githubRepository?: string | null,
++): string | null {
++  if (!githubRepository || typeof githubRepository !== "string") {
++    return null;
++  }
++
++  const match = GITHUB_REPOSITORY_PATTERN.exec(githubRepository.trim());
++  if (!match) {
++    return null;
++  }
++
++  const [, owner, repo] = match;
++  if ([owner, repo].some((part) => part === "." || part === "..")) {
++    return null;
++  }
++
++  return `${owner}/${repo}`;
++}
++
+ /**
+  * Creates a GitHub commit URL from repository and commit ID
+- * @param githubRepository - The GitHub repository in format "owner/repo"
++ * @param githubRepository - The GitHub repository ("owner/repo", URL or SSH remote)
+  * @param commitId - The git commit ID
+  * @returns The GitHub commit URL or null if invalid
+  */
+@@ -56,19 +84,12 @@ export function createGitHubCommitUrl(
+   commitId?: string | null,
+ ): string | null {
+   const normalizedCommitId = normalizeCommitId(commitId);
+-  if (!githubRepository || !normalizedCommitId) {
+-    return null;
+-  }
+-
+-  // Validate repository format (should be "owner/repo")
+-  if (
+-    !githubRepository.includes("/") ||
+-    githubRepository.split("/").length !== 2
+-  ) {
++  const repository = normalizeGitHubRepository(githubRepository);
++  if (!repository || !normalizedCommitId) {
+     return null;
+   }
+ 
+-  return `https://github.com/${githubRepository}/commit/${normalizedCommitId}`;
++  return `https://github.com/${repository}/commit/${normalizedCommitId}`;
+ }
+ 
+ /**

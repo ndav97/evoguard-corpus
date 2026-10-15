@@ -1,0 +1,57 @@
+diff --git a/src/utils/other/mask.tsx b/src/utils/other/mask.tsx
+index c507d06d..a522d8d4 100644
+--- a/src/utils/other/mask.tsx
++++ b/src/utils/other/mask.tsx
+@@ -70,6 +70,30 @@ export function maskResponseData(
+   }
+ }
+ 
++const suffixMultipliers: Record<string, number> = { k: 3, m: 6, b: 9 };
++
++/**
++ * Expands a trailing k/M/B abbreviation ("1.5k" -> "1500") without floating
++ * point arithmetic. Values without a suffix are returned unchanged.
++ * @param {String} value
++ * @returns {String}
++ */
++export function expandAbbreviatedNumber(value: string): string {
++  const match = /^(\$?-?)([\d,]*\.?\d+)\s*([kmb])$/i.exec(value.trim());
++  if (!match) return value;
++
++  const [, prefix, number, suffix] = match;
++  const zeros = suffixMultipliers[suffix.toLowerCase()];
++  const [whole, fraction = ""] = number.replaceAll(",", "").split(".");
++  const shiftedFraction = fraction.padEnd(zeros, "0");
++  const expanded = (
++    whole +
++    shiftedFraction.slice(0, zeros) +
++    (shiftedFraction.length > zeros ? "." + shiftedFraction.slice(zeros) : "")
++  ).replace(/^0+(?=\d)/, "");
++  return prefix + expanded;
++}
++
+ /**
+  * Converts a number-like string to a comma seperated value
+  * @param {String} value
+@@ -80,7 +104,9 @@ export function convertToThousandsSeparatedString(
+   fixedDecimalPlaces?: number | undefined
+ ): MaskedValue {
+   // Check value validity, and if invalid, bypass all masking and return user-inputted value
+-  const cleanedInput = cleanStandardNumericalInput(value);
++  const cleanedInput = cleanStandardNumericalInput(
++    expandAbbreviatedNumber(value)
++  );
+   if (!cleanedInput.isValid) return { isValid: false, maskedValue: value };
+ 
+   // If valid, take cleaned value and continue to masking
+@@ -117,7 +143,9 @@ export function convertToThousandsSeparatedString(
+ export function convertToThousandsSeparatedIntegerString(
+   value: string
+ ): MaskedValue {
+-  const cleanedInput = cleanStandardNumericalInput(value);
++  const cleanedInput = cleanStandardNumericalInput(
++    expandAbbreviatedNumber(value)
++  );
+   if (!cleanedInput.isValid || cleanedInput.cleanedValue === "")
+     return { isValid: false, maskedValue: value };
+ 

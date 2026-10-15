@@ -1,0 +1,98 @@
+diff --git a/static/js/components/widgets/BooleanField.tsx b/static/js/components/widgets/BooleanField.tsx
+index 5387f44c..a2f5c2ac 100644
+--- a/static/js/components/widgets/BooleanField.tsx
++++ b/static/js/components/widgets/BooleanField.tsx
+@@ -1,4 +1,4 @@
+-import React from "react"
++import React, { useState } from "react"
+ 
+ type BooleanValue = boolean | null
+ 
+@@ -24,6 +24,11 @@ interface Props {
+   /** With a legend, the options are grouped in a fieldset named by it */
+   legend?: string
+   description?: string
++  /**
++   * Called before a change; the change only happens if it returns (or
++   * resolves to) true
++   */
++  confirmChange?: (next: BooleanValue) => boolean | Promise<boolean>
+ }
+ 
+ /**
+@@ -41,18 +46,34 @@ export default function BooleanField(props: Props): JSX.Element {
+     disabled = false,
+     legend,
+     description,
++    confirmChange,
+   } = props
++  const [confirming, setConfirming] = useState(false)
++  const isDisabled = disabled || confirming
+ 
+-  const handleChange = (event: any): void => {
+-    if (disabled) {
++  const handleChange = async (event: any): Promise<void> => {
++    if (isDisabled) {
+       return
+     }
+-    onChange({
+-      target: {
+-        name: event.target.name,
+-        value: fromRadioValue(event.target.value),
+-      },
+-    })
++    const fieldName = event.target.name
++    const next = fromRadioValue(event.target.value)
++
++    if (confirmChange) {
++      setConfirming(true)
++      let confirmed = false
++      try {
++        confirmed = (await confirmChange(next)) === true
++      } catch {
++        confirmed = false
++      } finally {
++        setConfirming(false)
++      }
++      if (!confirmed) {
++        return
++      }
++    }
++
++    onChange({ target: { name: fieldName, value: next } })
+   }
+ 
+   const options: Array<[BooleanValue, string]> = [
+@@ -75,7 +96,7 @@ export default function BooleanField(props: Props): JSX.Element {
+         value={toRadioValue(option)}
+         checked={selected === option}
+         onChange={handleChange}
+-        disabled={disabled}
++        disabled={isDisabled}
+       />
+       <label className="px-2" htmlFor={radioOptionId(name, option)}>
+         {label}
+@@ -83,8 +104,14 @@ export default function BooleanField(props: Props): JSX.Element {
+     </React.Fragment>
+   ))
+ 
++  const busy = confirming ? { "aria-busy": true } : {}
++
+   if (!legend) {
+-    return <div className={disabled ? "text-muted" : undefined}>{radios}</div>
++    return (
++      <div className={disabled ? "text-muted" : undefined} {...busy}>
++        {radios}
++      </div>
++    )
+   }
+ 
+   const descriptionId = `${name}_description`
+@@ -92,6 +119,7 @@ export default function BooleanField(props: Props): JSX.Element {
+     <fieldset
+       className={disabled ? "text-muted" : undefined}
+       aria-describedby={description ? descriptionId : undefined}
++      {...busy}
+     >
+       <legend className="h6">{legend}</legend>
+       {radios}

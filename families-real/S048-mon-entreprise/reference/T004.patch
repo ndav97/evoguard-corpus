@@ -1,0 +1,51 @@
+diff --git a/source/lib/navigation/pathUtils.ts b/source/lib/navigation/pathUtils.ts
+index 2c285109e..7cac363c4 100644
+--- a/source/lib/navigation/pathUtils.ts
++++ b/source/lib/navigation/pathUtils.ts
+@@ -109,3 +109,46 @@ function toQueryString(search?: Record<string, SearchValue>): string {
+ 
+ 	return query ? `?${query}` : ''
+ }
++
++// Higher is more specific: no wildcard, then more fixed segments, then more
++// required parameters.
++function specificity(pattern: string): [number, number, number] {
++	const parts = stripTrailingSlash(pattern).split('/').filter(Boolean)
++	const hasWildcard = parts[parts.length - 1] === '*'
++	const fixed = parts.filter((part) => !part.startsWith(':') && part !== '*')
++	const required = parts.filter(
++		(part) => part.startsWith(':') && !part.endsWith('?')
++	)
++
++	return [hasWildcard ? 0 : 1, fixed.length, required.length]
++}
++
++function compareSpecificity(a: string, b: string): number {
++	const [scoreA, scoreB] = [specificity(a), specificity(b)]
++	for (let i = 0; i < scoreA.length; i++) {
++		if (scoreA[i] !== scoreB[i]) {
++			return scoreB[i] - scoreA[i]
++		}
++	}
++
++	return 0
++}
++
++/**
++ * Returns the most specific pattern matching the pathname, with its params.
++ * Ties keep the order of the list.
++ */
++export function matchPaths(
++	patterns: string[],
++	pathname: string
++): { pattern: string; params: Record<string, string> } | null {
++	const sorted = [...patterns].sort(compareSpecificity)
++	for (const pattern of sorted) {
++		const match = matchPath(pattern, pathname)
++		if (match) {
++			return { pattern, params: match.params }
++		}
++	}
++
++	return null
++}

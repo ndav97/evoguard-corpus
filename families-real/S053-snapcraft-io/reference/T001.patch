@@ -1,0 +1,64 @@
+diff --git a/static/js/publisher/utils/formatGitCommit.tsx b/static/js/publisher/utils/formatGitCommit.tsx
+index 43e2cd4bb..e7b85d10b 100644
+--- a/static/js/publisher/utils/formatGitCommit.tsx
++++ b/static/js/publisher/utils/formatGitCommit.tsx
+@@ -1,19 +1,33 @@
+ /**
+- * Formats a git commit ID for display (truncates to 7 characters)
+- * @param commitId - The full git commit ID
+- * @returns The truncated commit ID or null if invalid
++ * Normalizes a git commit ID: trims it and lowercases it
++ * @param commitId - The git commit ID
++ * @returns The normalized commit ID, or null if it is not a hexadecimal ID
++ * of at least 7 characters
+  */
+-export function formatCommitId(commitId?: string | null): string | null {
++export function normalizeCommitId(commitId?: string | null): string | null {
+   if (!commitId || typeof commitId !== "string") {
+     return null;
+   }
+ 
+-  // Git commit IDs should be at least 7 characters long
+-  if (commitId.length < 7) {
++  const normalized = commitId.trim().toLowerCase();
++
++  // Git commit IDs are hexadecimal and at least 7 characters long
++  if (!/^[0-9a-f]{7,}$/.test(normalized)) {
+     return null;
+   }
+ 
+-  return commitId.substring(0, 7);
++  return normalized;
++}
++
++/**
++ * Formats a git commit ID for display (truncates to 7 characters)
++ * @param commitId - The full git commit ID
++ * @returns The truncated commit ID or null if invalid
++ */
++export function formatCommitId(commitId?: string | null): string | null {
++  const normalized = normalizeCommitId(commitId);
++
++  return normalized ? normalized.substring(0, 7) : null;
+ }
+ 
+ /**
+@@ -26,7 +40,8 @@ export function createGitHubCommitUrl(
+   githubRepository?: string | null,
+   commitId?: string | null,
+ ): string | null {
+-  if (!githubRepository || !commitId) {
++  const normalizedCommitId = normalizeCommitId(commitId);
++  if (!githubRepository || !normalizedCommitId) {
+     return null;
+   }
+ 
+@@ -38,7 +53,7 @@ export function createGitHubCommitUrl(
+     return null;
+   }
+ 
+-  return `https://github.com/${githubRepository}/commit/${commitId}`;
++  return `https://github.com/${githubRepository}/commit/${normalizedCommitId}`;
+ }
+ 
+ /**

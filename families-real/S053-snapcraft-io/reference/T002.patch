@@ -1,0 +1,63 @@
+diff --git a/static/js/publisher/utils/formatGitCommit.tsx b/static/js/publisher/utils/formatGitCommit.tsx
+index e7b85d10b..461239bec 100644
+--- a/static/js/publisher/utils/formatGitCommit.tsx
++++ b/static/js/publisher/utils/formatGitCommit.tsx
+@@ -19,15 +19,30 @@ export function normalizeCommitId(commitId?: string | null): string | null {
+   return normalized;
+ }
+ 
++const DEFAULT_COMMIT_ID_LENGTH = 7;
++const MIN_COMMIT_ID_LENGTH = 4;
++const MAX_COMMIT_ID_LENGTH = 40;
++
+ /**
+- * Formats a git commit ID for display (truncates to 7 characters)
++ * Formats a git commit ID for display (truncates to 7 characters by default)
+  * @param commitId - The full git commit ID
++ * @param length - How many characters to show (integer between 4 and 40)
+  * @returns The truncated commit ID or null if invalid
+  */
+-export function formatCommitId(commitId?: string | null): string | null {
++export function formatCommitId(
++  commitId?: string | null,
++  length: number = DEFAULT_COMMIT_ID_LENGTH,
++): string | null {
+   const normalized = normalizeCommitId(commitId);
++  if (!normalized) {
++    return null;
++  }
++
++  const visibleLength = Number.isInteger(length)
++    ? Math.min(Math.max(length, MIN_COMMIT_ID_LENGTH), MAX_COMMIT_ID_LENGTH)
++    : DEFAULT_COMMIT_ID_LENGTH;
+ 
+-  return normalized ? normalized.substring(0, 7) : null;
++  return normalized.substring(0, visibleLength);
+ }
+ 
+ /**
+@@ -61,20 +76,23 @@ export function createGitHubCommitUrl(
+  * @param commitId - The git commit ID
+  * @param githubRepository - The GitHub repository in format "owner/repo"
+  * @param showLink - Whether to show as a clickable link (default: true)
++ * @param length - How many characters of the commit ID to show (default: 7)
+  * @returns JSX element or null if no commit ID
+  */
+ interface GitCommitLinkProps {
+   commitId?: string | null;
+   githubRepository?: string | null;
+   showLink?: boolean;
++  length?: number;
+ }
+ 
+ export function GitCommitLink({
+   commitId,
+   githubRepository,
+   showLink = true,
++  length,
+ }: GitCommitLinkProps): React.JSX.Element {
+-  const formattedCommitId = formatCommitId(commitId);
++  const formattedCommitId = formatCommitId(commitId, length);
+   const commitUrl = createGitHubCommitUrl(githubRepository, commitId);
+ 
+   return !formattedCommitId ? (

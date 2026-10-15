@@ -1,0 +1,17 @@
+diff --git a/source/lib/navigation/pathUtils.ts b/source/lib/navigation/pathUtils.ts
+index 7cac363c4..5680dd57b 100644
+--- a/source/lib/navigation/pathUtils.ts
++++ b/source/lib/navigation/pathUtils.ts
+@@ -94,6 +94,12 @@ export function generatePath(
+ 		.replace(/:([^/?]+)\??/g, (_, key: string) =>
+ 			encodeURIComponent(params[key] ?? '')
+ 		)
++		// A final wildcard takes the rest of the path, one encoded segment at a time
++		.replace(/\/\*$/, () => {
++			const rest = (params['*'] ?? '').split('/').filter(Boolean)
++
++			return rest.map((segment) => '/' + encodeURIComponent(segment)).join('')
++		})
+ 
+ 	return (path === '' ? '/' : path) + toQueryString(search)
+ }

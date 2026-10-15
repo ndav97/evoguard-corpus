@@ -1,0 +1,71 @@
+diff --git a/src/routes/utils/sort.ts b/src/routes/utils/sort.ts
+index d29733a8..7d72848c 100644
+--- a/src/routes/utils/sort.ts
++++ b/src/routes/utils/sort.ts
+@@ -9,6 +9,7 @@ interface BaseSortOptions<T> {
+   direction?: SortDirection;
+   key?: SortKeyFn<T>;
+   natural?: boolean;
++  dates?: boolean;
+   thenBy?: SortCriterion<T>[];
+ }
+ 
+@@ -21,6 +22,8 @@ interface ObjectSortOptions<T> {
+   direction?: SortDirection;
+   key?: keyof T | SortKeyFn<T>;
+   natural?: boolean;
++  // Compare text values as dates (e.g. "2026-01-31").
++  dates?: boolean;
+   // Criteria used, in order, when the main key ties.
+   thenBy?: SortCriterion<T>[];
+ }
+@@ -57,9 +60,26 @@ function isMissing(value: unknown) {
+   return value === undefined || value === null || (typeof value === 'number' && isNaN(value));
+ }
+ 
+-function compareByCriterion<T>(a: T, b: T, criterion: Partial<SortCriterion<T>>, natural: boolean) {
+-  const aVal = getValueForItem(a, criterion.key);
+-  const bVal = getValueForItem(b, criterion.key);
++// Dates are compared by time; invalid dates count as missing values.
++function normalizeValue(value: any, dates: boolean) {
++  if (value instanceof Date) {
++    return value.getTime();
++  }
++  if (dates && typeof value === 'string') {
++    return Date.parse(value);
++  }
++  return value;
++}
++
++function compareByCriterion<T>(
++  a: T,
++  b: T,
++  criterion: Partial<SortCriterion<T>>,
++  natural: boolean,
++  dates: boolean
++) {
++  const aVal = normalizeValue(getValueForItem(a, criterion.key), dates);
++  const bVal = normalizeValue(getValueForItem(b, criterion.key), dates);
+   // Items without a value always go last, whatever the direction.
+   const aMissing = isMissing(aVal);
+   const bMissing = isMissing(bVal);
+@@ -72,11 +92,17 @@ function compareByCriterion<T>(a: T, b: T, criterion: Partial<SortCriterion<T>>,
+ }
+ 
+ export function sort<T>(array: T[], options: SortOptions<T>): T[] {
+-  const { direction = SortDirection.asc, key, natural = false, thenBy = [] } = (options || {}) as ObjectSortOptions<T>;
++  const {
++    direction = SortDirection.asc,
++    key,
++    natural = false,
++    dates = false,
++    thenBy = [],
++  } = (options || {}) as ObjectSortOptions<T>;
+   const criteria: Partial<SortCriterion<T>>[] = [{ key, direction }, ...thenBy];
+   return [...array].sort((a, b) => {
+     for (const criterion of criteria) {
+-      const result = compareByCriterion(a, b, criterion, natural);
++      const result = compareByCriterion(a, b, criterion, natural, dates);
+       if (result !== 0) {
+         return result;
+       }

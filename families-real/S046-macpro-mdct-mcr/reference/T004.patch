@@ -1,0 +1,42 @@
+diff --git a/src/utils/other/mask.tsx b/src/utils/other/mask.tsx
+index e7545abb..2aaedb59 100644
+--- a/src/utils/other/mask.tsx
++++ b/src/utils/other/mask.tsx
+@@ -12,6 +12,9 @@ export const maskMap = {
+   integer: convertToThousandsSeparatedIntegerString,
+ };
+ 
++// -0 would be displayed as "-0"
++const withoutNegativeZero = (value: number) => (value === 0 ? 0 : value);
++
+ interface MaskedValue {
+   isValid: boolean;
+   maskedValue: string;
+@@ -36,7 +39,7 @@ export function maskResponseData(
+   )
+     return "Suppressed";
+ 
+-  const numericValue = Number(fieldResponseData);
++  const numericValue = withoutNegativeZero(Number(fieldResponseData));
+ 
+   let minimumFractionDigits = 0;
+   if (fieldMask === "currency" && !Number.isInteger(numericValue)) {
+@@ -132,7 +135,8 @@ export function convertToThousandsSeparatedString(
+ 
+     // Slide any extra decimals down to number of fixedDecimalPlaces
+     const fixedDecimal = valueAsFloat.toFixed(fixedDecimalPlaces);
+-    maskValue = Number(fixedDecimal).toLocaleString("en", {
++    const roundedValue = withoutNegativeZero(Number(fixedDecimal));
++    maskValue = roundedValue.toLocaleString("en", {
+       minimumFractionDigits: fixedDecimalPlaces,
+       maximumFractionDigits: fixedDecimalPlaces,
+     });
+@@ -140,7 +144,7 @@ export function convertToThousandsSeparatedString(
+   }
+ 
+   // Add in commas to delineate thousands (if needed)
+-  maskValue = Number(maskValue).toLocaleString("en", {
++  maskValue = withoutNegativeZero(Number(maskValue)).toLocaleString("en", {
+     // .toLocaleString rounds to 3 decimal places by default, so we have to set a minimum and maximum
+     minimumFractionDigits: 0,
+     maximumFractionDigits: maskValue.length,

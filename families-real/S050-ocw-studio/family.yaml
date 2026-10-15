@@ -1,0 +1,67 @@
+# Familia semi-real S050 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S050
+slug: ocw-studio
+stratum: semi-real
+repo: mitodl/ocw-studio
+url: https://github.com/mitodl/ocw-studio
+license: BSD-3-CLAUSE
+domain: Edición de sitios de cursos abiertos (MIT OpenCourseWare)
+v0:
+  commit: 4909ad7a0344067033f2abc8dce6dccb3a288977
+  date: 2026-10-02
+  verified: 2026-10-05 GREEN (845 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: jest
+node: "24"
+workspace: github__mitodl__ocw-studio          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: static/js/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: static/js/components/widgets/BooleanField.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Etiquetas propias para las opciones
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Permitir dejarlo sin valor
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Campo desactivado
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Agrupar las opciones con una leyenda
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Confirmar antes de cambiar
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: openai
+    V2: anthropic
+    V3: google
+    V4: local_a
+    V5: local_b
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

@@ -1,0 +1,75 @@
+diff --git a/static/js/components/widgets/BooleanField.tsx b/static/js/components/widgets/BooleanField.tsx
+index 16f12bc5..1006bfc5 100644
+--- a/static/js/components/widgets/BooleanField.tsx
++++ b/static/js/components/widgets/BooleanField.tsx
+@@ -7,13 +7,21 @@ interface Props {
+   name: string
+   value: boolean
+   onChange: (event: any) => void
++  trueLabel?: string
++  falseLabel?: string
+ }
+ 
+ /**
+  * A widget for editing boolean values
+  */
+ export default function BooleanField(props: Props): JSX.Element {
+-  const { name, value, onChange } = props
++  const {
++    name,
++    value,
++    onChange,
++    trueLabel = "True",
++    falseLabel = "False",
++  } = props
+ 
+   const handleChange = (event: any): void => {
+     onChange({
+@@ -35,7 +43,7 @@ export default function BooleanField(props: Props): JSX.Element {
+         onChange={handleChange}
+       />
+       <label className="px-2" htmlFor={radioOptionId(name, true)}>
+-        True
++        {trueLabel}
+       </label>
+       <input
+         type="radio"
+@@ -46,7 +54,7 @@ export default function BooleanField(props: Props): JSX.Element {
+         onChange={handleChange}
+       />
+       <label className="px-2" htmlFor={radioOptionId(name, false)}>
+-        False
++        {falseLabel}
+       </label>
+     </div>
+   )
+diff --git a/static/js/lib/site_content.ts b/static/js/lib/site_content.ts
+index 99e53571..52f1a0ca 100644
+--- a/static/js/lib/site_content.ts
++++ b/static/js/lib/site_content.ts
+@@ -121,6 +121,12 @@ export function widgetExtraProps(field: ConfigField): Record<string, any> {
+       return pick(HIERARCHICAL_SELECT_EXTRA_PROPS, field)
+     case WidgetVariant.String:
+       return pick(STRING_EXTRA_PROPS, field)
++    case WidgetVariant.Boolean: {
++      const labels: Record<string, string> = {}
++      if (field.true_label) labels.trueLabel = field.true_label
++      if (field.false_label) labels.falseLabel = field.false_label
++      return labels
++    }
+     default:
+       return {}
+   }
+diff --git a/static/js/types/websites.ts b/static/js/types/websites.ts
+index 4e688d8e..41aed112 100644
+--- a/static/js/types/websites.ts
++++ b/static/js/types/websites.ts
+@@ -68,6 +68,8 @@ export interface FileConfigField extends ConfigFieldBaseProps {
+ 
+ export interface BooleanConfigField extends ConfigFieldBaseProps {
+   widget: WidgetVariant.Boolean
++  true_label?: string // eslint-disable-line camelcase
++  false_label?: string // eslint-disable-line camelcase
+ }
+ 
+ export interface TextConfigField extends ConfigFieldBaseProps {

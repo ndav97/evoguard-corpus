@@ -1,0 +1,77 @@
+diff --git a/source/lib/navigation/pathUtils.ts b/source/lib/navigation/pathUtils.ts
+index fd6503044..4b25a408e 100644
+--- a/source/lib/navigation/pathUtils.ts
++++ b/source/lib/navigation/pathUtils.ts
+@@ -35,24 +35,43 @@ export function matchPath(
+ 		return null
+ 	}
+ 
+-	const patternParts = normalizedPattern.split('/')
+-	const pathParts = normalizedPath.split('/')
++	const params = matchSegments(
++		normalizedPattern.split('/'),
++		normalizedPath.split('/')
++	)
+ 
+-	if (patternParts.length !== pathParts.length) {
+-		return null
++	return params ? { params } : null
++}
++
++// Matches pattern segments against path segments. Optional parameters
++// (":name?") may be skipped; the first way of matching wins.
++function matchSegments(
++	patternParts: string[],
++	pathParts: string[]
++): Record<string, string> | null {
++	if (patternParts.length === 0) {
++		return pathParts.length === 0 ? {} : null
+ 	}
+ 
+-	const params: Record<string, string> = {}
++	const [part, ...restPattern] = patternParts
++	const isParam = part.startsWith(':')
++	const isOptional = isParam && part.endsWith('?')
+ 
+-	for (let i = 0; i < patternParts.length; i++) {
+-		if (patternParts[i].startsWith(':')) {
+-			params[patternParts[i].slice(1)] = decodeSegment(pathParts[i])
+-		} else if (patternParts[i] !== decodeSegment(pathParts[i])) {
+-			return null
++	if (pathParts.length > 0) {
++		const segment = decodeSegment(pathParts[0])
++		const restPath = pathParts.slice(1)
++		if (isParam) {
++			const rest = matchSegments(restPattern, restPath)
++			if (rest) {
++				const name = part.slice(1, isOptional ? -1 : undefined)
++				return { [name]: segment, ...rest }
++			}
++		} else if (part === segment) {
++			return matchSegments(restPattern, restPath)
+ 		}
+ 	}
+ 
+-	return { params }
++	return isOptional ? matchSegments(restPattern, pathParts) : null
+ }
+ 
+ export function generatePath(
+@@ -63,7 +82,14 @@ export function generatePath(
+ 		return pattern
+ 	}
+ 
+-	return pattern.replace(/:([^/]+)/g, (_, key: string) =>
+-		encodeURIComponent(params[key] ?? '')
+-	)
++	const path = pattern
++		// Optional parameters without a value disappear with their slash
++		.replace(/\/:([^/]+)\?(?=\/|$)/g, (segment, key: string) =>
++			params[key] ? segment : ''
++		)
++		.replace(/:([^/?]+)\??/g, (_, key: string) =>
++			encodeURIComponent(params[key] ?? '')
++		)
++
++	return path === '' ? '/' : path
+ }

@@ -1,0 +1,55 @@
+diff --git a/source/lib/navigation/pathUtils.ts b/source/lib/navigation/pathUtils.ts
+index d18553e06..fd6503044 100644
+--- a/source/lib/navigation/pathUtils.ts
++++ b/source/lib/navigation/pathUtils.ts
+@@ -2,6 +2,15 @@ function stripTrailingSlash(path: string): string {
+ 	return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path
+ }
+ 
++function decodeSegment(segment: string): string {
++	try {
++		return decodeURIComponent(segment)
++	} catch {
++		// Malformed escape sequence: keep the segment as it was
++		return segment
++	}
++}
++
+ export function matchPath(
+ 	pattern: string,
+ 	pathname: string
+@@ -13,7 +22,13 @@ export function matchPath(
+ 		const prefix = normalizedPattern.slice(0, -2)
+ 		if (normalizedPath === prefix || normalizedPath.startsWith(prefix + '/')) {
+ 			return {
+-				params: { '*': normalizedPath.slice(prefix.length + 1) },
++				params: {
++					'*': normalizedPath
++						.slice(prefix.length + 1)
++						.split('/')
++						.map(decodeSegment)
++						.join('/'),
++				},
+ 			}
+ 		}
+ 
+@@ -31,8 +46,8 @@ export function matchPath(
+ 
+ 	for (let i = 0; i < patternParts.length; i++) {
+ 		if (patternParts[i].startsWith(':')) {
+-			params[patternParts[i].slice(1)] = pathParts[i]
+-		} else if (patternParts[i] !== pathParts[i]) {
++			params[patternParts[i].slice(1)] = decodeSegment(pathParts[i])
++		} else if (patternParts[i] !== decodeSegment(pathParts[i])) {
+ 			return null
+ 		}
+ 	}
+@@ -48,5 +63,7 @@ export function generatePath(
+ 		return pattern
+ 	}
+ 
+-	return pattern.replace(/:([^/]+)/g, (_, key) => params[key] ?? '')
++	return pattern.replace(/:([^/]+)/g, (_, key: string) =>
++		encodeURIComponent(params[key] ?? '')
++	)
+ }

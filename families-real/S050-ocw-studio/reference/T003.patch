@@ -1,0 +1,43 @@
+diff --git a/static/js/components/widgets/BooleanField.tsx b/static/js/components/widgets/BooleanField.tsx
+index f8de7dce..9d29176c 100644
+--- a/static/js/components/widgets/BooleanField.tsx
++++ b/static/js/components/widgets/BooleanField.tsx
+@@ -20,6 +20,7 @@ interface Props {
+   /** Adds a third option to leave the field without a value (null) */
+   allowUnset?: boolean
+   unsetLabel?: string
++  disabled?: boolean
+ }
+ 
+ /**
+@@ -34,9 +35,13 @@ export default function BooleanField(props: Props): JSX.Element {
+     falseLabel = "False",
+     allowUnset = false,
+     unsetLabel = "Not set",
++    disabled = false,
+   } = props
+ 
+   const handleChange = (event: any): void => {
++    if (disabled) {
++      return
++    }
+     onChange({
+       target: {
+         name: event.target.name,
+@@ -57,7 +62,7 @@ export default function BooleanField(props: Props): JSX.Element {
+     allowUnset && (value === null || value === undefined) ? null : value
+ 
+   return (
+-    <div>
++    <div className={disabled ? "text-muted" : undefined}>
+       {options.map(([option, label]) => (
+         <React.Fragment key={toRadioValue(option)}>
+           <input
+@@ -67,6 +72,7 @@ export default function BooleanField(props: Props): JSX.Element {
+             value={toRadioValue(option)}
+             checked={selected === option}
+             onChange={handleChange}
++            disabled={disabled}
+           />
+           <label className="px-2" htmlFor={radioOptionId(name, option)}>
+             {label}

@@ -1,0 +1,72 @@
+diff --git a/src/utils/other/mask.tsx b/src/utils/other/mask.tsx
+index 2aaedb59..6660c34c 100644
+--- a/src/utils/other/mask.tsx
++++ b/src/utils/other/mask.tsx
+@@ -20,10 +20,12 @@ interface MaskedValue {
+   maskedValue: string;
+ }
+ 
+-// mask response data as necessary
++// mask response data as necessary; with fixedDecimalPlaces, numbers are shown
++// rounded to exactly that many decimals
+ export function maskResponseData(
+   fieldResponseData: any,
+-  fieldMask?: string
++  fieldMask?: string,
++  fixedDecimalPlaces?: number
+ ): string {
+   if (
+     fieldResponseData === undefined ||
+@@ -39,18 +41,34 @@ export function maskResponseData(
+   )
+     return "Suppressed";
+ 
+-  const numericValue = withoutNegativeZero(Number(fieldResponseData));
++  const hasFixedDecimals =
++    Number.isInteger(fixedDecimalPlaces) && fixedDecimalPlaces! >= 0;
++
++  let numericValue = withoutNegativeZero(Number(fieldResponseData));
++  if (hasFixedDecimals) {
++    numericValue = withoutNegativeZero(
++      Number(numericValue.toFixed(fixedDecimalPlaces))
++    );
++  }
+ 
+   let minimumFractionDigits = 0;
+   if (fieldMask === "currency" && !Number.isInteger(numericValue)) {
+     minimumFractionDigits = 2;
+   }
+ 
+-  const maskValue = numericValue.toLocaleString("en", {
+-    // .toLocaleString rounds to 3 decimal places by default, so we have to set a minimum and maximum
+-    minimumFractionDigits,
+-    maximumFractionDigits: fieldResponseData.length,
+-  });
++  const maskValue = numericValue.toLocaleString(
++    "en",
++    hasFixedDecimals
++      ? {
++          minimumFractionDigits: fixedDecimalPlaces,
++          maximumFractionDigits: fixedDecimalPlaces,
++        }
++      : {
++          // .toLocaleString rounds to 3 decimal places by default, so we have to set a minimum and maximum
++          minimumFractionDigits,
++          maximumFractionDigits: fieldResponseData.length,
++        }
++  );
+ 
+   switch (fieldMask) {
+     case "percentage":
+@@ -63,9 +81,9 @@ export function maskResponseData(
+     case "ratio": {
+       let sidesOfRatio = fieldResponseData.split(":");
+       return (
+-        maskResponseData(sidesOfRatio[0]) +
++        maskResponseData(sidesOfRatio[0], undefined, fixedDecimalPlaces) +
+         ":" +
+-        maskResponseData(sidesOfRatio[1])
++        maskResponseData(sidesOfRatio[1], undefined, fixedDecimalPlaces)
+       );
+     }
+     default:

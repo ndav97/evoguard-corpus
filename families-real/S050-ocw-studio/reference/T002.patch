@@ -1,0 +1,104 @@
+diff --git a/static/js/components/widgets/BooleanField.tsx b/static/js/components/widgets/BooleanField.tsx
+index 1006bfc5..f8de7dce 100644
+--- a/static/js/components/widgets/BooleanField.tsx
++++ b/static/js/components/widgets/BooleanField.tsx
+@@ -1,14 +1,25 @@
+ import React from "react"
+ 
+-const radioOptionId = (name: string, bool: boolean): string =>
+-  `${name}_${String(bool)}`
++type BooleanValue = boolean | null
++
++const radioOptionId = (name: string, option: BooleanValue): string =>
++  `${name}_${option === null ? "unset" : String(option)}`
++
++const toRadioValue = (option: BooleanValue): string =>
++  option === null ? "" : String(option)
++
++const fromRadioValue = (radioValue: string): BooleanValue =>
++  radioValue === "" ? null : radioValue === "true"
+ 
+ interface Props {
+   name: string
+-  value: boolean
++  value: boolean | null | undefined
+   onChange: (event: any) => void
+   trueLabel?: string
+   falseLabel?: string
++  /** Adds a third option to leave the field without a value (null) */
++  allowUnset?: boolean
++  unsetLabel?: string
+ }
+ 
+ /**
+@@ -21,41 +32,47 @@ export default function BooleanField(props: Props): JSX.Element {
+     onChange,
+     trueLabel = "True",
+     falseLabel = "False",
++    allowUnset = false,
++    unsetLabel = "Not set",
+   } = props
+ 
+   const handleChange = (event: any): void => {
+     onChange({
+       target: {
+         name: event.target.name,
+-        value: event.target.value === "true",
++        value: fromRadioValue(event.target.value),
+       },
+     })
+   }
+ 
++  const options: Array<[BooleanValue, string]> = [
++    [true, trueLabel],
++    [false, falseLabel],
++  ]
++  if (allowUnset) {
++    options.push([null, unsetLabel])
++  }
++
++  const selected: BooleanValue | undefined =
++    allowUnset && (value === null || value === undefined) ? null : value
++
+   return (
+     <div>
+-      <input
+-        type="radio"
+-        id={radioOptionId(name, true)}
+-        name={name}
+-        value="true"
+-        checked={value === true}
+-        onChange={handleChange}
+-      />
+-      <label className="px-2" htmlFor={radioOptionId(name, true)}>
+-        {trueLabel}
+-      </label>
+-      <input
+-        type="radio"
+-        id={radioOptionId(name, false)}
+-        name={name}
+-        value="false"
+-        checked={value === false}
+-        onChange={handleChange}
+-      />
+-      <label className="px-2" htmlFor={radioOptionId(name, false)}>
+-        {falseLabel}
+-      </label>
++      {options.map(([option, label]) => (
++        <React.Fragment key={toRadioValue(option)}>
++          <input
++            type="radio"
++            id={radioOptionId(name, option)}
++            name={name}
++            value={toRadioValue(option)}
++            checked={selected === option}
++            onChange={handleChange}
++          />
++          <label className="px-2" htmlFor={radioOptionId(name, option)}>
++            {label}
++          </label>
++        </React.Fragment>
++      ))}
+     </div>
+   )
+ }
