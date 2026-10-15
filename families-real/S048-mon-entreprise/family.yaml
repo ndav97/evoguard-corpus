@@ -23,27 +23,27 @@ turns:
   - id: T001
     title: Codificar y decodificar parámetros
     request: turns/T001.md
-    hidden_tests: oracle/T001.test.tsx
+    hidden_tests: oracle/T001.test.ts
     reference_patch: reference/T001.patch
   - id: T002
     title: Parámetros opcionales
     request: turns/T002.md
-    hidden_tests: oracle/T002.test.tsx
+    hidden_tests: oracle/T002.test.ts
     reference_patch: reference/T002.patch
   - id: T003
     title: Consulta y fragmento en las rutas
     request: turns/T003.md
-    hidden_tests: oracle/T003.test.tsx
+    hidden_tests: oracle/T003.test.ts
     reference_patch: reference/T003.patch
   - id: T004
     title: Elegir la ruta más específica
     request: turns/T004.md
-    hidden_tests: oracle/T004.test.tsx
+    hidden_tests: oracle/T004.test.ts
     reference_patch: reference/T004.patch
   - id: T005
     title: Generar rutas con comodín
     request: turns/T005.md
-    hidden_tests: oracle/T005.test.tsx
+    hidden_tests: oracle/T005.test.ts
     reference_patch: reference/T005.patch
 provenance:
   authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
