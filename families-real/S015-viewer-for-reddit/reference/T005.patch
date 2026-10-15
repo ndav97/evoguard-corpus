@@ -1,0 +1,48 @@
+diff --git a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+index 02fb122..fd00b3b 100644
+--- a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
++++ b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+@@ -5,6 +5,7 @@ import {useSubscriptionsFilterSort} from '@/lib/hooks/useSubscriptionsFilterSort
+ import {Avatar, Button, NavLink, Select, Stack, Text, TextInput} from '@mantine/core'
+ import {IconMessage, IconSearch} from '@tabler/icons-react'
+ import Link from 'next/link'
++import {useRef} from 'react'
+ 
+ /**
+  * Props for the SubscriptionFilterList component.
+@@ -27,6 +28,12 @@ export function SubscriptionFilterList({
+   } = useSubscriptionsFilterSort({
+     initialSubscriptions: subscriptions
+   })
++  const searchInputRef = useRef<HTMLInputElement>(null)
++
++  const clearSearch = () => {
++    setSearchQuery('')
++    searchInputRef.current?.focus()
++  }
+ 
+   return (
+     <Stack gap="xs">
+@@ -35,6 +42,13 @@ export function SubscriptionFilterList({
+         placeholder="Search subreddits..."
+         value={searchQuery}
+         onChange={(e) => setSearchQuery(e.currentTarget.value)}
++        onKeyDown={(e) => {
++          if (e.key === 'Escape' && searchQuery !== '') {
++            e.preventDefault()
++            clearSearch()
++          }
++        }}
++        ref={searchInputRef}
+         leftSection={<IconSearch size={16} />}
+         size="xs"
+         styles={{input: {fontSize: 16}}}
+@@ -69,7 +83,7 @@ export function SubscriptionFilterList({
+           <Text size="sm" c="dimmed" role="status">
+             {`No subreddits match "${searchQuery.trim()}"`}
+           </Text>
+-          <Button size="xs" variant="subtle" onClick={() => setSearchQuery('')}>
++          <Button size="xs" variant="subtle" onClick={clearSearch}>
+             Clear search
+           </Button>
+         </Stack>

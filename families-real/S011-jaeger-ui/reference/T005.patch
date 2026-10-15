@@ -1,0 +1,14 @@
+diff --git a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+index ec738af5..b933790f 100644
+--- a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
++++ b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+@@ -53,7 +53,8 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+     }
+     if (event.key !== 'Enter' || !navigable || !textFilter) return;
+     event.preventDefault();
+-    if (event.shiftKey) prevResult();
++    if (event.ctrlKey || event.metaKey) focusUiFindMatches();
++    else if (event.shiftKey) prevResult();
+     else nextResult();
+   };
+ 

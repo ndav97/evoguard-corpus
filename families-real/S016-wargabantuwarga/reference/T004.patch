@@ -1,0 +1,26 @@
+diff --git a/components/search-form.tsx b/components/search-form.tsx
+index b36bde8..e7fb215 100644
+--- a/components/search-form.tsx
++++ b/components/search-form.tsx
+@@ -107,6 +107,13 @@ export function SearchForm({
+     onSubmitKeywords("", filters, sortBy);
+   }
+ 
++  function handleKeywordsKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
++    if (event.key === "Escape" && keywords !== "") {
++      event.preventDefault();
++      handleClear();
++    }
++  }
++
+   function handleFilterChange(event: ChangeEvent<HTMLSelectElement>) {
+     const newFilters = { ...filters };
+     const filterName = event.target.name;
+@@ -145,6 +152,7 @@ export function SearchForm({
+                 id="keywordsInput"
+                 isGroupItem
+                 onChange={handleKeywordsChange}
++                onKeyDown={handleKeywordsKeyDown}
+                 placeholder={placeholderText}
+                 type="text"
+                 value={keywords}

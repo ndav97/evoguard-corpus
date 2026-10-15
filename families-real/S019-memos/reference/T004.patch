@@ -1,0 +1,27 @@
+diff --git a/src/utils/format.ts b/src/utils/format.ts
+index 06389bf6..268704ac 100644
+--- a/src/utils/format.ts
++++ b/src/utils/format.ts
+@@ -1,13 +1,18 @@
+-export function formatFileSize(bytes: number): string {
++export interface FormatFileSizeOptions {
++  /** Decimal (SI) units: base 1000 and "kB", "MB", "GB", "TB". */
++  si?: boolean;
++}
++
++export function formatFileSize(bytes: number, options: FormatFileSizeOptions = {}): string {
+   if (!Number.isFinite(bytes) || bytes < 0) return "Invalid size";
+   const whole = Math.floor(bytes);
+   if (whole === 0) return "0 B";
+ 
+-  const units = ["B", "KB", "MB", "GB", "TB"];
+-  const k = 1024;
++  const units = options.si ? ["B", "kB", "MB", "GB", "TB"] : ["B", "KB", "MB", "GB", "TB"];
++  const k = options.si ? 1000 : 1024;
+   let i = Math.min(Math.floor(Math.log(whole) / Math.log(k)), units.length - 1);
+   let size = whole / Math.pow(k, i);
+-  // A value that rounds up to 1024 is shown in the next unit (1048570 B → "1.0 MB", not "1024.0 KB").
++  // A value that rounds up to the base (1024, or 1000 in SI) is shown in the next unit (1048570 B → "1.0 MB", not "1024.0 KB").
+   if (i > 0 && i < units.length - 1 && Number(size.toFixed(1)) >= k) {
+     i += 1;
+     size = whole / Math.pow(k, i);

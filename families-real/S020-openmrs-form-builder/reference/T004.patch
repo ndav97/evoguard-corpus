@@ -1,0 +1,37 @@
+diff --git a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+index ca3b32e..296555a 100644
+--- a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
++++ b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+@@ -23,6 +23,21 @@ const Number: React.FC = () => {
+ 
+   const hasRange = [min, max, step].some((value) => value !== '');
+ 
++  // With min, max and step all valid, the range must be a whole number of steps.
++  const stepFitsRange = (() => {
++    if ([min, max, step].some((value) => value.trim() === '') || !minIsValid || !maxIsValid || !stepIsValid) {
++      return true;
++    }
++    if (rangeIsInverted) return true;
++    const steps = (parseFloat(max) - parseFloat(min)) / parseFloat(step);
++    return Math.abs(steps - Math.round(steps)) < 1e-9 * Math.max(1, Math.abs(steps));
++  })();
++  const stepInvalidText = !stepIsValid
++    ? t('invalidStep', 'Step must be a number greater than 0')
++    : !stepFitsRange
++      ? t('stepDoesNotFitRange', 'The range must be a multiple of the step')
++      : '';
++
+   const clearRange = () => {
+     const { min: _min, max: _max, step: _step, ...questionOptions } = formField.questionOptions ?? {};
+     setFormField({ ...formField, questionOptions });
+@@ -68,8 +83,8 @@ const Number: React.FC = () => {
+         id="step"
+         labelText={t('stepValue', 'Step between allowed values')}
+         value={step}
+-        invalid={!stepIsValid}
+-        invalidText={stepIsValid ? '' : t('invalidStep', 'Step must be a number greater than 0')}
++        invalid={!stepIsValid || !stepFitsRange}
++        invalidText={stepInvalidText}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+             ...formField,

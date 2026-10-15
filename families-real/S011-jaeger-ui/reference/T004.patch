@@ -1,0 +1,26 @@
+diff --git a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+index fec3a4f0..ec738af5 100644
+--- a/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
++++ b/src/components/TracePage/TracePageHeader/TracePageSearchBar.tsx
+@@ -25,6 +25,7 @@ type TracePageSearchBarProps = {
+ 
+ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwardedRef: React.Ref<InputRef> }) {
+   const {
++    clearSearch,
+     focusUiFindMatches,
+     forwardedRef,
+     navigable,
+@@ -43,6 +44,13 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
+   ) : null;
+ 
+   const onSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
++    if (event.key === 'Escape') {
++      if (textFilter) {
++        event.preventDefault();
++        clearSearch();
++      }
++      return;
++    }
+     if (event.key !== 'Enter' || !navigable || !textFilter) return;
+     event.preventDefault();
+     if (event.shiftKey) prevResult();

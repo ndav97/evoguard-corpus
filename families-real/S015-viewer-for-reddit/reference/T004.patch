@@ -1,0 +1,18 @@
+diff --git a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+index b9a174c..02fb122 100644
+--- a/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
++++ b/components/ui/SubscriptionFilterList/SubscriptionFilterList.tsx
+@@ -57,6 +57,13 @@ export function SubscriptionFilterList({
+         aria-label="Sort subscriptions"
+         allowDeselect={false}
+       />
++      {filteredSubscriptions.length > 0 && searchQuery.trim() !== '' && (
++        <Text size="xs" c="dimmed" data-testid="subscription-count">
++          {`Showing ${filteredSubscriptions.length} of ${subscriptions.length} ${
++            subscriptions.length === 1 ? 'subreddit' : 'subreddits'
++          }`}
++        </Text>
++      )}
+       {filteredSubscriptions.length === 0 && searchQuery.trim() !== '' && (
+         <Stack gap={4} align="flex-start">
+           <Text size="sm" c="dimmed" role="status">

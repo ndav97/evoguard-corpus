@@ -1,0 +1,61 @@
+diff --git a/client/modules/IDE/components/Toast.jsx b/client/modules/IDE/components/Toast.jsx
+index 4a36d84f..35744523 100644
+--- a/client/modules/IDE/components/Toast.jsx
++++ b/client/modules/IDE/components/Toast.jsx
+@@ -6,7 +6,9 @@ import { hideToast, pauseToast, resumeToast } from '../actions/toast';
+ import ExitIcon from '../../../images/exit.svg';
+ 
+ export default function Toast() {
+-  const { text, isVisible, variant } = useSelector((state) => state.toast);
++  const { text, isVisible, variant, count } = useSelector(
++    (state) => state.toast
++  );
+   const dispatch = useDispatch();
+   const { t } = useTranslation();
+ 
+@@ -39,7 +41,10 @@ export default function Toast() {
+         }
+       }}
+     >
+-      <p>{t(text)}</p>
++      <p>
++        {t(text)}
++        {count > 1 && <span className="toast__count">{` ×${count}`}</span>}
++      </p>
+       <button
+         className="toast__close"
+         onClick={() => dispatch(hideToast())}
+diff --git a/client/modules/IDE/reducers/toast.js b/client/modules/IDE/reducers/toast.js
+index 63af698a..2c71d3dd 100644
+--- a/client/modules/IDE/reducers/toast.js
++++ b/client/modules/IDE/reducers/toast.js
+@@ -3,7 +3,10 @@ import * as ActionTypes from '../../../constants';
+ const initialState = {
+   isVisible: false,
+   text: '',
+-  variant: 'info'
++  variant: 'info',
++  // Times the same text has been shown in a row while visible.
++  count: 1,
++  shownText: null
+ };
+ 
+ const toast = (state = initialState, action) => {
+@@ -11,10 +14,15 @@ const toast = (state = initialState, action) => {
+     case ActionTypes.SHOW_TOAST:
+       return Object.assign({}, state, {
+         isVisible: true,
+-        variant: action.variant === 'error' ? 'error' : 'info'
++        variant: action.variant === 'error' ? 'error' : 'info',
++        count:
++          state.isVisible && state.shownText === state.text
++            ? (state.count || 1) + 1
++            : 1,
++        shownText: state.text
+       });
+     case ActionTypes.HIDE_TOAST:
+-      return Object.assign({}, state, { isVisible: false });
++      return Object.assign({}, state, { isVisible: false, count: 1 });
+     case ActionTypes.SET_TOAST_TEXT:
+       return Object.assign({}, state, { text: action.text });
+     default:

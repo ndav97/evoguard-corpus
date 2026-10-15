@@ -1,0 +1,22 @@
+diff --git a/src/components/resources/TraefikResourceStatsCard.tsx b/src/components/resources/TraefikResourceStatsCard.tsx
+index b0488d0a..870a5d20 100644
+--- a/src/components/resources/TraefikResourceStatsCard.tsx
++++ b/src/components/resources/TraefikResourceStatsCard.tsx
+@@ -158,6 +158,7 @@ const TraefikResourceStatsCard = ({
+ 
+   // Si los datos llegan incoherentes (errores + avisos > total), los porcentajes se calculan sobre la suma real.
+   const shownTotal = counts.success + counts.warnings + counts.errors
++  const problems = counts.warnings + counts.errors
+ 
+   const percents = useMemo(() => {
+     const [success, warning, error] = getPercents([counts.success, counts.warnings, counts.errors], shownTotal)
+@@ -222,6 +223,9 @@ const TraefikResourceStatsCard = ({
+           )}
+         </Flex>
+       )}
++      <Text role="status" data-testid="stats-health" css={{ pb: '$2', color: problems ? '$red10' : '$green10' }}>
++        {problems === 0 ? 'All healthy' : `${problems} with ${problems === 1 ? 'a problem' : 'problems'}`}
++      </Text>
+       <Flex css={{ flex: '1' }}>
+         <Box css={{ width: '50%' }}>
+           <Doughnut data={data} options={options} />

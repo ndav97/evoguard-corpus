@@ -1,4 +1,5 @@
-# Familia semi-real S018 — base real + cambios T001–T003 redactados por el equipo (Claude).
+# Familia semi-real S018 — base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# T001–T003 del piloto (calibrados); T004–T005 añadidos el 2026-10-15 para el corpus definitivo de cinco turnos.
 # Añadida el 2026-10-02 al ampliar el piloto a 20 familias semi-reales (config/strata.json).
 id: S018
 slug: p5js-web-editor
@@ -27,7 +28,7 @@ known_failures:
   - "server/models/__test__/user.test.ts › User model should find user by username (case insensitive)"
   - "server/models/__test__/user.test.ts › User model should return null for wrong username/email"
   - "server/models/__test__/user.test.ts › User model should hash apiKeys on save and find matching key"
-focus: client/modules/IDE/components/Toast.jsx                 # zona que tocan los tres cambios
+focus: client/modules/IDE/components/Toast.jsx                 # zona que tocan los cinco cambios
 turns:
   - id: T001
     title: Cerrar los avisos con Escape
@@ -44,12 +45,22 @@ turns:
     request: turns/T003.md
     hidden_tests: oracle/T003.test.jsx
     reference_patch: reference/T003.patch
+  - id: T004
+    title: No cerrar el aviso mientras el usuario lo mira
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.jsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Contar los avisos repetidos
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.jsx
+    reference_patch: reference/T005.patch
 provenance:
   authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
   authored_at: 2026-10-02
-  status: CALIBRATED
-  calibrated_at: "2026-10-04, tests ocultos reforzados tras el triaje de mutantes y su segunda revisión (T001 3/6, T002 3/5, T003 1/4 fail-to-pass; suite 460 tests sin regresiones; estable 2/2)"
-# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V3). Rotación por fila:
+  status: DRAFT
+  calibrated_at: "T001–T003: 2026-10-04, tests ocultos reforzados tras el triaje de mutantes y su segunda revisión (T001 3/6, T002 3/5, T003 1/4 fail-to-pass; suite 460 tests sin regresiones; estable 2/2); T004–T005 pendientes"
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
 # proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
 generation:
   status: DRAFT
@@ -57,7 +68,11 @@ generation:
     V1: local_a
     V2: local_b
     V3: openai
+    V4: anthropic
+    V5: google
   references:
     V1: null
     V2: null
     V3: null
+    V4: null
+    V5: null

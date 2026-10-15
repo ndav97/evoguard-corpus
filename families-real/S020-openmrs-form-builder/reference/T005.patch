@@ -1,0 +1,104 @@
+diff --git a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+index 296555a..2c424c5 100644
+--- a/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
++++ b/src/components/interactive-builder/modals/question/question-form/rendering-types/inputs/number/number.component.tsx
+@@ -1,6 +1,6 @@
+ import React from 'react';
+ import { useTranslation } from 'react-i18next';
+-import { Button, TextInput } from '@carbon/react';
++import { Button, Checkbox, TextInput } from '@carbon/react';
+ import { useFormField } from '../../../../form-field-context';
+ 
+ // An empty value is allowed; anything else must be a complete number such as "5", "-2" or "0.5".
+@@ -15,6 +15,10 @@ const Number: React.FC = () => {
+ 
+   const min = String(formField.questionOptions?.min ?? '');
+   const max = String(formField.questionOptions?.max ?? '');
++  const disallowDecimals = formField.questionOptions?.disallowDecimals === true;
++  // With decimals disallowed, a valid value must also be a whole number ("5" or "5.0", not "5.5").
++  const hasDecimals = (value: string) =>
++    disallowDecimals && value.trim() !== '' && isValidNumber(value) && !globalThis.Number.isInteger(parseFloat(value));
+   const minIsValid = isValidNumber(min);
+   const maxIsValid = isValidNumber(max);
+   const rangeIsInverted = parseFloat(min) > parseFloat(max);
+@@ -24,6 +28,8 @@ const Number: React.FC = () => {
+   const hasRange = [min, max, step].some((value) => value !== '');
+ 
+   // With min, max and step all valid, the range must be a whole number of steps.
++  const decimalsText = t('decimalsNotAllowed', 'Decimals are not allowed');
++
+   const stepFitsRange = (() => {
+     if ([min, max, step].some((value) => value.trim() === '') || !minIsValid || !maxIsValid || !stepIsValid) {
+       return true;
+@@ -34,7 +40,9 @@ const Number: React.FC = () => {
+   })();
+   const stepInvalidText = !stepIsValid
+     ? t('invalidStep', 'Step must be a number greater than 0')
+-    : !stepFitsRange
++    : hasDecimals(step)
++      ? decimalsText
++      : !stepFitsRange
+       ? t('stepDoesNotFitRange', 'The range must be a multiple of the step')
+       : '';
+ 
+@@ -43,8 +51,9 @@ const Number: React.FC = () => {
+     setFormField({ ...formField, questionOptions });
+   };
+ 
+-  const invalidTextFor = (isValid: boolean) => {
++  const invalidTextFor = (isValid: boolean, value: string) => {
+     if (!isValid) return t('invalidNumber', 'Enter a valid number');
++    if (hasDecimals(value)) return decimalsText;
+     if (rangeIsInverted) return t('invalidMinMax', 'Min value cannot be greater than max');
+     return '';
+   };
+@@ -55,8 +64,8 @@ const Number: React.FC = () => {
+         id="min"
+         labelText={t('minValue', 'Min value that can be entered')}
+         value={min}
+-        invalid={!minIsValid || rangeIsInverted}
+-        invalidText={invalidTextFor(minIsValid)}
++        invalid={!minIsValid || hasDecimals(min) || rangeIsInverted}
++        invalidText={invalidTextFor(minIsValid, min)}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+             ...formField,
+@@ -69,8 +78,8 @@ const Number: React.FC = () => {
+         id="max"
+         labelText={t('maxValue', 'Max value that can be entered')}
+         value={max}
+-        invalid={!maxIsValid || rangeIsInverted}
+-        invalidText={invalidTextFor(maxIsValid)}
++        invalid={!maxIsValid || hasDecimals(max) || rangeIsInverted}
++        invalidText={invalidTextFor(maxIsValid, max)}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+             ...formField,
+@@ -83,7 +92,7 @@ const Number: React.FC = () => {
+         id="step"
+         labelText={t('stepValue', 'Step between allowed values')}
+         value={step}
+-        invalid={!stepIsValid || !stepFitsRange}
++        invalid={!stepIsValid || hasDecimals(step) || !stepFitsRange}
+         invalidText={stepInvalidText}
+         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+           const updatedQuestion = {
+@@ -93,6 +102,18 @@ const Number: React.FC = () => {
+           setFormField(updatedQuestion);
+         }}
+       />
++      <Checkbox
++        id="allowDecimals"
++        labelText={t('allowDecimals', 'Allow decimal values')}
++        checked={!disallowDecimals}
++        onChange={(_event: React.ChangeEvent<HTMLInputElement>, { checked }: { checked: boolean }) => {
++          const { disallowDecimals: _previous, ...rest } = formField.questionOptions ?? {};
++          setFormField({
++            ...formField,
++            questionOptions: checked ? rest : { ...rest, disallowDecimals: true },
++          });
++        }}
++      />
+       {hasRange && (
+         <Button kind="ghost" size="sm" onClick={clearRange}>
+           {t('clearRange', 'Clear range')}

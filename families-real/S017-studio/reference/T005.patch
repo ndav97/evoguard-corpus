@@ -1,0 +1,30 @@
+diff --git a/src/components/site-preview/address-bar.tsx b/src/components/site-preview/address-bar.tsx
+index f397ada3..9c0f4a45 100644
+--- a/src/components/site-preview/address-bar.tsx
++++ b/src/components/site-preview/address-bar.tsx
+@@ -87,6 +87,14 @@ function getPathFromSiteHost( value: string, siteUrl: string ): string | null {
+ 	return null;
+ }
+ 
++// Single-word shortcuts for the site's admin and database areas.
++const KEYWORD_PATHS = new Map< string, string >( [
++	[ 'admin', '/wp-admin/' ],
++	[ 'wp-admin', '/wp-admin/' ],
++	[ 'database', DATABASE_HOME_PATH ],
++	[ 'phpmyadmin', DATABASE_HOME_PATH ],
++] );
++
+ type OmniboxIntent = { type: 'path'; path: string } | { type: 'search'; term: string };
+ 
+ export function parseOmniboxInput( raw: string, siteUrl: string ): OmniboxIntent | null {
+@@ -98,6 +106,10 @@ export function parseOmniboxInput( raw: string, siteUrl: string ): OmniboxIntent
+ 		const path = getPathFromPreviewUrl( value, siteUrl );
+ 		return path ? { type: 'path', path } : null;
+ 	}
++	const keywordPath = KEYWORD_PATHS.get( value.toLowerCase() );
++	if ( keywordPath ) {
++		return { type: 'path', path: keywordPath };
++	}
+ 	const hostPath = getPathFromSiteHost( value, siteUrl );
+ 	if ( hostPath ) {
+ 		return { type: 'path', path: hostPath };

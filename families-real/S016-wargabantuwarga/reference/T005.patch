@@ -1,0 +1,38 @@
+diff --git a/components/search-form.tsx b/components/search-form.tsx
+index e7fb215..0a01cf9 100644
+--- a/components/search-form.tsx
++++ b/components/search-form.tsx
+@@ -133,6 +133,17 @@ export function SearchForm({
+     onSubmitKeywords(keywords.trim(), filters, sortValue);
+   }
+ 
++  const filtersActive =
++    Object.values(filters ?? {}).some(
++      (value: any) => Array.isArray(value) && value.length > 0,
++    ) || sortBy !== defaultSort;
++
++  function handleResetFilters() {
++    setFilters({});
++    setSortBy(defaultSort);
++    onSubmitKeywords(keywords.trim(), {}, defaultSort);
++  }
++
+   useEffect(() => {
+     setKeywords(initialValue?.query ?? "");
+     setFilters(initialValue?.filters ?? {});
+@@ -218,6 +229,15 @@ export function SearchForm({
+           sortSettings={sortSettings}
+         />
+       )}
++      {filtersActive && (
++        <button
++          className="text-sm text-blue-600 hover:underline focus:outline-none focus:ring-1 focus:ring-blue-500"
++          onClick={handleResetFilters}
++          type="button"
++        >
++          Atur ulang filter
++        </button>
++      )}
+     </form>
+   );
+ }

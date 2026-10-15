@@ -1,0 +1,102 @@
+diff --git a/src/components/site-preview/address-bar.module.css b/src/components/site-preview/address-bar.module.css
+index 84706d4b..bd01feac 100644
+--- a/src/components/site-preview/address-bar.module.css
++++ b/src/components/site-preview/address-bar.module.css
+@@ -161,3 +161,22 @@
+ 	text-overflow: ellipsis;
+ 	white-space: nowrap;
+ }
++
++.recentRow {
++	display: flex;
++	align-items: center;
++}
++
++.recentRow .shortcut {
++	flex: 1;
++	min-width: 0;
++}
++
++.removeRecent {
++	flex: none;
++	border: 0;
++	background: transparent;
++	color: inherit;
++	cursor: pointer;
++	padding: 0 8px;
++}
+diff --git a/src/components/site-preview/address-bar.tsx b/src/components/site-preview/address-bar.tsx
+index d617327f..f397ada3 100644
+--- a/src/components/site-preview/address-bar.tsx
++++ b/src/components/site-preview/address-bar.tsx
+@@ -1,5 +1,5 @@
+ import { TRACKS_EVENTS, type TracksEventName } from '@studio/common/lib/record-tracks-event';
+-import { __ } from '@wordpress/i18n';
++import { __, sprintf } from '@wordpress/i18n';
+ import { external, Icon, wordpress } from '@wordpress/icons';
+ import { Popover, Tooltip, VisuallyHidden } from '@wordpress/ui';
+ import { useEffect, useRef, useState } from 'react';
+@@ -185,6 +185,23 @@ function storeRecentLocation(
+ 	return locations;
+ }
+ 
++function removeRecentLocation( siteId: string, path: string ): RecentPreviewLocation[] {
++	const locations = loadRecentLocations( siteId ).filter( ( recent ) => recent.path !== path );
++	try {
++		if ( locations.length ) {
++			window.localStorage.setItem(
++				getRecentLocationsStorageKey( siteId ),
++				JSON.stringify( { version: RECENT_LOCATIONS_VERSION, locations } )
++			);
++		} else {
++			window.localStorage.removeItem( getRecentLocationsStorageKey( siteId ) );
++		}
++	} catch {
++		// The address bar remains usable when storage is unavailable.
++	}
++	return locations;
++}
++
+ function clearRecentLocations( siteId: string ) {
+ 	try {
+ 		window.localStorage.removeItem( getRecentLocationsStorageKey( siteId ) );
+@@ -380,15 +397,30 @@ export function PreviewAddressBar( {
+ 							{ __( 'Clear recent' ) }
+ 						</button>
+ 						{ visibleRecentLocations.map( ( recent ) => (
+-							<Popover.Close
+-								key={ recent.path }
+-								className={ styles.shortcut }
+-								title={ recent.label }
+-								onClick={ () => chooseRecentLocation( recent ) }
+-							>
+-								{ renderLocationIcon( recent.path ) }
+-								<span className={ styles.shortcutUrl }>{ recent.label }</span>
+-							</Popover.Close>
++							<div key={ recent.path } className={ styles.recentRow }>
++								<Popover.Close
++									className={ styles.shortcut }
++									title={ recent.label }
++									onClick={ () => chooseRecentLocation( recent ) }
++								>
++									{ renderLocationIcon( recent.path ) }
++									<span className={ styles.shortcutUrl }>{ recent.label }</span>
++								</Popover.Close>
++								<button
++									type="button"
++									className={ styles.removeRecent }
++									aria-label={ sprintf(
++										/* translators: %s: address of a recently visited page. */
++										__( 'Remove %s from recent' ),
++										recent.label
++									) }
++									onClick={ () =>
++										setRecentLocations( removeRecentLocation( site.id, recent.path ) )
++									}
++								>
++									×
++								</button>
++							</div>
+ 						) ) }
+ 					</div>
+ 				) : null }

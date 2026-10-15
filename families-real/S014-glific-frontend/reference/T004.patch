@@ -1,0 +1,45 @@
+diff --git a/src/components/UI/Timer/Timer.tsx b/src/components/UI/Timer/Timer.tsx
+index c724dafd2..2410213b2 100644
+--- a/src/components/UI/Timer/Timer.tsx
++++ b/src/components/UI/Timer/Timer.tsx
+@@ -1,4 +1,4 @@
+-import { useState, useEffect } from 'react';
++import { useState, useEffect, useRef } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import dayjs from 'dayjs';
+ 
+@@ -11,6 +11,8 @@ export interface TimerProps {
+   contactStatus?: string;
+   contactBspStatus?: string;
+   variant?: 'primary' | 'secondary';
++  // Se llama una vez cuando la ventana de sesión expira mientras el componente está montado.
++  onExpire?: () => void;
+ }
+ 
+ export const Timer = (props: TimerProps) => {
+@@ -37,7 +39,7 @@ export const Timer = (props: TimerProps) => {
+     </>
+   );
+ 
+-  const { contactStatus, contactBspStatus, time, variant = 'primary' } = props;
++  const { contactStatus, contactBspStatus, time, variant = 'primary', onExpire } = props;
+ 
+   let intervalID: any;
+   useEffect(() => {
+@@ -48,6 +50,16 @@ export const Timer = (props: TimerProps) => {
+     return () => clearInterval(intervalID);
+   }, []);
+ 
++  // ¿Está expirada la ventana ahora? (null si no hay hora del último mensaje)
++  const expiredNow = time ? currentTime.diff(dayjs(time), 'hour') >= 24 : null;
++  const wasExpired = useRef<boolean | null>(expiredNow);
++  useEffect(() => {
++    if (expiredNow === true && wasExpired.current === false) {
++      onExpire?.();
++    }
++    wasExpired.current = expiredNow;
++  }, [expiredNow]);
++
+   if (!contactBspStatus && !contactStatus && !time) {
+     return null;
+   }

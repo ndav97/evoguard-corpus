@@ -1,0 +1,44 @@
+diff --git a/src/components/UI/Timer/Timer.tsx b/src/components/UI/Timer/Timer.tsx
+index 2410213b2..229e4794b 100644
+--- a/src/components/UI/Timer/Timer.tsx
++++ b/src/components/UI/Timer/Timer.tsx
+@@ -13,6 +13,8 @@ export interface TimerProps {
+   variant?: 'primary' | 'secondary';
+   // Se llama una vez cuando la ventana de sesión expira mientras el componente está montado.
+   onExpire?: () => void;
++  // Duración de la ventana de sesión en horas (24 por defecto).
++  windowHours?: number;
+ }
+ 
+ export const Timer = (props: TimerProps) => {
+@@ -40,6 +42,8 @@ export const Timer = (props: TimerProps) => {
+   );
+ 
+   const { contactStatus, contactBspStatus, time, variant = 'primary', onExpire } = props;
++  const windowHours =
++    Number.isInteger(props.windowHours) && (props.windowHours as number) > 0 ? (props.windowHours as number) : 24;
+ 
+   let intervalID: any;
+   useEffect(() => {
+@@ -51,7 +55,7 @@ export const Timer = (props: TimerProps) => {
+   }, []);
+ 
+   // ¿Está expirada la ventana ahora? (null si no hay hora del último mensaje)
+-  const expiredNow = time ? currentTime.diff(dayjs(time), 'hour') >= 24 : null;
++  const expiredNow = time ? currentTime.diff(dayjs(time), 'hour') >= windowHours : null;
+   const wasExpired = useRef<boolean | null>(expiredNow);
+   useEffect(() => {
+     if (expiredNow === true && wasExpired.current === false) {
+@@ -91,10 +95,10 @@ export const Timer = (props: TimerProps) => {
+     const duration = currentTime.diff(lastMessageTime, 'hour');
+     hours = Math.floor(duration);
+     if (hours < 0) hours = 0;
+-    hours = hours > 24 ? 0 : 24 - hours;
++    hours = hours > windowHours ? 0 : windowHours - hours;
+     if (hours === 1) {
+       const elapsedMinutes = Math.floor(currentTime.diff(lastMessageTime, 'minute'));
+-      minutesLeft = Math.max(24 * 60 - elapsedMinutes, 0);
++      minutesLeft = Math.max(windowHours * 60 - elapsedMinutes, 0);
+     }
+   }
+ 

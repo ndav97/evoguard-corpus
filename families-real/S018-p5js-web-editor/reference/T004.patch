@@ -1,0 +1,82 @@
+diff --git a/client/modules/IDE/actions/toast.js b/client/modules/IDE/actions/toast.js
+index 3d3e424b..60cf686f 100644
+--- a/client/modules/IDE/actions/toast.js
++++ b/client/modules/IDE/actions/toast.js
+@@ -3,6 +3,8 @@ import * as ActionTypes from '../../../constants';
+ // Pending automatic hide of the toast currently shown. A new toast cancels it,
+ // so each toast stays visible for its own full time.
+ let hideTimer = null;
++// Duration of the toast currently shown, to restart it after a pause.
++let currentTime = 1500;
+ 
+ export function hideToast() {
+   if (hideTimer) {
+@@ -38,6 +40,7 @@ export function showToast(textOrTime, timeout = 1500, variant = 'info') {
+       type: ActionTypes.SHOW_TOAST,
+       variant: variant === 'error' ? 'error' : 'info'
+     });
++    currentTime = time;
+     if (hideTimer) clearTimeout(hideTimer);
+     hideTimer = setTimeout(() => {
+       hideTimer = null;
+@@ -46,6 +49,32 @@ export function showToast(textOrTime, timeout = 1500, variant = 'info') {
+   };
+ }
+ 
++/**
++ * While the user hovers or focuses the toast, it does not hide automatically.
++ */
++export function pauseToast() {
++  return () => {
++    if (hideTimer) {
++      clearTimeout(hideTimer);
++      hideTimer = null;
++    }
++  };
++}
++
++/**
++ * Restarts the automatic hide with the full time of the toast shown.
++ */
++export function resumeToast() {
++  return (dispatch, getState) => {
++    if (!getState().toast.isVisible) return;
++    if (hideTimer) clearTimeout(hideTimer);
++    hideTimer = setTimeout(() => {
++      hideTimer = null;
++      dispatch(hideToast());
++    }, currentTime);
++  };
++}
++
+ export function setToastText(text) {
+   return {
+     type: ActionTypes.SET_TOAST_TEXT,
+diff --git a/client/modules/IDE/components/Toast.jsx b/client/modules/IDE/components/Toast.jsx
+index 6e901c32..4a36d84f 100644
+--- a/client/modules/IDE/components/Toast.jsx
++++ b/client/modules/IDE/components/Toast.jsx
+@@ -1,7 +1,7 @@
+ import React, { useEffect } from 'react';
+ import { useDispatch, useSelector } from 'react-redux';
+ import { useTranslation } from 'react-i18next';
+-import { hideToast } from '../actions/toast';
++import { hideToast, pauseToast, resumeToast } from '../actions/toast';
+ 
+ import ExitIcon from '../../../images/exit.svg';
+ 
+@@ -30,6 +30,14 @@ export default function Toast() {
+       className={isError ? 'toast toast--error' : 'toast'}
+       role={isError ? 'alert' : 'status'}
+       aria-live={isError ? 'assertive' : 'polite'}
++      onMouseEnter={() => dispatch(pauseToast())}
++      onMouseLeave={() => dispatch(resumeToast())}
++      onFocus={() => dispatch(pauseToast())}
++      onBlur={(event) => {
++        if (!event.currentTarget.contains(event.relatedTarget)) {
++          dispatch(resumeToast());
++        }
++      }}
+     >
+       <p>{t(text)}</p>
+       <button

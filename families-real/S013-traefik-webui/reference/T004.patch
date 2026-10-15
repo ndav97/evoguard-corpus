@@ -1,0 +1,38 @@
+diff --git a/src/components/resources/TraefikResourceStatsCard.tsx b/src/components/resources/TraefikResourceStatsCard.tsx
+index c9dd9025..b0488d0a 100644
+--- a/src/components/resources/TraefikResourceStatsCard.tsx
++++ b/src/components/resources/TraefikResourceStatsCard.tsx
+@@ -46,6 +46,8 @@ export type TraefikResourceStatsType = {
+ 
+ export type TraefikResourceStatsCardProps = TraefikResourceStatsType & {
+   linkTo: string
++  // Oculta las entradas de la leyenda cuyo recuento es 0.
++  hideEmpty?: boolean
+ }
+ 
+ export type DataType = {
+@@ -125,7 +127,14 @@ const CustomLegend = ({
+   )
+ }
+ 
+-const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: TraefikResourceStatsCardProps) => {
++const TraefikResourceStatsCard = ({
++  title,
++  errors,
++  total,
++  warnings,
++  linkTo,
++  hideEmpty = false,
++}: TraefikResourceStatsCardProps) => {
+   const navigate = useNavigate()
+ 
+   const defaultData = {
+@@ -218,7 +227,7 @@ const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: Tr
+           <Doughnut data={data} options={options} />
+         </Box>
+         <Box css={{ width: '50%' }}>
+-          {STATS_ATTRIBUTES.map((i) => (
++          {STATS_ATTRIBUTES.filter((i) => !hideEmpty || counts[i.label] > 0).map((i) => (
+             <CustomLegend
+               key={`${title}-${i.label}`}
+               {...i}

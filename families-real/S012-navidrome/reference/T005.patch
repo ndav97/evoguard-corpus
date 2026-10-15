@@ -1,0 +1,56 @@
+diff --git a/src/dialogs/SaveQueueDialog.jsx b/src/dialogs/SaveQueueDialog.jsx
+index 54c81528..0a4aa294 100644
+--- a/src/dialogs/SaveQueueDialog.jsx
++++ b/src/dialogs/SaveQueueDialog.jsx
+@@ -25,6 +25,7 @@ export const SaveQueueDialog = () => {
+   const dispatch = useDispatch()
+   const { open } = useSelector((state) => state.saveQueueDialog)
+   const queue = useSelector((state) => state.player.queue)
++  const currentUuid = useSelector((state) => state.player.current?.uuid)
+   const [name, setName] = useState('')
+   const dataProvider = useDataProvider()
+   const notify = useNotify()
+@@ -33,8 +34,14 @@ export const SaveQueueDialog = () => {
+   const [isSaving, setIsSaving] = useState(false)
+   const [saveFailed, setSaveFailed] = useState(false)
+   const [removeDuplicates, setRemoveDuplicates] = useState(false)
++  const [fromCurrent, setFromCurrent] = useState(false)
+   const refresh = useRefresh()
+-  const allIds = queue.map((item) => item.trackId)
++  const currentIndex = currentUuid
++    ? queue.findIndex((item) => item.uuid === currentUuid)
++    : -1
++  const selected =
++    fromCurrent && currentIndex >= 0 ? queue.slice(currentIndex) : queue
++  const allIds = selected.map((item) => item.trackId)
+   const ids = removeDuplicates ? [...new Set(allIds)] : allIds
+   const queueIsEmpty = queue.length === 0
+   const canSave = name.trim() !== '' && !queueIsEmpty && !isSaving
+@@ -44,6 +51,7 @@ export const SaveQueueDialog = () => {
+       setName('')
+       setSaveFailed(false)
+       setRemoveDuplicates(false)
++      setFromCurrent(false)
+       dispatch(closeSaveQueueDialog())
+       e.stopPropagation()
+     },
+@@ -139,6 +147,19 @@ export const SaveQueueDialog = () => {
+           }
+           label="Remove duplicate songs"
+         />
++        {currentIndex >= 0 && (
++          <FormControlLabel
++            control={
++              <Checkbox
++                checked={fromCurrent}
++                onChange={(e) => setFromCurrent(e.target.checked)}
++                disabled={isSaving}
++                color="primary"
++              />
++            }
++            label="Start from the current song"
++          />
++        )}
+         {saveFailed && (
+           <Typography variant="body2" color="error" role="alert">
+             Could not save the playlist.

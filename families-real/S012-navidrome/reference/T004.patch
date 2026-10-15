@@ -1,0 +1,73 @@
+diff --git a/src/dialogs/SaveQueueDialog.jsx b/src/dialogs/SaveQueueDialog.jsx
+index df44258d..54c81528 100644
+--- a/src/dialogs/SaveQueueDialog.jsx
++++ b/src/dialogs/SaveQueueDialog.jsx
+@@ -15,6 +15,8 @@ import {
+   TextField,
+   CircularProgress,
+   Typography,
++  Checkbox,
++  FormControlLabel,
+ } from '@material-ui/core'
+ import { closeSaveQueueDialog } from '../actions'
+ import { useHistory } from 'react-router-dom'
+@@ -30,7 +32,10 @@ export const SaveQueueDialog = () => {
+   const history = useHistory()
+   const [isSaving, setIsSaving] = useState(false)
+   const [saveFailed, setSaveFailed] = useState(false)
++  const [removeDuplicates, setRemoveDuplicates] = useState(false)
+   const refresh = useRefresh()
++  const allIds = queue.map((item) => item.trackId)
++  const ids = removeDuplicates ? [...new Set(allIds)] : allIds
+   const queueIsEmpty = queue.length === 0
+   const canSave = name.trim() !== '' && !queueIsEmpty && !isSaving
+ 
+@@ -38,6 +43,7 @@ export const SaveQueueDialog = () => {
+     (e) => {
+       setName('')
+       setSaveFailed(false)
++      setRemoveDuplicates(false)
+       dispatch(closeSaveQueueDialog())
+       e.stopPropagation()
+     },
+@@ -47,7 +53,6 @@ export const SaveQueueDialog = () => {
+   const handleSave = useCallback(() => {
+     setIsSaving(true)
+     setSaveFailed(false)
+-    const ids = queue.map((item) => item.trackId)
+     dataProvider
+       .create('playlist', { data: { name: name.trim() } })
+       .then((res) => {
+@@ -76,7 +81,7 @@ export const SaveQueueDialog = () => {
+         notify('ra.page.error', { type: 'warning' })
+       })
+       .finally(() => setIsSaving(false))
+-  }, [dataProvider, dispatch, notify, queue, name, history, refresh])
++  }, [dataProvider, dispatch, notify, ids, name, history, refresh])
+ 
+   const handleKeyPress = useCallback(
+     (e) => {
+@@ -119,10 +124,21 @@ export const SaveQueueDialog = () => {
+         >
+           {queueIsEmpty
+             ? 'The queue is empty'
+-            : queue.length === 1
++            : ids.length === 1
+               ? '1 song will be saved'
+-              : `${queue.length} songs will be saved`}
++              : `${ids.length} songs will be saved`}
+         </Typography>
++        <FormControlLabel
++          control={
++            <Checkbox
++              checked={removeDuplicates}
++              onChange={(e) => setRemoveDuplicates(e.target.checked)}
++              disabled={isSaving}
++              color="primary"
++            />
++          }
++          label="Remove duplicate songs"
++        />
+         {saveFailed && (
+           <Typography variant="body2" color="error" role="alert">
+             Could not save the playlist.

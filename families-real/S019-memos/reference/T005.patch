@@ -1,0 +1,24 @@
+diff --git a/src/utils/format.ts b/src/utils/format.ts
+index 268704ac..bd87f6f5 100644
+--- a/src/utils/format.ts
++++ b/src/utils/format.ts
+@@ -22,6 +22,19 @@ export function formatFileSize(bytes: number, options: FormatFileSizeOptions = {
+   return `${formatted} ${units[i]}`;
+ }
+ 
++/**
++ * Storage used against an optional quota: "1.5 MB of 10.0 MB (15%)".
++ * Without a usable quota (missing, not finite or under one byte) only the used size is shown.
++ */
++export function formatStorageUsage(used: number, quota?: number, options: FormatFileSizeOptions = {}): string {
++  const usedLabel = formatFileSize(used, options);
++  if (usedLabel === "Invalid size" || quota === undefined || !Number.isFinite(quota) || Math.floor(quota) <= 0) {
++    return usedLabel;
++  }
++  const percent = Math.round((Math.floor(used) / Math.floor(quota)) * 100);
++  return `${usedLabel} of ${formatFileSize(quota, options)} (${percent}%)`;
++}
++
+ // Extension of a file name in upper case ("report.final.pdf" → "PDF"), or null when there is none.
+ function getExtensionLabel(filename?: string): string | null {
+   if (!filename) return null;
