@@ -1,0 +1,39 @@
+diff --git a/src/components/dashboard/sidebar/utils.js b/src/components/dashboard/sidebar/utils.js
+index 1e9b908..6c321df 100644
+--- a/src/components/dashboard/sidebar/utils.js
++++ b/src/components/dashboard/sidebar/utils.js
+@@ -65,3 +65,34 @@ export const getDaysUntilExpiration = (expirationDate, now = new Date()) => {
+   }
+   return Math.round((startOfUTCDay(expirationTime) - startOfUTCDay(nowTime)) / DAY_IN_MS);
+ };
++
++export const EXPIRATION_WARNING_DAYS = 60;
++export const EXPIRATION_URGENT_DAYS = 14;
++
++const validThreshold = (value, fallback) => (
++  Number.isInteger(value) && value >= 0 ? value : fallback
++);
++
++/**
++ * Classifies how close an expiration date is:
++ * 'expired', 'urgent', 'warning' or 'active' (null if the date is invalid).
++ */
++export const getExpirationStatus = (expirationDate, now = new Date(), {
++  warningDays = EXPIRATION_WARNING_DAYS,
++  urgentDays = EXPIRATION_URGENT_DAYS,
++} = {}) => {
++  const days = getDaysUntilExpiration(expirationDate, now);
++  if (days === null) {
++    return null;
++  }
++  if (days < 0) {
++    return 'expired';
++  }
++  if (days <= validThreshold(urgentDays, EXPIRATION_URGENT_DAYS)) {
++    return 'urgent';
++  }
++  if (days <= validThreshold(warningDays, EXPIRATION_WARNING_DAYS)) {
++    return 'warning';
++  }
++  return 'active';
++};

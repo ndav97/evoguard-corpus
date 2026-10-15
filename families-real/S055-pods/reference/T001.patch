@@ -1,0 +1,48 @@
+diff --git a/ui/js/dfv/src/components/validation-messages.js b/ui/js/dfv/src/components/validation-messages.js
+index 745b6f539..20820988b 100644
+--- a/ui/js/dfv/src/components/validation-messages.js
++++ b/ui/js/dfv/src/components/validation-messages.js
+@@ -3,14 +3,32 @@ import PropTypes from 'prop-types';
+ 
+ import { Notice } from '@wordpress/components';
+ 
++// Messages without text are ignored and repeated ones are shown once.
++const uniqueMessages = ( messages ) => {
++	const seen = new Set();
++
++	return messages.filter( ( message ) => {
++		const key = typeof message === 'string' ? message.trim() : '';
++
++		if ( ! key || seen.has( key ) ) {
++			return false;
++		}
++
++		seen.add( key );
++		return true;
++	} );
++};
++
+ const ValidationMessages = ( { messages } ) => {
+-	if ( ! messages.length ) {
++	const visibleMessages = uniqueMessages( messages || [] );
++
++	if ( ! visibleMessages.length ) {
+ 		return null;
+ 	}
+ 
+ 	return (
+ 		<div className="pods-validation-messages" data-testid="validation-messages">
+-			{ messages.map( ( message, index ) => (
++			{ visibleMessages.map( ( message, index ) => (
+ 				<Notice
+ 					key={ `message-${ index }` }
+ 					status="error"
+@@ -26,7 +44,7 @@ const ValidationMessages = ( { messages } ) => {
+ };
+ 
+ ValidationMessages.propTypes = {
+-	messages: PropTypes.arrayOf( PropTypes.string ).isRequired,
++	messages: PropTypes.arrayOf( PropTypes.string ),
+ };
+ 
+ export default ValidationMessages;

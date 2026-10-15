@@ -1,0 +1,29 @@
+diff --git a/src/wait-time.ts b/src/wait-time.ts
+index 6c037e2f..c7d50cd8 100644
+--- a/src/wait-time.ts
++++ b/src/wait-time.ts
+@@ -3,13 +3,21 @@ import { formatDuration } from '@openmrs/esm-framework';
+ const minutesPerHour = 60;
+ const minutesPerDay = 24 * minutesPerHour;
+ 
++/** Shown instead of a wait time when there is no valid value. */
++export const WAIT_TIME_PLACEHOLDER = '--';
++
+ /**
+  * Formats a number of minutes as a wait time, matching how the table's "Wait time" column formats an
+  * interval (see QueueDuration). Rounds before splitting so that a value such as 179.7 cannot render
+- * as "2 hours, 60 minutes". Only call this with a finite number: Intl.DurationFormat rejects NaN.
++ * as "2 hours, 60 minutes". Values that are not finite numbers (which Intl.DurationFormat rejects)
++ * render as WAIT_TIME_PLACEHOLDER, and negative values as no wait.
+  */
+-export function formatWaitTimeInMinutes(minutes: number) {
+-  const totalMinutes = Math.round(minutes);
++export function formatWaitTimeInMinutes(minutes: number | null | undefined) {
++  if (typeof minutes !== 'number' || !Number.isFinite(minutes)) {
++    return WAIT_TIME_PLACEHOLDER;
++  }
++
++  const totalMinutes = Math.max(Math.round(minutes), 0);
+ 
+   return formatDuration(
+     {

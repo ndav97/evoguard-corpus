@@ -1,0 +1,55 @@
+diff --git a/src/components/dashboard/sidebar/utils.js b/src/components/dashboard/sidebar/utils.js
+index 88bb65d..9361006 100644
+--- a/src/components/dashboard/sidebar/utils.js
++++ b/src/components/dashboard/sidebar/utils.js
+@@ -1,12 +1,29 @@
+ import dayjs from 'dayjs';
+ 
++/**
++ * Milliseconds since the epoch for a date-like value, or NaN if it is missing
++ * or not a valid date.
++ */
++const toTime = (value) => (value ? new Date(value).getTime() : NaN);
++
++/**
++ * Compares two times so that valid times go in ascending order and invalid
++ * ones (NaN) go last.
++ */
++const compareTimesAscending = (a, b) => {
++  if (Number.isNaN(a) || Number.isNaN(b)) {
++    return Number.isNaN(a) - Number.isNaN(b);
++  }
++  return a - b;
++};
++
+ export const getOfferExpiringFirst = (offers) => {
+   if (!offers) {
+     return undefined;
+   }
+   return offers
+     .filter(offer => offer.isCurrent)
+-    .sort((a, b) => new Date(a.endDatetime) - new Date(b.endDatetime))[0];
++    .sort((a, b) => compareTimesAscending(toTime(a.endDatetime), toTime(b.endDatetime)))[0];
+ };
+ 
+ export const getPolicyExpiringFirst = ({ expiredPolicies, unexpiredPolicies }) => {
+@@ -15,9 +32,15 @@ export const getPolicyExpiringFirst = ({ expiredPolicies, unexpiredPolicies }) =
+   }
+   const hasUnexpiredPolicies = unexpiredPolicies.length > 0;
+   if (hasUnexpiredPolicies) {
+-    return [...unexpiredPolicies].sort((a, b) => (
+-      dayjs(a.subsidyExpirationDate).isAfter(dayjs(b.subsidyExpirationDate)) ? 1 : -1))[0];
++    return [...unexpiredPolicies].sort((a, b) => compareTimesAscending(
++      toTime(a.subsidyExpirationDate),
++      toTime(b.subsidyExpirationDate),
++    ))[0];
+   }
+-  return [...expiredPolicies].sort((a, b) => (
+-    dayjs(b.subsidyExpirationDate).isAfter(dayjs(a.subsidyExpirationDate)) ? 1 : -1))[0];
++  // Among expired policies, the one that expired most recently; policies
++  // without a valid date are ignored.
++  return [...expiredPolicies]
++    .filter(policy => !Number.isNaN(toTime(policy.subsidyExpirationDate)))
++    .sort((a, b) => (
++      dayjs(b.subsidyExpirationDate).isAfter(dayjs(a.subsidyExpirationDate)) ? 1 : -1))[0];
+ };

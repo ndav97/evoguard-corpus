@@ -1,0 +1,68 @@
+diff --git a/ui/js/dfv/src/components/validation-messages.js b/ui/js/dfv/src/components/validation-messages.js
+index da510de16..3f0570914 100644
+--- a/ui/js/dfv/src/components/validation-messages.js
++++ b/ui/js/dfv/src/components/validation-messages.js
+@@ -1,4 +1,4 @@
+-import React, { useState } from 'react';
++import React, { useEffect, useState } from 'react';
+ import PropTypes from 'prop-types';
+ 
+ import { Notice } from '@wordpress/components';
+@@ -43,9 +43,27 @@ const uniqueMessages = ( messages ) => {
+ 	);
+ };
+ 
+-const ValidationMessages = ( { messages, maxVisible, id } ) => {
++const messageKey = ( message ) => `${ message.status }:${ message.text.trim() }`;
++
++const ValidationMessages = ( { messages, maxVisible, id, onDismiss } ) => {
+ 	const [ expanded, setExpanded ] = useState( false );
+-	const allMessages = uniqueMessages( messages || [] );
++	const [ dismissedKeys, setDismissedKeys ] = useState( [] );
++	const uniqueList = uniqueMessages( messages || [] );
++	const currentKeys = uniqueList.map( messageKey );
++
++	// A dismissed message that disappears and comes back is shown again.
++	const currentKeysString = currentKeys.join( '\n' );
++	useEffect( () => {
++		setDismissedKeys( ( keys ) => {
++			const kept = keys.filter( ( key ) => currentKeys.includes( key ) );
++			return kept.length === keys.length ? keys : kept;
++		} );
++		// eslint-disable-next-line react-hooks/exhaustive-deps
++	}, [ currentKeysString ] );
++
++	const allMessages = uniqueList.filter(
++		( message ) => ! dismissedKeys.includes( messageKey( message ) ),
++	);
+ 
+ 	if ( ! allMessages.length ) {
+ 		return null;
+@@ -74,9 +92,17 @@ const ValidationMessages = ( { messages, maxVisible, id } ) => {
+ 			) : null }
+ 			{ visibleMessages.map( ( message, index ) => (
+ 				<Notice
+-					key={ `message-${ index }` }
++					key={ `message-${ messageKey( message ) }-${ index }` }
+ 					status={ message.status }
+-					isDismissible={ false }
++					isDismissible={ !! onDismiss }
++					onRemove={
++						onDismiss
++							? () => {
++								setDismissedKeys( ( keys ) => [ ...keys, messageKey( message ) ] );
++								onDismiss( { message: message.text, status: message.status } );
++							}
++							: undefined
++					}
+ 					politeness="polite"
+ 					data-testid="validation-message"
+ 				>
+@@ -115,6 +141,7 @@ ValidationMessages.propTypes = {
+ 	),
+ 	maxVisible: PropTypes.number,
+ 	id: PropTypes.string,
++	onDismiss: PropTypes.func,
+ };
+ 
+ export default ValidationMessages;

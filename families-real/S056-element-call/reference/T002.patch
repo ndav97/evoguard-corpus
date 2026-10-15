@@ -1,0 +1,33 @@
+diff --git a/src/utils/videoFit.ts b/src/utils/videoFit.ts
+index a41b7071..8e4a0629 100644
+--- a/src/utils/videoFit.ts
++++ b/src/utils/videoFit.ts
+@@ -12,6 +12,16 @@ function isValidAspectRatio(ratio: number): boolean {
+   return Number.isFinite(ratio) && ratio > 0;
+ }
+ 
++/**
++ * Aspect ratios between these bounds (inclusive) are considered square.
++ */
++export const SQUARE_ASPECT_RATIO_MIN = 0.9;
++export const SQUARE_ASPECT_RATIO_MAX = 1.1;
++
++function isRoughlySquare(ratio: number): boolean {
++  return ratio >= SQUARE_ASPECT_RATIO_MIN && ratio <= SQUARE_ASPECT_RATIO_MAX;
++}
++
+ /**
+  * Computes the appropriate video fit mode ("cover" or "contain") based on the aspect ratios of the video and the tile.
+  * - If the video and tile have the same orientation (both landscape or both portrait), we use "cover" to fill the tile, even if it means cropping.
+@@ -31,6 +41,11 @@ export function autoVideoFit(
+     return "cover";
+   }
+ 
++  // Cropping a little is better than black bars in a tile that is (almost) square.
++  if (isRoughlySquare(tileAspectRatio)) {
++    return "cover";
++  }
++
+   // If video is landscape (ratio > 1) and tile is portrait (ratio < 1) or vice versa,
+   // we want to use "contain" (fit) mode to avoid excessive cropping
+   const videoIsLandscape = videoAspectRatio > 1;

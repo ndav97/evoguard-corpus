@@ -1,0 +1,25 @@
+diff --git a/src/components/dashboard/sidebar/utils.js b/src/components/dashboard/sidebar/utils.js
+index 0d540e3..8d3b074 100644
+--- a/src/components/dashboard/sidebar/utils.js
++++ b/src/components/dashboard/sidebar/utils.js
+@@ -127,3 +127,20 @@ export const getSubsidyExpiringFirst = ({ offers, unexpiredPolicies } = {}) => {
+     return order < 0 || (order === 0 && candidate.type === 'policy') ? candidate : first;
+   });
+ };
++
++/**
++ * What the sidebar needs to warn about the subsidy that expires first:
++ * the result of getSubsidyExpiringFirst plus `daysUntilExpiration` and
++ * `status` (see getExpirationStatus), or null if there is no such subsidy.
++ */
++export const getExpirationSummary = (subsidies, now = new Date(), thresholds = {}) => {
++  const first = getSubsidyExpiringFirst(subsidies);
++  if (!first) {
++    return null;
++  }
++  return {
++    ...first,
++    daysUntilExpiration: getDaysUntilExpiration(first.expirationDate, now),
++    status: getExpirationStatus(first.expirationDate, now, thresholds),
++  };
++};

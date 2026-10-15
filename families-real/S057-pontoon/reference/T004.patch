@@ -1,0 +1,31 @@
+diff --git a/src/modules/editor/components/TranslationLength.tsx b/src/modules/editor/components/TranslationLength.tsx
+index 0ea63507..680e2275 100644
+--- a/src/modules/editor/components/TranslationLength.tsx
++++ b/src/modules/editor/components/TranslationLength.tsx
+@@ -36,15 +36,23 @@ export function getMaxLength(comment: string | undefined): number | null {
+ export function TranslationLength(): React.ReactElement<'div'> | null {
+   const { entity } = useContext(EntityView);
+   const entry = useEntityEntry();
+-  const { fields, sourceView } = useContext(EditorData);
++  const { fields, focusField, sourceView } = useContext(EditorData);
+   // Included to re-render on input changes
+   const result = useContext(EditorResult);
+ 
+-  if (sourceView || fields.length !== 1) {
++  if (sourceView || fields.length === 0) {
+     return null;
+   }
+ 
+-  const text = result ? getPlainMessage(result) : '';
++  // With several fields (plurals, attributes), measure the focused one.
++  let text: string;
++  if (fields.length > 1) {
++    const focused = focusField?.current;
++    const field = focused && fields.includes(focused) ? focused : fields[0];
++    text = field.handle.current.value;
++  } else {
++    text = result ? getPlainMessage(result) : '';
++  }
+   const maxLength = getMaxLength(entity?.comment);
+ 
+   if (maxLength !== null) {

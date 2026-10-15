@@ -1,0 +1,15 @@
+diff --git a/src/modules/editor/components/TranslationLength.tsx b/src/modules/editor/components/TranslationLength.tsx
+index 4929e7cb..0ea63507 100644
+--- a/src/modules/editor/components/TranslationLength.tsx
++++ b/src/modules/editor/components/TranslationLength.tsx
+@@ -48,7 +48,9 @@ export function TranslationLength(): React.ReactElement<'div'> | null {
+   const maxLength = getMaxLength(entity?.comment);
+ 
+   if (maxLength !== null) {
+-    const remaining = maxLength - countCharacters(text);
++    // MAX_LENGTH limits the visible text, so markup does not count.
++    const visibleText = text.replace(/<[^<>]*>/g, '');
++    const remaining = maxLength - countCharacters(visibleText);
+     return (
+       <div className='translation-length'>
+         <div className='countdown'>

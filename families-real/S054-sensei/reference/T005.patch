@@ -1,0 +1,52 @@
+diff --git a/assets/home/tasks-section/progress.js b/assets/home/tasks-section/progress.js
+index 4306416d2..0c18d1fc4 100644
+--- a/assets/home/tasks-section/progress.js
++++ b/assets/home/tasks-section/progress.js
+@@ -6,6 +6,7 @@ import classnames from 'classnames';
+ /**
+  * WordPress dependencies
+  */
++import { useEffect, useRef, useState } from '@wordpress/element';
+ import { __, _n, sprintf } from '@wordpress/i18n';
+ 
+ /**
+@@ -78,6 +79,28 @@ export const getProgressText = ( totalTasks, completedTasks ) => {
+ const Progress = ( { totalTasks, completedTasks, showCount = false } ) => {
+ 	const percentage = getProgressPercentage( totalTasks, completedTasks );
+ 	const isComplete = totalTasks > 0 && percentage === 100;
++	const completedCount =
++		totalTasks > 0 ? getCompletedCount( totalTasks, completedTasks ) : 0;
++
++	// Announce newly completed tasks (not the initial state).
++	const previousCount = useRef( completedCount );
++	const [ announcement, setAnnouncement ] = useState( '' );
++	useEffect( () => {
++		if ( completedCount > previousCount.current ) {
++			setAnnouncement(
++				isComplete
++					? __( 'All tasks completed', 'sensei-lms' )
++					: sprintf(
++							// translators: %s: description of the progress, e.g. "4 of 10 tasks completed".
++							__( 'Task completed. %s', 'sensei-lms' ),
++							getProgressText( totalTasks, completedTasks )
++					  )
++			);
++		} else if ( completedCount < previousCount.current ) {
++			setAnnouncement( '' );
++		}
++		previousCount.current = completedCount;
++	}, [ completedCount, isComplete, totalTasks, completedTasks ] );
+ 
+ 	return (
+ 		<div
+@@ -129,6 +152,10 @@ const Progress = ( { totalTasks, completedTasks, showCount = false } ) => {
+ 					{ __( 'All tasks completed', 'sensei-lms' ) }
+ 				</span>
+ 			) }
++
++			<span role="status" className="screen-reader-text">
++				{ announcement }
++			</span>
+ 		</div>
+ 	);
+ };

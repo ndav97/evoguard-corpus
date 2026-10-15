@@ -1,0 +1,34 @@
+diff --git a/src/utils/videoFit.ts b/src/utils/videoFit.ts
+index d0ff7f94..4cd30239 100644
+--- a/src/utils/videoFit.ts
++++ b/src/utils/videoFit.ts
+@@ -97,3 +97,29 @@ export function videoCropFraction(
+     )
+   );
+ }
++
++export interface Size {
++  width: number;
++  height: number;
++}
++
++/**
++ * Like autoVideoFit, but from the sizes of the video and the tile. Also
++ * reports how much of the video is cut off with the chosen fit.
++ */
++export function computeVideoFit(
++  videoSize: Size | null | undefined,
++  tileSize: Size | null | undefined,
++  options: AutoVideoFitOptions = {},
++): { fit: "cover" | "contain"; cropFraction: number } {
++  const videoAspectRatio = videoSize
++    ? videoSize.width / videoSize.height
++    : NaN;
++  const tileAspectRatio = tileSize ? tileSize.width / tileSize.height : NaN;
++
++  const fit = autoVideoFit(videoAspectRatio, tileAspectRatio, options);
++  const cropFraction =
++    fit === "cover" ? videoCropFraction(videoAspectRatio, tileAspectRatio) : 0;
++
++  return { fit, cropFraction };
++}

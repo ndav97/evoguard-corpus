@@ -1,0 +1,38 @@
+diff --git a/assets/home/tasks-section/progress.js b/assets/home/tasks-section/progress.js
+index 304c940a3..5190f7a09 100644
+--- a/assets/home/tasks-section/progress.js
++++ b/assets/home/tasks-section/progress.js
+@@ -3,6 +3,24 @@
+  */
+ import { __ } from '@wordpress/i18n';
+ 
++/**
++ * Completed percentage, rounded, between 0 and 100. Without tasks it is 0.
++ *
++ * @param {number} totalTasks     Number of tasks.
++ * @param {number} completedTasks Number of completed tasks.
++ *
++ * @return {number} Percentage.
++ */
++export const getProgressPercentage = ( totalTasks, completedTasks ) => {
++	if ( ! ( totalTasks > 0 ) || ! Number.isFinite( completedTasks ) ) {
++		return 0;
++	}
++
++	const percentage = Math.round( ( completedTasks / totalTasks ) * 100 );
++
++	return Math.min( Math.max( percentage, 0 ), 100 );
++};
++
+ /**
+  * Progress component.
+  *
+@@ -11,7 +29,7 @@ import { __ } from '@wordpress/i18n';
+  * @param {number} props.completedTasks Number of completed tasks.
+  */
+ const Progress = ( { totalTasks, completedTasks } ) => {
+-	const percentage = Math.round( ( completedTasks / totalTasks ) * 100 );
++	const percentage = getProgressPercentage( totalTasks, completedTasks );
+ 
+ 	return (
+ 		<div className="sensei-home-task-progress">

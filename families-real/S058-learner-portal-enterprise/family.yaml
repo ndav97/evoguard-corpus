@@ -1,0 +1,67 @@
+# Familia semi-real S058 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S058
+slug: learner-portal-enterprise
+stratum: semi-real
+repo: openedx/frontend-app-learner-portal-enterprise
+url: https://github.com/openedx/frontend-app-learner-portal-enterprise
+license: AGPL-3.0
+domain: Portal de aprendizaje corporativo (Open edX)
+v0:
+  commit: 3c21d1058c8f354f0c90def4383cb6e4f74e1dcd
+  date: 2026-09-21
+  verified: 2026-10-05 GREEN (1546 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: npm
+runner: jest
+node: "24"
+workspace: github__openedx__frontend-app-learner-portal-enterprise          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: src/components/dashboard/sidebar/utils.js                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Fechas de caducidad no válidas
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.js
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Días hasta la caducidad
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.js
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Estado de caducidad
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.js
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Primera subvención que caduca
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.js
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Resumen de caducidad
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.js
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: local_a
+    V2: local_b
+    V3: openai
+    V4: anthropic
+    V5: google
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

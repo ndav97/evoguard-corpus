@@ -1,0 +1,29 @@
+diff --git a/src/components/dashboard/sidebar/utils.js b/src/components/dashboard/sidebar/utils.js
+index 9361006..1e9b908 100644
+--- a/src/components/dashboard/sidebar/utils.js
++++ b/src/components/dashboard/sidebar/utils.js
+@@ -44,3 +44,24 @@ export const getPolicyExpiringFirst = ({ expiredPolicies, unexpiredPolicies }) =
+     .sort((a, b) => (
+       dayjs(b.subsidyExpirationDate).isAfter(dayjs(a.subsidyExpirationDate)) ? 1 : -1))[0];
+ };
++
++const DAY_IN_MS = 24 * 60 * 60 * 1000;
++
++const startOfUTCDay = (time) => {
++  const date = new Date(time);
++  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
++};
++
++/**
++ * Number of calendar days (UTC) from `now` to the expiration date: 0 if it
++ * expires today, 1 tomorrow, -1 if it expired yesterday. Returns null if the
++ * date is missing or invalid.
++ */
++export const getDaysUntilExpiration = (expirationDate, now = new Date()) => {
++  const expirationTime = toTime(expirationDate);
++  const nowTime = toTime(now);
++  if (Number.isNaN(expirationTime) || Number.isNaN(nowTime)) {
++    return null;
++  }
++  return Math.round((startOfUTCDay(expirationTime) - startOfUTCDay(nowTime)) / DAY_IN_MS);
++};

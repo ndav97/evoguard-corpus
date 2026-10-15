@@ -1,0 +1,67 @@
+# Familia semi-real S057 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S057
+slug: pontoon
+stratum: semi-real
+repo: mozilla/pontoon
+url: https://github.com/mozilla/pontoon
+license: BSD-3-CLAUSE
+domain: Plataforma de localización (traducción colaborativa)
+v0:
+  commit: 87ee2de979685b89ff68a34f6681953173cf95d5
+  date: 2026-09-25
+  verified: 2026-10-05 GREEN (785 tests, 2 ejecuciones idénticas, sin red)
+package_path: translate
+package_manager: npm
+runner: vitest
+node: "24"
+workspace: github__mozilla__pontoon          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: translate/src/modules/editor/components/TranslationLength.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Límite MAX_LENGTH del comentario
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Contar caracteres visibles
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Sin etiquetas HTML en la cuenta atrás
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Mensajes con varios campos
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Avisar de traducciones demasiado largas
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: google
+    V2: local_a
+    V3: local_b
+    V4: openai
+    V5: anthropic
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

@@ -1,0 +1,84 @@
+diff --git a/ui/js/dfv/src/components/validation-messages.js b/ui/js/dfv/src/components/validation-messages.js
+index 27c463bfb..aa8809b79 100644
+--- a/ui/js/dfv/src/components/validation-messages.js
++++ b/ui/js/dfv/src/components/validation-messages.js
+@@ -4,20 +4,43 @@ import PropTypes from 'prop-types';
+ import { Notice } from '@wordpress/components';
+ import { _n, __, sprintf } from '@wordpress/i18n';
+ 
+-// Messages without text are ignored and repeated ones are shown once.
++const STATUSES = [ 'error', 'warning', 'info' ];
++
++// A message is a string (an error) or an object { message, status }.
++const normalizeMessage = ( message ) => {
++	if ( typeof message === 'string' ) {
++		return { text: message, status: 'error' };
++	}
++
++	if ( message && typeof message.message === 'string' ) {
++		return {
++			text: message.message,
++			status: STATUSES.includes( message.status ) ? message.status : 'error',
++		};
++	}
++
++	return null;
++};
++
++// Messages without text are ignored, repeated ones are shown once, and errors
++// go before warnings, and warnings before info messages.
+ const uniqueMessages = ( messages ) => {
+ 	const seen = new Set();
+ 
+-	return messages.filter( ( message ) => {
+-		const key = typeof message === 'string' ? message.trim() : '';
++	const unique = messages.map( normalizeMessage ).filter( ( message ) => {
++		const key = message ? `${ message.status }:${ message.text.trim() }` : '';
+ 
+-		if ( ! key || seen.has( key ) ) {
++		if ( ! message || ! message.text.trim() || seen.has( key ) ) {
+ 			return false;
+ 		}
+ 
+ 		seen.add( key );
+ 		return true;
+ 	} );
++
++	return unique.sort(
++		( a, b ) => STATUSES.indexOf( a.status ) - STATUSES.indexOf( b.status ),
++	);
+ };
+ 
+ const ValidationMessages = ( { messages, maxVisible } ) => {
+@@ -39,12 +62,12 @@ const ValidationMessages = ( { messages, maxVisible } ) => {
+ 			{ visibleMessages.map( ( message, index ) => (
+ 				<Notice
+ 					key={ `message-${ index }` }
+-					status="error"
++					status={ message.status }
+ 					isDismissible={ false }
+ 					politeness="polite"
+ 					data-testid="validation-message"
+ 				>
+-					{ message }
++					{ message.text }
+ 				</Notice>
+ 			) ) }
+ 			{ hiddenCount > 0 ? (
+@@ -68,7 +91,15 @@ const ValidationMessages = ( { messages, maxVisible } ) => {
+ };
+ 
+ ValidationMessages.propTypes = {
+-	messages: PropTypes.arrayOf( PropTypes.string ),
++	messages: PropTypes.arrayOf(
++		PropTypes.oneOfType( [
++			PropTypes.string,
++			PropTypes.shape( {
++				message: PropTypes.string,
++				status: PropTypes.string,
++			} ),
++		] ),
++	),
+ 	maxVisible: PropTypes.number,
+ };
+ 

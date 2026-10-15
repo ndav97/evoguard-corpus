@@ -1,0 +1,92 @@
+diff --git a/assets/home/tasks-section/progress.js b/assets/home/tasks-section/progress.js
+index e973b7b13..4306416d2 100644
+--- a/assets/home/tasks-section/progress.js
++++ b/assets/home/tasks-section/progress.js
+@@ -26,6 +26,19 @@ export const getProgressPercentage = ( totalTasks, completedTasks ) => {
+ 	return Math.min( Math.max( percentage, 0 ), 100 );
+ };
+ 
++/**
++ * Completed tasks, rounded and limited to the number of tasks.
++ *
++ * @param {number} totalTasks     Number of tasks.
++ * @param {number} completedTasks Number of completed tasks.
++ *
++ * @return {number} Completed tasks.
++ */
++const getCompletedCount = ( totalTasks, completedTasks ) =>
++	Number.isFinite( completedTasks )
++		? Math.min( Math.max( Math.round( completedTasks ), 0 ), totalTasks )
++		: 0;
++
+ /**
+  * Text that describes the progress to assistive technologies.
+  *
+@@ -39,9 +52,7 @@ export const getProgressText = ( totalTasks, completedTasks ) => {
+ 		return __( 'No tasks yet', 'sensei-lms' );
+ 	}
+ 
+-	const completed = Number.isFinite( completedTasks )
+-		? Math.min( Math.max( Math.round( completedTasks ), 0 ), totalTasks )
+-		: 0;
++	const completed = getCompletedCount( totalTasks, completedTasks );
+ 
+ 	return sprintf(
+ 		// translators: %1$d: number of completed tasks, %2$d: number of tasks.
+@@ -59,11 +70,12 @@ export const getProgressText = ( totalTasks, completedTasks ) => {
+ /**
+  * Progress component.
+  *
+- * @param {Object} props                Component props.
+- * @param {number} props.totalTasks     Number of tasks.
+- * @param {number} props.completedTasks Number of completed tasks.
++ * @param {Object}  props                Component props.
++ * @param {number}  props.totalTasks     Number of tasks.
++ * @param {number}  props.completedTasks Number of completed tasks.
++ * @param {boolean} props.showCount      Whether to show "completed/total tasks".
+  */
+-const Progress = ( { totalTasks, completedTasks } ) => {
++const Progress = ( { totalTasks, completedTasks, showCount = false } ) => {
+ 	const percentage = getProgressPercentage( totalTasks, completedTasks );
+ 	const isComplete = totalTasks > 0 && percentage === 100;
+ 
+@@ -77,6 +89,22 @@ const Progress = ( { totalTasks, completedTasks } ) => {
+ 				{ percentage }%
+ 			</div>
+ 
++			{ showCount && totalTasks > 0 && (
++				<span className="sensei-home-task-progress__count">
++					{ sprintf(
++						// translators: %1$d: number of completed tasks, %2$d: number of tasks.
++						_n(
++							'%1$d/%2$d task',
++							'%1$d/%2$d tasks',
++							totalTasks,
++							'sensei-lms'
++						),
++						getCompletedCount( totalTasks, completedTasks ),
++						totalTasks
++					) }
++				</span>
++			) }
++
+ 			<div className="sensei-home-task-progress__bar">
+ 				<div
+ 					role="progressbar"
+diff --git a/assets/home/tasks-section/progress.scss b/assets/home/tasks-section/progress.scss
+index 2d2da4d82..ee7d53843 100644
+--- a/assets/home/tasks-section/progress.scss
++++ b/assets/home/tasks-section/progress.scss
+@@ -17,6 +17,12 @@
+ 		background-color: $gray-5;
+ 	}
+ 
++	&__count {
++		margin-right: 8px;
++		font-size: 12px;
++		color: $gray-60;
++	}
++
+ 	&__done {
+ 		margin-left: 8px;
+ 		font-size: 12px;

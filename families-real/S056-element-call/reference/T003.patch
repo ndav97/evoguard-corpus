@@ -1,0 +1,32 @@
+diff --git a/src/utils/videoFit.ts b/src/utils/videoFit.ts
+index 8e4a0629..157aae6e 100644
+--- a/src/utils/videoFit.ts
++++ b/src/utils/videoFit.ts
+@@ -55,3 +55,27 @@ export function autoVideoFit(
+   // If they're not the same orientation, use the contain mode (Preserves the aspect ratio, but the image is letterboxed - black bars- to fit within the container.)
+   return videoIsLandscape === tileIsLandscape ? "cover" : "contain";
+ }
++
++/**
++ * Fraction (from 0 to 1) of the video area that is cut off when it is shown
++ * with "cover" in the tile. Invalid aspect ratios give 0.
++ */
++export function videoCropFraction(
++  videoAspectRatio: number,
++  tileAspectRatio: number,
++): number {
++  if (
++    !isValidAspectRatio(videoAspectRatio) ||
++    !isValidAspectRatio(tileAspectRatio)
++  ) {
++    return 0;
++  }
++
++  return (
++    1 -
++    Math.min(
++      videoAspectRatio / tileAspectRatio,
++      tileAspectRatio / videoAspectRatio,
++    )
++  );
++}

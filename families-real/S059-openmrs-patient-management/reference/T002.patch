@@ -1,0 +1,29 @@
+diff --git a/src/wait-time.ts b/src/wait-time.ts
+index c7d50cd8..2ccf5d35 100644
+--- a/src/wait-time.ts
++++ b/src/wait-time.ts
+@@ -28,3 +28,24 @@ export function formatWaitTimeInMinutes(minutes: number | null | undefined) {
+     { style: 'long', minutesDisplay: 'always' },
+   );
+ }
++
++/**
++ * Whole minutes a patient has been waiting since `startedAt` (a Date, an ISO string or a
++ * timestamp), or null if it is missing or invalid. A start in the future counts as no wait.
++ */
++export function getWaitTimeInMinutes(
++  startedAt: Date | string | number | null | undefined,
++  now: Date | string | number = new Date(),
++): number | null {
++  if (startedAt === null || startedAt === undefined || startedAt === '') {
++    return null;
++  }
++
++  const start = new Date(startedAt).getTime();
++  const end = new Date(now).getTime();
++  if (Number.isNaN(start) || Number.isNaN(end)) {
++    return null;
++  }
++
++  return Math.max(Math.floor((end - start) / 60_000), 0);
++}

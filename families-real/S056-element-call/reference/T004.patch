@@ -1,0 +1,52 @@
+diff --git a/src/utils/videoFit.ts b/src/utils/videoFit.ts
+index 157aae6e..d0ff7f94 100644
+--- a/src/utils/videoFit.ts
++++ b/src/utils/videoFit.ts
+@@ -27,9 +27,18 @@ function isRoughlySquare(ratio: number): boolean {
+  * - If the video and tile have the same orientation (both landscape or both portrait), we use "cover" to fill the tile, even if it means cropping.
+  * - If the video and tile have different orientations, we use "contain" to ensure the entire video is visible, even if it means letterboxing (black bars).
+  */
++export interface AutoVideoFitOptions {
++  /**
++   * Largest fraction of the video (from 0 to 1) that may be cropped with
++   * "cover". If more would be cut off, "contain" is used instead.
++   */
++  maxCrop?: number;
++}
++
+ export function autoVideoFit(
+   videoAspectRatio: number,
+   tileAspectRatio: number,
++  options: AutoVideoFitOptions = {},
+ ): "cover" | "contain" {
+   if (
+     !isValidAspectRatio(videoAspectRatio) ||
+@@ -41,9 +50,16 @@ export function autoVideoFit(
+     return "cover";
+   }
+ 
++  const { maxCrop } = options;
++  const cropsTooMuch =
++    typeof maxCrop === "number" &&
++    maxCrop >= 0 &&
++    maxCrop <= 1 &&
++    videoCropFraction(videoAspectRatio, tileAspectRatio) > maxCrop;
++
+   // Cropping a little is better than black bars in a tile that is (almost) square.
+   if (isRoughlySquare(tileAspectRatio)) {
+-    return "cover";
++    return cropsTooMuch ? "contain" : "cover";
+   }
+ 
+   // If video is landscape (ratio > 1) and tile is portrait (ratio < 1) or vice versa,
+@@ -53,7 +69,9 @@ export function autoVideoFit(
+ 
+   // If the orientations are the same, use the cover mode (Preserves the aspect ratio, and the image fills the container.)
+   // If they're not the same orientation, use the contain mode (Preserves the aspect ratio, but the image is letterboxed - black bars- to fit within the container.)
+-  return videoIsLandscape === tileIsLandscape ? "cover" : "contain";
++  return videoIsLandscape === tileIsLandscape && !cropsTooMuch
++    ? "cover"
++    : "contain";
+ }
+ 
+ /**

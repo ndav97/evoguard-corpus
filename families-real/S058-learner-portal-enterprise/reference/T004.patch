@@ -1,0 +1,39 @@
+diff --git a/src/components/dashboard/sidebar/utils.js b/src/components/dashboard/sidebar/utils.js
+index 6c321df..0d540e3 100644
+--- a/src/components/dashboard/sidebar/utils.js
++++ b/src/components/dashboard/sidebar/utils.js
+@@ -96,3 +96,34 @@ export const getExpirationStatus = (expirationDate, now = new Date(), {
+   }
+   return 'active';
+ };
++
++/**
++ * Among the current enterprise offers and the unexpired learner credit
++ * policies, the subsidy that expires first, as
++ * { type: 'offer' | 'policy', subsidy, expirationDate }, or null if none has a
++ * valid expiration date. On a tie, the policy is returned.
++ */
++export const getSubsidyExpiringFirst = ({ offers, unexpiredPolicies } = {}) => {
++  const candidates = [];
++
++  const offer = getOfferExpiringFirst(offers);
++  if (offer && !Number.isNaN(toTime(offer.endDatetime))) {
++    candidates.push({ type: 'offer', subsidy: offer, expirationDate: offer.endDatetime });
++  }
++
++  const policy = unexpiredPolicies?.length
++    ? getPolicyExpiringFirst({ expiredPolicies: [], unexpiredPolicies })
++    : undefined;
++  if (policy && !Number.isNaN(toTime(policy.subsidyExpirationDate))) {
++    candidates.push({ type: 'policy', subsidy: policy, expirationDate: policy.subsidyExpirationDate });
++  }
++
++  if (!candidates.length) {
++    return null;
++  }
++
++  return candidates.reduce((first, candidate) => {
++    const order = compareTimesAscending(toTime(candidate.expirationDate), toTime(first.expirationDate));
++    return order < 0 || (order === 0 && candidate.type === 'policy') ? candidate : first;
++  });
++};

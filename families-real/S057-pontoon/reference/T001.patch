@@ -1,0 +1,66 @@
+diff --git a/src/modules/editor/components/TranslationLength.css b/src/modules/editor/components/TranslationLength.css
+index 2bf353b5..39602dd7 100644
+--- a/src/modules/editor/components/TranslationLength.css
++++ b/src/modules/editor/components/TranslationLength.css
+@@ -4,3 +4,7 @@
+   line-height: 22px;
+   padding: 9px 5px;
+ }
++
++.translation-length .countdown .overflow {
++  color: var(--status-error);
++}
+diff --git a/src/modules/editor/components/TranslationLength.tsx b/src/modules/editor/components/TranslationLength.tsx
+index 4ada588a..1d7f3ac9 100644
+--- a/src/modules/editor/components/TranslationLength.tsx
++++ b/src/modules/editor/components/TranslationLength.tsx
+@@ -1,12 +1,25 @@
+ import React, { useContext } from 'react';
+ import { EditorData, EditorResult } from '~/context/Editor';
+-import { useEntityEntry } from '~/context/EntityView';
++import { EntityView, useEntityEntry } from '~/context/EntityView';
+ import { getPlainMessage } from '~/utils/message';
+ 
+ import './TranslationLength.css';
+ 
+-/** Shows translation length vs. original string length.  */
++/**
++ * Maximum translation length declared in the source string comment,
++ * with a line like `MAX_LENGTH: 25`.
++ */
++export function getMaxLength(comment: string | undefined): number | null {
++  const match = comment?.match(/^MAX_LENGTH:\s*(\d+)\s*$/m);
++  return match ? parseInt(match[1], 10) : null;
++}
++
++/**
++ * Shows translation length vs. original string length, or the remaining
++ * characters if the original string comment sets a MAX_LENGTH.
++ */
+ export function TranslationLength(): React.ReactElement<'div'> | null {
++  const { entity } = useContext(EntityView);
+   const entry = useEntityEntry();
+   const { fields, sourceView } = useContext(EditorData);
+   // Included to re-render on input changes
+@@ -17,6 +30,21 @@ export function TranslationLength(): React.ReactElement<'div'> | null {
+   }
+ 
+   const text = result ? getPlainMessage(result) : '';
++  const maxLength = getMaxLength(entity?.comment);
++
++  if (maxLength !== null) {
++    const remaining = maxLength - text.length;
++    return (
++      <div className='translation-length'>
++        <div className='countdown'>
++          <span className={remaining < 0 ? 'overflow' : undefined}>
++            {remaining}
++          </span>
++        </div>
++      </div>
++    );
++  }
++
+   const srcText = getPlainMessage(entry);
+ 
+   return (

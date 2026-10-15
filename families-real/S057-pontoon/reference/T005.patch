@@ -1,0 +1,56 @@
+diff --git a/src/modules/editor/components/TranslationLength.css b/src/modules/editor/components/TranslationLength.css
+index 39602dd7..fc99a98c 100644
+--- a/src/modules/editor/components/TranslationLength.css
++++ b/src/modules/editor/components/TranslationLength.css
+@@ -8,3 +8,7 @@
+ .translation-length .countdown .overflow {
+   color: var(--status-error);
+ }
++
++.translation-length .translation-vs-original.too-long span:first-child {
++  color: var(--status-warning, var(--status-error));
++}
+diff --git a/src/modules/editor/components/TranslationLength.tsx b/src/modules/editor/components/TranslationLength.tsx
+index 680e2275..a2227f7b 100644
+--- a/src/modules/editor/components/TranslationLength.tsx
++++ b/src/modules/editor/components/TranslationLength.tsx
+@@ -20,6 +20,13 @@ export function countCharacters(text: string): number {
+     : Array.from(text).length;
+ }
+ 
++/**
++ * A translation is flagged as too long if it is more than this many times
++ * longer than an original string of at least this length.
++ */
++export const LONG_TRANSLATION_RATIO = 1.5;
++export const LONG_TRANSLATION_MIN_SOURCE = 10;
++
+ /**
+  * Maximum translation length declared in the source string comment,
+  * with a line like `MAX_LENGTH: 25`.
+@@ -71,12 +78,22 @@ export function TranslationLength(): React.ReactElement<'div'> | null {
+   }
+ 
+   const srcText = getPlainMessage(entry);
++  const length = countCharacters(text);
++  const srcLength = countCharacters(srcText);
++  const tooLong =
++    srcLength >= LONG_TRANSLATION_MIN_SOURCE &&
++    length > srcLength * LONG_TRANSLATION_RATIO;
+ 
+   return (
+     <div className='translation-length'>
+-      <div className='translation-vs-original'>
+-        <span>{countCharacters(text)}</span>|
+-        <span>{countCharacters(srcText)}</span>
++      <div
++        className={
++          tooLong
++            ? 'translation-vs-original too-long'
++            : 'translation-vs-original'
++        }
++      >
++        <span>{length}</span>|<span>{srcLength}</span>
+       </div>
+     </div>
+   );

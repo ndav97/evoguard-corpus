@@ -1,0 +1,68 @@
+diff --git a/ui/js/dfv/src/components/validation-messages.js b/ui/js/dfv/src/components/validation-messages.js
+index 20820988b..27c463bfb 100644
+--- a/ui/js/dfv/src/components/validation-messages.js
++++ b/ui/js/dfv/src/components/validation-messages.js
+@@ -1,7 +1,8 @@
+-import React from 'react';
++import React, { useState } from 'react';
+ import PropTypes from 'prop-types';
+ 
+ import { Notice } from '@wordpress/components';
++import { _n, __, sprintf } from '@wordpress/i18n';
+ 
+ // Messages without text are ignored and repeated ones are shown once.
+ const uniqueMessages = ( messages ) => {
+@@ -19,13 +20,20 @@ const uniqueMessages = ( messages ) => {
+ 	} );
+ };
+ 
+-const ValidationMessages = ( { messages } ) => {
+-	const visibleMessages = uniqueMessages( messages || [] );
++const ValidationMessages = ( { messages, maxVisible } ) => {
++	const [ expanded, setExpanded ] = useState( false );
++	const allMessages = uniqueMessages( messages || [] );
+ 
+-	if ( ! visibleMessages.length ) {
++	if ( ! allMessages.length ) {
+ 		return null;
+ 	}
+ 
++	const limit =
++		Number.isInteger( maxVisible ) && maxVisible > 0 ? maxVisible : allMessages.length;
++	const hiddenCount = Math.max( allMessages.length - limit, 0 );
++	const visibleMessages =
++		expanded || ! hiddenCount ? allMessages : allMessages.slice( 0, limit );
++
+ 	return (
+ 		<div className="pods-validation-messages" data-testid="validation-messages">
+ 			{ visibleMessages.map( ( message, index ) => (
+@@ -39,12 +47,29 @@ const ValidationMessages = ( { messages } ) => {
+ 					{ message }
+ 				</Notice>
+ 			) ) }
++			{ hiddenCount > 0 ? (
++				<button
++					type="button"
++					className="pods-validation-messages__toggle"
++					aria-expanded={ expanded }
++					onClick={ () => setExpanded( ! expanded ) }
++				>
++					{ expanded
++						? __( 'Show fewer messages', 'pods' )
++						: sprintf(
++							// translators: %d: number of hidden validation messages.
++							_n( 'Show %d more message', 'Show %d more messages', hiddenCount, 'pods' ),
++							hiddenCount,
++						) }
++				</button>
++			) : null }
+ 		</div>
+ 	);
+ };
+ 
+ ValidationMessages.propTypes = {
+ 	messages: PropTypes.arrayOf( PropTypes.string ),
++	maxVisible: PropTypes.number,
+ };
+ 
+ export default ValidationMessages;

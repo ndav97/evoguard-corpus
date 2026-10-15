@@ -1,0 +1,39 @@
+diff --git a/src/wait-time.ts b/src/wait-time.ts
+index 2ccf5d35..8da7a610 100644
+--- a/src/wait-time.ts
++++ b/src/wait-time.ts
+@@ -49,3 +49,34 @@ export function getWaitTimeInMinutes(
+ 
+   return Math.max(Math.floor((end - start) / 60_000), 0);
+ }
++
++export const DEFAULT_WAIT_WARNING_MINUTES = 30;
++export const DEFAULT_WAIT_CRITICAL_MINUTES = 60;
++
++export type WaitTimeSeverity = 'normal' | 'warning' | 'critical';
++
++const validThreshold = (value: number | undefined, fallback: number) =>
++  typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback;
++
++/**
++ * Classifies a wait: 'critical' from `criticalAfter` minutes, 'warning' from `warningAfter`
++ * minutes, 'normal' otherwise; null if the wait is not a finite number.
++ */
++export function getWaitTimeSeverity(
++  minutes: number | null | undefined,
++  {
++    warningAfter = DEFAULT_WAIT_WARNING_MINUTES,
++    criticalAfter = DEFAULT_WAIT_CRITICAL_MINUTES,
++  }: { warningAfter?: number; criticalAfter?: number } = {},
++): WaitTimeSeverity | null {
++  if (typeof minutes !== 'number' || !Number.isFinite(minutes)) {
++    return null;
++  }
++  if (minutes >= validThreshold(criticalAfter, DEFAULT_WAIT_CRITICAL_MINUTES)) {
++    return 'critical';
++  }
++  if (minutes >= validThreshold(warningAfter, DEFAULT_WAIT_WARNING_MINUTES)) {
++    return 'warning';
++  }
++  return 'normal';
++}

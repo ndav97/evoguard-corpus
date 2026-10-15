@@ -1,0 +1,33 @@
+diff --git a/src/utils/videoFit.ts b/src/utils/videoFit.ts
+index 16d7cb84..a41b7071 100644
+--- a/src/utils/videoFit.ts
++++ b/src/utils/videoFit.ts
+@@ -5,6 +5,13 @@ SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ Please see LICENSE in the repository root for full details.
+ */
+ 
++/**
++ * An aspect ratio is usable if it is a finite number greater than zero.
++ */
++function isValidAspectRatio(ratio: number): boolean {
++  return Number.isFinite(ratio) && ratio > 0;
++}
++
+ /**
+  * Computes the appropriate video fit mode ("cover" or "contain") based on the aspect ratios of the video and the tile.
+  * - If the video and tile have the same orientation (both landscape or both portrait), we use "cover" to fill the tile, even if it means cropping.
+@@ -14,8 +21,12 @@ export function autoVideoFit(
+   videoAspectRatio: number,
+   tileAspectRatio: number,
+ ): "cover" | "contain" {
+-  if (Number.isNaN(videoAspectRatio) || Number.isNaN(tileAspectRatio)) {
+-    // If we have invalid sizes (e.g. useMeasure returns 0×0 on an initial render),
++  if (
++    !isValidAspectRatio(videoAspectRatio) ||
++    !isValidAspectRatio(tileAspectRatio)
++  ) {
++    // If we have invalid sizes (e.g. useMeasure returns 0×0 on an initial render,
++    // or a video that has not loaded yet reports 0 or Infinity),
+     // default to cover to avoid black bars.
+     return "cover";
+   }
