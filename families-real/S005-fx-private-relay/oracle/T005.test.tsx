@@ -37,8 +37,9 @@ describe("T005 · error al guardar", () => {
     const onSubmit = jest.fn();
     render(<LabelEditor label="Work" onSubmit={onSubmit} />);
     await userEvent.type(input(), "!{Enter}");
-    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit).toHaveBeenCalledWith("Work!");
     expect(saveError()).not.toBeInTheDocument();
+    expect(input()).toHaveValue("Work!");
   });
 
   it("el aviso desaparece al volver a escribir", async () => {
