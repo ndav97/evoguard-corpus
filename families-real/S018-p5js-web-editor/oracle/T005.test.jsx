@@ -1,6 +1,6 @@
 // Tests ocultos del estudio.
 import React from 'react';
-import { act, fireEvent, reduxRender, screen } from '../test-utils';
+import { act, reduxRender, screen } from '../test-utils';
 import { hideToast, setToastText, showToast } from '../modules/IDE/actions/toast';
 import Toast from '../modules/IDE/components/Toast';
 

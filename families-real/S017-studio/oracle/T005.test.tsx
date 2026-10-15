@@ -1,5 +1,5 @@
 // Tests ocultos del estudio.
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DATABASE_HOME_PATH, parseOmniboxInput, PreviewAddressBar } from '@/components/site-preview/address-bar';
 import type { SiteDetails } from '@/data/core';
@@ -32,11 +32,6 @@ const address = () => screen.getByRole( 'textbox', { name: 'Address' } );
 function submit( value: string ) {
 	fireEvent.change( address(), { target: { value } } );
 	fireEvent.submit( address().closest( 'form' )! );
-}
-
-async function openShortcuts() {
-	fireEvent.click( address() );
-	return screen.findByRole( 'dialog', { name: 'Preview shortcuts' } );
 }
 
 beforeEach( () => window.localStorage.clear() );

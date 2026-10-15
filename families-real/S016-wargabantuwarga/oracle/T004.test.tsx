@@ -6,7 +6,6 @@ import { SearchForm } from "~/components/search-form";
 
 const input = () => screen.getByLabelText("Cari provinsi:");
 const type = (value: string) => fireEvent.change(input(), { target: { value } });
-const FILTER_ITEMS = { lokasi: { title: "Lokasi", buckets: [{ key: "Bandung", doc_count: 3 }] } };
 const SORT_SETTINGS = [
   { value: "nama", label: "Nama" },
   { value: "terbaru", label: "Terbaru" },

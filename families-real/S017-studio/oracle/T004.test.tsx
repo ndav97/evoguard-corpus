@@ -1,7 +1,7 @@
 // Tests ocultos del estudio.
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { parseOmniboxInput, PreviewAddressBar } from '@/components/site-preview/address-bar';
+import { PreviewAddressBar } from '@/components/site-preview/address-bar';
 import type { SiteDetails } from '@/data/core';
 
 const SITE_URL = 'http://localhost:8881';

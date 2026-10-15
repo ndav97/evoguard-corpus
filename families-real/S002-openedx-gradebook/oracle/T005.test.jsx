@@ -1,6 +1,6 @@
-import { screen, fireEvent, within } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderWithAllProviders, initializeMocks } from '@src/testUtils';
-import { HistoryTable, mapHistoryRows } from '@src/components/BulkManagementHistoryView/HistoryTable';
+import { HistoryTable } from '@src/components/BulkManagementHistoryView/HistoryTable';
 
 jest.mock('@openedx/paragon', () => ({
   ...jest.requireActual('@openedx/paragon'),

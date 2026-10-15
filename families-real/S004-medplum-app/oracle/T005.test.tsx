@@ -7,8 +7,6 @@ import { MedplumProvider } from '@medplum/react';
 import { MemoryRouter } from 'react-router';
 import { act, fireEvent, render, screen } from '../test-utils/render';
 import { ArrayColumnPadding } from '../admin/db/ArrayColumnPadding';
-import { calculate } from '../admin/db/arrayColumnPaddingUtils';
-
 function setup(): void {
   render(
     <MedplumProvider medplum={new MockClient()}>

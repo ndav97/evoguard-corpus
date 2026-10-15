@@ -1,7 +1,7 @@
 // Tests ocultos del estudio.
 import React from "react";
 
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { SearchForm } from "~/components/search-form";
 
 const input = () => screen.getByLabelText("Cari provinsi:");

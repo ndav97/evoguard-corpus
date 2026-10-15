@@ -2,8 +2,7 @@ import {
     DeleteConfirmationModal,
     DeleteConfirmationModalProps
 } from "@/core/ui/Modals/DeleteConfirmationModal";
-import en from "@/locales/en/translation.json";
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 
 const baseProps = (overrides: Partial<DeleteConfirmationModalProps> = {}): DeleteConfirmationModalProps => ({
@@ -15,8 +14,6 @@ const baseProps = (overrides: Partial<DeleteConfirmationModalProps> = {}): Delet
     deleteFn: vi.fn(),
     ...overrides,
 });
-
-const translations = en as Record<string, string>;
 
 const field = () => screen.getByLabelText("deleteConfirmationPrompt");
 

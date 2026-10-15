@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, waitFor, within, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { Tasks } from "../../src/pages/Tasks";
@@ -55,17 +55,6 @@ async function renderWith(tasks) {
     </UIPreferencesContext.Provider>,
   );
   await waitFor(() => expect(screen.queryByText("Loading ...")).not.toBeInTheDocument());
-}
-
-async function choose(prefix, label) {
-  const toggle = screen.getByText(new RegExp(`^${prefix}: `));
-  await userEvent.click(toggle);
-  const menu = await waitFor(() => {
-    const open = toggle.closest(".dropdown").querySelector(".dropdown-menu.show");
-    expect(open).not.toBeNull();
-    return open;
-  });
-  await userEvent.click(within(menu).getByText(label));
 }
 
 function search(value) {
