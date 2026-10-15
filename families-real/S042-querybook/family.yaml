@@ -1,0 +1,67 @@
+# Familia semi-real S042 — corpus definitivo: base real + cinco cambios T001–T005 redactados por el equipo (Claude).
+# Añadida el 2026-10-15 (docs/seleccion-corpus-definitivo-2026-10-05.md).
+id: S042
+slug: querybook
+stratum: semi-real
+repo: pinterest/querybook
+url: https://github.com/pinterest/querybook
+license: APACHE-2.0
+domain: Análisis de datos colaborativo (cuadernos SQL)
+v0:
+  commit: 3f26532bfc36ccfed422678c20f99800e5ed4cdf
+  date: 2026-09-16
+  verified: 2026-10-05 GREEN (325 tests, 2 ejecuciones idénticas, sin red)
+package_path: .
+package_manager: yarn
+runner: jest
+node: "24"
+workspace: github__pinterest__querybook          # carpeta en la caché de verificación (volumen evoguard-bases)
+hidden_tests_dir: querybook/webapp/__tests__/evoguard           # donde se copian los tests ocultos al evaluar
+known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+focus: querybook/webapp/ui/Pagination/Pagination.tsx                 # zona que tocan los cinco cambios
+turns:
+  - id: T001
+    title: Indicar la página actual
+    request: turns/T001.md
+    hidden_tests: oracle/T001.test.tsx
+    reference_patch: reference/T001.patch
+  - id: T002
+    title: Paginación desactivada
+    request: turns/T002.md
+    hidden_tests: oracle/T002.test.tsx
+    reference_patch: reference/T002.patch
+  - id: T003
+    title: Ir a la primera y a la última página
+    request: turns/T003.md
+    hidden_tests: oracle/T003.test.tsx
+    reference_patch: reference/T003.patch
+  - id: T004
+    title: Saltar a una página concreta
+    request: turns/T004.md
+    hidden_tests: oracle/T004.test.tsx
+    reference_patch: reference/T004.patch
+  - id: T005
+    title: Navegar con el teclado
+    request: turns/T005.md
+    hidden_tests: oracle/T005.test.tsx
+    reference_patch: reference/T005.patch
+provenance:
+  authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
+  authored_at: 2026-10-15
+  status: DRAFT
+# Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
+# proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
+generation:
+  status: DRAFT
+  plan:
+    V1: google
+    V2: local_a
+    V3: local_b
+    V4: openai
+    V5: anthropic
+  references:
+    V1: null
+    V2: null
+    V3: null
+    V4: null
+    V5: null

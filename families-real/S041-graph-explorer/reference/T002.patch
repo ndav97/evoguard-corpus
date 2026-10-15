@@ -1,0 +1,52 @@
+diff --git a/src/components/NumberInput.tsx b/src/components/NumberInput.tsx
+index 743454d..f6a6085 100644
+--- a/src/components/NumberInput.tsx
++++ b/src/components/NumberInput.tsx
+@@ -1,4 +1,4 @@
+-import { useState } from "react";
++import { useRef, useState } from "react";
+ 
+ import { parseNumberSafely } from "@/utils/parseNumberSafely";
+ 
+@@ -24,14 +24,17 @@ export interface NumberInputProps extends Omit<
+  * (e.g. Reset to Default, which blurs the input by taking focus) always show.
+  *
+  * When the edit ends, a number outside of `min`/`max` is brought back into the
+- * range and the corrected value is reported.
++ * range and the corrected value is reported. Escape abandons the edit and
++ * restores the value the field had before it started.
+  */
+ export function NumberInput({
+   value,
+   onValueChange,
++  onKeyDown,
+   ...props
+ }: NumberInputProps) {
+   const [draft, setDraft] = useState<string | null>(null);
++  const valueBeforeEdit = useRef<number | undefined>(undefined);
+ 
+   const finishEdit = () => {
+     if (draft === null) return;
+@@ -49,10 +52,22 @@ export function NumberInput({
+       type="number"
+       value={draft ?? formatValue(value)}
+       onChange={e => {
++        if (draft === null) {
++          valueBeforeEdit.current = value;
++        }
+         setDraft(e.target.value);
+         onValueChange(parseNumberSafely(e.target.value));
+       }}
+       onBlur={finishEdit}
++      onKeyDown={e => {
++        onKeyDown?.(e);
++        if (e.defaultPrevented) return;
++        if (e.key === "Escape" && draft !== null) {
++          e.preventDefault();
++          setDraft(null);
++          onValueChange(valueBeforeEdit.current);
++        }
++      }}
+       {...props}
+     />
+   );

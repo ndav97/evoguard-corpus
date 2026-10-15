@@ -1,0 +1,53 @@
+diff --git a/src/components/KuadrantDataView.tsx b/src/components/KuadrantDataView.tsx
+index d4d3ba0..e37b50d 100644
+--- a/src/components/KuadrantDataView.tsx
++++ b/src/components/KuadrantDataView.tsx
+@@ -70,6 +70,8 @@ type KuadrantDataViewProps<T extends K8sResourceCommon> = {
+   /** case-insensitive text matched against the values at filterFields (dot paths) */
+   filterText?: string;
+   filterFields?: string[];
++  /** initial sort when the URL does not set one for this table */
++  defaultSort?: { columnId: string; direction?: 'asc' | 'desc' };
+ };
+ 
+ const getNestedValue = (value: unknown, path: string): unknown =>
+@@ -141,6 +143,7 @@ const decorateRowCells = (row: DataViewTr, rowKey: string, labels: (string | und
+ const getInitialSortState = <T,>(
+   columns: KuadrantDataViewColumn<T>[],
+   ouiaId: string,
++  defaultSort?: { columnId: string; direction?: 'asc' | 'desc' },
+ ): SortState | null => {
+   const params =
+     typeof window === 'undefined' ? undefined : new URLSearchParams(window.location.search);
+@@ -156,6 +159,18 @@ const getInitialSortState = <T,>(
+       )
+     : columns.find((col) => Boolean(col.sort));
+ 
++  // Without a usable sort in the URL, the table's default sort (if any) applies
++  const defaultColumn =
++    defaultSort && (!sortByParam || !column)
++      ? columns.find((col) => Boolean(col.sort) && col.id === defaultSort.columnId)
++      : undefined;
++  if (defaultColumn) {
++    return {
++      columnId: defaultColumn.id,
++      direction: defaultSort.direction === 'desc' ? SortByDirection.desc : SortByDirection.asc,
++    };
++  }
++
+   if (!column) {
+     return null;
+   }
+@@ -182,10 +197,11 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+   emptyMessage,
+   filterText,
+   filterFields,
++  defaultSort,
+ }: KuadrantDataViewProps<T>): React.ReactElement => {
+   const { t } = useTranslation('plugin__kuadrant-console-plugin');
+   const [sortState, setSortState] = React.useState<SortState | null>(() =>
+-    getInitialSortState(columns, ouiaId),
++    getInitialSortState(columns, ouiaId, defaultSort),
+   );
+ 
+   // Derive the current sort index from the stored column ID and current columns array

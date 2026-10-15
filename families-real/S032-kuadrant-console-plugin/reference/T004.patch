@@ -1,0 +1,60 @@
+diff --git a/src/components/KuadrantDataView.tsx b/src/components/KuadrantDataView.tsx
+index e37b50d..edb93e9 100644
+--- a/src/components/KuadrantDataView.tsx
++++ b/src/components/KuadrantDataView.tsx
+@@ -32,15 +32,52 @@ type SortState = {
+   direction: SortByDirection;
+ };
+ 
+-export const useKuadrantDataViewPagination = (itemCount: number, initialPerPage = 10) => {
+-  const [page, setPage] = React.useState(1);
+-  const [perPage, setPerPage] = React.useState(initialPerPage);
++const readPositiveIntParam = (name: string): number | undefined => {
++  if (typeof window === 'undefined') {
++    return undefined;
++  }
++  const raw = new URLSearchParams(window.location.search).get(name);
++  if (raw === null || !/^[1-9][0-9]*$/.test(raw)) {
++    return undefined;
++  }
++  return Number(raw);
++};
++
++/**
++ * Page state for a KuadrantDataView. With urlKey, the page and page size are read from and kept
++ * in the URL as `<urlKey>.page` and `<urlKey>.perPage`, keeping other parameters and the hash.
++ */
++export const useKuadrantDataViewPagination = (
++  itemCount: number,
++  initialPerPage = 10,
++  urlKey?: string,
++) => {
++  const [page, setPage] = React.useState(() =>
++    urlKey ? readPositiveIntParam(`${urlKey}.page`) ?? 1 : 1,
++  );
++  const [perPage, setPerPage] = React.useState(() =>
++    urlKey ? readPositiveIntParam(`${urlKey}.perPage`) ?? initialPerPage : initialPerPage,
++  );
+   const lastPage = Math.max(1, Math.ceil(itemCount / perPage));
+ 
+   React.useEffect(() => {
+     setPage((currentPage) => Math.min(currentPage, lastPage));
+   }, [lastPage]);
+ 
++  React.useEffect(() => {
++    if (!urlKey || typeof window === 'undefined') {
++      return;
++    }
++    const params = new URLSearchParams(window.location.search);
++    params.set(`${urlKey}.page`, String(page));
++    params.set(`${urlKey}.perPage`, String(perPage));
++    window.history.replaceState(
++      window.history.state,
++      '',
++      window.location.pathname + '?' + params.toString() + window.location.hash,
++    );
++  }, [page, perPage, urlKey]);
++
+   const onSetPage = React.useCallback((_event: PaginationEvent, pageNumber: number) => {
+     setPage(pageNumber);
+   }, []);

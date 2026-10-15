@@ -1,0 +1,16 @@
+diff --git a/src/layout/search/SelectedFilters.tsx b/src/layout/search/SelectedFilters.tsx
+index 78bff12..0e156da 100644
+--- a/src/layout/search/SelectedFilters.tsx
++++ b/src/layout/search/SelectedFilters.tsx
+@@ -56,7 +56,10 @@ const SelectedFilters = (props: Props) => {
+ 
+   const compoundAcceptedFilter = (): string => {
+     if (props.acceptedFrom && props.acceptedTo) {
+-      return `${getFormatDate(props.acceptedFrom)} - ${getFormatDate(props.acceptedTo)}`;
++      const from = getFormatDate(props.acceptedFrom);
++      const to = getFormatDate(props.acceptedTo);
++      // A range that starts and ends on the same day is a single date.
++      return from === to ? from : `${from} - ${to}`;
+     } else {
+       return `${isUndefined(props.acceptedFrom) ? '≤' : '≥'} ${getFormatDate(props.acceptedFrom || props.acceptedTo)}`;
+     }

@@ -1,0 +1,74 @@
+diff --git a/querybook/webapp/ui/Pagination/Pagination.scss b/querybook/webapp/ui/Pagination/Pagination.scss
+index 81d1a93..976e281 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.scss
++++ b/querybook/webapp/ui/Pagination/Pagination.scss
+@@ -10,6 +10,17 @@
+         display: flex;
+     }
+ 
++    .Pagination-first,
++    .Pagination-last {
++        display: flex;
++    }
++    .Pagination-first {
++        order: 0;
++    }
++    .Pagination-last {
++        order: 4;
++    }
++
+     .Pagination-previous {
+         order: 1;
+         justify-content: flex-start;
+diff --git a/querybook/webapp/ui/Pagination/Pagination.tsx b/querybook/webapp/ui/Pagination/Pagination.tsx
+index 5ce201d..2528fda 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.tsx
++++ b/querybook/webapp/ui/Pagination/Pagination.tsx
+@@ -37,6 +37,7 @@ export interface IPaginationProps {
+     hideNavButton?: boolean;
+     showPageInfo?: boolean;
+     disabled?: boolean;
++    showEdgeButtons?: boolean;
+ }
+ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     currentPage,
+@@ -50,6 +51,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     hideNavButton = false,
+     showPageInfo = false,
+     disabled = false,
++    showEdgeButtons = false,
+ }) => {
+     const goToPage = (page: number) => {
+         if (disabled || page === currentPage || page < 0 || page >= totalPage) {
+@@ -137,7 +139,30 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+         </div>
+     );
+ 
+-    const navButtons = !hideNavButton ? [previousButton, nextButton] : null;
++    const firstButton = (
++        <div key="first-div" className="Pagination-first">
++            {isFirstPage ? null : (
++                <Button title="First" onClick={goToPage.bind(null, 0)} />
++            )}
++        </div>
++    );
++
++    const lastButton = (
++        <div key="last-div" className="Pagination-last">
++            {isLastPage || totalPage === 0 ? null : (
++                <Button
++                    title="Last"
++                    onClick={goToPage.bind(null, totalPage - 1)}
++                />
++            )}
++        </div>
++    );
++
++    const navButtons = hideNavButton
++        ? null
++        : showEdgeButtons
++        ? [firstButton, previousButton, nextButton, lastButton]
++        : [previousButton, nextButton];
+ 
+     const pageInfoDOM = showPageInfo ? (
+         <div className="Pagination-info" aria-live="polite">

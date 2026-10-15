@@ -1,0 +1,32 @@
+diff --git a/src/components/KuadrantDataView.tsx b/src/components/KuadrantDataView.tsx
+index edb93e9..5252924 100644
+--- a/src/components/KuadrantDataView.tsx
++++ b/src/components/KuadrantDataView.tsx
+@@ -109,6 +109,8 @@ type KuadrantDataViewProps<T extends K8sResourceCommon> = {
+   filterFields?: string[];
+   /** initial sort when the URL does not set one for this table */
+   defaultSort?: { columnId: string; direction?: 'asc' | 'desc' };
++  /** called after the user changes the sort, with the column id and the new direction */
++  onSortChange?: (columnId: string, direction: 'asc' | 'desc') => void;
+ };
+ 
+ const getNestedValue = (value: unknown, path: string): unknown =>
+@@ -235,6 +237,7 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+   filterText,
+   filterFields,
+   defaultSort,
++  onSortChange,
+ }: KuadrantDataViewProps<T>): React.ReactElement => {
+   const { t } = useTranslation('plugin__kuadrant-console-plugin');
+   const [sortState, setSortState] = React.useState<SortState | null>(() =>
+@@ -270,8 +273,9 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+ 
+       // Store by column ID, not index
+       setSortState({ columnId: column.id, direction });
++      onSortChange?.(column.id, direction === SortByDirection.desc ? 'desc' : 'asc');
+     },
+-    [columns, ouiaId],
++    [columns, onSortChange, ouiaId],
+   );
+ 
+   const dataViewColumns = React.useMemo<DataViewTh[]>(

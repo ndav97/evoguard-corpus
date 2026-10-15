@@ -1,0 +1,57 @@
+diff --git a/src/components/NumberInput.tsx b/src/components/NumberInput.tsx
+index 9afc51d..743454d 100644
+--- a/src/components/NumberInput.tsx
++++ b/src/components/NumberInput.tsx
+@@ -22,6 +22,9 @@ export interface NumberInputProps extends Omit<
+  * While the user is editing, the draft string owns the display. Outside of an
+  * edit the display derives directly from the value prop, so external changes
+  * (e.g. Reset to Default, which blurs the input by taking focus) always show.
++ *
++ * When the edit ends, a number outside of `min`/`max` is brought back into the
++ * range and the corrected value is reported.
+  */
+ export function NumberInput({
+   value,
+@@ -30,6 +33,17 @@ export function NumberInput({
+ }: NumberInputProps) {
+   const [draft, setDraft] = useState<string | null>(null);
+ 
++  const finishEdit = () => {
++    if (draft === null) return;
++    setDraft(null);
++    const parsed = parseNumberSafely(draft);
++    if (parsed === undefined) return;
++    const clamped = clamp(parsed, toBound(props.min), toBound(props.max));
++    if (clamped !== parsed) {
++      onValueChange(clamped);
++    }
++  };
++
+   return (
+     <Input
+       type="number"
+@@ -38,7 +52,7 @@ export function NumberInput({
+         setDraft(e.target.value);
+         onValueChange(parseNumberSafely(e.target.value));
+       }}
+-      onBlur={() => setDraft(null)}
++      onBlur={finishEdit}
+       {...props}
+     />
+   );
+@@ -47,3 +61,15 @@ export function NumberInput({
+ function formatValue(value: number | undefined) {
+   return value === undefined ? "" : String(value);
+ }
++
++function toBound(bound: InputProps["min"]) {
++  if (bound === undefined || bound === "") return undefined;
++  const parsed = Number(bound);
++  return isNaN(parsed) ? undefined : parsed;
++}
++
++function clamp(value: number, min: number | undefined, max: number | undefined) {
++  if (min !== undefined && value < min) return min;
++  if (max !== undefined && value > max) return max;
++  return value;
++}

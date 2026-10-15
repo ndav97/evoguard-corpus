@@ -1,0 +1,69 @@
+diff --git a/querybook/webapp/ui/Pagination/Pagination.tsx b/querybook/webapp/ui/Pagination/Pagination.tsx
+index 47cae8e..42a74c4 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.tsx
++++ b/querybook/webapp/ui/Pagination/Pagination.tsx
+@@ -39,6 +39,7 @@ export interface IPaginationProps {
+     disabled?: boolean;
+     showEdgeButtons?: boolean;
+     showJumpTo?: boolean;
++    keyboardNavigation?: boolean;
+ }
+ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     currentPage,
+@@ -54,6 +55,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     disabled = false,
+     showEdgeButtons = false,
+     showJumpTo = false,
++    keyboardNavigation = false,
+ }) => {
+     const [jumpText, setJumpText] = React.useState('');
+     const [jumpInvalid, setJumpInvalid] = React.useState(false);
+@@ -216,6 +218,40 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             </div>
+         ) : null;
+ 
++    const handleNavKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
++        if (
++            event.target instanceof HTMLInputElement ||
++            event.ctrlKey ||
++            event.altKey ||
++            event.metaKey
++        ) {
++            return;
++        }
++        let page: number;
++        switch (event.key) {
++            case 'ArrowLeft':
++                page = currentPage - 1;
++                break;
++            case 'ArrowRight':
++                page = currentPage + 1;
++                break;
++            case 'Home':
++                page = 0;
++                break;
++            case 'End':
++                page = totalPage - 1;
++                break;
++            default:
++                return;
++        }
++        event.preventDefault();
++        goToPage(page);
++    };
++
++    const keyboardProps = keyboardNavigation
++        ? { tabIndex: 0, onKeyDown: handleNavKeyDown }
++        : {};
++
+     return (
+         <nav
+             className={clsx({
+@@ -224,6 +260,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+                 [className]: Boolean(className),
+             })}
+             {...(disabled ? { 'aria-disabled': true } : {})}
++            {...keyboardProps}
+         >
+             {navButtons}
+             <ul className="Pagination-pages flex-center">

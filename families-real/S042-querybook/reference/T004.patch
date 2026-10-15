@@ -1,0 +1,102 @@
+diff --git a/querybook/webapp/ui/Pagination/Pagination.scss b/querybook/webapp/ui/Pagination/Pagination.scss
+index 976e281..baae71b 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.scss
++++ b/querybook/webapp/ui/Pagination/Pagination.scss
+@@ -62,6 +62,19 @@
+         }
+     }
+ 
++    .Pagination-jump {
++        order: 2;
++        display: flex;
++        align-items: center;
++        margin: 0 8px;
++        input {
++            width: 64px;
++            &[aria-invalid='true'] {
++                border-color: var(--color-false);
++            }
++        }
++    }
++
+     .Pagination-info {
+         order: 2;
+         display: flex;
+diff --git a/querybook/webapp/ui/Pagination/Pagination.tsx b/querybook/webapp/ui/Pagination/Pagination.tsx
+index 2528fda..47cae8e 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.tsx
++++ b/querybook/webapp/ui/Pagination/Pagination.tsx
+@@ -38,6 +38,7 @@ export interface IPaginationProps {
+     showPageInfo?: boolean;
+     disabled?: boolean;
+     showEdgeButtons?: boolean;
++    showJumpTo?: boolean;
+ }
+ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     currentPage,
+@@ -52,7 +53,11 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     showPageInfo = false,
+     disabled = false,
+     showEdgeButtons = false,
++    showJumpTo = false,
+ }) => {
++    const [jumpText, setJumpText] = React.useState('');
++    const [jumpInvalid, setJumpInvalid] = React.useState(false);
++
+     const goToPage = (page: number) => {
+         if (disabled || page === currentPage || page < 0 || page >= totalPage) {
+             return;
+@@ -172,6 +177,45 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+         </div>
+     ) : null;
+ 
++    const jumpToPage = () => {
++        const text = jumpText.trim();
++        if (!/^-?\d+$/.test(text)) {
++            setJumpInvalid(true);
++            return;
++        }
++        const page = Math.min(
++            Math.max(parseInt(text, 10) - shift, 0),
++            totalPage - 1
++        );
++        setJumpText('');
++        goToPage(page);
++    };
++
++    const jumpToDOM =
++        showJumpTo && totalPage > 0 ? (
++            <div className="Pagination-jump">
++                <input
++                    type="text"
++                    inputMode="numeric"
++                    aria-label="Go to page"
++                    placeholder="Go to"
++                    value={jumpText}
++                    disabled={disabled}
++                    aria-invalid={jumpInvalid || undefined}
++                    onChange={(event) => {
++                        setJumpText(event.target.value);
++                        setJumpInvalid(false);
++                    }}
++                    onKeyDown={(event) => {
++                        if (event.key === 'Enter') {
++                            event.preventDefault();
++                            jumpToPage();
++                        }
++                    }}
++                />
++            </div>
++        ) : null;
++
+     return (
+         <nav
+             className={clsx({
+@@ -186,6 +230,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+                 {paginationListDOM}
+             </ul>
+             {pageInfoDOM}
++            {jumpToDOM}
+         </nav>
+     );
+ };

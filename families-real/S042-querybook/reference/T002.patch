@@ -1,0 +1,102 @@
+diff --git a/querybook/webapp/ui/Pagination/Pagination.scss b/querybook/webapp/ui/Pagination/Pagination.scss
+index f7278e8..81d1a93 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.scss
++++ b/querybook/webapp/ui/Pagination/Pagination.scss
+@@ -44,6 +44,13 @@
+         }
+     }
+ 
++    &.Pagination--disabled {
++        opacity: 0.5;
++        .Button {
++            cursor: not-allowed;
++        }
++    }
++
+     .Pagination-info {
+         order: 2;
+         display: flex;
+diff --git a/querybook/webapp/ui/Pagination/Pagination.tsx b/querybook/webapp/ui/Pagination/Pagination.tsx
+index 6f7d15d..5ce201d 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.tsx
++++ b/querybook/webapp/ui/Pagination/Pagination.tsx
+@@ -36,6 +36,7 @@ export interface IPaginationProps {
+     padding?: number;
+     hideNavButton?: boolean;
+     showPageInfo?: boolean;
++    disabled?: boolean;
+ }
+ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     currentPage,
+@@ -48,7 +49,15 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     padding = 2, // number of page on the left and right of current page
+     hideNavButton = false,
+     showPageInfo = false,
++    disabled = false,
+ }) => {
++    const goToPage = (page: number) => {
++        if (disabled || page === currentPage || page < 0 || page >= totalPage) {
++            return;
++        }
++        onPageClick(page);
++    };
++
+     const paginationListDOM: React.ReactNode[] = [];
+ 
+     const pageRanges: number[] = [];
+@@ -62,7 +71,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+ 
+     if (pageRanges[0] > 0) {
+         paginationListDOM.push(
+-            <PageButton page={0} key={0} onClick={onPageClick} shift={shift} />
++            <PageButton page={0} key={0} onClick={goToPage} shift={shift} />
+         );
+         if (pageRanges[0] > 1) {
+             paginationListDOM.push(
+@@ -78,7 +87,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             <PageButton
+                 key={page}
+                 page={page}
+-                onClick={onPageClick}
++                onClick={goToPage}
+                 shift={shift}
+                 className={page === currentPage ? 'current' : ''}
+             />
+@@ -97,7 +106,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             <PageButton
+                 key={totalPage - 1}
+                 page={totalPage - 1}
+-                onClick={onPageClick}
++                onClick={goToPage}
+                 shift={shift}
+             />
+         );
+@@ -111,7 +120,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             {isFirstPage ? null : (
+                 <Button
+                     title="Previous"
+-                    onClick={onPageClick.bind(null, currentPage - 1)}
++                    onClick={goToPage.bind(null, currentPage - 1)}
+                 />
+             )}
+         </div>
+@@ -122,7 +131,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             {isLastPage || totalPage === 0 ? null : (
+                 <Button
+                     title="Next"
+-                    onClick={onPageClick.bind(null, currentPage + 1)}
++                    onClick={goToPage.bind(null, currentPage + 1)}
+                 />
+             )}
+         </div>
+@@ -142,8 +151,10 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+         <nav
+             className={clsx({
+                 Pagination: true,
++                'Pagination--disabled': disabled,
+                 [className]: Boolean(className),
+             })}
++            {...(disabled ? { 'aria-disabled': true } : {})}
+         >
+             {navButtons}
+             <ul className="Pagination-pages flex-center">

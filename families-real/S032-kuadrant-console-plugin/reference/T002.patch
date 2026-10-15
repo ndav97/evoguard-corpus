@@ -1,0 +1,104 @@
+diff --git a/locales/en/plugin__kuadrant-console-plugin.json b/locales/en/plugin__kuadrant-console-plugin.json
+index a46482b..a8a2720 100644
+--- a/locales/en/plugin__kuadrant-console-plugin.json
++++ b/locales/en/plugin__kuadrant-console-plugin.json
+@@ -657,6 +657,7 @@
+   "Next": "Next",
+   "No {{resourceName}} found": "No {{resourceName}} found",
+   "No API key requests": "No API key requests",
++  "No resources match the filter": "No resources match the filter",
+   "No API Key Requests found": "No API Key Requests found",
+   "No API Key requests have been made for this API Product.": "No API Key requests have been made for this API Product.",
+   "No API Key requests match the filter criteria.": "No API Key requests match the filter criteria.",
+diff --git a/src/components/KuadrantDataView.tsx b/src/components/KuadrantDataView.tsx
+index 9cbfd28..d4d3ba0 100644
+--- a/src/components/KuadrantDataView.tsx
++++ b/src/components/KuadrantDataView.tsx
+@@ -67,6 +67,9 @@ type KuadrantDataViewProps<T extends K8sResourceCommon> = {
+   ouiaId?: string;
+   /** shown in the table body when the data has loaded without error and there are no items */
+   emptyMessage?: string;
++  /** case-insensitive text matched against the values at filterFields (dot paths) */
++  filterText?: string;
++  filterFields?: string[];
+ };
+ 
+ const getNestedValue = (value: unknown, path: string): unknown =>
+@@ -177,6 +180,8 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+   perPage,
+   ouiaId = 'KuadrantDataViewTable',
+   emptyMessage,
++  filterText,
++  filterFields,
+ }: KuadrantDataViewProps<T>): React.ReactElement => {
+   const { t } = useTranslation('plugin__kuadrant-console-plugin');
+   const [sortState, setSortState] = React.useState<SortState | null>(() =>
+@@ -239,8 +244,27 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+     [columns, onSort, sortBy],
+   );
+ 
++  const filterTerm = (filterText ?? '').trim().toLowerCase();
++  const isFiltering = filterTerm !== '' && Boolean(filterFields?.length);
++  const filteredData = React.useMemo(
++    () =>
++      isFiltering
++        ? data.filter((item) =>
++            filterFields.some((field) => {
++              const value = getNestedValue(item, field);
++              return (
++                value !== undefined &&
++                value !== null &&
++                String(value).toLowerCase().includes(filterTerm)
++              );
++            }),
++          )
++        : data,
++    [data, filterFields, filterTerm, isFiltering],
++  );
++
+   const visibleData = React.useMemo(() => {
+-    let sortedData = [...data];
++    let sortedData = [...filteredData];
+     if (sortBy.index !== undefined) {
+       const sortColumn = columns[sortBy.index];
+       const direction = (sortBy.direction ?? SortByDirection.asc) as SortByDirection;
+@@ -264,7 +288,7 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+       return sortedData.slice(startIndex, startIndex + perPage);
+     }
+     return sortedData;
+-  }, [columns, data, page, perPage, sortBy]);
++  }, [columns, filteredData, page, perPage, sortBy]);
+ 
+   const columnLabels = React.useMemo(() => columns.map(getColumnLabel), [columns]);
+ 
+@@ -276,11 +300,12 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+     [columnLabels, getRow, visibleData],
+   );
+   const isEmpty = Boolean(emptyMessage) && data.length === 0;
++  const noMatches = isFiltering && data.length > 0 && filteredData.length === 0;
+   const activeState = loadError
+     ? DataViewState.error
+     : !loaded
+       ? DataViewState.loading
+-      : isEmpty
++      : isEmpty || noMatches
+         ? DataViewState.empty
+         : undefined;
+ 
+@@ -307,12 +332,14 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+       [DataViewState.empty]: (
+         <Tbody>
+           <Tr>
+-            <Td colSpan={columns.length}>{emptyMessage}</Td>
++            <Td colSpan={columns.length}>
++              {noMatches ? t('No resources match the filter') : emptyMessage}
++            </Td>
+           </Tr>
+         </Tbody>
+       ),
+     }),
+-    [columns.length, emptyMessage, loadError?.message, t],
++    [columns.length, emptyMessage, loadError?.message, noMatches, t],
+   );
+ 
+   return (

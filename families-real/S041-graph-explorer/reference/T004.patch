@@ -1,0 +1,44 @@
+diff --git a/src/components/NumberInput.tsx b/src/components/NumberInput.tsx
+index a224013..2cafbc2 100644
+--- a/src/components/NumberInput.tsx
++++ b/src/components/NumberInput.tsx
+@@ -12,6 +12,8 @@ export interface NumberInputProps extends Omit<
+   onValueChange: (value: number | undefined) => void;
+   /** Number of decimals kept when an edit ends. */
+   precision?: number;
++  /** Value used when an edit ends with an empty or unreadable field. */
++  emptyValue?: number;
+ }
+ 
+ /**
+@@ -28,13 +30,15 @@ export interface NumberInputProps extends Omit<
+  * When the edit ends, a number outside of `min`/`max` is brought back into the
+  * range and the corrected value is reported. Escape abandons the edit and
+  * restores the value the field had before it started. With `precision`, the
+- * number is rounded to that many decimals when the edit ends.
++ * number is rounded to that many decimals when the edit ends. With
++ * `emptyValue`, an edit that leaves the field empty falls back to it.
+  */
+ export function NumberInput({
+   value,
+   onValueChange,
+   onKeyDown,
+   precision,
++  emptyValue,
+   ...props
+ }: NumberInputProps) {
+   const [draft, setDraft] = useState<string | null>(null);
+@@ -44,7 +48,12 @@ export function NumberInput({
+     if (draft === null) return;
+     setDraft(null);
+     const parsed = parseNumberSafely(draft);
+-    if (parsed === undefined) return;
++    if (parsed === undefined) {
++      if (emptyValue !== undefined) {
++        onValueChange(emptyValue);
++      }
++      return;
++    }
+     const final = clamp(
+       round(parsed, precision),
+       toBound(props.min),

@@ -1,0 +1,61 @@
+diff --git a/querybook/webapp/ui/Pagination/Pagination.scss b/querybook/webapp/ui/Pagination/Pagination.scss
+index 439e9fe..f7278e8 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.scss
++++ b/querybook/webapp/ui/Pagination/Pagination.scss
+@@ -43,4 +43,13 @@
+             color: var(--text-light);
+         }
+     }
++
++    .Pagination-info {
++        order: 2;
++        display: flex;
++        align-items: center;
++        margin: 0 8px;
++        color: var(--text-light);
++        white-space: nowrap;
++    }
+ }
+diff --git a/querybook/webapp/ui/Pagination/Pagination.tsx b/querybook/webapp/ui/Pagination/Pagination.tsx
+index 3a1e7e0..6f7d15d 100644
+--- a/querybook/webapp/ui/Pagination/Pagination.tsx
++++ b/querybook/webapp/ui/Pagination/Pagination.tsx
+@@ -35,6 +35,7 @@ export interface IPaginationProps {
+     shift?: number;
+     padding?: number;
+     hideNavButton?: boolean;
++    showPageInfo?: boolean;
+ }
+ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     currentPage,
+@@ -46,6 +47,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+     shift = 1, // you can pass in 0, we can shift it to 1
+     padding = 2, // number of page on the left and right of current page
+     hideNavButton = false,
++    showPageInfo = false,
+ }) => {
+     const paginationListDOM: React.ReactNode[] = [];
+ 
+@@ -128,6 +130,14 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+ 
+     const navButtons = !hideNavButton ? [previousButton, nextButton] : null;
+ 
++    const pageInfoDOM = showPageInfo ? (
++        <div className="Pagination-info" aria-live="polite">
++            {totalPage > 0
++                ? `Page ${currentPage + shift} of ${totalPage - 1 + shift}`
++                : 'No pages'}
++        </div>
++    ) : null;
++
+     return (
+         <nav
+             className={clsx({
+@@ -139,6 +149,7 @@ export const Pagination: React.FunctionComponent<IPaginationProps> = ({
+             <ul className="Pagination-pages flex-center">
+                 {paginationListDOM}
+             </ul>
++            {pageInfoDOM}
+         </nav>
+     );
+ };

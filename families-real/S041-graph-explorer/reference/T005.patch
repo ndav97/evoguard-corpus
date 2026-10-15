@@ -1,0 +1,74 @@
+diff --git a/src/components/NumberInput.tsx b/src/components/NumberInput.tsx
+index 2cafbc2..1f2f491 100644
+--- a/src/components/NumberInput.tsx
++++ b/src/components/NumberInput.tsx
+@@ -32,6 +32,8 @@ export interface NumberInputProps extends Omit<
+  * restores the value the field had before it started. With `precision`, the
+  * number is rounded to that many decimals when the edit ends. With
+  * `emptyValue`, an edit that leaves the field empty falls back to it.
++ *
++ * ArrowUp/ArrowDown move the number by `step` (ten steps with Shift).
+  */
+ export function NumberInput({
+   value,
+@@ -44,6 +46,23 @@ export function NumberInput({
+   const [draft, setDraft] = useState<string | null>(null);
+   const valueBeforeEdit = useRef<number | undefined>(undefined);
+ 
++  const min = toBound(props.min);
++  const max = toBound(props.max);
++
++  const stepBy = (direction: 1 | -1, multiplier: number) => {
++    const current = (draft !== null ? parseNumberSafely(draft) : value) ?? 0;
++    const step = toStep(props.step);
++    const raw = current + direction * multiplier * step;
++    const decimals =
++      precision ?? Math.max(decimalsOf(step), decimalsOf(current));
++    const next = clamp(round(raw, decimals), min, max);
++    if (draft === null) {
++      valueBeforeEdit.current = value;
++    }
++    setDraft(String(next));
++    onValueChange(next);
++  };
++
+   const finishEdit = () => {
+     if (draft === null) return;
+     setDraft(null);
+@@ -54,11 +73,7 @@ export function NumberInput({
+       }
+       return;
+     }
+-    const final = clamp(
+-      round(parsed, precision),
+-      toBound(props.min),
+-      toBound(props.max),
+-    );
++    const final = clamp(round(parsed, precision), min, max);
+     if (final !== parsed) {
+       onValueChange(final);
+     }
+@@ -83,6 +98,9 @@ export function NumberInput({
+           e.preventDefault();
+           setDraft(null);
+           onValueChange(valueBeforeEdit.current);
++        } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
++          e.preventDefault();
++          stepBy(e.key === "ArrowUp" ? 1 : -1, e.shiftKey ? 10 : 1);
+         }
+       }}
+       {...props}
+@@ -113,3 +131,13 @@ function round(value: number, precision: number | undefined) {
+   const factor = 10 ** precision;
+   return Math.round(value * factor) / factor;
+ }
++
++function toStep(step: InputProps["step"]) {
++  const parsed = toBound(step);
++  return parsed !== undefined && parsed > 0 ? parsed : 1;
++}
++
++function decimalsOf(value: number) {
++  const [, fraction = ""] = String(value).split(".");
++  return fraction.length;
++}

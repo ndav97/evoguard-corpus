@@ -1,0 +1,54 @@
+diff --git a/src/components/KuadrantDataView.tsx b/src/components/KuadrantDataView.tsx
+index ff30c4c..9cbfd28 100644
+--- a/src/components/KuadrantDataView.tsx
++++ b/src/components/KuadrantDataView.tsx
+@@ -65,6 +65,8 @@ type KuadrantDataViewProps<T extends K8sResourceCommon> = {
+   page?: number;
+   perPage?: number;
+   ouiaId?: string;
++  /** shown in the table body when the data has loaded without error and there are no items */
++  emptyMessage?: string;
+ };
+ 
+ const getNestedValue = (value: unknown, path: string): unknown =>
+@@ -174,6 +176,7 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+   page,
+   perPage,
+   ouiaId = 'KuadrantDataViewTable',
++  emptyMessage,
+ }: KuadrantDataViewProps<T>): React.ReactElement => {
+   const { t } = useTranslation('plugin__kuadrant-console-plugin');
+   const [sortState, setSortState] = React.useState<SortState | null>(() =>
+@@ -272,7 +275,14 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+       ),
+     [columnLabels, getRow, visibleData],
+   );
+-  const activeState = loadError ? DataViewState.error : !loaded ? DataViewState.loading : undefined;
++  const isEmpty = Boolean(emptyMessage) && data.length === 0;
++  const activeState = loadError
++    ? DataViewState.error
++    : !loaded
++      ? DataViewState.loading
++      : isEmpty
++        ? DataViewState.empty
++        : undefined;
+ 
+   const bodyStates = React.useMemo(
+     () => ({
+@@ -294,8 +304,15 @@ const KuadrantDataView = <T extends K8sResourceCommon>({
+           </Tr>
+         </Tbody>
+       ),
++      [DataViewState.empty]: (
++        <Tbody>
++          <Tr>
++            <Td colSpan={columns.length}>{emptyMessage}</Td>
++          </Tr>
++        </Tbody>
++      ),
+     }),
+-    [columns.length, loadError?.message, t],
++    [columns.length, emptyMessage, loadError?.message, t],
+   );
+ 
+   return (

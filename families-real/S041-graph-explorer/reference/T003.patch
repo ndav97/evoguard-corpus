@@ -1,0 +1,58 @@
+diff --git a/src/components/NumberInput.tsx b/src/components/NumberInput.tsx
+index f6a6085..a224013 100644
+--- a/src/components/NumberInput.tsx
++++ b/src/components/NumberInput.tsx
+@@ -10,6 +10,8 @@ export interface NumberInputProps extends Omit<
+ > {
+   value: number | undefined;
+   onValueChange: (value: number | undefined) => void;
++  /** Number of decimals kept when an edit ends. */
++  precision?: number;
+ }
+ 
+ /**
+@@ -25,12 +27,14 @@ export interface NumberInputProps extends Omit<
+  *
+  * When the edit ends, a number outside of `min`/`max` is brought back into the
+  * range and the corrected value is reported. Escape abandons the edit and
+- * restores the value the field had before it started.
++ * restores the value the field had before it started. With `precision`, the
++ * number is rounded to that many decimals when the edit ends.
+  */
+ export function NumberInput({
+   value,
+   onValueChange,
+   onKeyDown,
++  precision,
+   ...props
+ }: NumberInputProps) {
+   const [draft, setDraft] = useState<string | null>(null);
+@@ -41,9 +45,13 @@ export function NumberInput({
+     setDraft(null);
+     const parsed = parseNumberSafely(draft);
+     if (parsed === undefined) return;
+-    const clamped = clamp(parsed, toBound(props.min), toBound(props.max));
+-    if (clamped !== parsed) {
+-      onValueChange(clamped);
++    const final = clamp(
++      round(parsed, precision),
++      toBound(props.min),
++      toBound(props.max),
++    );
++    if (final !== parsed) {
++      onValueChange(final);
+     }
+   };
+ 
+@@ -88,3 +96,11 @@ function clamp(value: number, min: number | undefined, max: number | undefined)
+   if (max !== undefined && value > max) return max;
+   return value;
+ }
++
++function round(value: number, precision: number | undefined) {
++  if (precision === undefined || !Number.isInteger(precision) || precision < 0) {
++    return value;
++  }
++  const factor = 10 ** precision;
++  return Math.round(value * factor) / factor;
++}
