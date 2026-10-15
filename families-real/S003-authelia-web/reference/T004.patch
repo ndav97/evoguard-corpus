@@ -1,0 +1,43 @@
+diff --git a/src/components/PasswordMeter.tsx b/src/components/PasswordMeter.tsx
+index 9617a7ae0..c6a58a862 100644
+--- a/src/components/PasswordMeter.tsx
++++ b/src/components/PasswordMeter.tsx
+@@ -14,6 +14,7 @@ export interface Props {
+     value: string;
+     policy?: PasswordPolicyConfiguration;
+     onValidityChange?: (_valid: boolean) => void;
++    username?: string;
+ }
+ 
+ const getStandardPasswordInfo = (
+@@ -161,11 +162,19 @@ const PasswordMeter = function (props: Props) {
+     const mode = props.policy?.mode;
+     const showLevel = props.value !== "" && (mode === PasswordPolicyMode.Standard || mode === PasswordPolicyMode.ZXCVBN);
+     const levels = isZXCVBN ? zxcvbnLevels : standardLevels;
++    const username = (props.username ?? "").trim().toLowerCase();
++    const containsUsername = username !== "" && props.value.toLowerCase().includes(username);
+     const requirements =
+         props.policy && mode === PasswordPolicyMode.Standard ? getRequirements(props.value, props.policy) : [];
++    if (mode === PasswordPolicyMode.Standard && username !== "") {
++        requirements.push({ label: "Does not contain your username", met: !containsUsername });
++    }
+     const minScore = props.policy?.min_score ?? 0;
+     const belowMinScore = isZXCVBN && passwordScore < minScore;
+-    const valid = mode === PasswordPolicyMode.Standard ? requirements.every((r) => r.met) : !belowMinScore;
++    const valid =
++        mode === PasswordPolicyMode.Standard
++            ? requirements.every((r) => r.met)
++            : !belowMinScore && !(isZXCVBN && containsUsername);
+     const { onValidityChange } = props;
+ 
+     useEffect(() => {
+@@ -203,6 +212,9 @@ const PasswordMeter = function (props: Props) {
+                     )}`}
+                 </p>
+             )}
++            {isZXCVBN && containsUsername && (
++                <p className="text-[0.7rem] text-left">{translate("Must not contain your username")}</p>
++            )}
+             {requirements.length > 0 && (
+                 <ul aria-label={translate("Password requirements")} className="text-[0.7rem] text-left">
+                     {requirements.map((r) => (

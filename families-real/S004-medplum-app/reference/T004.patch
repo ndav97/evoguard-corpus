@@ -1,0 +1,89 @@
+diff --git a/src/admin/db/ArrayColumnPadding.tsx b/src/admin/db/ArrayColumnPadding.tsx
+index 654c5527e..d7e882433 100644
+--- a/src/admin/db/ArrayColumnPadding.tsx
++++ b/src/admin/db/ArrayColumnPadding.tsx
+@@ -71,9 +71,17 @@ export function ArrayColumnPadding(): JSX.Element {
+     confidence === DEFAULTS.confidence &&
+     selectivityOverride === DEFAULTS.selectivityOverride;
+ 
+-  const [copied, setCopied] = useState(false);
++  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
++
++  function withCopyReset<T>(setter: (value: T) => void): (value: T) => void {
++    return (value: T) => {
++      setCopyStatus('idle');
++      setter(value);
++    };
++  }
+ 
+   function resetToDefaults(): void {
++    setCopyStatus('idle');
+     setStatisticsTarget(DEFAULTS.statisticsTarget);
+     setElemsPerRow(DEFAULTS.elemsPerRow);
+     setConfidence(DEFAULTS.confidence);
+@@ -130,7 +138,7 @@ export function ArrayColumnPadding(): JSX.Element {
+             <NumberInput
+               label="Statistics Target"
+               value={statisticsTarget}
+-              onChange={setStatisticsTarget}
++              onChange={withCopyReset(setStatisticsTarget)}
+               error={errors.statisticsTarget}
+               min={100}
+               max={10000}
+@@ -141,7 +149,7 @@ export function ArrayColumnPadding(): JSX.Element {
+             <NumberInput
+               label="Elements Per Row"
+               value={elemsPerRow}
+-              onChange={setElemsPerRow}
++              onChange={withCopyReset(setElemsPerRow)}
+               error={errors.elemsPerRow}
+               min={1}
+               max={1000}
+@@ -152,7 +160,7 @@ export function ArrayColumnPadding(): JSX.Element {
+             <NumberInput
+               label="Confidence"
+               value={confidence}
+-              onChange={setConfidence}
++              onChange={withCopyReset(setConfidence)}
+               error={errors.confidence}
+               min={0}
+               max={1}
+@@ -165,7 +173,7 @@ export function ArrayColumnPadding(): JSX.Element {
+               label="Target Selectivity (optional)"
+               description="Overrides minimum selectivity"
+               value={selectivityOverride}
+-              onChange={setSelectivityOverride}
++              onChange={withCopyReset(setSelectivityOverride)}
+               error={errors.selectivityOverride}
+               min={0}
+               max={1}
+@@ -210,16 +218,26 @@ export function ArrayColumnPadding(): JSX.Element {
+                 size="xs"
+                 variant="default"
+                 onClick={() => {
++                  setCopyStatus('idle');
++                  if (!navigator.clipboard?.writeText) {
++                    setCopyStatus('failed');
++                    return;
++                  }
+                   navigator.clipboard
+                     .writeText(String(Math.ceil(results.targetM)))
+-                    .then(() => setCopied(true))
+-                    .catch(() => setCopied(false));
++                    .then(() => setCopyStatus('copied'))
++                    .catch(() => setCopyStatus('failed'));
+                 }}
+               >
+                 Copy recommended M
+               </Button>
+             </Group>
+-            {copied && <Text size="sm">Copied to clipboard</Text>}
++            {copyStatus === 'copied' && <Text size="sm">Copied to clipboard</Text>}
++            {copyStatus === 'failed' && (
++              <Text size="sm" c="red" role="alert">
++                Could not copy to clipboard
++              </Text>
++            )}
+           </Paper>
+ 
+           <Grid>

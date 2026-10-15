@@ -1,0 +1,94 @@
+diff --git a/pendingTranslations.ftl b/pendingTranslations.ftl
+index c60aaf97..eaa10a54 100644
+--- a/pendingTranslations.ftl
++++ b/pendingTranslations.ftl
+@@ -224,3 +224,6 @@ profile-label-characters-remaining = { $remaining } characters left
+ 
+ # Accessible name of the button that removes the label of a mask.
+ profile-label-remove = Remove label
++
++# Shown next to the mask label field when saving a new label failed.
++profile-label-save-error = Your label could not be saved. Please try again.
+diff --git a/src/components/dashboard/aliases/LabelEditor.tsx b/src/components/dashboard/aliases/LabelEditor.tsx
+index a06b31d3..a1f76572 100644
+--- a/src/components/dashboard/aliases/LabelEditor.tsx
++++ b/src/components/dashboard/aliases/LabelEditor.tsx
+@@ -13,7 +13,7 @@ import styles from "./LabelEditor.module.scss";
+ export type Props = {
+   label: string;
+   placeholder?: string;
+-  onSubmit: (newLabel: string) => void;
++  onSubmit: (newLabel: string) => void | Promise<unknown>;
+ };
+ 
+ /**
+@@ -29,6 +29,7 @@ export const LabelEditor = (props: Props) => {
+   //   `justSaved` is true if that is the case, and this isn't the first render.
+   const [labelJustUpdated, setLabelJustUpdated] = useState(false);
+   const [hasSaved, setHasSaved] = useState(false);
++  const [saveFailed, setSaveFailed] = useState(false);
+   const justSaved = labelJustUpdated && hasSaved;
+ 
+   useEffect(() => {
+@@ -47,6 +48,19 @@ export const LabelEditor = (props: Props) => {
+     return () => clearTimeout(updateTimeout);
+   }, [props.label]);
+ 
++  const save = (newLabel: string) => {
++    setSaveFailed(false);
++    setHasSaved(true);
++    const result = props.onSubmit(newLabel);
++    if (result && typeof result.then === "function") {
++      result.then(undefined, () => {
++        setHasSaved(false);
++        setSaveFailed(true);
++        setInputValue(props.label);
++      });
++    }
++  };
++
+   const onSubmit: FormEventHandler = (event) => {
+     event.preventDefault();
+ 
+@@ -57,15 +71,13 @@ export const LabelEditor = (props: Props) => {
+ 
+     const isValid = formRef.current?.reportValidity();
+     if (isValid && inputValue.trim() !== props.label) {
+-      setHasSaved(true);
+-      props.onSubmit(inputValue.trim());
++      save(inputValue.trim());
+       inputRef.current?.blur();
+     }
+   };
+   const removeLabel = () => {
+     setInputValue("");
+-    setHasSaved(true);
+-    props.onSubmit("");
++    save("");
+   };
+   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+     if (event.key === "Escape") {
+@@ -85,7 +97,10 @@ export const LabelEditor = (props: Props) => {
+     <form onSubmit={onSubmit} ref={formRef} className={styles["label-form"]}>
+       <input
+         value={inputValue}
+-        onChange={(e) => setInputValue(e.target.value)}
++        onChange={(e) => {
++          setSaveFailed(false);
++          setInputValue(e.target.value);
++        }}
+         onBlur={onBlur}
+         onKeyDown={onKeyDown}
+         aria-label={l10n.getString("profile-label-edit-2")}
+@@ -117,6 +132,11 @@ export const LabelEditor = (props: Props) => {
+           })}
+         </span>
+       )}
++      {saveFailed && (
++        <span role="alert" className={styles["save-error"]}>
++          {l10n.getString("profile-label-save-error")}
++        </span>
++      )}
+       <span
+         className={`${styles["confirmation-message"]} ${
+           justSaved ? styles["is-shown"] : styles["is-hidden"]

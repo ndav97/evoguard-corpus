@@ -1,0 +1,35 @@
+diff --git a/src/components/BulkManagementHistoryView/HistoryTable.jsx b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+index 0591863..e26444c 100644
+--- a/src/components/BulkManagementHistoryView/HistoryTable.jsx
++++ b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+@@ -1,7 +1,7 @@
+ import { useState } from 'react';
+ import PropTypes from 'prop-types';
+ 
+-import { DataTable, Form } from '@openedx/paragon';
++import { Button, DataTable, Form } from '@openedx/paragon';
+ 
+ import { bulkManagementColumns } from '@src/data/constants/app';
+ import { useBulkManagementHistoryEntries } from './data/apiHook';
+@@ -47,6 +47,11 @@ export const HistoryTable = ({
+       || entry.originalFilename.toLowerCase().includes(term)
+       || entry.user.toLowerCase().includes(term)));
+   const total = bulkManagementHistory.length;
++  const filtersActive = search !== '' || uploader !== '';
++  const clearFilters = () => {
++    setSearch('');
++    setUploader('');
++  };
+   const rowsToShow = order ? visible
+     .map((entry, index) => ({ entry, index, time: Date.parse(entry.timeUploaded) }))
+     .sort((a, b) => (a.time === b.time ? a.index - b.index : (order === 'newest' ? b.time - a.time : a.time - b.time)))
+@@ -73,6 +78,9 @@ export const HistoryTable = ({
+           <option value="oldest">Oldest first</option>
+         </Form.Control>
+       </Form.Group>
++      {filtersActive && (
++        <Button variant="link" size="sm" onClick={clearFilters}>Clear filters</Button>
++      )}
+       {total > 0 && (
+         <p className="bulk-history-summary">{`Showing ${visible.length} of ${total} ${total === 1 ? 'upload' : 'uploads'}`}</p>
+       )}

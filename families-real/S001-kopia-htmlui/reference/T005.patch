@@ -1,0 +1,59 @@
+diff --git a/src/pages/Tasks.jsx b/src/pages/Tasks.jsx
+index c7c3a4c..6be4d20 100644
+--- a/src/pages/Tasks.jsx
++++ b/src/pages/Tasks.jsx
+@@ -27,6 +27,7 @@ export class Tasks extends Component {
+       uniqueKinds: [],
+       searchDescription: "",
+       matchCase: true,
++      autoRefreshPaused: false,
+       cancelling: false,
+       cancelMessage: null,
+       cancelError: null,
+@@ -36,6 +37,7 @@ export class Tasks extends Component {
+     this.fetchTasks = this.fetchTasks.bind(this);
+     this.clearFilters = this.clearFilters.bind(this);
+     this.cancelAllRunning = this.cancelAllRunning.bind(this);
++    this.toggleAutoRefresh = this.toggleAutoRefresh.bind(this);
+     this.interval = window.setInterval(this.fetchTasks, 3000);
+   }
+ 
+@@ -47,6 +49,18 @@ export class Tasks extends Component {
+     window.clearInterval(this.interval);
+   }
+ 
++  toggleAutoRefresh() {
++    if (this.state.autoRefreshPaused) {
++      this.fetchTasks();
++      this.interval = window.setInterval(this.fetchTasks, 3000);
++      this.setState({ autoRefreshPaused: false });
++    } else {
++      window.clearInterval(this.interval);
++      this.interval = null;
++      this.setState({ autoRefreshPaused: true });
++    }
++  }
++
+   getUniqueKinds(tasks) {
+     let o = {};
+ 
+@@ -231,6 +245,11 @@ export class Tasks extends Component {
+                   onChange={(e) => this.setState({ matchCase: e.target.checked })}
+                 />
+               </Col>
++              <Col xs="auto">
++                <Button size="sm" variant="outline-secondary" onClick={this.toggleAutoRefresh}>
++                  {this.state.autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
++                </Button>
++              </Col>
+               {this.filtersActive() && (
+                 <Col xs="auto">
+                   <Button size="sm" variant="secondary" onClick={this.clearFilters}>
+@@ -252,6 +271,7 @@ export class Tasks extends Component {
+               )}
+             </Row>
+           </div>
++          {this.state.autoRefreshPaused && <p>Auto-refresh paused.</p>}
+           {this.state.cancelError && <Alert variant="danger">{this.state.cancelError}</Alert>}
+           {this.state.cancelMessage && <p>{this.state.cancelMessage}</p>}
+           <Row>

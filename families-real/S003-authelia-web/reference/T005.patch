@@ -1,0 +1,31 @@
+diff --git a/src/components/PasswordMeter.tsx b/src/components/PasswordMeter.tsx
+index c6a58a862..27995c659 100644
+--- a/src/components/PasswordMeter.tsx
++++ b/src/components/PasswordMeter.tsx
+@@ -175,6 +175,16 @@ const PasswordMeter = function (props: Props) {
+         mode === PasswordPolicyMode.Standard
+             ? requirements.every((r) => r.met)
+             : !belowMinScore && !(isZXCVBN && containsUsername);
++    const metCount = requirements.filter((r) => r.met).length;
++    const requirementsSummary =
++        metCount === requirements.length
++            ? translate("All requirements met")
++            : translate(
++                  requirements.length === 1
++                      ? "{{met}} of {{total}} requirement met"
++                      : "{{met}} of {{total}} requirements met",
++                  { met: metCount, total: requirements.length },
++              );
+     const { onValidityChange } = props;
+ 
+     useEffect(() => {
+@@ -215,6 +225,9 @@ const PasswordMeter = function (props: Props) {
+             {isZXCVBN && containsUsername && (
+                 <p className="text-[0.7rem] text-left">{translate("Must not contain your username")}</p>
+             )}
++            {requirements.length > 0 && (
++                <p className="text-[0.7rem] text-left">{requirementsSummary}</p>
++            )}
+             {requirements.length > 0 && (
+                 <ul aria-label={translate("Password requirements")} className="text-[0.7rem] text-left">
+                     {requirements.map((r) => (

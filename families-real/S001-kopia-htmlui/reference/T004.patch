@@ -1,0 +1,50 @@
+diff --git a/src/pages/Tasks.jsx b/src/pages/Tasks.jsx
+index 4241638..c7c3a4c 100644
+--- a/src/pages/Tasks.jsx
++++ b/src/pages/Tasks.jsx
+@@ -26,6 +26,7 @@ export class Tasks extends Component {
+       showStatus: "All",
+       uniqueKinds: [],
+       searchDescription: "",
++      matchCase: true,
+       cancelling: false,
+       cancelMessage: null,
+       cancelError: null,
+@@ -89,8 +90,12 @@ export class Tasks extends Component {
+       return false;
+     }
+ 
+-    if (this.state.searchDescription && t.description.indexOf(this.state.searchDescription) < 0) {
+-      return false;
++    if (this.state.searchDescription) {
++      const description = this.state.matchCase ? t.description : t.description.toLowerCase();
++      const search = this.state.matchCase ? this.state.searchDescription : this.state.searchDescription.toLowerCase();
++      if (description.indexOf(search) < 0) {
++        return false;
++      }
+     }
+ 
+     return true;
+@@ -211,12 +216,21 @@ export class Tasks extends Component {
+                   size="sm"
+                   type="text"
+                   name="searchDescription"
+-                  placeholder="case-sensitive search description"
++                  placeholder={this.state.matchCase ? "case-sensitive search description" : "search description"}
+                   value={this.state.searchDescription}
+                   onChange={this.handleChange}
+                   autoFocus={true}
+                 />
+               </Col>
++              <Col xs="auto">
++                <Form.Check
++                  type="checkbox"
++                  id="tasks-match-case"
++                  label="Match case"
++                  checked={this.state.matchCase}
++                  onChange={(e) => this.setState({ matchCase: e.target.checked })}
++                />
++              </Col>
+               {this.filtersActive() && (
+                 <Col xs="auto">
+                   <Button size="sm" variant="secondary" onClick={this.clearFilters}>

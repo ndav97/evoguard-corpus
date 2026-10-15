@@ -1,0 +1,18 @@
+diff --git a/src/components/dashboard/aliases/LabelEditor.tsx b/src/components/dashboard/aliases/LabelEditor.tsx
+index ede78e20..a06b31d3 100644
+--- a/src/components/dashboard/aliases/LabelEditor.tsx
++++ b/src/components/dashboard/aliases/LabelEditor.tsx
+@@ -31,6 +31,13 @@ export const LabelEditor = (props: Props) => {
+   const [hasSaved, setHasSaved] = useState(false);
+   const justSaved = labelJustUpdated && hasSaved;
+ 
++  useEffect(() => {
++    // Show labels that change elsewhere, unless the user is editing the field.
++    if (document.activeElement !== inputRef.current) {
++      setInputValue(props.label);
++    }
++  }, [props.label]);
++
+   useEffect(() => {
+     startTransition(() => setLabelJustUpdated(true));
+     const updateTimeout = setTimeout(

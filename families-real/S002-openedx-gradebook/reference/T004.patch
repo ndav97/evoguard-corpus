@@ -1,0 +1,47 @@
+diff --git a/src/components/BulkManagementHistoryView/HistoryTable.jsx b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+index d2b9404..0591863 100644
+--- a/src/components/BulkManagementHistoryView/HistoryTable.jsx
++++ b/src/components/BulkManagementHistoryView/HistoryTable.jsx
+@@ -39,6 +39,7 @@ export const HistoryTable = ({
+ }) => {
+   const [search, setSearch] = useState('');
+   const [uploader, setUploader] = useState('');
++  const [order, setOrder] = useState('');
+   const term = search.trim().toLowerCase();
+   const users = [...new Set(bulkManagementHistory.map((entry) => entry.user))].sort((a, b) => a.localeCompare(b));
+   const visible = bulkManagementHistory.filter((entry) => (!uploader || entry.user === uploader)
+@@ -46,6 +47,10 @@ export const HistoryTable = ({
+       || entry.originalFilename.toLowerCase().includes(term)
+       || entry.user.toLowerCase().includes(term)));
+   const total = bulkManagementHistory.length;
++  const rowsToShow = order ? visible
++    .map((entry, index) => ({ entry, index, time: Date.parse(entry.timeUploaded) }))
++    .sort((a, b) => (a.time === b.time ? a.index - b.index : (order === 'newest' ? b.time - a.time : a.time - b.time)))
++    .map(({ entry }) => entry) : visible;
+ 
+   return (
+     <>
+@@ -60,6 +65,14 @@ export const HistoryTable = ({
+           {users.map((u) => <option key={u} value={u}>{u}</option>)}
+         </Form.Control>
+       </Form.Group>
++      <Form.Group controlId="bulk-history-order">
++        <Form.Label>Sort by</Form.Label>
++        <Form.Control as="select" value={order} onChange={(e) => setOrder(e.target.value)}>
++          <option value="">Upload order</option>
++          <option value="newest">Newest first</option>
++          <option value="oldest">Oldest first</option>
++        </Form.Control>
++      </Form.Group>
+       {total > 0 && (
+         <p className="bulk-history-summary">{`Showing ${visible.length} of ${total} ${total === 1 ? 'upload' : 'uploads'}`}</p>
+       )}
+@@ -67,7 +80,7 @@ export const HistoryTable = ({
+         <p>No uploads match your search.</p>
+       ) : (
+         <DataTable
+-          data={visible.map((entry) => mapHistoryRows(entry, setUploader))}
++          data={rowsToShow.map((entry) => mapHistoryRows(entry, setUploader))}
+           hasFixedColumnWidths
+           columns={bulkManagementColumns}
+           className="table-striped"

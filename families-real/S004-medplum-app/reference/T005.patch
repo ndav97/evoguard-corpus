@@ -1,0 +1,75 @@
+diff --git a/src/admin/db/ArrayColumnPadding.tsx b/src/admin/db/ArrayColumnPadding.tsx
+index d7e882433..1f650828a 100644
+--- a/src/admin/db/ArrayColumnPadding.tsx
++++ b/src/admin/db/ArrayColumnPadding.tsx
+@@ -1,6 +1,6 @@
+ // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+ // SPDX-License-Identifier: Apache-2.0
+-import { Button, Grid, Group, NumberInput, Paper, Stack, Text, Title } from '@mantine/core';
++import { Button, Code, Grid, Group, NumberInput, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+ import type { JSX } from 'react';
+ import { useMemo, useState } from 'react';
+ import type { NumberFormat } from './arrayColumnPaddingUtils';
+@@ -52,6 +52,14 @@ function ResultGroup({ title, m, poissonCdf, lambda, f }: ResultGroupProps): JSX
+   );
+ }
+ 
++const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
++const IDENTIFIER_ERROR = 'Use only letters, numbers and underscores, not starting with a number';
++
++function identifierError(value: string): string | undefined {
++  const trimmed = value.trim();
++  return trimmed === '' || IDENTIFIER.test(trimmed) ? undefined : IDENTIFIER_ERROR;
++}
++
+ const DEFAULTS = {
+   statisticsTarget: 1000,
+   elemsPerRow: 3,
+@@ -71,6 +79,11 @@ export function ArrayColumnPadding(): JSX.Element {
+     confidence === DEFAULTS.confidence &&
+     selectivityOverride === DEFAULTS.selectivityOverride;
+ 
++  const [tableName, setTableName] = useState('');
++  const [columnName, setColumnName] = useState('');
++  const tableError = identifierError(tableName);
++  const columnError = identifierError(columnName);
++
+   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
+ 
+   function withCopyReset<T>(setter: (value: T) => void): (value: T) => void {
+@@ -185,6 +198,35 @@ export function ArrayColumnPadding(): JSX.Element {
+         </Grid>
+       </Paper>
+ 
++      <Paper withBorder p="md">
++        <Title order={4} mb="md">
++          Statistics Statement
++        </Title>
++        <Grid>
++          <Grid.Col span={{ base: 12, sm: 6 }}>
++            <TextInput
++              label="Table name"
++              value={tableName}
++              onChange={(e) => setTableName(e.currentTarget.value)}
++              error={tableError}
++            />
++          </Grid.Col>
++          <Grid.Col span={{ base: 12, sm: 6 }}>
++            <TextInput
++              label="Column name"
++              value={columnName}
++              onChange={(e) => setColumnName(e.currentTarget.value)}
++              error={columnError}
++            />
++          </Grid.Col>
++        </Grid>
++        {results && tableName.trim() !== '' && columnName.trim() !== '' && !tableError && !columnError && (
++          <Code block mt="md">
++            {`ALTER TABLE "${tableName.trim()}" ALTER COLUMN "${columnName.trim()}" SET STATISTICS ${statisticsTarget};`}
++          </Code>
++        )}
++      </Paper>
++
+       {results && (
+         <>
+           <Paper withBorder p="md">
