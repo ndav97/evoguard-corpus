@@ -90,15 +90,15 @@
       "families_source": "config/partition.json (train_validation)",
       "turns": 5,
       "episodes_per_family": 1,
-      "repetitions": 2,
+      "repetitions": 1,
       "arms": [
         "B"
       ],
       "providers": [
-        "google"
+        "openai", "anthropic", "google", "local_a", "local_b"
       ],
-      "provider_decision": "2026-10-14: Gemma 4 26B (ranura google) en lugar de Qwen3-Coder: en el piloto tuvo mejor TP (25 % frente a 17 %), más turnos entregados (30/60 frente a 18/60) y la mitad de minutos por turno (6,0 frente a 12,3). El riesgo se define respecto de Gemma 4.",
-      "turns_planned": 400,
+      "provider_decision": "2026-10-15: π0 con los cinco modelos del grupo y una repetición (40 familias × 5 turnos × 5 modelos = 1 000 turnos), en lugar de solo Gemma 4 con dos repeticiones (400 turnos). Motivos: más transiciones elegibles y regresiones observadas; el riesgo aprendido pasa a ser el agrupado de los cinco agentes que luego se evalúan, y se elimina la limitación de un riesgo aprendido con un solo modelo. Antes (2026-10-14): solo Gemma 4 26B. Los episodios B del piloto (S001–S020, 3 turnos) se pueden sumar como datos de entrenamiento.",
+      "turns_planned": 1000,
       "purpose": "Etiquetas de riesgo para entrenar EvoGuard UI: qué requisitos rompe el agente base. Con un modelo local (solo cuesta GPU); el proveedor definitivo es el modelo local elegido en el banco. El riesgo se define respecto de ese modelo."
     },
     "final": {

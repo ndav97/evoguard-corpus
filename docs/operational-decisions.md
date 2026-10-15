@@ -798,3 +798,19 @@ Decisiones del tesista tomadas con esos datos, antes de π0 y de la fase final:
 - **Factura real de Vast.ai: 9,68 USD** en total (instancia destruida). Lo registrado sumaba 14,93 USD (10,12 de GPU
   de turnos a 0,40 USD/h estimados + 4,81 de banco, preparación y episodios apartados); se anota un ajuste de
   −5,25 USD en `extra_spent_usd`. Se mantiene 0,40 USD/h en las proyecciones como estimación conservadora.
+
+## 2026-10-15 — π0 con los cinco modelos
+
+Decisión del tesista: las etiquetas de riesgo se generan con **los cinco modelos del grupo**, una repetición cada uno,
+en las 40 familias de entrenamiento y validación (40 × 5 turnos × 5 modelos = **1 000 turnos**), en lugar de solo
+Gemma 4 con dos repeticiones (400 turnos). `config/experiment.json` → `phases.pi0`.
+
+- **Motivos:** una etiqueta de riesgo solo existe cuando un requisito pasaba y se observa si se rompe; un solo modelo
+  débil deja pocas transiciones elegibles. Con cinco agentes hay más transiciones y regresiones, el riesgo aprendido es
+  el agrupado de los mismos agentes que se evalúan en la fase final y desaparece la limitación de «riesgo aprendido con
+  un solo modelo local». El modelo de lenguaje puede entrar como atributo del predictor.
+- **Sin contaminación:** π0 solo usa familias de entrenamiento y validación; la prueba sigue cerrada.
+- **Costo estimado:** 400 turnos comerciales (~US$ 0,40–0,55 c/u ≈ US$ 180–220) + 600 locales (~85–100 h de GPU ≈ US$
+  35–40), unos S/ 760 frente a los S/ 85 previstos. Total previsto ≈ S/ 3 140 de S/ 5 000.
+- **Datos del piloto:** los 100 episodios B (S001–S020, 3 turnos, salida local de 4 096) pueden sumarse como datos de
+  entrenamiento, declarando su configuración.
