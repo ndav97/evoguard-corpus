@@ -1,0 +1,23 @@
+diff --git a/src/components/forms/TimeOffsetForm.tsx b/src/components/forms/TimeOffsetForm.tsx
+index 6b8c37ef..17e351c1 100644
+--- a/src/components/forms/TimeOffsetForm.tsx
++++ b/src/components/forms/TimeOffsetForm.tsx
+@@ -105,6 +105,9 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+     ["+100 ms", 100],
+     ["+1 s", 1000],
+     ["+1 min", 60000],
++    ["-100 ms", -100],
++    ["-1 s", -1000],
++    ["-1 min", -60000],
+   ];
+ 
+   const enabled =
+@@ -188,7 +191,7 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+               key={label}
+               size="xs"
+               variant="light"
+-              onClick={() => setTotal(currentTotal() + amount)}
++              onClick={() => setTotal(Math.max(0, currentTotal() + amount))}
+             >
+               {label}
+             </Button>

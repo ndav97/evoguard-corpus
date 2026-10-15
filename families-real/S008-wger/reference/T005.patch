@@ -1,0 +1,19 @@
+diff --git a/src/core/ui/Modals/DeleteConfirmationModal.tsx b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+index 40820317..f65054dd 100644
+--- a/src/core/ui/Modals/DeleteConfirmationModal.tsx
++++ b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+@@ -107,6 +107,14 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+                             label={t('deleteConfirmationPrompt', { text: confirmationText })}
+                             value={typed}
+                             onChange={(event) => setTyped(event.target.value)}
++                            onKeyDown={(event) => {
++                                if (event.key === 'Enter') {
++                                    event.preventDefault();
++                                    if (confirmed && !pending) {
++                                        handleDelete();
++                                    }
++                                }
++                            }}
+                         />
+                     )}
+                     {failed && (

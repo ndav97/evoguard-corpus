@@ -1,0 +1,74 @@
+diff --git a/js/dashboard/components/search-input.tsx b/js/dashboard/components/search-input.tsx
+index 727a2e11..bbd76268 100644
+--- a/js/dashboard/components/search-input.tsx
++++ b/js/dashboard/components/search-input.tsx
+@@ -16,7 +16,8 @@ export const SearchInput = ({
+   className,
+   placeholderFocusedOrMobile = 'Search',
+   placeholderUnfocusedOnlyDesktop = 'Press / to search',
+-  resultCount
++  resultCount,
++  minLength = 1
+ }: {
+   searchRef: RefObject<HTMLInputElement>
+   onSearch: (value: string) => void
+@@ -24,22 +25,27 @@ export const SearchInput = ({
+   placeholderFocusedOrMobile?: string
+   placeholderUnfocusedOnlyDesktop?: string
+   resultCount?: number
++  minLength?: number
+ }) => {
+   const [isFocused, setIsFocused] = useState(false)
+   const [hasValue, setHasValue] = useState(false)
++  const [trimmedLength, setTrimmedLength] = useState(0)
++  const tooShort = trimmedLength > 0 && trimmedLength < minLength
+   // Last value passed to onSearch (null before the first call), so the same
+   // value is never reported twice in a row.
+   const lastSearchRef = useRef<string | null>(null)
+ 
+   const emitSearch = useCallback(
+-    (value: string) => {
++    (rawValue: string) => {
++      const length = rawValue.trim().length
++      const value = length > 0 && length < minLength ? '' : rawValue
+       if (lastSearchRef.current === value) {
+         return
+       }
+       lastSearchRef.current = value
+       onSearch(value)
+     },
+-    [onSearch]
++    [onSearch, minLength]
+   )
+ 
+   const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+@@ -54,6 +60,7 @@ export const SearchInput = ({
+     (event) => {
+       const value = event.target.value
+       setHasValue(value.length > 0)
++      setTrimmedLength(value.trim().length)
+       debouncedOnSearchInputChange(event)
+     },
+     [debouncedOnSearchInputChange]
+@@ -65,6 +72,7 @@ export const SearchInput = ({
+       searchRef.current.focus()
+     }
+     setHasValue(false)
++    setTrimmedLength(0)
+     emitSearch('')
+   }, [searchRef, emitSearch])
+ 
+@@ -132,7 +140,12 @@ export const SearchInput = ({
+             ×
+           </button>
+         )}
+-        {hasValue && resultCount !== undefined && (
++        {tooShort && (
++          <span className="absolute left-0 top-full mt-1 text-xs text-gray-500 dark:text-gray-400">
++            {`Type at least ${minLength} characters`}
++          </span>
++        )}
++        {hasValue && !tooShort && resultCount !== undefined && (
+           <span role="status" className="sr-only">
+             {resultCount === 0
+               ? 'No results'

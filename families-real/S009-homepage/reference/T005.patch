@@ -1,0 +1,31 @@
+diff --git a/src/components/widgets/stocks/stocks.jsx b/src/components/widgets/stocks/stocks.jsx
+index 52794102..79bc127f 100644
+--- a/src/components/widgets/stocks/stocks.jsx
++++ b/src/components/widgets/stocks/stocks.jsx
+@@ -54,6 +54,14 @@ export function sortStocks(stocks, sort) {
+ }
+ 
+ // options.limit: número entero positivo de cotizaciones a mostrar (tras ordenar). Otro valor: sin límite.
++const isMissing = (value) => value === null || value === undefined;
++
++// options.hideMissing === true: oculta las cotizaciones sin precio ni porcentaje de cambio.
++export function withoutMissing(stocks, hideMissing) {
++  if (hideMissing !== true) return stocks;
++  return stocks.filter((stock) => !(isMissing(stock.currentPrice) && isMissing(stock.percentChange)));
++}
++
+ export function limitStocks(stocks, limit) {
+   const n = Number(limit);
+   if (!Number.isInteger(n) || n < 1 || stocks.length <= n) {
+@@ -98,7 +106,10 @@ export default function Widget({ options }) {
+   }
+ 
+   if (data) {
+-    const { shown, hidden } = limitStocks(sortStocks(data.stocks, options.sort), options.limit);
++    const { shown, hidden } = limitStocks(
++      withoutMissing(sortStocks(data.stocks, options.sort), options.hideMissing),
++      options.limit,
++    );
+     return (
+       <Container options={options} additionalClassNames="information-widget-stocks">
+         <Raw>

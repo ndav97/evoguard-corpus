@@ -1,0 +1,97 @@
+diff --git a/src/components/forms/TimeOffsetForm.tsx b/src/components/forms/TimeOffsetForm.tsx
+index 17e351c1..1e338188 100644
+--- a/src/components/forms/TimeOffsetForm.tsx
++++ b/src/components/forms/TimeOffsetForm.tsx
+@@ -1,4 +1,4 @@
+-import { FunctionComponent } from "react";
++import { FunctionComponent, useState } from "react";
+ import {
+   Button,
+   Divider,
+@@ -38,6 +38,41 @@ export const formatOffset = (
+   return `${positive ? "+" : "-"}${pad(h)}:${pad(m)}:${pad(s)}.${pad(r, 3)}`;
+ };
+ 
++export const LAST_OFFSET_KEY = "bazarr-time-offset-last";
++
++interface LastOffset {
++  positive: boolean;
++  total: number;
++}
++
++const readLastOffset = (): LastOffset | null => {
++  try {
++    const raw = window.localStorage.getItem(LAST_OFFSET_KEY);
++    if (!raw) {
++      return null;
++    }
++    const value = JSON.parse(raw) as Partial<LastOffset>;
++    if (
++      typeof value.positive !== "boolean" ||
++      typeof value.total !== "number" ||
++      !Number.isInteger(value.total) ||
++      value.total <= 0
++    ) {
++      return null;
++    }
++    return { positive: value.positive, total: value.total };
++  } catch {
++    return null;
++  }
++};
++
++const splitTotal = (total: number) => ({
++  hour: Math.floor(total / 3600000),
++  min: Math.floor((total % 3600000) / 60000),
++  sec: Math.floor((total % 60000) / 1000),
++  ms: total % 1000,
++});
++
+ interface Props {
+   selections: FormType.ModifySubtitle[];
+   onSubmit?: VoidFunction;
+@@ -46,6 +81,7 @@ interface Props {
+ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+   const { mutateAsync } = useSubtitleAction();
+   const modals = useModals();
++  const [lastOffset] = useState(readLastOffset);
+ 
+   const form = useForm({
+     initialValues: {
+@@ -129,6 +165,14 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+         const min = Math.floor((total % 3600000) / 60000);
+         const sec = Math.floor((total % 60000) / 1000);
+         const ms = total % 1000;
++        try {
++          window.localStorage.setItem(
++            LAST_OFFSET_KEY,
++            JSON.stringify({ positive, total }),
++          );
++        } catch {
++          // Storage may be unavailable; the shift itself still runs.
++        }
+         const action = positive
+           ? convertToAction(hour, min, sec, ms)
+           : convertToAction(-hour, -min, -sec, -ms);
+@@ -197,6 +241,21 @@ const TimeOffsetForm: FunctionComponent<Props> = ({ selections, onSubmit }) => {
+             </Button>
+           ))}
+         </Group>
++        {lastOffset && (
++          <Button
++            size="xs"
++            variant="subtle"
++            onClick={() =>
++              form.setValues((f) => ({
++                ...f,
++                positive: lastOffset.positive,
++                ...splitTotal(lastOffset.total),
++              }))
++            }
++          >
++            {`Use last offset (${formatOffset(lastOffset.positive, 0, 0, 0, lastOffset.total)})`}
++          </Button>
++        )}
+         {enabled && (
+           <Text size="sm">
+             {`Offset: ${formatOffset(

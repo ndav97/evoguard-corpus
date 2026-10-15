@@ -1,0 +1,47 @@
+diff --git a/src/components/widgets/stocks/stocks.jsx b/src/components/widgets/stocks/stocks.jsx
+index 2ae2892a..52794102 100644
+--- a/src/components/widgets/stocks/stocks.jsx
++++ b/src/components/widgets/stocks/stocks.jsx
+@@ -53,6 +53,15 @@ export function sortStocks(stocks, sort) {
+   return list;
+ }
+ 
++// options.limit: número entero positivo de cotizaciones a mostrar (tras ordenar). Otro valor: sin límite.
++export function limitStocks(stocks, limit) {
++  const n = Number(limit);
++  if (!Number.isInteger(n) || n < 1 || stocks.length <= n) {
++    return { shown: stocks, hidden: 0 };
++  }
++  return { shown: stocks.slice(0, n), hidden: stocks.length - n };
++}
++
+ export default function Widget({ options }) {
+   const { t, i18n } = useTranslation();
+ 
+@@ -89,6 +98,7 @@ export default function Widget({ options }) {
+   }
+ 
+   if (data) {
++    const { shown, hidden } = limitStocks(sortStocks(data.stocks, options.sort), options.limit);
+     return (
+       <Container options={options} additionalClassNames="information-widget-stocks">
+         <Raw>
+@@ -102,7 +112,7 @@ export default function Widget({ options }) {
+           >
+             <FaChartLine className="flex-none w-5 h-5 text-theme-800 dark:text-theme-200 mr-2" />
+             <div className="flex flex-wrap items-center gap-0.5">
+-              {sortStocks(data.stocks, options.sort).map(
++              {shown.map(
+                 (stock) =>
+                   stock && (
+                     <div
+@@ -142,6 +152,9 @@ export default function Widget({ options }) {
+                     </div>
+                   ),
+               )}
++              {hidden > 0 && (
++                <span className="text-theme-800/70 dark:text-theme-200/70 text-xs px-1">{`+${hidden}`}</span>
++              )}
+             </div>
+           </button>
+         </Raw>

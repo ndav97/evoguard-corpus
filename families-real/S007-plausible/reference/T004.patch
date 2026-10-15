@@ -1,0 +1,71 @@
+diff --git a/js/dashboard/components/search-input.tsx b/js/dashboard/components/search-input.tsx
+index 84bb528b..727a2e11 100644
+--- a/js/dashboard/components/search-input.tsx
++++ b/js/dashboard/components/search-input.tsx
+@@ -1,6 +1,8 @@
+ import React, {
+   ChangeEventHandler,
++  KeyboardEventHandler,
+   useCallback,
++  useRef,
+   useState,
+   RefObject
+ } from 'react'
+@@ -25,12 +27,26 @@ export const SearchInput = ({
+ }) => {
+   const [isFocused, setIsFocused] = useState(false)
+   const [hasValue, setHasValue] = useState(false)
++  // Last value passed to onSearch (null before the first call), so the same
++  // value is never reported twice in a row.
++  const lastSearchRef = useRef<string | null>(null)
++
++  const emitSearch = useCallback(
++    (value: string) => {
++      if (lastSearchRef.current === value) {
++        return
++      }
++      lastSearchRef.current = value
++      onSearch(value)
++    },
++    [onSearch]
++  )
+ 
+   const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+     (event) => {
+-      onSearch(event.target.value)
++      emitSearch(event.target.value)
+     },
+-    [onSearch]
++    [emitSearch]
+   )
+   const debouncedOnSearchInputChange = useDebounce(onSearchInputChange)
+ 
+@@ -49,8 +65,18 @@ export const SearchInput = ({
+       searchRef.current.focus()
+     }
+     setHasValue(false)
+-    onSearch('')
+-  }, [searchRef, onSearch])
++    emitSearch('')
++  }, [searchRef, emitSearch])
++
++  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
++    (event) => {
++      if (event.key === 'Enter') {
++        event.preventDefault()
++        emitSearch(event.currentTarget.value)
++      }
++    },
++    [emitSearch]
++  )
+ 
+   const blurSearchBox = useCallback(() => {
+     if (searchRef.current?.value) {
+@@ -94,6 +120,7 @@ export const SearchInput = ({
+           placeholder=" "
+           className="peer w-full text-sm dark:text-gray-100 block border-gray-300 dark:border-gray-750 rounded-md dark:bg-gray-750 dark:placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-indigo-500/20 dark:focus:ring-indigo-500/25 focus:border-indigo-500"
+           onChange={handleInputChange}
++          onKeyDown={handleKeyDown}
+         />
+         {hasValue && (
+           <button

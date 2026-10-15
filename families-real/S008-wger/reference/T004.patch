@@ -1,0 +1,41 @@
+diff --git a/src/core/ui/Modals/DeleteConfirmationModal.tsx b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+index a58cbd69..40820317 100644
+--- a/src/core/ui/Modals/DeleteConfirmationModal.tsx
++++ b/src/core/ui/Modals/DeleteConfirmationModal.tsx
+@@ -70,10 +70,17 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+         closeFn();
+     };
+ 
++    // While a deletion is in progress the dialog cannot be closed.
++    const handleClose = () => {
++        if (!pending) {
++            closeFn();
++        }
++    };
++
+     return (
+         <Modal
+             open={isOpen}
+-            onClose={closeFn}
++            onClose={handleClose}
+             aria-labelledby="modal-modal-title"
+             aria-describedby="modal-modal-description"
+         >
+@@ -83,7 +90,7 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+                     slotProps={{ title: { variant: 'h6', id: 'modal-modal-title' } }}
+                     subheader={subtitle}
+                     action={
+-                        <IconButton aria-label={t('closeDialog')} onClick={closeFn}>
++                        <IconButton aria-label={t('closeDialog')} onClick={handleClose} disabled={pending}>
+                             <CloseIcon />
+                         </IconButton>
+                     }
+@@ -112,7 +119,7 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
+                     <Button color="error" variant="contained" onClick={handleDelete} disabled={!confirmed || pending}>
+                         {pending ? t('deleting') : t('delete')}
+                     </Button>
+-                    <Button color="primary" onClick={closeFn}>
++                    <Button color="primary" onClick={handleClose} disabled={pending}>
+                         {t('close')}
+                     </Button>
+                 </CardActions>

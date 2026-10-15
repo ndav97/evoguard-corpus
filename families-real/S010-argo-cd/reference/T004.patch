@@ -1,0 +1,25 @@
+diff --git a/src/app/applications/components/applications-list/applications-summary.tsx b/src/app/applications/components/applications-list/applications-summary.tsx
+index e86735fa8..fecff165a 100644
+--- a/src/app/applications/components/applications-list/applications-summary.tsx
++++ b/src/app/applications/components/applications-list/applications-summary.tsx
+@@ -40,6 +40,12 @@ export const attentionTooltip = (apps: models.Application[]) => {
+     return names.length > 5 ? `${shown}, +${names.length - 5} more` : shown;
+ };
+ 
++// Sincronización automática activada: spec.syncPolicy.automated existe y no está desactivada con enabled: false.
++export const hasAutoSync = (app: models.Application) => {
++    const automated = app.spec?.syncPolicy?.automated;
++    return !!automated && automated.enabled !== false;
++};
++
+ export type SummaryFilterType = 'sync' | 'health';
+ 
+ export const ApplicationsSummary = ({
+@@ -84,6 +90,7 @@ export const ApplicationsSummary = ({
+             title: 'HYDRATED',
+             value: withPercentage(applications.filter(app => app.status.sourceHydrator?.currentOperation?.phase === 'Hydrated').length, applications.length)
+         },
++        {title: 'AUTO-SYNC', value: withPercentage(applications.filter(hasAutoSync).length, applications.length)},
+         {
+             title: 'CLUSTERS',
+             value: new Set(

@@ -1,0 +1,38 @@
+diff --git a/src/app/applications/components/applications-list/applications-summary.tsx b/src/app/applications/components/applications-list/applications-summary.tsx
+index fecff165a..f7902a4d1 100644
+--- a/src/app/applications/components/applications-list/applications-summary.tsx
++++ b/src/app/applications/components/applications-list/applications-summary.tsx
+@@ -46,6 +46,21 @@ export const hasAutoSync = (app: models.Application) => {
+     return !!automated && automated.enabled !== false;
+ };
+ 
++// Aplicaciones por proyecto: "nombre (N)" de más a menos aplicaciones (empates por nombre), como máximo 5, y "+K more".
++export const projectsTooltip = (apps: models.Application[]) => {
++    const counts = new Map<string, number>();
++    apps.forEach(app => {
++        const project = app.spec?.project || 'default';
++        counts.set(project, (counts.get(project) || 0) + 1);
++    });
++    const entries = Array.from(counts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
++    const shown = entries
++        .slice(0, 5)
++        .map(([name, count]) => `${name} (${count})`)
++        .join(', ');
++    return entries.length > 5 ? `${shown}, +${entries.length - 5} more` : shown;
++};
++
+ export type SummaryFilterType = 'sync' | 'health';
+ 
+ export const ApplicationsSummary = ({
+@@ -101,6 +116,11 @@ export const ApplicationsSummary = ({
+             ).size
+         },
+         {title: 'NAMESPACES', value: new Set(applications.map(app => app.spec.destination.namespace)).size},
++        {
++            title: 'PROJECTS',
++            value: new Set(applications.map(app => app.spec?.project || 'default')).size,
++            tooltip: applications.length > 0 ? projectsTooltip(applications) : undefined
++        },
+         {
+             title: 'NEEDS ATTENTION',
+             value: attentionApps.length,
