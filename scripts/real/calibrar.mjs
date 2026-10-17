@@ -158,6 +158,11 @@ async function calibrateFamily(dir) {
       r.checks.suite_sin_regresiones = !a.error && suiteFailing.length === 0 && suitesBroken.length === 0;
       const sig = (x) => JSON.stringify(Object.entries(x.results).sort(([p], [q]) => (p < q ? -1 : 1)));
       r.checks.estable = after.every((x) => sig(x) === sig(a));
+      if (!r.checks.estable) {
+        // Pruebas cuyo resultado cambió entre ejecuciones, para poder diagnosticar la inestabilidad.
+        const keys = new Set(after.flatMap((x) => Object.keys(x.results)));
+        r.unstable_tests = [...keys].filter((k) => new Set(after.map((x) => JSON.stringify(x.results[k] ?? null))).size > 1).slice(0, 50);
+      }
       r.ok = Object.values(r.checks).every(Boolean);
       res.turns.push(r);
       if (!r.ok) res.ok = false;

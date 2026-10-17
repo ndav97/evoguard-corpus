@@ -1,4 +1,5 @@
 // Tests ocultos del estudio.
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
