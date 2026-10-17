@@ -1,0 +1,28 @@
+diff --git a/src/shared/utils/roundNumber.ts b/src/shared/utils/roundNumber.ts
+index 77b9dfce..b6ac8f58 100644
+--- a/src/shared/utils/roundNumber.ts
++++ b/src/shared/utils/roundNumber.ts
+@@ -2,11 +2,20 @@ const UNITS = ['', 'k', 'M', 'B'];
+ const UNIT_SCALE = 1_000; // Every 1000, jump in magnitude
+ 
+ export const roundNumber = (value: number, scaleMargin = 1) => {
+-  let outValue = value;
++  // Pick the unit from the magnitude and round only once, so that e.g.
++  // 1,499,500 is "1M" and not "2M" (rounding 1499.5 to 1500 and then to 2)
+   let unitIndex = 0;
+-  while (outValue >= UNIT_SCALE * scaleMargin) {
++  while (
++    unitIndex < UNITS.length - 1 &&
++    value >= UNIT_SCALE ** (unitIndex + 1) * scaleMargin
++  ) {
+     unitIndex += 1;
+-    outValue = Math.round(outValue / UNIT_SCALE);
++  }
++  let outValue = Math.round(value / UNIT_SCALE ** unitIndex);
++  // Rounding can reach the next unit (999,600 is 1000k): use it if it exists
++  if (unitIndex < UNITS.length - 1 && outValue >= UNIT_SCALE * scaleMargin) {
++    unitIndex += 1;
++    outValue = Math.round(value / UNIT_SCALE ** unitIndex);
+   }
+   return `${outValue.toLocaleString()}${UNITS[unitIndex]}`;
+ };

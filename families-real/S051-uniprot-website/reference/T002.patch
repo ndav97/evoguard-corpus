@@ -1,0 +1,27 @@
+diff --git a/src/shared/utils/roundNumber.ts b/src/shared/utils/roundNumber.ts
+index b6ac8f58..221406a5 100644
+--- a/src/shared/utils/roundNumber.ts
++++ b/src/shared/utils/roundNumber.ts
+@@ -1,7 +1,21 @@
+ const UNITS = ['', 'k', 'M', 'B'];
+ const UNIT_SCALE = 1_000; // Every 1000, jump in magnitude
+ 
+-export const roundNumber = (value: number, scaleMargin = 1) => {
++/** Shown for values that are not finite numbers. */
++export const NOT_A_NUMBER_LABEL = '—';
++
++export const roundNumber = (value: number, scaleMargin = 1): string => {
++  if (typeof value !== 'number' || !Number.isFinite(value)) {
++    return NOT_A_NUMBER_LABEL;
++  }
++  if (value === 0) {
++    return '0'; // also for -0
++  }
++  // Negative numbers are rounded like their absolute value
++  if (value < 0) {
++    const rounded = roundNumber(-value, scaleMargin);
++    return rounded === '0' ? '0' : `-${rounded}`;
++  }
+   // Pick the unit from the magnitude and round only once, so that e.g.
+   // 1,499,500 is "1M" and not "2M" (rounding 1499.5 to 1500 and then to 2)
+   let unitIndex = 0;

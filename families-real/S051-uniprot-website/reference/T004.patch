@@ -1,0 +1,21 @@
+diff --git a/src/shared/utils/roundNumber.ts b/src/shared/utils/roundNumber.ts
+index c3e43ac3..f9269f1a 100644
+--- a/src/shared/utils/roundNumber.ts
++++ b/src/shared/utils/roundNumber.ts
+@@ -50,3 +50,16 @@ export const roundNumber = (
+   });
+   return `${formatted}${UNITS[unitIndex]}`;
+ };
++
++/**
++ * Abbreviated count followed by a noun, e.g. "1 entry", "12k entries".
++ * The singular is used only for exactly 1 or -1; the plural defaults to the
++ * singular plus "s".
++ */
++export const formatCount = (
++  value: number,
++  singular: string,
++  plural = `${singular}s`,
++  options: RoundNumberOptions = {}
++): string =>
++  `${roundNumber(value, 1, options)} ${Math.abs(value) === 1 ? singular : plural}`;

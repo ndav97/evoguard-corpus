@@ -1,0 +1,54 @@
+diff --git a/src/shared/utils/roundNumber.ts b/src/shared/utils/roundNumber.ts
+index 221406a5..c3e43ac3 100644
+--- a/src/shared/utils/roundNumber.ts
++++ b/src/shared/utils/roundNumber.ts
+@@ -4,7 +4,21 @@ const UNIT_SCALE = 1_000; // Every 1000, jump in magnitude
+ /** Shown for values that are not finite numbers. */
+ export const NOT_A_NUMBER_LABEL = '—';
+ 
+-export const roundNumber = (value: number, scaleMargin = 1): string => {
++export type RoundNumberOptions = {
++  /** Decimals kept in the abbreviated value (integer from 0 to 3; default 0) */
++  decimals?: number;
++};
++
++export const roundNumber = (
++  value: number,
++  scaleMargin = 1,
++  { decimals = 0 }: RoundNumberOptions = {}
++): string => {
++  const fractionDigits =
++    Number.isInteger(decimals) && decimals >= 0 && decimals <= 3 ? decimals : 0;
++  const factor = 10 ** fractionDigits;
++  const round = (x: number) => Math.round(x * factor) / factor;
++
+   if (typeof value !== 'number' || !Number.isFinite(value)) {
+     return NOT_A_NUMBER_LABEL;
+   }
+@@ -13,7 +27,7 @@ export const roundNumber = (value: number, scaleMargin = 1): string => {
+   }
+   // Negative numbers are rounded like their absolute value
+   if (value < 0) {
+-    const rounded = roundNumber(-value, scaleMargin);
++    const rounded = roundNumber(-value, scaleMargin, { decimals });
+     return rounded === '0' ? '0' : `-${rounded}`;
+   }
+   // Pick the unit from the magnitude and round only once, so that e.g.
+@@ -25,11 +39,14 @@ export const roundNumber = (value: number, scaleMargin = 1): string => {
+   ) {
+     unitIndex += 1;
+   }
+-  let outValue = Math.round(value / UNIT_SCALE ** unitIndex);
++  let outValue = round(value / UNIT_SCALE ** unitIndex);
+   // Rounding can reach the next unit (999,600 is 1000k): use it if it exists
+   if (unitIndex < UNITS.length - 1 && outValue >= UNIT_SCALE * scaleMargin) {
+     unitIndex += 1;
+-    outValue = Math.round(value / UNIT_SCALE ** unitIndex);
++    outValue = round(value / UNIT_SCALE ** unitIndex);
+   }
+-  return `${outValue.toLocaleString()}${UNITS[unitIndex]}`;
++  const formatted = outValue.toLocaleString(undefined, {
++    maximumFractionDigits: fractionDigits,
++  });
++  return `${formatted}${UNITS[unitIndex]}`;
+ };
