@@ -156,12 +156,17 @@ async function calibrateFamily(dir) {
         suites_failed: suitesBroken.length, suites_known: (a.suiteFailedFiles ?? []).filter((f) => known.has(f)), suite_errors: a.suiteErrors, seconds: Math.round((a.ms ?? 0) / 1000), tail: hiddenFailing.length || suiteFailing.length || suitesBroken.length || a.error ? a.tail : undefined };
       r.checks.tests_pasan_despues = !a.error && hiddenCount > 0 && hiddenFailing.length === 0;
       r.checks.suite_sin_regresiones = !a.error && suiteFailing.length === 0 && suitesBroken.length === 0;
-      const sig = (x) => JSON.stringify(Object.entries(x.results).sort(([p], [q]) => (p < q ? -1 : 1)));
+      // Estable = mismo número de pruebas y mismas pruebas que fallan en todas las ejecuciones.
+      // No se comparan los nombres de las que pasan: algunas suites generan nombres con la fecha
+      // actual o datos aleatorios (p. ej. S058), y cambian de una ejecución a otra sin ser inestables.
+      const sig = (x) => JSON.stringify([Object.keys(x.results).length, failed(x).sort()]);
       r.checks.estable = after.every((x) => sig(x) === sig(a));
       if (!r.checks.estable) {
         // Pruebas cuyo resultado cambió entre ejecuciones, para poder diagnosticar la inestabilidad.
-        const keys = new Set(after.flatMap((x) => Object.keys(x.results)));
-        r.unstable_tests = [...keys].filter((k) => new Set(after.map((x) => JSON.stringify(x.results[k] ?? null))).size > 1).slice(0, 50);
+        const failing = after.map((x) => new Set(failed(x)));
+        const keys = new Set(failing.flatMap((f) => [...f]));
+        r.unstable_tests = [...keys].filter((k) => !failing.every((f) => f.has(k))).slice(0, 50);
+        r.unstable_totals = after.map((x) => Object.keys(x.results).length);
       }
       r.ok = Object.values(r.checks).every(Boolean);
       res.turns.push(r);
