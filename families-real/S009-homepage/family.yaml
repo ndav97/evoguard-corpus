@@ -48,8 +48,8 @@ turns:
 provenance:
   authored_by: Claude (claude-opus-5-5), revisión pendiente del equipo
   authored_at: 2026-09-27
-  status: DRAFT
-  calibrated_at: "T001–T003: 2026-09-27 (T001 4/4, T002 2/5, T003 2/6 fail-to-pass; suite 1770 tests sin regresiones; estable 2/2); T004–T005 pendientes"
+  status: CALIBRATED
+  calibrated_at: "2026-10-15 (T001 4/4, T002 2/5, T003 2/6, T004 4/7, T005 2/6 fail-to-pass; suite 1783 tests sin regresiones; estable 2/2)"
 # Generación por el pipeline (V0 es el commit real; los modelos generan V1–V5). Rotación por fila:
 # proveedor de Vv = provider_ring[(n − 1 + v) mod 5] para Sn.
 generation:
