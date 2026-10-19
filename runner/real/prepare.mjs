@@ -59,7 +59,7 @@ export function buildImage(root, data, { base, source = 'git', srcDir, installCm
   mkdirSync(context, { recursive: true });
   writeFileSync(join(context, 'Dockerfile'), dockerfile({ source }));
   copyFileSync(join(root, 'docker/real/install.sh'), join(context, 'install.sh'));
-  if (source === 'dir') cpSync(srcDir, join(context, 'src'), { recursive: true });
+  if (source !== 'git') cpSync(srcDir, join(context, 'src'), { recursive: true });
   const iid = join(context, 'image.id');
   const tag = `evoguard-real-${m.id.toLowerCase()}:v0`;
   log(`${m.id}: construyendo ${tag} desde ${base} (${source === 'git' ? `${m.repo}@${m.v0.commit.slice(0, 12)}` : srcDir})`);
@@ -105,7 +105,7 @@ export async function verifyBase(root, data, image, { runs = 2 } = {}) {
       const result = await runSuiteIn(session, m);
       const bad = result.run ? failing(result.run).filter(k => !known.has(k)) : null;
       report.suite_runs.push({ error: result.error, seconds: Math.round(result.ms / 1000), total: result.run?.total ?? null, failing: bad, suites_failed: result.run?.suiteFailedFiles.filter(f => !known.has(f)) ?? null, tail: result.error || bad?.length || result.run?.suiteFailedFiles.some(f => !known.has(f)) ? result.tail : undefined });
-      if (result.run) signatures.push(signature(result.run));
+      if (result.run) signatures.push(signature(result.run, known));
     } finally { closeReal(session); }
   }
   report.checks.suite_green = report.suite_runs.every(r => !r.error && r.failing.length === 0 && r.suites_failed.length === 0 && r.total > 0);
@@ -131,6 +131,7 @@ export async function prepare(root, familyId, options = {}) {
     repo: data.manifest.repo, v0_commit: data.manifest.v0.commit, v0_repo_commit: report.v0_repo_commit,
     package_path: data.manifest.package_path, node: report.node, install: report.install,
     development_source: options.source === 'dir' ? 'local-directory (solo pruebas)' : undefined,
+    source_archive: options.source === 'archive' ? { path: options.srcDir, note: 'git archive del commit V0 (repositorio no accesible por red); la carpeta debe contener exactamente ese árbol' } : undefined,
     prepared_at: new Date().toISOString(), checks: report.checks, patches: report.patches, suite_runs: report.suite_runs
   };
   if (!options.dryRun) writeFileSync(join(root, BASES_PATH), JSON.stringify(bases, null, 2) + '\n');
@@ -145,7 +146,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   if (!ids.length) { console.error('Uso: npm run real:prepare -- Sxxx [Sxxx…] [--base imagen]'); process.exit(1); }
   (async () => {
     for (const id of ids) {
-      const result = await prepare(root, id, { base: option('--base'), keepContext: args.includes('--keep-context') });
+      // --src-dir <carpeta>: árbol del commit V0 extraído con git archive, para repositorios que ya no se pueden clonar.
+      const srcDir = option('--src-dir');
+      const result = await prepare(root, id, { base: option('--base'), keepContext: args.includes('--keep-context'), ...(srcDir ? { source: 'archive', srcDir } : {}) });
       log(`${id}: ${result.status} — ${result.tag} ${result.image_id.slice(0, 19)}; suite ${result.suite_runs.map(r => r.error ?? `${r.total} tests, ${r.failing.length} fallos, ${r.seconds}s`).join(' / ')}; ${Object.entries(result.checks).filter(([, ok]) => !ok).map(([k]) => k).join(', ') || 'todas las comprobaciones OK'}`);
       if (result.status !== 'VERIFIED') process.exitCode = 1;
     }

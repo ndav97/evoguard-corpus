@@ -17,7 +17,8 @@ runner: vitest
 node: "24"
 workspace: github__betagouv__mon-entreprise          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: source/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+known_failures:                              # inestable en V0 (falla en 1 de 2 ejecuciones; preparación 2026-10-17)
+  - "test/regressions/dividendes.test.ts › calculate simulations-dividendes"
 focus: site/source/lib/navigation/pathUtils.ts                 # zona que tocan los cinco cambios
 turns:
   - id: T001

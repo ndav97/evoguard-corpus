@@ -11,11 +11,14 @@ const reject = (id, mutate, pattern) => {
   assert.match(validateRealFamily(data, root).join('\n'), pattern);
 };
 
-// Desde el 2026-10-02 el piloto tiene 20 familias semi-reales (config/strata.json). S001–S010 están calibradas;
-// las nuevas pueden estar en borrador (provenance DRAFT) hasta calibrarlas en el PC: su único error admitido es ese.
-test('estrato semi-real: familias S001–S0nn consecutivas; S001–S010 calibradas y las demás válidas o pendientes de calibrar', () => {
+// Desde el 2026-10-17 el corpus semi-real tiene ids no consecutivos (las candidatas descartadas dejan huecos).
+// S001–S010 deben seguir calibradas; las demás pueden estar en borrador (DRAFT) hasta calibrarlas en el PC.
+test('estrato semi-real: ids Snnn únicos y ordenados; S001–S010 calibradas y las demás válidas o pendientes de calibrar', () => {
   assert.ok(families.length >= 10);
-  assert.deepEqual(families.map(f => f.id), Array.from({ length: families.length }, (_, i) => `S${String(i + 1).padStart(3, '0')}`));
+  const ids = families.map(f => f.id);
+  for (const id of ids) assert.match(id, /^S\d{3}$/);
+  assert.deepEqual(ids, [...new Set(ids)].sort());
+  for (const n of Array.from({ length: 10 }, (_, i) => `S${String(i + 1).padStart(3, '0')}`)) assert.ok(ids.includes(n), `${n} falta`);
   for (const [id, errors] of Object.entries(validateAllReal(root))) {
     const draft = loadRealFamily(root, id).manifest.provenance.status === 'DRAFT';
     assert.ok(!draft || Number(id.slice(1)) > 10, `${id}: S001–S010 deben seguir calibradas`);

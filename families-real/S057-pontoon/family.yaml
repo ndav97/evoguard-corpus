@@ -17,7 +17,8 @@ runner: vitest
 node: "24"
 workspace: github__mozilla__pontoon          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+known_failures:                              # inestable en V0 (falla en 1 de 2 ejecuciones; preparación 2026-10-17)
+  - "src/modules/translationform/utils/editFieldModes.test.ts › fluent mode applies an edit resuming from a parser state snapshot (#4438)"
 focus: translate/src/modules/editor/components/TranslationLength.tsx                 # zona que tocan los cinco cambios
 turns:
   - id: T001

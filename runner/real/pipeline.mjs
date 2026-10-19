@@ -139,7 +139,7 @@ export async function runRealOracle({ image, manifest, steps, v0Commit, patch, h
       const suiteBroken = result.run.suiteFailedFiles.filter(f => !f.startsWith(`${manifest.hidden_tests_dir}/`) && !known.has(f));
       const pass = Object.values(perTurn).every(t => t.tests > 0 && !t.failing.length && !t.compile_error) && !suiteFailing.length && !suiteBroken.length;
       report.runs.push({ status: pass ? 'PASS' : 'FAIL', seconds: Math.round(result.ms / 1000), total: result.run.total, hidden: perTurn, suite_failing: suiteFailing, suite_broken: suiteBroken, tail: pass ? undefined : result.tail });
-      signatures.push(signature(result.run));
+      signatures.push(signature(result.run, known));
     } finally { closeReal(session); }
   }
   report.stable = signatures.length === runs && signatures.every(s => s === signatures[0]);

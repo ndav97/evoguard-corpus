@@ -45,7 +45,14 @@ export function parseReport(json, cwd) {
 const IGNORED = new Set(['passed', 'pending', 'skipped', 'todo', 'disabled']);
 export const failing = (run, filter = () => true) => Object.entries(run.results).filter(([k, v]) => filter(k) && !IGNORED.has(v)).map(([k]) => k).sort();
 export const passing = (run, filter = () => true) => Object.entries(run.results).filter(([k, v]) => filter(k) && v === 'passed').map(([k]) => k).sort();
-export const signature = run => JSON.stringify(Object.entries(run.results).sort(([a], [b]) => (a < b ? -1 : 1)).concat([['__suites_failed__', [...run.suiteFailedFiles].sort()]]));
+// Firma para comparar ejecuciones: número de pruebas, pruebas que fallan y archivos que no cargan, sin las
+// conocidas (known_failures). No usa los nombres de las que pasan: algunas suites los generan con la fecha
+// actual o datos aleatorios y cambian entre ejecuciones sin que cambie ningún resultado (S058, 2026-10-17).
+export const signature = (run, known = new Set()) => JSON.stringify([
+  Object.keys(run.results).length,
+  failing(run, k => !known.has(k)),
+  [...run.suiteFailedFiles].filter(f => !known.has(f)).sort()
+]);
 
 // Ejecuta la suite (o archivos concretos) dentro de un contenedor semi-real y devuelve el resultado interpretado.
 // { run, error: null | 'TIMEOUT' | 'SIN_INFORME' | 'INFRA_ERROR', ms, tail }
