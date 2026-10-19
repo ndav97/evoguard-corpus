@@ -6,10 +6,10 @@
 # Ocupa 0,5–2 GB por familia. Se puede repetir: rehace la imagen y actualiza su entrada.
 #
 # Uso (PowerShell o doble clic en preparar-imagenes.cmd):
-#   .\scripts\real\preparar-imagenes.ps1                    # las 20 familias
+#   .\scripts\real\preparar-imagenes.ps1                    # las 40 familias train/val
 #   .\scripts\real\preparar-imagenes.ps1 -Familias S010,S005
 
-param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020'))
+param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020', 'S022', 'S024', 'S029', 'S030', 'S031', 'S032', 'S041', 'S042', 'S045', 'S046', 'S048', 'S050', 'S051', 'S053', 'S054', 'S055', 'S056', 'S057', 'S058', 'S059'))
 
 $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -36,7 +36,10 @@ try {
   $Familias = $Familias | ForEach-Object { $_ -split ',' } | Where-Object { $_ }
   foreach ($f in $Familias) {
     Paso "Preparando $f"
-    node runner/real/prepare.mjs $f
+    # Familias cuyo repositorio no se puede clonar por red: se construyen desde un git archive del commit V0
+    # guardado en .artifacts\real\src\<familia> (S051, 2026-10-18).
+    $srcDir = Join-Path $root ".artifacts\real\src\$f"
+    if (Test-Path $srcDir) { node runner/real/prepare.mjs $f --src-dir $srcDir } else { node runner/real/prepare.mjs $f }
     if ($LASTEXITCODE -ne 0) { $fallidas += $f; Write-Host "$f no quedó verificada (ver el registro)." -ForegroundColor Yellow }
   }
   Paso 'Resumen'

@@ -7,7 +7,7 @@
 # Resultado por familia: docs\verification\real-rehearsal-sxxx.json (lo exige el preflight antes de generar).
 #
 # Uso (PowerShell o doble clic en ensayar-familias.cmd):
-#   .\scripts\real\ensayar-familias.ps1                    # las 20 familias
+#   .\scripts\real\ensayar-familias.ps1                    # las 40 familias train/val
 #   .\scripts\real\ensayar-familias.ps1 -Familias S010,S005
 #   .\scripts\real\ensayar-familias.ps1 -Repetir            # repite también las que ya están vigentes
 #
@@ -18,7 +18,7 @@
 #     y se reintenta una vez;
 #   - registra la salida de cada ensayo en .artifacts\real\ensayo-<familia>-<fecha>.log.
 
-param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020'), [int]$LimiteMinutos = 150, [switch]$Repetir)
+param([string[]]$Familias = @('S001', 'S002', 'S003', 'S004', 'S005', 'S006', 'S007', 'S008', 'S009', 'S010', 'S011', 'S012', 'S013', 'S014', 'S015', 'S016', 'S017', 'S018', 'S019', 'S020', 'S022', 'S024', 'S029', 'S030', 'S031', 'S032', 'S041', 'S042', 'S045', 'S046', 'S048', 'S050', 'S051', 'S053', 'S054', 'S055', 'S056', 'S057', 'S058', 'S059'), [int]$LimiteMinutos = 150, [switch]$Repetir)
 
 $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
