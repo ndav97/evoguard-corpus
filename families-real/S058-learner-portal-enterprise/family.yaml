@@ -17,7 +17,8 @@ runner: jest
 node: "24"
 workspace: github__openedx__frontend-app-learner-portal-enterprise          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures: []                         # tests que ya fallaban en V0 (excluidos del pass-to-pass)
+known_failures:                              # inestable en V0 (ensayo 2026-10-20: falla de forma intermitente sin cambios)
+  - "src/components/stateful-enroll/data/hooks/useStatefulEnroll.test.tsx › useStatefulEnroll should make redemption request and poll for committed transaction ({ hasRedemptionMetadata: true })"
 focus: src/components/dashboard/sidebar/utils.js                 # zona que tocan los cinco cambios
 turns:
   - id: T001

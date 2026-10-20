@@ -1,0 +1,183 @@
+{
+  "artifact_type": "real_pipeline_rehearsal",
+  "family_id": "S059",
+  "image_id": "sha256:40e43e83a8a3d3f91e258a22cdced8b3cadc54347afadd96914699e2759f285d",
+  "experimental": false,
+  "started_at": "2026-10-20T10:12:15.638Z",
+  "versions": {
+    "V1": {
+      "task_id": "d861515c-a478-4d7a-8246-7333c2d8ade5",
+      "outcomes": [
+        {
+          "provider": "local_b",
+          "attempt": 1,
+          "outcome": "REASSIGN",
+          "reason": "architecture",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "FAIL"
+          }
+        },
+        {
+          "provider": "openai",
+          "attempt": 1,
+          "outcome": "REASSIGN",
+          "reason": "independent_oracle",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "FAIL",
+            "architecture": "NOT_RUN"
+          }
+        },
+        {
+          "provider": "anthropic",
+          "attempt": 1,
+          "outcome": "REPAIR",
+          "reason": "development_tests",
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "FAIL",
+            "independent_oracle": "NOT_RUN",
+            "architecture": "NOT_RUN"
+          }
+        },
+        {
+          "provider": "anthropic",
+          "attempt": 2,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "06cac3aef9797c1898c641196071d8046732cfd6"
+    },
+    "V2": {
+      "task_id": "4b326adf-0bec-4eee-a1fa-916b3febd022",
+      "outcomes": [
+        {
+          "provider": "openai",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "0832a1b087e428245fe6a7ec9ae098e8691fc5c6"
+    },
+    "V3": {
+      "task_id": "4a2099a0-ff98-455f-880f-11673422f96e",
+      "outcomes": [
+        {
+          "provider": "anthropic",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "306f1d61211a470529541f7a4aee8107f9392291"
+    },
+    "V4": {
+      "task_id": "f4f0c757-60ea-4a50-a15e-d3aad1493e6c",
+      "outcomes": [
+        {
+          "provider": "google",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "22a493f081d3080d5e9c2f6c141fcd966163c1e5"
+    },
+    "V5": {
+      "task_id": "196ace81-48cb-404f-aa7e-501ae5671e6e",
+      "outcomes": [
+        {
+          "provider": "local_a",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "078da21b85467a37dd9bc42cfe327d3d3b6ec94c"
+    }
+  },
+  "v3_oracle_stability": {
+    "status": "PASS",
+    "stable": true,
+    "runs": [
+      {
+        "status": "PASS",
+        "total": 286,
+        "seconds": 55
+      },
+      {
+        "status": "PASS",
+        "total": 286,
+        "seconds": 58
+      }
+    ]
+  },
+  "status": "PASS",
+  "finished_at": "2026-10-20T10:32:43.551Z",
+  "sources_sha256": {
+    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
+    "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
+    "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
+    "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
+    "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
+    "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
+    "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
+    "runner/real/families.mjs": "b06114a33396d96c47fad2c5f99cde3ffa36d65612740ea82a942d1c133a0684",
+    "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
+    "runner/real/suite.mjs": "022b9ddd9208979cee2df7e909eb97c3295a790cd43919881e2af4487c1786c1",
+    "runner/real/prepare.mjs": "2978e4d2e28c43c9e6128926f1ca588dba24219efb14d4d5f5d5dfd52f43a9b9",
+    "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
+    "runner/real/pipeline.mjs": "99992b5ca74b3b7a285ce8d49b52b3e72047d2fae028c705efc4b53d473df324",
+    "runner/real/rehearse.mjs": "d39b1470cf891abb93572416524ce87d9ed37b18cadff0937ce024deba8cec6c",
+    "runner/real/generate.mjs": "fa84d180aca20a5d59f3266e773896eacd651691d81cf197ff0779d9fee8bd36",
+    "runner/real/audit.mjs": "ab9fe8ad14b3d933804b4f58cede2c51b9a189be41f580454f0dd4c3548617e7",
+    "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
+    "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
+    "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",
+    "schema/real-family.schema.json": "3ebf65f6aef2c955fc298bdbbd2dca73977d5d10e8095cc4ff317be7c4ad60a0"
+  }
+}

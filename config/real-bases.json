@@ -2013,8 +2013,8 @@
       ]
     },
     "S048": {
-      "status": "FAILED",
-      "image_id": "sha256:fb6e3a100fea5c887d393c15d7caa5fc37cd644dbdc612ed35ad1830472afc08",
+      "status": "VERIFIED",
+      "image_id": "sha256:1febd27d5b4d61460f7f9b7506f3c4e34019c4fd3238eb06b0ccf4bd53f9231f",
       "tag": "evoguard-real-s048:v0",
       "base_image": "node:24-bookworm",
       "base_image_id": "sha256:14078204b6bb268c107ceff6d3c43f45a888105e5c2b18b14c32b3409d93a1b0",
@@ -2029,7 +2029,7 @@
         "lockfile_sha256": "689de4e5292b6e8b85862f46a1759e07ecdcbb872e561292a50b14b6e14f81e5",
         "node": "v24.22.0"
       },
-      "prepared_at": "2026-10-18T05:21:46.033Z",
+      "prepared_at": "2026-10-19T03:11:01.929Z",
       "checks": {
         "single_v0_commit": true,
         "clean": true,
@@ -2037,8 +2037,8 @@
         "hidden_dir_absent": true,
         "node_major": true,
         "reference_patches_apply": true,
-        "suite_green": false,
-        "suite_stable": false
+        "suite_green": true,
+        "suite_stable": true
       },
       "patches": [
         {
@@ -2065,20 +2065,17 @@
       "suite_runs": [
         {
           "error": null,
-          "seconds": 263,
+          "seconds": 174,
           "total": 956,
           "failing": [],
           "suites_failed": []
         },
         {
           "error": null,
-          "seconds": 272,
+          "seconds": 165,
           "total": 956,
-          "failing": [
-            "test/regressions/dividendes.test.ts › calculate simulations-dividendes"
-          ],
-          "suites_failed": [],
-          "tail": ""
+          "failing": [],
+          "suites_failed": []
         }
       ]
     },
@@ -2418,8 +2415,8 @@
       ]
     },
     "S057": {
-      "status": "FAILED",
-      "image_id": "sha256:7aeb2999e7f7f7cdc899e9da71d741ec952f041d129cf057f991058f05072a9f",
+      "status": "VERIFIED",
+      "image_id": "sha256:ccc54bd21f330bbe5409771b2aa232054ba70f16e4a89f2e54ff074a6eb09c7e",
       "tag": "evoguard-real-s057:v0",
       "base_image": "node:24-bookworm",
       "base_image_id": "sha256:14078204b6bb268c107ceff6d3c43f45a888105e5c2b18b14c32b3409d93a1b0",
@@ -2434,7 +2431,7 @@
         "lockfile_sha256": "6b80ec730b708b282076a400e7f3fdade8b7d4b7fbc7d3ee15054ecc3841b3a9",
         "node": "v24.22.0"
       },
-      "prepared_at": "2026-10-18T05:57:44.377Z",
+      "prepared_at": "2026-10-19T03:18:24.939Z",
       "checks": {
         "single_v0_commit": true,
         "clean": true,
@@ -2442,8 +2439,8 @@
         "hidden_dir_absent": true,
         "node_major": true,
         "reference_patches_apply": true,
-        "suite_green": false,
-        "suite_stable": false
+        "suite_green": true,
+        "suite_stable": true
       },
       "patches": [
         {
@@ -2470,17 +2467,14 @@
       "suite_runs": [
         {
           "error": null,
-          "seconds": 67,
+          "seconds": 69,
           "total": 785,
-          "failing": [
-            "src/modules/translationform/utils/editFieldModes.test.ts › fluent mode applies an edit resuming from a parser state snapshot (#4438)"
-          ],
-          "suites_failed": [],
-          "tail": ""
+          "failing": [],
+          "suites_failed": []
         },
         {
           "error": null,
-          "seconds": 66,
+          "seconds": 71,
           "total": 785,
           "failing": [],
           "suites_failed": []
@@ -2488,8 +2482,8 @@
       ]
     },
     "S058": {
-      "status": "FAILED",
-      "image_id": "sha256:97e1ea9a0da65ff0092503e6943632cf54c315af64a2205a39009085bdfceb2d",
+      "status": "VERIFIED",
+      "image_id": "sha256:f2038d9d80786264c323b67a756ab6b34bd69e1d9de272d2db3553177135caf2",
       "tag": "evoguard-real-s058:v0",
       "base_image": "node:24-bookworm",
       "base_image_id": "sha256:14078204b6bb268c107ceff6d3c43f45a888105e5c2b18b14c32b3409d93a1b0",
@@ -2504,7 +2498,7 @@
         "lockfile_sha256": "1e848b6e94162e2289bd7306d64b431c4e43bb710d0bea91c41171c00f9d7262",
         "node": "v24.22.0"
       },
-      "prepared_at": "2026-10-18T06:07:38.765Z",
+      "prepared_at": "2026-10-19T03:26:15.834Z",
       "checks": {
         "single_v0_commit": true,
         "clean": true,
@@ -2513,7 +2507,7 @@
         "node_major": true,
         "reference_patches_apply": true,
         "suite_green": true,
-        "suite_stable": false
+        "suite_stable": true
       },
       "patches": [
         {
@@ -2540,14 +2534,14 @@
       "suite_runs": [
         {
           "error": null,
-          "seconds": 251,
+          "seconds": 236,
           "total": 1546,
           "failing": [],
           "suites_failed": []
         },
         {
           "error": null,
-          "seconds": 233,
+          "seconds": 223,
           "total": 1546,
           "failing": [],
           "suites_failed": []
@@ -2616,6 +2610,77 @@
           "error": null,
           "seconds": 46,
           "total": 246,
+          "failing": [],
+          "suites_failed": []
+        }
+      ]
+    },
+    "S051": {
+      "status": "VERIFIED",
+      "image_id": "sha256:9828a92bddd5ac8f5dc64be1c4f0ba447d05c6ee062c6dede93dde63f9cab302",
+      "tag": "evoguard-real-s051:v0",
+      "base_image": "node:24-bookworm",
+      "base_image_id": "sha256:14078204b6bb268c107ceff6d3c43f45a888105e5c2b18b14c32b3409d93a1b0",
+      "repo": "ebi-uniprot/uniprot-website",
+      "v0_commit": "1442948c7fa836dd77a650d153a533b08029b39e",
+      "v0_repo_commit": "f5a58a19dbd9a6f1dd33d2ccdc253ca0d573c9ea",
+      "package_path": ".",
+      "node": "v24.22.0",
+      "install": {
+        "lock_dir": ".",
+        "lockfile": "pnpm-lock.yaml",
+        "lockfile_sha256": "823fddd1425b0c226497efeb36a1b0680b2f0e9b4103c1cc3e851491ab4913bc",
+        "node": "v24.22.0"
+      },
+      "source_archive": {
+        "path": "C:\\Users\\nsdav\\.codex\\.chatgpt-projects\\g-p-6aa23980cd148191adc114fd0d7ec3a1\\evoguard-corpus\\.artifacts\\real\\src\\S051",
+        "note": "git archive del commit V0 (repositorio no accesible por red); la carpeta debe contener exactamente ese árbol"
+      },
+      "prepared_at": "2026-10-19T03:15:54.674Z",
+      "checks": {
+        "single_v0_commit": true,
+        "clean": true,
+        "focus_exists": true,
+        "hidden_dir_absent": true,
+        "node_major": true,
+        "reference_patches_apply": true,
+        "suite_green": true,
+        "suite_stable": true
+      },
+      "patches": [
+        {
+          "turn": "T001",
+          "status": "PASS"
+        },
+        {
+          "turn": "T002",
+          "status": "PASS"
+        },
+        {
+          "turn": "T003",
+          "status": "PASS"
+        },
+        {
+          "turn": "T004",
+          "status": "PASS"
+        },
+        {
+          "turn": "T005",
+          "status": "PASS"
+        }
+      ],
+      "suite_runs": [
+        {
+          "error": null,
+          "seconds": 59,
+          "total": 1992,
+          "failing": [],
+          "suites_failed": []
+        },
+        {
+          "error": null,
+          "seconds": 55,
+          "total": 1992,
           "failing": [],
           "suites_failed": []
         }
