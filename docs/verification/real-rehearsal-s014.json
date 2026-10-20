@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S014",
-  "image_id": "sha256:77fe875306c17594ef1aef48178606896b6870585ba13464483a712f5dd04e0a",
+  "image_id": "sha256:b4ab85fd3fd1b4ba21a45c88777d38b4a30bdf56a73b1d48006a848d5ca1d5b0",
   "experimental": false,
-  "started_at": "2026-10-09T02:54:42.646Z",
+  "started_at": "2026-10-20T13:20:00.566Z",
   "versions": {
     "V1": {
-      "task_id": "56ff3bc9-16fd-4adf-b6aa-4ef450a6c8b4",
+      "task_id": "446e69de-cb2f-4e1a-9490-7e2aa70d84e2",
       "outcomes": [
         {
           "provider": "local_b",
@@ -64,7 +64,7 @@
       "candidate_commit": "b7a975bcf72918d1985690b6aa53dee4a5d0729a"
     },
     "V2": {
-      "task_id": "05f33f9c-9a61-4a05-abb4-f4c86f11b9c5",
+      "task_id": "92172350-74df-4abc-b3b2-7e5ec7ffac70",
       "outcomes": [
         {
           "provider": "openai",
@@ -83,7 +83,7 @@
       "candidate_commit": "de580667be6e883c24b3a4ce98118cc52bbb18df"
     },
     "V3": {
-      "task_id": "d394fe65-1a08-4d8e-beea-edfb244a6339",
+      "task_id": "629b4251-56c6-4f02-ab46-74b593bc41c4",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -100,6 +100,44 @@
         }
       ],
       "candidate_commit": "7405d854effa388b533ebce6a8a5c2f0a4ce0c27"
+    },
+    "V4": {
+      "task_id": "0383bec1-1a6f-49bf-b825-7d5c36940ad6",
+      "outcomes": [
+        {
+          "provider": "google",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "3a0f1058bc027e35adfae8e919866276a98ef143"
+    },
+    "V5": {
+      "task_id": "834914ae-2685-47c8-ac34-9f1259fa0f3f",
+      "outcomes": [
+        {
+          "provider": "local_a",
+          "attempt": 1,
+          "outcome": "ACCEPTED",
+          "reason": null,
+          "validation": {
+            "build": "NOT_APPLICABLE",
+            "typecheck": "NOT_APPLICABLE",
+            "development_tests": "PASS",
+            "independent_oracle": "PASS",
+            "architecture": "PASS"
+          }
+        }
+      ],
+      "candidate_commit": "9bf81929c960e9ced2442a1099687ead0f9964fe"
     }
   },
   "v3_oracle_stability": {
@@ -108,18 +146,18 @@
     "runs": [
       {
         "status": "PASS",
-        "total": 2274,
-        "seconds": 513
+        "total": 2286,
+        "seconds": 625
       },
       {
         "status": "PASS",
-        "total": 2274,
-        "seconds": 510
+        "total": 2286,
+        "seconds": 631
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-10-09T05:13:09.515Z",
+  "finished_at": "2026-10-20T17:10:04.810Z",
   "sources_sha256": {
     "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
@@ -130,10 +168,10 @@
     "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
     "runner/real/families.mjs": "b06114a33396d96c47fad2c5f99cde3ffa36d65612740ea82a942d1c133a0684",
     "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
-    "runner/real/suite.mjs": "6c57085aacf43f68f1a29762a92735db24694223072b784dcc26bd5508204b5e",
-    "runner/real/prepare.mjs": "44cdce2e0b20ef7755bd8b540aa68e47e7a60198f33467953e2e1c47db80373b",
+    "runner/real/suite.mjs": "022b9ddd9208979cee2df7e909eb97c3295a790cd43919881e2af4487c1786c1",
+    "runner/real/prepare.mjs": "2978e4d2e28c43c9e6128926f1ca588dba24219efb14d4d5f5d5dfd52f43a9b9",
     "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
-    "runner/real/pipeline.mjs": "d6e59a65b107a0ee264f354150d0c92b9b92fc04c6b3014bbdb3576ae9ae0e3e",
+    "runner/real/pipeline.mjs": "99992b5ca74b3b7a285ce8d49b52b3e72047d2fae028c705efc4b53d473df324",
     "runner/real/rehearse.mjs": "d39b1470cf891abb93572416524ce87d9ed37b18cadff0937ce024deba8cec6c",
     "runner/real/generate.mjs": "fa84d180aca20a5d59f3266e773896eacd651691d81cf197ff0779d9fee8bd36",
     "runner/real/audit.mjs": "ab9fe8ad14b3d933804b4f58cede2c51b9a189be41f580454f0dd4c3548617e7",
