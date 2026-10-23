@@ -211,6 +211,38 @@ test('openai en flujo (SSE): toma la respuesta del evento terminal y registra el
   const a3=createProviderAdapter({provider:'openai',config:models.openai,apiKey:'K',onCall:o=>observation=o,fetchImpl:async()=>new Response('event: x\ndata: {"type":"response.created"}\n\n',{headers:{'content-type':'text/event-stream'}})});
   await assert.rejects(a3.next(context),e=>e.code==='EMPTY_RESPONSE');
 });
+test('anthropic en flujo (SSE): reconstruye el mensaje (pensamiento, herramienta en trozos) y el uso',async()=>{
+  const input=JSON.parse(action);
+  const json=JSON.stringify(input);
+  const events=[
+    {type:'message_start',message:{id:'m1',type:'message',role:'assistant',model:'claude-sonnet-5',content:[],stop_reason:null,usage:{input_tokens:7,cache_read_input_tokens:4,cache_creation_input_tokens:0,output_tokens:1}}},
+    {type:'content_block_start',index:0,content_block:{type:'thinking',thinking:''}},
+    {type:'content_block_delta',index:0,delta:{type:'thinking_delta',thinking:'pienso'}},
+    {type:'content_block_delta',index:0,delta:{type:'signature_delta',signature:'sig'}},
+    {type:'content_block_stop',index:0},
+    {type:'ping'},
+    {type:'content_block_start',index:1,content_block:{type:'tool_use',id:'t1',name:'runner_action',input:{}}},
+    {type:'content_block_delta',index:1,delta:{type:'input_json_delta',partial_json:json.slice(0,9)}},
+    {type:'content_block_delta',index:1,delta:{type:'input_json_delta',partial_json:json.slice(9)}},
+    {type:'content_block_stop',index:1},
+    {type:'message_delta',delta:{stop_reason:'tool_use',stop_sequence:null},usage:{output_tokens:42}},
+    {type:'message_stop'}];
+  const sse=events.map(e=>`event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`).join('');
+  const chunks=[sse.slice(0,50),sse.slice(50,333),sse.slice(333)];
+  let request,observation;
+  const adapter=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:o=>observation=o,fetchImpl:async(url,options)=>{request=options;
+    return new Response(new ReadableStream({start(c){for(const x of chunks)c.enqueue(new TextEncoder().encode(x));c.close();}}),{headers:{'content-type':'text/event-stream'}});}});
+  assert.deepEqual(await adapter.next({...context,provider:'anthropic'}),input);
+  const body=JSON.parse(request.body);assert.equal(body.stream,true);assert.equal(request.headers.accept,'text/event-stream');
+  assert.equal(observation.streamed,true);assert.equal(observation.finish_reason,'tool_use');assert.equal(observation.tokens.output,42);assert.equal(observation.tokens.input,11);assert.equal(observation.tokens.cached,4);
+  // Flujo cortado antes de message_stop o con un evento de error: no se acepta una respuesta parcial.
+  const cut=events.slice(0,-1).map(e=>`data: ${JSON.stringify(e)}\n\n`).join('');
+  const a2=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:()=>{},fetchImpl:async()=>new Response(cut,{headers:{'content-type':'text/event-stream'}})});
+  await assert.rejects(a2.next({...context,provider:'anthropic'}),e=>e.code==='EMPTY_RESPONSE');
+  const err=`data: ${JSON.stringify(events[0])}\n\ndata: ${JSON.stringify({type:'error',error:{type:'overloaded_error'}})}\n\n`;
+  const a3=createProviderAdapter({provider:'anthropic',config:models.anthropic,apiKey:'K',onCall:()=>{},fetchImpl:async()=>new Response(err,{headers:{'content-type':'text/event-stream'}})});
+  await assert.rejects(a3.next({...context,provider:'anthropic'}),e=>e.code==='STREAM_ERROR');
+});
 test('gemini y anthropic registran el motivo de cierre',async()=>{
   let observation;
   const g=structuredClone(fixtures.google);g.candidates[0].finishReason='MALFORMED_FUNCTION_CALL';

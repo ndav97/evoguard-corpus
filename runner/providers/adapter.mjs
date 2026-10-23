@@ -1,4 +1,4 @@
-import {requestJson,requestSse,providerError} from './http.mjs';
+import {requestJson,requestSse,requestAnthropicSse,providerError} from './http.mjs';
 import {connectionFor} from './connection.mjs';
 import {ollamaBase} from './ollama.mjs';
 import {createHash} from 'node:crypto';
@@ -133,7 +133,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         text=blocks.filter(b=>b.type==='output_text').map(b=>b.text).join('');
       } else if(config.transport==='anthropic') {
         const content=managed?input:anthropicBlocks(context,input);
-        raw=await request(`${connection.base_url}/messages`,{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning},tools:[ANTHROPIC_TOOL],tool_choice:{type:'auto'}},{'x-api-key':apiKey,'anthropic-version':'2023-06-01'});
+        ({response:raw,streamed:metadata.streamed}=await requestAnthropicSse(`${connection.base_url}/messages`,{body:{model:config.api_model_id,max_tokens:config.max_output_tokens,system:INSTRUCTION,messages:[{role:'user',content}],thinking:{type:'adaptive'},output_config:{effort:config.reasoning},tools:[ANTHROPIC_TOOL],tool_choice:{type:'auto'}},headers:{'x-api-key':apiKey,'anthropic-version':'2023-06-01'},signal:combined,fetchImpl}));
         metadata.observed_model=raw.model;
         // Anthropic informa la lectura y la escritura de caché aparte de input_tokens: se suman para tener la entrada total.
         {const u=raw.usage??{},read=number(u.cache_read_input_tokens),write=number(u.cache_creation_input_tokens),plain=number(u.input_tokens);metadata.tokens={input:plain===null?null:plain+(read??0)+(write??0),output:number(u.output_tokens),reasoning:null,cached:read,cache_write:write};}
