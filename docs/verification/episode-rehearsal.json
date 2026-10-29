@@ -2,8 +2,8 @@
   "artifact_type": "episode_rehearsal",
   "family_id": "S001",
   "image_id": "sha256:8cfb79899555ddf90c49944952640e8bfcd5c2ca2749939373234c8b56539533",
-  "experiment": "ensayo-episodios-1792524527752",
-  "started_at": "2026-10-20T19:28:47.752Z",
+  "experiment": "ensayo-episodios-1793284004553",
+  "started_at": "2026-10-29T14:26:44.553Z",
   "scenarios": {
     "ideal": {
       "ok": true,
@@ -61,7 +61,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1792524527752\\B\\openai\\S001\\e1-r1"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793284004553\\B\\openai\\S001\\e1-r1"
     },
     "sin_entrega": {
       "ok": true,
@@ -119,7 +119,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1792524527752\\B\\openai\\S001\\e1-r2"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793284004553\\B\\openai\\S001\\e1-r2"
     },
     "regresion": {
       "ok": true,
@@ -177,7 +177,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1792524527752\\B\\openai\\S001\\e1-r3"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793284004553\\B\\openai\\S001\\e1-r3"
     },
     "head_movido": {
       "ok": true,
@@ -235,18 +235,18 @@
         true,
         true
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1792524527752\\B\\openai\\S001\\e1-r4"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793284004553\\B\\openai\\S001\\e1-r4"
     }
   },
   "status": "PASS",
-  "finished_at": "2026-10-20T19:48:31.869Z",
+  "finished_at": "2026-10-29T14:43:59.384Z",
   "sources_sha256": {
     "runner/episode/run.mjs": "2ac8292dff188bcb0efcaeeac4683bdc68bb7eb59854af63d82aa9dc1b9e200a",
     "runner/episode/store.mjs": "b874e4e07a9cc93fe24cdfe4b0a1ddfe47bbb944fcc1de4b0add92a5cbe0ff47",
     "runner/episode/budget.mjs": "663428271707ee976a40357191bc63004f95e7cb7abc19b40c545754c9e93608",
     "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
-    "runner/protocol/execute.mjs": "0458dc33b611a947161e4722bc27b967a3c81b6a9668078132f8ce5b5681143b",
+    "runner/protocol/execute.mjs": "1c367145be1125c757ba56012368fae897374008d9341a84b0cc669ce7274e36",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
     "runner/pipeline/workspace.mjs": "31c245665687405f4ae467c094a970551a73e150bafb0a80562be0e1c321e041",
     "runner/pipeline/store.mjs": "c7298fb030ab084eb9c1c6750e8fc2b0a431f342362914e061808b98c47624e7",
