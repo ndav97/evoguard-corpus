@@ -36,9 +36,19 @@ out('FAIL','operación desconocida');`;
 
 const b64 = text => Buffer.from(text, 'utf8').toString('base64');
 
+// Tope de la línea de comandos de una acción (decisión 2026-10-29). Los datos de write_file/edit_file viajan en base64
+// como argumentos de `docker exec`, y Windows limita la línea de comandos a 32 767 caracteres: por encima, el proceso no
+// arranca y el turno se registraba como error de infraestructura (S010 con Qwen3-Coder en π0, cuatro intentos). Con el
+// tope, la acción falla de forma visible para el modelo, como cualquier otro límite. 31 900 es la mayor línea que llegó a
+// ejecutarse en el piloto y en π0 (31 899); la menor que falló medía 32 179. Ninguna acción registrada cambia de resultado.
+export const MAX_ACTION_ARGV_CHARS = 31900;
+export const actionArgvChars = argv => ['node', '-e', SCRIPT, ...argv].reduce((sum, part) => sum + part.length + 1, 0);
+
 export async function performAction(workspace, action, options = {}) {
   // El script responde {status, output} en stdout; el workspace lo entrega dentro de su propio {status, output}.
   const run = async argv => {
+    const chars = actionArgvChars(argv);
+    if (chars > MAX_ACTION_ARGV_CHARS) return { status: 'FAIL', output: `acción demasiado grande para ejecutarse (${chars} caracteres codificados; máximo ${MAX_ACTION_ARGV_CHARS}, unos 21 000 caracteres de texto): divide el cambio en varias edit_file pequeñas con find limitado a las líneas que cambian` };
     const result = await workspace.exec(['node', '-e', SCRIPT, ...argv], options);
     if (result?.status === 'TIMEOUT' || result?.status === 'INFRA_ERROR') return result;
     try {

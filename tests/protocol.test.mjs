@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseAction, validateAction, extractJson, rejectedSample, ACTION_SCHEMA } from '../runner/protocol/actions.mjs';
-import { performAction } from '../runner/protocol/execute.mjs';
+import { performAction, actionArgvChars, MAX_ACTION_ARGV_CHARS } from '../runner/protocol/execute.mjs';
 import { createProviderAdapter } from '../runner/providers/adapter.mjs';
 
 const full = (type, extra = {}) => ({ type, path: '', content: '', find: '', replace: '', argv: [], ...extra });
@@ -99,6 +99,22 @@ test('el ejecutor protege TASK.json, fixtures, .git, node_modules y dist', async
   assert.equal(write.status, 'PASS');
   assert.equal(ws.seen[0][3], 'write');
   assert.equal(Buffer.from(ws.seen[0][5], 'base64').toString('utf8'), 'á');
+});
+
+test('una edición o escritura que no cabe en la línea de comandos falla de forma visible, sin ejecutarse', async () => {
+  const ws = recorder();
+  const path = 'ui/src/app/applications/components/applications-list/applications-summary.tsx';
+  // Tamaños reales de π0 (S010, Qwen3-Coder): 21 633 bytes se ejecutaron; 21 846 hacían caer el proceso en Windows.
+  const big = await performAction(ws, { type: 'edit_file', path, find: 'a'.repeat(11000), replace: 'b'.repeat(10846) });
+  assert.equal(big.status, 'FAIL');
+  assert.match(big.output, /demasiado grande para ejecutarse/);
+  const write = await performAction(ws, { type: 'write_file', path, content: 'c'.repeat(23000) });
+  assert.equal(write.status, 'FAIL');
+  assert.equal(ws.seen.length, 0, 'no se lanza ningún proceso');
+  const ok = await performAction(ws, { type: 'edit_file', path, find: 'a'.repeat(10800), replace: 'b'.repeat(10800) });
+  assert.equal(ok.status, 'PASS');
+  assert.equal(ws.seen.length, 1);
+  assert.ok(actionArgvChars(ws.seen[0].slice(3)) <= MAX_ACTION_ARGV_CHARS);
 });
 
 test('run_checks ejecuta los tres comandos visibles del pipeline y agrega sus salidas', async () => {

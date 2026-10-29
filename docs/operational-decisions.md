@@ -814,3 +814,38 @@ Gemma 4 con dos repeticiones (400 turnos). `config/experiment.json` → `phases.
   35–40), unos S/ 760 frente a los S/ 85 previstos. Total previsto ≈ S/ 3 140 de S/ 5 000.
 - **Datos del piloto:** los 100 episodios B (S001–S020, 3 turnos, salida local de 4 096) pueden sumarse como datos de
   entrenamiento, declarando su configuración.
+
+## 2026-10-29 — Cierre de π0 (199/200) y tope de tamaño de las acciones
+
+**π0 completo con una exclusión.** Tanda comercial (GPT, Claude: 80 episodios, US$ 202,40) y tanda local en Vast.ai
+(Gemma 4, Qwen3-Coder, Devstral: 120 episodios). 199 de 200 episodios válidos, 998 turnos, un solo código del
+ejecutor. Resumen: `runs/episodes/etiquetas-pi0/analisis/resumen.md`.
+
+| Modelo | TEE | TER | TP | Transiciones elegibles | Positivas |
+|---|---|---|---|---|---|
+| Claude Sonnet 5 | 60,0 % | 2,5 % | 79,0 % | 363 | 0 |
+| GPT-5.6 Sol | 7,5 % | 57,5 % | 40,5 % | 236 | 19 |
+| Gemma 4 26B | 0 % | 62,5 % | 12,0 % | 117 | 19 |
+| Qwen3-Coder 30B (39) | 0 % | 46,2 % | 16,9 % | 172 | 14 |
+| Devstral 24B | 0 % | 60,0 % | 9,0 % | 81 | 16 |
+| **Total** | | | | **969** | **68 (7,0 %)** |
+
+Positivas en 25 de 40 familias; además, 67 regresiones de la suite en 614 turnos elegibles. AP al azar = 0,070: las
+referencias heurísticas del EDA se recalculan con estos datos antes de entrenar (OE3).
+
+**Excluido: S010 con Qwen3-Coder.** Cuatro intentos (26-oct y 29-oct) interrumpidos como «error de infraestructura»
+en T002/T003, siempre al aplicar un `edit_file` que reescribía `applications-summary.tsx` completo (21 846 a 25 630
+bytes de `find` + `replace`). Causa: los datos viajan en base64 como argumentos de `docker exec` y Windows limita la
+línea de comandos a 32 767 caracteres; el proceso no arranca. No es un fallo del modelo ni de la familia. Se excluye
+el episodio en lugar de ejecutarlo con otro código, para que π0 conserve una sola versión del ejecutor. Los intentos
+quedan en `runs/episodes/etiquetas-pi0/B/local_a/S010/e1-r1*`.
+
+**Corrección del ejecutor (rige desde la fase final; π0 y el piloto quedan como se corrieron).**
+`runner/protocol/execute.mjs`: si la línea de comandos de una acción supera `MAX_ACTION_ARGV_CHARS = 31 900`
+caracteres, la acción no se ejecuta y el modelo recibe `FAIL` («acción demasiado grande para ejecutarse… divide el
+cambio en varias edit_file pequeñas»), como con cualquier otro límite del protocolo. El tope es la mayor línea que
+llegó a ejecutarse en el piloto y en π0 (31 899, 6 852 acciones write/edit revisadas); la menor que falló medía
+32 179. Ninguna acción registrada cambia de resultado. Motivo para la fase final: sin el tope, un modelo que hace
+ediciones enormes provoca repeticiones de episodio (error de infraestructura) en vez de un fallo atribuible a él, lo
+que sesgaría la comparación B frente a E. Prueba: `tests/protocol.test.mjs`. El cambio altera la huella de código:
+los ensayos del ejecutor (`scripts/episode/ensayar-episodios.cmd`) se repiten antes de la fase final.
