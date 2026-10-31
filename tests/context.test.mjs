@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { loadCorpus } from '../runner/validation/corpus.mjs';
 import { makePacket } from '../runner/packet.mjs';
-import { buildContextInput, loadContextPolicy, estimateTokens, clip } from '../runner/context/policy.mjs';
+import { buildContextInput, loadContextPolicy, estimateTokens, clip, policyFor } from '../runner/context/policy.mjs';
 import { createProviderAdapter, INSTRUCTION, ACTION_SCHEMA, RESPONSE_CONTRACT } from '../runner/providers/adapter.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -39,8 +39,9 @@ test('la política alcanza exactamente a los modelos con ventana limitada', () =
   const limited = Object.entries(models).filter(([, config]) => config.context !== null).map(([provider]) => provider);
   assert.deepEqual([...policy.applies_to].sort(), limited.sort());
   for (const provider of policy.applies_to) {
-    assert.equal(models[provider].context, policy.budget.context_tokens);
-    assert.equal(models[provider].max_output_tokens, policy.budget.output_reserve_tokens);
+    const own = policyFor(policy, provider).budget;
+    assert.equal(models[provider].context, own.context_tokens, provider);
+    assert.equal(models[provider].max_output_tokens, own.output_reserve_tokens, provider);
   }
 });
 
@@ -211,4 +212,13 @@ test('bytes por token propios de un modelo: solo cambian la ranura indicada', as
   assert.equal(policyFor(policy, 'local_b').estimator.bytes_per_token, policy.estimator.by_provider.local_b);
   assert.equal(policyFor(policy, 'local_a').estimator.bytes_per_token, policy.estimator.by_provider.local_a);
   assert.ok(policy.estimator.by_provider.google * policy.estimator.safety_factor <= 2.13, 'cubre el mínimo observado de Gemma');
+});
+
+test('presupuesto propio (2026-10-31): local_c y local_d amplían su ventana sin cambiar la de los modelos congelados', () => {
+  for (const p of ['google', 'local_a', 'local_b']) assert.deepEqual(policyFor(policy, p).budget, policy.budget, p);
+  for (const p of Object.keys(policy.budget_by_provider ?? {})) {
+    const own = policyFor(policy, p);
+    assert.deepEqual(own.budget, policy.budget_by_provider[p], p);
+    assert.equal(own.estimator.bytes_per_token, policy.estimator.by_provider?.[p] ?? policy.estimator.bytes_per_token, p);
+  }
 });

@@ -61,7 +61,7 @@ const UNUSED_FIELDS={
 };
 // Muestreo recomendado por cada fabricante para los modelos abiertos (decisión 2026-10-12: rendimiento como en uso
 // real, con semilla fija). Solo se admiten estas opciones de Ollama.
-const SAMPLING_KEYS=['top_p','top_k','min_p','repeat_penalty'];
+const SAMPLING_KEYS=['top_p','top_k','min_p','repeat_penalty','presence_penalty'];
 export function samplingOptions(sampling){
   if(sampling==null)return {};
   if(typeof sampling!=='object'||Object.keys(sampling).some(k=>!SAMPLING_KEYS.includes(k)||!Number.isFinite(sampling[k])))throw providerError('INVALID_LOCAL_CONFIG');
@@ -168,7 +168,10 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         if(thinking===undefined){const show=await request(`${ollamaBase()}/api/show`,{model:config.api_model_id}).catch(()=>null);thinking=Array.isArray(show?.capabilities)&&show.capabilities.includes('thinking');}
         // reasoning:null => sin razonamiento: los modelos con modo de pensamiento (Gemma 4) lo tienen activo por defecto en
         // Ollama y gastaban la reserva de salida pensando (decisión 2026-10-12).
-        const thinkField=thinking&&config.reasoning==null?{think:false}:{};if(thinking)metadata.think=config.reasoning==null?false:true;
+        // reasoning:'on' (decisión 2026-10-31) => razonamiento activo, como recomienda el fabricante; el pensamiento se
+        // genera dentro de max_output_tokens y solo se registra su tamaño (nunca entra al contexto del siguiente ciclo).
+        if(config.reasoning!=null&&config.reasoning!=='on')throw providerError('INVALID_LOCAL_CONFIG');
+        const thinkField=thinking?{think:config.reasoning==='on'}:{};if(thinking)metadata.think=config.reasoning==='on';
         const send=()=>request(`${ollamaBase()}/api/chat`,{model:config.api_model_id,stream:false,keep_alive:config.keep_alive??'15m',format:ACTION_SCHEMA,...thinkField,messages:[{role:'system',content:INSTRUCTION},{role:'user',content:input}],options:{num_ctx:config.context,num_predict:config.max_output_tokens,temperature:config.temperature,seed:config.seed,...samplingOptions(config.sampling)}});
         const exceeds=tokens=>managed&&(tokens===null||tokens>trace.estimated_tokens+contextPolicy.budget.template_reserve_tokens||tokens>config.context-config.max_output_tokens);
         raw=await send();
@@ -181,6 +184,7 @@ export function createProviderAdapter({provider,config,apiKey,fetchImpl=fetch,on
         }
         metadata.observed_model=raw.model;
         metadata.tokens={input:number(raw.prompt_eval_count),output:number(raw.eval_count),reasoning:null};
+        if(typeof raw.message?.thinking==='string')metadata.thinking_chars=raw.message.thinking.length;
         if(exceeds(metadata.tokens.input))throw providerError('CONTEXT_ESTIMATE_VIOLATION');
         if(raw.done!==true||raw.done_reason!=='stop'){metadata.finish_reason=raw.done_reason??null;metadata.rejected_output=rejectedSample(raw.message?.content??'');throw providerError('INCOMPLETE_RESPONSE');}
         if(raw.model!==config.api_model_id)throw providerError('MODEL_MISMATCH');

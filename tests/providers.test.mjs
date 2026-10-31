@@ -383,3 +383,26 @@ test('modelos abiertos pendientes del banco: sin digest no se pueden usar', asyn
     assert.throws(() => createProviderAdapter({ provider: p, config: models[p] }), { code: 'INVALID_LOCAL_CONFIG' }, p);
   }
 });
+
+test('Ollama: reasoning "on" activa el razonamiento y registra su tamaño; otro valor se rechaza', async () => {
+  const base = { ...models.local_a, digest: 'a'.repeat(64) };
+  const run = async reasoning => {
+    let body, observation;
+    const adapter = createProviderAdapter({ provider: 'local_a', config: { ...base, reasoning }, onCall: r => observation = r, fetchImpl: async (url, options) => {
+      if (url.endsWith('/api/version')) return Response.json({ version: base.ollama_version });
+      if (url.endsWith('/api/tags')) return Response.json({ models: [{ name: base.api_model_id, digest: base.digest }] });
+      if (url.endsWith('/api/show')) return Response.json({ capabilities: ['completion', 'thinking'] });
+      body = JSON.parse(options.body);
+      return Response.json({ model: base.api_model_id, done: true, done_reason: 'stop', prompt_eval_count: 100, eval_count: 20, message: { thinking: 'pienso', content: JSON.stringify({ type: 'run_checks' }) } });
+    } });
+    await adapter.next({ provider: 'local_a', attempt: 1, cycle: 1, packet: { request: 'test' }, messages: [] }).catch(() => {});
+    return { body, observation };
+  };
+  const on = await run('on');
+  assert.equal(on.body.think, true);
+  assert.equal(on.observation.think, true);
+  assert.equal(on.observation.thinking_chars, 6);
+  assert.equal((await run(null)).body.think, false);
+  const bad = await run('high');
+  assert.equal(bad.body, undefined);
+});

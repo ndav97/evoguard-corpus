@@ -91,6 +91,9 @@ function summarize(result, privateRecords, calls) {
     calls: calls.length,
     tokens: { input: sum('input'), output: sum('output') },
     median_call_s: calls.length ? Math.round(calls.map(c => c.duration_ms).sort((a, b) => a - b)[Math.floor(calls.length / 2)] / 100) / 10 : null,
+    max_output_tokens_used: Math.max(0, ...calls.map(c => c.tokens?.output ?? 0)),
+    thinking_chars: calls.reduce((t, c) => t + (c.thinking_chars ?? 0), 0),
+    truncated_calls: calls.filter(c => c.finish_reason === 'length').length,
     max_context_estimate: Math.max(0, ...calls.map(c => c.context?.estimated_tokens ?? 0)),
     context_omitted_steps: Math.max(0, ...calls.map(c => c.context?.steps_omitted ?? 0))
   };
@@ -117,7 +120,7 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
   const report = { artifact_type: 'local_model_bench', experimental: false, run_id: runId, protocol_version: PROTOCOL_VERSION, image_id: lock.image_id, ollama: ollamaBase(), started_at: new Date().toISOString(), candidates: [] };
   const tags = adapterFactory ? null : await ollama('/api/tags');
   for (const candidate of candidates) {
-    const entry = { id: candidate.id, model: candidate.model, context: candidate.context, max_output_tokens: candidate.max_output_tokens, digest: null, tasks: {} };
+    const entry = { id: candidate.id, model: candidate.model, context: candidate.context, max_output_tokens: candidate.max_output_tokens, reasoning: candidate.reasoning ?? null, temperature: candidate.temperature, sampling: candidate.sampling ?? null, digest: null, tasks: {} };
     report.candidates.push(entry);
     let policy;
     try {
@@ -130,7 +133,7 @@ export async function runBench(root, { models, tasks, adapterFactory, config: ov
         entry.bytes_per_token = policy.estimator.bytes_per_token;
       }
     } catch (error) { entry.error = error.message; log(`${candidate.id}: ${error.message}`); continue; }
-    const modelConfig = { display_name: candidate.model, api_model_id: candidate.model, transport: 'ollama', context: candidate.context, max_output_tokens: candidate.max_output_tokens, reasoning: null, temperature: candidate.temperature, seed: candidate.seed, digest: entry.digest, keep_alive: candidate.keep_alive };
+    const modelConfig = { display_name: candidate.model, api_model_id: candidate.model, transport: 'ollama', context: candidate.context, max_output_tokens: candidate.max_output_tokens, reasoning: candidate.reasoning ?? null, temperature: candidate.temperature, seed: candidate.seed, ...(candidate.sampling ? { sampling: candidate.sampling } : {}), digest: entry.digest, keep_alive: candidate.keep_alive };
     for (const version of selectedTasks) {
       const real = REAL_TASK.test(version) ? realTask(root, version.match(REAL_TASK)[1]) : null;
       const store = createTaskStore(root, { mode: 'bench', version: real ? 'V1' : version, ...(real ? { familyId: real.familyId } : {}), taskId: `${runId}-${candidate.id}-${version.replace(':', '-')}` });

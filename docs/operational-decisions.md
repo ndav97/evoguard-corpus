@@ -876,3 +876,16 @@ verificación previa rechazan local_c y local_d (prueba en `tests/providers.test
 ≥ 9/10 acciones válidas y tareas del banco; fijar digest, versión de Ollama, muestreo y modo sin razonamiento.
 (2) Calibrar el contexto con su tokenizador. (3) π0 de los dos modelos (400 turnos). (4) Repetir el ensayo del
 ejecutor de episodios (cambió su huella). (5) Actualizar el plan.
+
+## 2026-10-31 (b) — Mejor configuración posible de local_c y local_d
+
+- **Criterio.** Cada modelo nuevo se evalúa en su mejor configuración posible, decidida antes de π0 solo con las tareas del banco (familias de entrenamiento y validación) y fija e idéntica en los brazos B y E.
+- **Pesos.** Q8_0 en la RTX A6000 (48 GB): `qwen3.8:27b-q8_0` (~30 GB) y `glm-4.7-flash:q8_0` (~32 GB), la mejor cuantización que deja margen para la caché de 64 K.
+- **Muestreo.** El del fabricante para cada modo:
+  - Qwen3.8 con razonamiento: T 1,0 · top_p 0,95 · top_k 20 · min_p 0 · presence 0.
+  - Qwen3.8 sin razonamiento: T 0,7 · top_p 0,8 · top_k 20 · presence 1,5.
+  - GLM-4.7-Flash (ajustes de SWE-bench Verified de la ficha): T 0,7 · top_p 1,0.
+  - En todos los casos, semilla 42.
+- **Razonamiento.** `reasoning: "on"` activa el modo de razonamiento en Ollama (`think: true`). El pensamiento cuenta dentro de `max_output_tokens`, se registra su tamaño (`thinking_chars`) y no entra al contexto del siguiente ciclo. La configuración provisional es con razonamiento, 65 536 / 16 384 (`config/context.json → budget_by_provider`). El banco la compara con la variante sin razonamiento (32 768 / 8 192) y con la variante MTP, que es más rápida y usa los mismos pesos.
+- **Regla de selección.** `config/local-bench.json → selection_2026_10_31`.
+- **Sin cambios en los modelos congelados.** Gemma 4, Qwen3-Coder y Devstral mantienen su configuración del 2026-10-12, porque el presupuesto general no cambia. El código cambia, así que se repite el ensayo de episodio antes de π0.

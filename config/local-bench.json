@@ -71,18 +71,76 @@
       "note": "Google, MoE (≈4B activos); 16–19 GB; ranura google (2026-10-11) · salida 8 192 desde π0 (2026-10-14), como en config/models.json"
     },
     {
-      "id": "qwen38-27b-32k",
-      "model": "qwen3.8:27b",
-      "context": 32768,
-      "max_output_tokens": 8192,
-      "note": "Alibaba, 27B denso (~18 GB Q4); candidato a local_c (2026-10-31)"
+      "id": "qwen38-27b-q8-think-64k",
+      "model": "qwen3.8:27b-q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 1.0,
+      "sampling": {
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0.0,
+        "presence_penalty": 0.0,
+        "repeat_penalty": 1.0
+      },
+      "note": "Alibaba, 27B denso, Q8_0 (~30 GB; requiere la GPU de 48 GB). Razonamiento activo (por defecto del modelo) con el muestreo recomendado para ese modo; contexto y salida ampliados para que el razonamiento no agote la reserva."
     },
     {
-      "id": "glm47flash-32k",
-      "model": "glm-4.7-flash:q4_K_M",
+      "id": "qwen38-27b-mtp-q8-think-64k",
+      "model": "qwen3.8:27b-mtp-q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 1.0,
+      "sampling": {
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0.0,
+        "presence_penalty": 0.0,
+        "repeat_penalty": 1.0
+      },
+      "note": "Alibaba, 27B denso, Q8_0 (~30 GB; requiere la GPU de 48 GB). Mismos pesos con predicción multitoken (decodificación especulativa, misma distribución de salida): solo cambia la velocidad."
+    },
+    {
+      "id": "qwen38-27b-q8-nothink-32k",
+      "model": "qwen3.8:27b-q8_0",
       "context": 32768,
       "max_output_tokens": 8192,
-      "note": "Zhipu, 30B MoE (≈3B activos, ~19 GB Q4); candidato a local_d (2026-10-31)"
+      "reasoning": null,
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0,
+        "presence_penalty": 1.5,
+        "repeat_penalty": 1.0
+      },
+      "note": "Alibaba, 27B denso, Q8_0 (~30 GB; requiere la GPU de 48 GB). Sin razonamiento, con el muestreo recomendado para ese modo; misma ventana que los modelos de π0."
+    },
+    {
+      "id": "glm47flash-q8-think-64k",
+      "model": "glm-4.7-flash:q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 1.0
+      },
+      "note": "Zhipu, 30B MoE (≈3B activos), Q8_0 (~32 GB; requiere la GPU de 48 GB). Razonamiento activo; muestreo y salida (16 384) de la evaluación SWE-bench Verified / Terminal Bench de la ficha."
+    },
+    {
+      "id": "glm47flash-q8-nothink-32k",
+      "model": "glm-4.7-flash:q8_0",
+      "context": 32768,
+      "max_output_tokens": 8192,
+      "reasoning": null,
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 1.0
+      },
+      "note": "Zhipu, 30B MoE (≈3B activos), Q8_0 (~32 GB; requiere la GPU de 48 GB). Sin razonamiento; misma ventana que los modelos de π0."
     }
   ],
   "selection_2026_10_11": {
@@ -101,16 +159,18 @@
     "rule": "≥ 9/10 acciones válidas en el diagnóstico, rendimiento en las tareas del banco y tiempo por turno dentro del límite"
   },
   "selection_2026_10_31": {
-    "gpu": "RTX 3090 (24 GB)",
+    "gpu": "RTX A6000 (48 GB)",
     "slots": {
-      "local_c": "qwen3.8:27b",
-      "local_d": "glm-4.7-flash:q4_K_M"
+      "local_c": "qwen3.8:27b-q8_0 (variante por decidir)",
+      "local_d": "glm-4.7-flash:q8_0 (variante por decidir)"
     },
+    "policy": "Mejor configuración posible de cada modelo nuevo: pesos Q8_0 (la mejor cuantización que cabe en 48 GB con margen para la caché), muestreo recomendado por el fabricante para cada modo y razonamiento activo o no según el banco. La variante se decide solo con las tareas del banco (familias de entrenamiento y validación) y queda fija e idéntica en los brazos B y E.",
+    "rule": "Gana la variante con más tareas aceptadas; empate: más acciones válidas (≥ 9/10 en el diagnóstico) y menos llamadas cortadas (truncated_calls); se descarta la que supere el límite de tiempo por turno. MTP solo se elige si iguala en resultados a su variante sin MTP.",
+    "frozen": "Gemma 4, Qwen3-Coder y Devstral conservan la configuración del 2026-10-12 (Q4, 32 768 / 8 192); su π0 no se toca.",
     "backups": [
       "qwen3.6:27b",
       "gpt-oss:20b",
       "devstral-small-2:24b"
-    ],
-    "rule": "≥ 9/10 acciones válidas en el diagnóstico, tareas del banco y tiempo por turno dentro del límite; digest y versión de Ollama registrados"
+    ]
   }
 }

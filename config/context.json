@@ -60,5 +60,20 @@
     }
   },
   "history_note": "2026-10-12: con 3 000 bytes por salida, los modelos abiertos nunca veían completo un archivo de más de 3 KB (Gemma releyó 21 veces el mismo archivo de 6 KB en S003 T002) y sus propias escrituras se recortaban; los comerciales ven el historial completo. Ahora cada paso se conserva casi íntegro (24 000 bytes) mientras quepa en la ventana; si no cabe, baja a 3 000 y luego a 400 bytes, empezando por los más antiguos (recent_steps 25 = todo el turno).",
-  "budget_note": "2026-10-14: reserva de salida de 4 096 → 8 192 tokens (entrada 28 160 → 24 064) para π0 y la fase final. El piloto usó 4 096."
+  "budget_note": "2026-10-14: reserva de salida de 4 096 → 8 192 tokens (entrada 28 160 → 24 064) para π0 y la fase final. El piloto usó 4 096.",
+  "budget_by_provider": {
+    "local_c": {
+      "context_tokens": 65536,
+      "output_reserve_tokens": 16384,
+      "template_reserve_tokens": 512,
+      "input_tokens": 48640
+    },
+    "local_d": {
+      "context_tokens": 65536,
+      "output_reserve_tokens": 16384,
+      "template_reserve_tokens": 512,
+      "input_tokens": 48640
+    }
+  },
+  "budget_by_provider_note": "2026-10-31: local_c y local_d corren en la RTX A6000 (48 GB) con su mejor configuración: 65 536 tokens de ventana y 16 384 de salida para el razonamiento. El presupuesto general (32 768 / 8 192) sigue rigiendo a Gemma 4, Qwen3-Coder y Devstral, cuyo π0 ya está congelado. Si el banco elige la variante sin razonamiento, esta entrada se ajusta a 32 768 / 8 192 antes de π0."
 }
