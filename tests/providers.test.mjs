@@ -16,7 +16,8 @@ const fixtures={
   ollama:{model:models.local_a.api_model_id,done:true,done_reason:'stop',message:{content:action},prompt_eval_count:7,eval_count:3}
 };
 const context={provider:'openai',attempt:1,cycle:1,packet:{request:'test'},messages:[],oracle:'PRIVATE_CANARY'};
-for(const provider of Object.keys(models)) test(`${provider}: petición propia, acción validada y métricas observadas`,async()=>{
+// local_c y local_d (2026-10-31) quedan fuera hasta fijar su digest con el banco; el adaptador los rechaza mientras tanto.
+for(const provider of Object.keys(models).filter(p=>models[p].digest_status!=='PENDING_BENCH')) test(`${provider}: petición propia, acción validada y métricas observadas`,async()=>{
   let request,observation;
   const config=models[provider];
   const response=structuredClone(fixtures[config.transport]);if(config.transport==='ollama')response.model=config.api_model_id;
@@ -373,4 +374,12 @@ test('modelos abiertos: muestreo recomendado por su fabricante, con semilla fija
   }
   assert.deepEqual(models.local_a.sampling,{top_p:0.8,top_k:20,repeat_penalty:1.05});assert.equal(models.local_a.temperature,0.7);
   assert.equal(models.local_b.temperature,0.15);assert.equal(models.google.temperature,1);
+});
+
+test('modelos abiertos pendientes del banco: sin digest no se pueden usar', async () => {
+  for (const p of Object.keys(models).filter(p => models[p].digest_status === 'PENDING_BENCH')) {
+    assert.equal(models[p].transport, 'ollama', p);
+    assert.equal(models[p].digest, null, p);
+    assert.throws(() => createProviderAdapter({ provider: p, config: models[p] }), { code: 'INVALID_LOCAL_CONFIG' }, p);
+  }
 });

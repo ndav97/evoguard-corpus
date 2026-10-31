@@ -46,15 +46,15 @@
       "id": "devstral24-32k",
       "model": "devstral:24b",
       "context": 32768,
-      "max_output_tokens": 4096,
-      "note": "~14 GB Q4; orientado a agentes de código"
+      "max_output_tokens": 8192,
+      "note": "~14 GB Q4; orientado a agentes de código · salida 8 192 desde π0 (2026-10-14), como en config/models.json"
     },
     {
       "id": "qwen3coder30-32k",
       "model": "qwen3-coder:30b",
       "context": 32768,
-      "max_output_tokens": 4096,
-      "note": "~19 GB Q4, MoE (3,3B activos)"
+      "max_output_tokens": 8192,
+      "note": "~19 GB Q4, MoE (3,3B activos) · salida 8 192 desde π0 (2026-10-14), como en config/models.json"
     },
     {
       "id": "qwen25c32-16k",
@@ -67,8 +67,22 @@
       "id": "gemma4-26b-32k",
       "model": "gemma4:26b",
       "context": 32768,
-      "max_output_tokens": 4096,
-      "note": "Google, MoE (≈4B activos); 16–19 GB; ranura google (2026-10-11)"
+      "max_output_tokens": 8192,
+      "note": "Google, MoE (≈4B activos); 16–19 GB; ranura google (2026-10-11) · salida 8 192 desde π0 (2026-10-14), como en config/models.json"
+    },
+    {
+      "id": "qwen38-27b-32k",
+      "model": "qwen3.8:27b",
+      "context": 32768,
+      "max_output_tokens": 8192,
+      "note": "Alibaba, 27B denso (~18 GB Q4); candidato a local_c (2026-10-31)"
+    },
+    {
+      "id": "glm47flash-32k",
+      "model": "glm-4.7-flash:q4_K_M",
+      "context": 32768,
+      "max_output_tokens": 8192,
+      "note": "Zhipu, 30B MoE (≈3B activos, ~19 GB Q4); candidato a local_d (2026-10-31)"
     }
   ],
   "selection_2026_10_11": {
@@ -85,5 +99,18 @@
       "deepseek-coder-v2:16b"
     ],
     "rule": "≥ 9/10 acciones válidas en el diagnóstico, rendimiento en las tareas del banco y tiempo por turno dentro del límite"
+  },
+  "selection_2026_10_31": {
+    "gpu": "RTX 3090 (24 GB)",
+    "slots": {
+      "local_c": "qwen3.8:27b",
+      "local_d": "glm-4.7-flash:q4_K_M"
+    },
+    "backups": [
+      "qwen3.6:27b",
+      "gpt-oss:20b",
+      "devstral-small-2:24b"
+    ],
+    "rule": "≥ 9/10 acciones válidas en el diagnóstico, tareas del banco y tiempo por turno dentro del límite; digest y versión de Ollama registrados"
   }
 }

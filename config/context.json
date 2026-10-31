@@ -5,7 +5,9 @@
   "applies_to": [
     "google",
     "local_a",
-    "local_b"
+    "local_b",
+    "local_c",
+    "local_d"
   ],
   "rationale": "Los modelos comerciales conservan su contexto normal (paquete completo e historial íntegro), como en un uso real. Los modelos abiertos servidos por Ollama en la GPU (RTX 3090, 24 GB) reciben un contexto gestionado de 32 768 tokens; es una restricción propia de esos modelos y se registra por llamada. Calibrado el 2026-10-12 con los tokenizadores de Gemma 4 26B, Qwen3-Coder 30B y Devstral 24B en Ollama 0.40.3 (antes: 8 192 tokens para modelos de 7–8B).",
   "budget": {
@@ -27,9 +29,12 @@
     "by_provider": {
       "google": 2.6,
       "local_a": 3.2,
-      "local_b": 2.9
+      "local_b": 2.9,
+      "local_c": 2.6,
+      "local_d": 2.6
     },
-    "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12). Revisado el mismo día al conservar el historial casi íntegro: con la ventana llena, Gemma llegó a 2,13 bytes/token (código escapado en JSON). Valores: Gemma 2,6 (efectivo 2,08), Qwen3-Coder 3,2 (2,56), Devstral 2,9 (2,32); además el adaptador corrige la estimación con la proporción observada en el turno y, si una llamada la excede, reconstruye la entrada una vez."
+    "by_provider_note": "2026-10-12: en el piloto, Gemma 4 llegó a 2,55 bytes/token reales (839 llamadas) y Devstral a 2,81 en el banco, por debajo del 2,91 efectivo del valor general (3,64 × 0,8); tres episodios de Gemma se cortaron por CONTEXT_ESTIMATE_VIOLATION. Valores propios: Gemma 3,0 (efectivo 2,40) y Devstral 3,2 (efectivo 2,56). Qwen3-Coder mantiene el general (mínimo real 3,12). Revisado el mismo día al conservar el historial casi íntegro: con la ventana llena, Gemma llegó a 2,13 bytes/token (código escapado en JSON). Valores: Gemma 2,6 (efectivo 2,08), Qwen3-Coder 3,2 (2,56), Devstral 2,9 (2,32); además el adaptador corrige la estimación con la proporción observada en el turno y, si una llamada la excede, reconstruye la entrada una vez.",
+    "by_provider_note_2026_10_31": "local_c (Qwen3.8-27B) y local_d (GLM-4.7-Flash) parten del valor más conservador (2,6, el de Gemma) hasta calibrarlos con su tokenizador por el túnel (npm run context:calibrate)."
   },
   "history": {
     "recent_steps": 25,

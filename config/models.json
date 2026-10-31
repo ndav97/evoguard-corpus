@@ -1,97 +1,140 @@
 {
-  "schema_version": "1.0.0",
-  "status": "INFERENCE_PARAMETERS_FROZEN",
-  "frozen_at": "2026-09-24",
-  "freeze_scope": "inference_parameters_only",
-  "not_frozen": [
-    "provenance.models",
-    "pi0_model",
-    "pi0_repetitions",
-    "money_cutoff_usd",
-    "family.status"
-  ],
-  "selected_from": "6aadd8a1-1480-83e9-b6ec-da02364ae366",
-  "models": {
-    "openai": {
-      "display_name": "GPT-5.6 Sol",
-      "api_model_id": "gpt-5.6-sol",
-      "transport": "openai",
-      "access_provider": "synterolink",
-      "base_url": "https://api.synterolink.com/v1",
-      "context": null,
-      "max_output_tokens": 16384,
-      "reasoning": "medium",
-      "temperature": null,
-      "seed": null,
-      "digest": null
-    },
-    "anthropic": {
-      "display_name": "Claude Sonnet 5",
-      "api_model_id": "claude-sonnet-5",
-      "transport": "anthropic",
-      "access_provider": "synterolink",
-      "base_url": "https://api.synterolink.com/v1",
-      "context": null,
-      "max_output_tokens": 16384,
-      "reasoning": "high",
-      "temperature": null,
-      "seed": null,
-      "digest": null
-    },
-    "google": {
-      "display_name": "Gemma 4 26B",
-      "api_model_id": "gemma4:26b",
-      "transport": "ollama",
-      "context": 32768,
-      "max_output_tokens": 8192,
-      "reasoning": null,
-      "temperature": 1.0,
-      "seed": 42,
-      "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c",
-      "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3",
-      "sampling": {
-        "top_p": 0.95,
-        "top_k": 64
-      },
-      "sampling_source": "https://ollama.com/library/gemma4 (configuración estándar de Gemma 4)",
-      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
-    },
-    "local_a": {
-      "display_name": "Qwen3-Coder 30B",
-      "api_model_id": "qwen3-coder:30b",
-      "transport": "ollama",
-      "context": 32768,
-      "max_output_tokens": 8192,
-      "reasoning": null,
-      "temperature": 0.7,
-      "seed": 42,
-      "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
-      "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3",
-      "sampling": {
-        "top_p": 0.8,
-        "top_k": 20,
-        "repeat_penalty": 1.05
-      },
-      "sampling_source": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct (Best Practices)",
-      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
-    },
-    "local_b": {
-      "display_name": "Devstral 24B",
-      "api_model_id": "devstral:24b",
-      "transport": "ollama",
-      "context": 32768,
-      "max_output_tokens": 8192,
-      "reasoning": null,
-      "temperature": 0.15,
-      "seed": 42,
-      "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9",
-      "digest_status": "VERIFIED_BENCH_2026-10-12",
-      "ollama_version": "0.40.3",
-      "sampling": {},
-      "sampling_source": "https://huggingface.co/mistralai/Devstral-Small-2505 (ejemplo de vLLM)",
-      "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
-    }
+ "schema_version": "1.0.0",
+ "status": "INFERENCE_PARAMETERS_FROZEN",
+ "frozen_at": "2026-09-24",
+ "freeze_scope": "inference_parameters_only",
+ "not_frozen": [
+  "provenance.models",
+  "pi0_model",
+  "pi0_repetitions",
+  "money_cutoff_usd",
+  "family.status"
+ ],
+ "selected_from": "6aadd8a1-1480-83e9-b6ec-da02364ae366",
+ "models": {
+  "openai": {
+   "display_name": "GPT-5.6 Sol",
+   "api_model_id": "gpt-5.6-sol",
+   "transport": "openai",
+   "access_provider": "synterolink",
+   "base_url": "https://api.synterolink.com/v1",
+   "context": null,
+   "max_output_tokens": 16384,
+   "reasoning": "medium",
+   "temperature": null,
+   "seed": null,
+   "digest": null,
+   "role": "reference",
+   "role_note": "2026-10-31: referencia comercial; no entra en la comparación B frente a E (decisión del docente: no se puede verificar qué modelo responde detrás del intermediario)."
+  },
+  "anthropic": {
+   "display_name": "Claude Sonnet 5",
+   "api_model_id": "claude-sonnet-5",
+   "transport": "anthropic",
+   "access_provider": "synterolink",
+   "base_url": "https://api.synterolink.com/v1",
+   "context": null,
+   "max_output_tokens": 16384,
+   "reasoning": "high",
+   "temperature": null,
+   "seed": null,
+   "digest": null,
+   "role": "reference",
+   "role_note": "2026-10-31: referencia comercial; no entra en la comparación B frente a E (decisión del docente: no se puede verificar qué modelo responde detrás del intermediario)."
+  },
+  "google": {
+   "display_name": "Gemma 4 26B",
+   "api_model_id": "gemma4:26b",
+   "transport": "ollama",
+   "context": 32768,
+   "max_output_tokens": 8192,
+   "reasoning": null,
+   "temperature": 1.0,
+   "seed": 42,
+   "digest": "001e5dafc3c77684c2307ebc6ab8e336e10c9b18eca52acf547d72fc83c3ca8c",
+   "digest_status": "VERIFIED_BENCH_2026-10-12",
+   "ollama_version": "0.40.3",
+   "sampling": {
+    "top_p": 0.95,
+    "top_k": 64
+   },
+   "sampling_source": "https://ollama.com/library/gemma4 (configuración estándar de Gemma 4)",
+   "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
+  },
+  "local_a": {
+   "display_name": "Qwen3-Coder 30B",
+   "api_model_id": "qwen3-coder:30b",
+   "transport": "ollama",
+   "context": 32768,
+   "max_output_tokens": 8192,
+   "reasoning": null,
+   "temperature": 0.7,
+   "seed": 42,
+   "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
+   "digest_status": "VERIFIED_BENCH_2026-10-12",
+   "ollama_version": "0.40.3",
+   "sampling": {
+    "top_p": 0.8,
+    "top_k": 20,
+    "repeat_penalty": 1.05
+   },
+   "sampling_source": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct (Best Practices)",
+   "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
+  },
+  "local_b": {
+   "display_name": "Devstral 24B",
+   "api_model_id": "devstral:24b",
+   "transport": "ollama",
+   "context": 32768,
+   "max_output_tokens": 8192,
+   "reasoning": null,
+   "temperature": 0.15,
+   "seed": 42,
+   "digest": "9bd74193e93935e9d8564d88607b220a9d341c4a36b748cffcbd9ad4f47a9ca9",
+   "digest_status": "VERIFIED_BENCH_2026-10-12",
+   "ollama_version": "0.40.3",
+   "sampling": {},
+   "sampling_source": "https://huggingface.co/mistralai/Devstral-Small-2505 (ejemplo de vLLM)",
+   "max_output_note": "2026-10-14: 8 192 tokens de salida desde π0 y la fase final (iguales en B y E). El piloto (linea-base-piloto) se corrió con 4 096: Qwen3-Coder perdió 42 turnos por agotar ciclos, en buena parte por respuestas cortadas al reescribir archivos completos dentro de edit_file."
+  },
+  "local_c": {
+   "display_name": "Qwen3.8 27B",
+   "api_model_id": "qwen3.8:27b",
+   "transport": "ollama",
+   "context": 32768,
+   "max_output_tokens": 8192,
+   "reasoning": null,
+   "temperature": 0.7,
+   "seed": 42,
+   "digest": null,
+   "digest_status": "PENDING_BENCH",
+   "ollama_version": "0.40.3",
+   "sampling": {
+    "top_p": 0.8,
+    "top_k": 20
+   },
+   "sampling_source": "https://huggingface.co/Qwen/Qwen3.8-27B (modo sin razonamiento; se fija con el banco)",
+   "source": "https://huggingface.co/Qwen/Qwen3.8-27B",
+   "note": "2026-10-31: modelo abierto añadido al grupo al quedar GPT-5.6 Sol y Claude Sonnet 5 como referencia comercial (el intermediario impide verificar qué modelo responde). Digest pendiente del banco de modelos."
+  },
+  "local_d": {
+   "display_name": "GLM-4.7-Flash",
+   "api_model_id": "glm-4.7-flash:q4_K_M",
+   "transport": "ollama",
+   "context": 32768,
+   "max_output_tokens": 8192,
+   "reasoning": null,
+   "temperature": 0.7,
+   "seed": 42,
+   "digest": null,
+   "digest_status": "PENDING_BENCH",
+   "ollama_version": "0.40.3",
+   "sampling": {
+    "top_p": 0.95
+   },
+   "sampling_source": "https://huggingface.co/zai-org/GLM-4.7-Flash (se fija con el banco)",
+   "source": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+   "note": "2026-10-31: modelo abierto añadido al grupo al quedar GPT-5.6 Sol y Claude Sonnet 5 como referencia comercial (el intermediario impide verificar qué modelo responde). Digest pendiente del banco de modelos."
   }
+ }
 }

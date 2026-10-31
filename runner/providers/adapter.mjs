@@ -6,7 +6,7 @@ import {buildContextInput,loadContextPolicy,policyFor} from '../context/policy.m
 import {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION,parseAction,rejectedSample} from '../protocol/actions.mjs';
 export {ACTION_SCHEMA,INSTRUCTION,RESPONSE_CONTRACT,PROTOCOL_VERSION};
 // La ranura google admite Gemini (API) o un modelo abierto de Google servido por Ollama (Gemma, decisión 2026-10-11).
-const TRANSPORT={openai:['openai'],anthropic:['anthropic'],google:['google','ollama'],local_a:['ollama'],local_b:['ollama']};
+const TRANSPORT={openai:['openai'],anthropic:['anthropic'],google:['google','ollama'],local_a:['ollama'],local_b:['ollama'],local_c:['ollama'],local_d:['ollama']};
 export const isOllamaConfig=config=>config?.transport==='ollama';
 // Anthropic (Sonnet 5 vía Synterolink): transporte F de la sonda del 2026-10-09 (10/10 válidas). Herramienta nativa en
 // modo estricto con razonamiento adaptativo: el intermediario no aplica output_config.format y la herramienta sí.

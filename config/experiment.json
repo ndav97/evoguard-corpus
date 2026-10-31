@@ -4,11 +4,11 @@
   "decision": "Línea base y comparación final por episodios, con las métricas de EvoGenUI-Bench (Peng et al., 2026), los cinco modelos del pool en ambas fases y 60 familias en el corpus definitivo. Costo mínimo con un límite de S/ 5 000 (2026-10-08): referencias del corpus = parches de referencia calibrados (sin generación con modelos); etiquetas π0 con un modelo local; piloto con 1 repetición; final con 1 episodio por familia, 1 repetición y brazos B y E (docs/diseno-linea-base-episodios.md).",
   "reference": "Peng, Xia, Wang, Ye, Ning y Wen (2026). EvoGenUI-Bench: Evaluating LLMs as multi-turn generative UI assistants. arXiv:2608.29387.",
   "providers": [
-    "openai",
-    "anthropic",
     "google",
     "local_a",
-    "local_b"
+    "local_b",
+    "local_c",
+    "local_d"
   ],
   "arms": {
     "B": {
@@ -86,7 +86,48 @@
     },
     "pi0": {
       "experiment": "etiquetas-pi0",
-      "families": ["S001", "S002", "S003", "S004", "S005", "S006", "S007", "S008", "S009", "S010", "S011", "S012", "S013", "S014", "S015", "S016", "S017", "S018", "S019", "S020", "S022", "S024", "S029", "S030", "S031", "S032", "S041", "S042", "S045", "S046", "S048", "S050", "S051", "S053", "S054", "S055", "S056", "S057", "S058", "S059"],
+      "families": [
+        "S001",
+        "S002",
+        "S003",
+        "S004",
+        "S005",
+        "S006",
+        "S007",
+        "S008",
+        "S009",
+        "S010",
+        "S011",
+        "S012",
+        "S013",
+        "S014",
+        "S015",
+        "S016",
+        "S017",
+        "S018",
+        "S019",
+        "S020",
+        "S022",
+        "S024",
+        "S029",
+        "S030",
+        "S031",
+        "S032",
+        "S041",
+        "S042",
+        "S045",
+        "S046",
+        "S048",
+        "S050",
+        "S051",
+        "S053",
+        "S054",
+        "S055",
+        "S056",
+        "S057",
+        "S058",
+        "S059"
+      ],
       "families_source": "config/partition.json (train_validation)",
       "turns": 5,
       "episodes_per_family": 1,
@@ -95,15 +136,42 @@
         "B"
       ],
       "providers": [
-        "openai", "anthropic", "google", "local_a", "local_b"
+        "openai",
+        "anthropic",
+        "google",
+        "local_a",
+        "local_b",
+        "local_c",
+        "local_d"
       ],
       "provider_decision": "2026-10-15: π0 con los cinco modelos del grupo y una repetición (40 familias × 5 turnos × 5 modelos = 1 000 turnos), en lugar de solo Gemma 4 con dos repeticiones (400 turnos). Motivos: más transiciones elegibles y regresiones observadas; el riesgo aprendido pasa a ser el agrupado de los cinco agentes que luego se evalúan, y se elimina la limitación de un riesgo aprendido con un solo modelo. Antes (2026-10-14): solo Gemma 4 26B. Los episodios B del piloto (S001–S020, 3 turnos) se pueden sumar como datos de entrenamiento.",
-      "turns_planned": 1000,
+      "turns_planned": 1400,
       "purpose": "Etiquetas de riesgo para entrenar EvoGuard UI: qué requisitos rompe el agente base. Con un modelo local (solo cuesta GPU); el proveedor definitivo es el modelo local elegido en el banco. El riesgo se define respecto de ese modelo."
     },
     "final": {
       "experiment": "evaluacion-final",
-      "families": ["S021", "S023", "S025", "S026", "S027", "S028", "S033", "S034", "S035", "S036", "S037", "S038", "S039", "S040", "S043", "S044", "S047", "S049", "S052", "S060"],
+      "families": [
+        "S021",
+        "S023",
+        "S025",
+        "S026",
+        "S027",
+        "S028",
+        "S033",
+        "S034",
+        "S035",
+        "S036",
+        "S037",
+        "S038",
+        "S039",
+        "S040",
+        "S043",
+        "S044",
+        "S047",
+        "S049",
+        "S052",
+        "S060"
+      ],
       "families_source": "config/partition.json (test)",
       "turns": 5,
       "episodes_per_family": 1,
@@ -113,11 +181,11 @@
         "E"
       ],
       "providers": [
-        "openai",
-        "anthropic",
         "google",
         "local_a",
-        "local_b"
+        "local_b",
+        "local_c",
+        "local_d"
       ],
       "turns_planned": 1000,
       "purpose": "Comparación emparejada por familia de TEE (TP@5) y TER entre B y E para cada modelo y agrupada para los cinco. Una 2.ª repetición solo si la caché de prompts reduce el costo y el presupuesto lo permite."
@@ -174,17 +242,66 @@
     },
     "unknown_call_usd": 0.3,
     "extra_spent_usd": [
-      {"date": "2026-10-09", "concept": "providers:diagnose (2 ejecuciones) y sonda de transporte de Sonnet", "usd": 0.6},
-      {"date": "2026-10-10", "concept": "lote de calibración antes de las correcciones de transporte (14 episodios + 1 interrumpido; 8 llamadas HTTP 502 sin tokens a 0,3 USD); apartado en runs/episodes-diagnostico/calibracion-2026-10-10", "usd": 33.87},
-      {"date": "2026-10-10", "concept": "episodio S003 · openai invalidado por transporte (HTTP 524 de Synterolink: ~21 de 30 min del intento de T003); apartado en runs/episodes-diagnostico/invalidados-transporte", "usd": 3.35},
-      {"date": "2026-10-11", "concept": "5 episodios de calibración de Gemini por Synterolink (cortes SAFETY del intermediario); apartados en runs/episodes-diagnostico/gemini-synterolink", "usd": 7.54},
-      {"date": "2026-10-11", "concept": "Gemini 3.8 Flash por VNAIPro: 5 familias de calibración (incluidos 5 intentos interrumpidos de S004), cota superior con la tarifa de Gemini Pro; apartados en runs/episodes-diagnostico/gemini-vnaipro", "usd": 32.59},
-      {"date": "2026-10-12", "concept": "10 episodios comerciales del piloto (S001–S005 · GPT y Claude) corridos con una versión anterior del ejecutor; apartados en runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10 y repetidos para que la línea base use un solo código", "usd": 15.78},
-      {"date": "2026-10-12", "concept": "Vast.ai: banco de modelos locales y preparación de instancias (11 y 12 de octubre), según el panel de Vast.ai", "usd": 3.0},
-      {"date": "2026-10-12", "concept": "GPU de los 20 episodios de Gemma 4 corridos con el estimador de contexto general (~4 h); apartados en runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12 y repetidos con el estimador propio de Gemma", "usd": 1.0},
-      {"date": "2026-10-12", "concept": "GPU de los 7 episodios de Qwen3-Coder corridos con temperatura 0 (2,6 h); apartados en runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12 y repetidos con el muestreo recomendado", "usd": 0.66},
-      {"date": "2026-10-12", "concept": "GPU de 6 episodios de Gemma 4 corridos con el historial recortado a 3 000 bytes (~0,6 h); apartados en runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12", "usd": 0.15},
-      {"date": "2026-10-14", "concept": "Ajuste a la factura real de Vast.ai (panel: 9,68 USD en total, instancia destruida). Lo registrado sumaba 14,93 USD: GPU de turnos 10,12 a 0,40 USD/h estimados + 4,81 de banco, preparación y episodios apartados. Se resta la diferencia.", "usd": -5.25}
+      {
+        "date": "2026-10-09",
+        "concept": "providers:diagnose (2 ejecuciones) y sonda de transporte de Sonnet",
+        "usd": 0.6
+      },
+      {
+        "date": "2026-10-10",
+        "concept": "lote de calibración antes de las correcciones de transporte (14 episodios + 1 interrumpido; 8 llamadas HTTP 502 sin tokens a 0,3 USD); apartado en runs/episodes-diagnostico/calibracion-2026-10-10",
+        "usd": 33.87
+      },
+      {
+        "date": "2026-10-10",
+        "concept": "episodio S003 · openai invalidado por transporte (HTTP 524 de Synterolink: ~21 de 30 min del intento de T003); apartado en runs/episodes-diagnostico/invalidados-transporte",
+        "usd": 3.35
+      },
+      {
+        "date": "2026-10-11",
+        "concept": "5 episodios de calibración de Gemini por Synterolink (cortes SAFETY del intermediario); apartados en runs/episodes-diagnostico/gemini-synterolink",
+        "usd": 7.54
+      },
+      {
+        "date": "2026-10-11",
+        "concept": "Gemini 3.8 Flash por VNAIPro: 5 familias de calibración (incluidos 5 intentos interrumpidos de S004), cota superior con la tarifa de Gemini Pro; apartados en runs/episodes-diagnostico/gemini-vnaipro",
+        "usd": 32.59
+      },
+      {
+        "date": "2026-10-12",
+        "concept": "10 episodios comerciales del piloto (S001–S005 · GPT y Claude) corridos con una versión anterior del ejecutor; apartados en runs/episodes-diagnostico/piloto-codigo-anterior-2026-10-10 y repetidos para que la línea base use un solo código",
+        "usd": 15.78
+      },
+      {
+        "date": "2026-10-12",
+        "concept": "Vast.ai: banco de modelos locales y preparación de instancias (11 y 12 de octubre), según el panel de Vast.ai",
+        "usd": 3.0
+      },
+      {
+        "date": "2026-10-12",
+        "concept": "GPU de los 20 episodios de Gemma 4 corridos con el estimador de contexto general (~4 h); apartados en runs/episodes-diagnostico/piloto-gemma-estimador-anterior-2026-10-12 y repetidos con el estimador propio de Gemma",
+        "usd": 1.0
+      },
+      {
+        "date": "2026-10-12",
+        "concept": "GPU de los 7 episodios de Qwen3-Coder corridos con temperatura 0 (2,6 h); apartados en runs/episodes-diagnostico/piloto-qwen-temperatura-0-2026-10-12 y repetidos con el muestreo recomendado",
+        "usd": 0.66
+      },
+      {
+        "date": "2026-10-12",
+        "concept": "GPU de 6 episodios de Gemma 4 corridos con el historial recortado a 3 000 bytes (~0,6 h); apartados en runs/episodes-diagnostico/piloto-gemma-historial-recortado-2026-10-12",
+        "usd": 0.15
+      },
+      {
+        "date": "2026-10-14",
+        "concept": "Ajuste a la factura real de Vast.ai (panel: 9,68 USD en total, instancia destruida). Lo registrado sumaba 14,93 USD: GPU de turnos 10,12 a 0,40 USD/h estimados + 4,81 de banco, preparación y episodios apartados. Se resta la diferencia.",
+        "usd": -5.25
+      }
     ]
-  }
+  },
+  "reference_providers": [
+    "openai",
+    "anthropic"
+  ],
+  "providers_decision_2026_10_31": "Por indicación del docente, GPT-5.6 Sol y Claude Sonnet 5 quedan como referencia comercial (línea base descriptiva del piloto y de π0) y no entran en la comparación B frente a E: detrás del intermediario no se puede verificar qué modelo responde. Los reemplazan dos modelos abiertos bajo control propio en la GPU: Qwen3.8-27B (local_c) y GLM-4.7-Flash (local_d). La comparación final usa cinco modelos abiertos."
 }

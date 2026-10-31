@@ -15,7 +15,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const STAGES = ['typecheck', 'build', 'development_tests', 'independent_oracle', 'architecture'];
-const PROVIDERS = ['openai', 'anthropic', 'google', 'local_a', 'local_b'];
+const PROVIDERS = ['openai', 'anthropic', 'google', 'local_a', 'local_b', 'local_c', 'local_d'];
 const readJson = path => JSON.parse(readFileSync(path, 'utf8'));
 const readJsonl = path => (existsSync(path) ? readFileSync(path, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []);
 const dirs = path => (existsSync(path) ? readdirSync(path).filter(name => statSync(join(path, name)).isDirectory()).sort() : []);

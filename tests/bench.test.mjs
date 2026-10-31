@@ -21,7 +21,7 @@ test('candidatos del banco: ids únicos, contexto suficiente y líneas base del 
   const ids = bench.candidates.map(c => c.id);
   assert.equal(new Set(ids).size, ids.length);
   for (const c of bench.candidates) {
-    assert.match(c.model, /^[a-z0-9._-]+:[a-z0-9._-]+$/);
+    assert.match(c.model, /^[a-z0-9._-]+:[A-Za-z0-9._-]+$/); // etiquetas de cuantización como q4_K_M
     assert.ok(c.context - c.max_output_tokens - 512 >= 4096, c.id);
   }
   for (const local of ['local_a', 'local_b']) assert.ok(bench.candidates.some(c => c.model === models[local].api_model_id && c.context === models[local].context && c.max_output_tokens === models[local].max_output_tokens), local);

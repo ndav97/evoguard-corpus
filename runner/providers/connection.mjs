@@ -5,7 +5,9 @@ const direct={
   anthropic:{base_url:'https://api.anthropic.com/v1',credential_env:['ANTHROPIC_API_KEY']},
   google:{base_url:'https://generativelanguage.googleapis.com/v1beta',credential_env:['GEMINI_API_KEY','GOOGLE_API_KEY']},
   local_a:{base_url:'http://127.0.0.1:11434',credential_env:[]},
-  local_b:{base_url:'http://127.0.0.1:11434',credential_env:[]}
+  local_b:{base_url:'http://127.0.0.1:11434',credential_env:[]},
+  local_c:{base_url:'http://127.0.0.1:11434',credential_env:[]},
+  local_d:{base_url:'http://127.0.0.1:11434',credential_env:[]}
 };
 export function connectionFor(provider,config) {
   if(!Object.hasOwn(direct,provider))throw providerError('CONNECTION_INVALID');

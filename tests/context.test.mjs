@@ -137,7 +137,8 @@ test('los modelos comerciales reciben paquete completo e historial íntegro, sin
 });
 
 test('los locales reciben contexto gestionado y registran la traza por llamada', async () => {
-  for (const provider of policy.applies_to) {
+  // los modelos aún sin digest (pendientes del banco) quedan bloqueados por el adaptador y la verificación previa
+  for (const provider of policy.applies_to.filter(p => models[p].digest_status !== 'PENDING_BENCH')) {
     const config = smallConfig(models[provider]);
     const seen = [];
     let observation;

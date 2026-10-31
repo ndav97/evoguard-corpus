@@ -65,7 +65,7 @@ export function visibleChecks(manifest) {
 }
 
 // Nombres e identificadores que no pueden aparecer en lo que ve el constructor.
-const PRIVATE = /(oracle|evoguard|hidden[_ -]?tests?|reference[_ ]patch|spec-lock|calibra|openai|anthropic|gemini|qwen|granite|local_a|local_b|SYNTEROLINK)/i;
+const PRIVATE = /(oracle|evoguard|hidden[_ -]?tests?|reference[_ ]patch|spec-lock|calibra|openai|anthropic|gemini|qwen|granite|local_a|local_b|local_c|local_d|glm|SYNTEROLINK)/i;
 
 export function validateRealFamily(data, root) {
   const errors = [];

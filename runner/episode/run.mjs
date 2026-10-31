@@ -36,7 +36,9 @@ import { loadBudget, turnCost, budgetBlocker } from './budget.mjs';
 
 const sha = text => createHash('sha256').update(text).digest('hex');
 const log = message => console.log(`[${new Date().toISOString()}] ${message}`);
-export const RING = ['openai', 'anthropic', 'google', 'local_a', 'local_b'];
+// openai y anthropic quedan como referencia comercial (decisión 2026-10-31); local_c y local_d los reemplazan en la
+// comparación B frente a E.
+export const RING = ['openai', 'anthropic', 'google', 'local_a', 'local_b', 'local_c', 'local_d'];
 export const loadExperiment = root => JSON.parse(readFileSync(join(root, 'config/experiment.json'), 'utf8'));
 
 // Código que ejecuta los episodios: si cambia, hay que repetir su ensayo (episode:rehearse). Las métricas y la

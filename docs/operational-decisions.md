@@ -849,3 +849,30 @@ llegó a ejecutarse en el piloto y en π0 (31 899, 6 852 acciones write/edit rev
 ediciones enormes provoca repeticiones de episodio (error de infraestructura) en vez de un fallo atribuible a él, lo
 que sesgaría la comparación B frente a E. Prueba: `tests/protocol.test.mjs`. El cambio altera la huella de código:
 los ensayos del ejecutor (`scripts/episode/ensayar-episodios.cmd`) se repiten antes de la fase final.
+
+## 2026-10-31 — Modelos comerciales como referencia; dos modelos abiertos nuevos
+
+**Decisión del docente.** GPT-5.6 Sol y Claude Sonnet 5 se consumen por un intermediario (Synterolink): el nombre del
+modelo que responde lo informa ese intermediario (`observed_model`, siempre el pedido en los 520 turnos comerciales del
+piloto y de π0), pero no se puede verificar de forma independiente ni controlar sus cambios. Por eso quedan como
+**referencia comercial**: sus resultados del piloto y de π0 se conservan como línea base descriptiva, pero no entran en
+la comparación B frente a E. La comparación final usa **cinco modelos abiertos** bajo control propio (pesos, versión de
+Ollama y digest fijados), en la GPU alquilada.
+
+**Reemplazos** (búsqueda en Hugging Face, 31-oct; criterio: caber en una RTX 3090 de 24 GB, desempeño en programación y
+diversidad de laboratorios):
+- `local_c` = **Qwen3.8-27B** (Alibaba, 27B denso, Apache-2.0; SWE-bench Pro 61,7 según el fabricante). Aporta un modelo
+  abierto fuerte: con 5 turnos los tres abiertos actuales tienen TEE 0 % en π0 (efecto suelo).
+- `local_d` = **GLM-4.7-Flash** (Zhipu, 30B MoE ≈3B activos, MIT; SWE-bench Verified 59,2). Un cuarto laboratorio.
+- Respaldos: Qwen3.6-27B, gpt-oss-20b, Devstral Small 2.
+
+**Cambios.** `config/models.json` (local_c, local_d con digest pendiente; openai/anthropic con `role: reference`),
+`config/experiment.json` (providers del final = 5 abiertos; π0 = 7 modelos, 1 400 turnos), `config/context.json`
+(contexto gestionado de 32 768 tokens; estimador 2,6 B/token hasta calibrar), `config/local-bench.json` (candidatos y
+selección), adaptador, conexión, análisis y anillo de episodios. Hasta que el banco fije el digest, el adaptador y la
+verificación previa rechazan local_c y local_d (prueba en `tests/providers.test.mjs`).
+
+**Pasos siguientes.** (1) Banco de modelos en la GPU (`scripts/vast/bench.ps1 -Models qwen38-27b-32k,glm47flash-32k`):
+≥ 9/10 acciones válidas y tareas del banco; fijar digest, versión de Ollama, muestreo y modo sin razonamiento.
+(2) Calibrar el contexto con su tokenizador. (3) π0 de los dos modelos (400 turnos). (4) Repetir el ensayo del
+ejecutor de episodios (cambió su huella). (5) Actualizar el plan.
