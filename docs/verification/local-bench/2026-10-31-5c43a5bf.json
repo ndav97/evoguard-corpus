@@ -1,0 +1,947 @@
+{
+  "artifact_type": "local_model_bench",
+  "experimental": false,
+  "run_id": "2026-10-31-5c43a5bf",
+  "protocol_version": "1.1",
+  "image_id": null,
+  "ollama": "http://127.0.0.1:11435",
+  "started_at": "2026-10-31T20:01:25.917Z",
+  "candidates": [
+    {
+      "id": "qwen38-27b-q8-think-64k",
+      "model": "qwen3.8:27b-q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 1,
+      "sampling": {
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0,
+        "presence_penalty": 0,
+        "repeat_penalty": 1
+      },
+      "digest": "8f5fb6b71ea00052cbe8545738c55ce61112c4e571cb60ca4dad00b131766039",
+      "tasks": {
+        "S001:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 5,
+              "duration_s": 232,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 1,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 5,
+          "tokens": {
+            "input": 44548,
+            "output": 1289
+          },
+          "median_call_s": 14.7,
+          "max_output_tokens_used": 565,
+          "thinking_chars": 3008,
+          "truncated_calls": 0,
+          "max_context_estimate": 18781,
+          "context_omitted_steps": 0,
+          "wall_s": 241,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-think-64k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 6,
+              "duration_s": 495,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 2,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 6,
+          "tokens": {
+            "input": 64441,
+            "output": 3986
+          },
+          "median_call_s": 23.8,
+          "max_output_tokens_used": 2608,
+          "thinking_chars": 12772,
+          "truncated_calls": 0,
+          "max_context_estimate": 22238,
+          "context_omitted_steps": 0,
+          "wall_s": 503,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-think-64k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 8,
+              "duration_s": 165,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 2,
+            "edit_file": 4,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 8,
+          "tokens": {
+            "input": 123144,
+            "output": 1426
+          },
+          "median_call_s": 11.2,
+          "max_output_tokens_used": 408,
+          "thinking_chars": 3126,
+          "truncated_calls": 0,
+          "max_context_estimate": 32470,
+          "context_omitted_steps": 0,
+          "wall_s": 172,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-think-64k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 7,
+              "duration_s": 267,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 2,
+            "write_file": 1,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 7,
+          "tokens": {
+            "input": 54152,
+            "output": 4583
+          },
+          "median_call_s": 16.7,
+          "max_output_tokens_used": 2389,
+          "thinking_chars": 13883,
+          "truncated_calls": 0,
+          "max_context_estimate": 17959,
+          "context_omitted_steps": 0,
+          "wall_s": 273,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-think-64k-S007-V1"
+        }
+      },
+      "quantization": "Q8_0",
+      "bytes_per_token": 2.86,
+      "accepted": 4
+    },
+    {
+      "id": "qwen38-27b-mtp-q8-think-64k",
+      "model": "qwen3.8:27b-mtp-q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 1,
+      "sampling": {
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0,
+        "presence_penalty": 0,
+        "repeat_penalty": 1
+      },
+      "digest": "8a15828773037bdbb79b103ca20344c67a05251521b918a534c135ca76f1f04d",
+      "tasks": {
+        "S001:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 5,
+              "duration_s": 174,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 1,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 5,
+          "tokens": {
+            "input": 44078,
+            "output": 1688
+          },
+          "median_call_s": 11.8,
+          "max_output_tokens_used": 583,
+          "thinking_chars": 5411,
+          "truncated_calls": 0,
+          "max_context_estimate": 18481,
+          "context_omitted_steps": 0,
+          "wall_s": 178,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-mtp-q8-think-64k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 7,
+              "duration_s": 389,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 3,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 7,
+          "tokens": {
+            "input": 86860,
+            "output": 3575
+          },
+          "median_call_s": 9.4,
+          "max_output_tokens_used": 2110,
+          "thinking_chars": 11252,
+          "truncated_calls": 0,
+          "max_context_estimate": 25713,
+          "context_omitted_steps": 0,
+          "wall_s": 394,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-mtp-q8-think-64k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 9,
+              "duration_s": 195,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 3,
+            "edit_file": 3,
+            "write_file": 1,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 9,
+          "tokens": {
+            "input": 144935,
+            "output": 4843
+          },
+          "median_call_s": 6.6,
+          "max_output_tokens_used": 2150,
+          "thinking_chars": 8275,
+          "truncated_calls": 0,
+          "max_context_estimate": 35065,
+          "context_omitted_steps": 0,
+          "wall_s": 201,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-mtp-q8-think-64k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 9,
+              "duration_s": 301,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 3,
+            "write_file": 1,
+            "run_checks": 2,
+            "edit_file": 2,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 9,
+          "tokens": {
+            "input": 94053,
+            "output": 9350
+          },
+          "median_call_s": 14.6,
+          "max_output_tokens_used": 3643,
+          "thinking_chars": 33072,
+          "truncated_calls": 0,
+          "max_context_estimate": 23612,
+          "context_omitted_steps": 0,
+          "wall_s": 306,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-mtp-q8-think-64k-S007-V1"
+        }
+      },
+      "quantization": "Q8_0",
+      "bytes_per_token": 2.86,
+      "accepted": 4
+    },
+    {
+      "id": "qwen38-27b-q8-nothink-32k",
+      "model": "qwen3.8:27b-q8_0",
+      "context": 32768,
+      "max_output_tokens": 8192,
+      "reasoning": null,
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0,
+        "presence_penalty": 1.5,
+        "repeat_penalty": 1
+      },
+      "digest": "8f5fb6b71ea00052cbe8545738c55ce61112c4e571cb60ca4dad00b131766039",
+      "tasks": {
+        "S001:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 4,
+              "duration_s": 148,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 1,
+            "edit_file": 1,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 4,
+          "tokens": {
+            "input": 36535,
+            "output": 359
+          },
+          "median_call_s": 8.1,
+          "max_output_tokens_used": 299,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 18577,
+          "context_omitted_steps": 0,
+          "wall_s": 153,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-nothink-32k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 18,
+              "duration_s": 617,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 13,
+            "write_file": 1,
+            "run_checks": 2,
+            "edit_file": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 18,
+          "tokens": {
+            "input": 285946,
+            "output": 2200
+          },
+          "median_call_s": 12.6,
+          "max_output_tokens_used": 1681,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 24046,
+          "context_omitted_steps": 13,
+          "wall_s": 623,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-nothink-32k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 242,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 24,
+            "tool": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 25,
+          "tokens": {
+            "input": 338916,
+            "output": 801
+          },
+          "median_call_s": 10.7,
+          "max_output_tokens_used": 51,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 24052,
+          "context_omitted_steps": 19,
+          "wall_s": 249,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-nothink-32k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 12,
+              "duration_s": 170,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 9,
+            "write_file": 1,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 12,
+          "tokens": {
+            "input": 118451,
+            "output": 1305
+          },
+          "median_call_s": 4.8,
+          "max_output_tokens_used": 1030,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 23886,
+          "context_omitted_steps": 0,
+          "wall_s": 176,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-qwen38-27b-q8-nothink-32k-S007-V1"
+        }
+      },
+      "quantization": "Q8_0",
+      "bytes_per_token": 2.86,
+      "accepted": 2
+    },
+    {
+      "id": "glm47flash-q8-think-64k",
+      "model": "glm-4.7-flash:q8_0",
+      "context": 65536,
+      "max_output_tokens": 16384,
+      "reasoning": "on",
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 1
+      },
+      "digest": "4420340fd3190fc6f5da59d85aeff8e74c8c401679b067c5d00df16efb98104d",
+      "tasks": {
+        "S001:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 3,
+              "duration_s": 136,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "edit_file": 1,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 3,
+          "tokens": {
+            "input": 19749,
+            "output": 1110
+          },
+          "median_call_s": 9,
+          "max_output_tokens_used": 613,
+          "thinking_chars": 3143,
+          "truncated_calls": 0,
+          "max_context_estimate": 13612,
+          "context_omitted_steps": 0,
+          "wall_s": 141,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-think-64k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 16,
+              "duration_s": 493,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 6,
+            "edit_file": 7,
+            "run_checks": 2,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 16,
+          "tokens": {
+            "input": 269735,
+            "output": 6332
+          },
+          "median_call_s": 7.5,
+          "max_output_tokens_used": 1208,
+          "thinking_chars": 18209,
+          "truncated_calls": 0,
+          "max_context_estimate": 42823,
+          "context_omitted_steps": 0,
+          "wall_s": 499,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-think-64k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 8,
+              "duration_s": 171,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 4,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 8,
+          "tokens": {
+            "input": 130262,
+            "output": 5785
+          },
+          "median_call_s": 10,
+          "max_output_tokens_used": 2681,
+          "thinking_chars": 13994,
+          "truncated_calls": 0,
+          "max_context_estimate": 35188,
+          "context_omitted_steps": 0,
+          "wall_s": 179,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-think-64k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "ACCEPTED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "ACCEPTED",
+              "reason": null,
+              "cycles": 14,
+              "duration_s": 268,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "PASS",
+                "architecture": "PASS"
+              }
+            }
+          ],
+          "oracle_results": [
+            "PASS"
+          ],
+          "actions": {
+            "read_file": 4,
+            "edit_file": 4,
+            "run_checks": 3,
+            "write_file": 2,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 14,
+          "tokens": {
+            "input": 237249,
+            "output": 11173
+          },
+          "median_call_s": 12.9,
+          "max_output_tokens_used": 3272,
+          "thinking_chars": 21645,
+          "truncated_calls": 0,
+          "max_context_estimate": 39600,
+          "context_omitted_steps": 0,
+          "wall_s": 273,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-think-64k-S007-V1"
+        }
+      },
+      "quantization": "Q8_0",
+      "bytes_per_token": 3.02,
+      "accepted": 1
+    },
+    {
+      "id": "glm47flash-q8-nothink-32k",
+      "model": "glm-4.7-flash:q8_0",
+      "context": 32768,
+      "max_output_tokens": 8192,
+      "reasoning": null,
+      "temperature": 0.7,
+      "sampling": {
+        "top_p": 1
+      },
+      "digest": "4420340fd3190fc6f5da59d85aeff8e74c8c401679b067c5d00df16efb98104d",
+      "tasks": {
+        "S001:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 7,
+              "duration_s": 167,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 2,
+            "edit_file": 3,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 7,
+          "tokens": {
+            "input": 69206,
+            "output": 2529
+          },
+          "median_call_s": 4.6,
+          "max_output_tokens_used": 1654,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 20808,
+          "context_omitted_steps": 0,
+          "wall_s": 172,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-nothink-32k-S001-V1"
+        },
+        "S003:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "CYCLE_LIMIT",
+              "cycles": 25,
+              "duration_s": 601,
+              "validation": {}
+            }
+          ],
+          "oracle_results": [],
+          "actions": {
+            "read_file": 15,
+            "edit_file": 6,
+            "run_checks": 4
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 26,
+          "tokens": {
+            "input": 405406,
+            "output": 4750
+          },
+          "median_call_s": 11.1,
+          "max_output_tokens_used": 2971,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 24054,
+          "context_omitted_steps": 18,
+          "wall_s": 607,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-nothink-32k-S003-V1"
+        },
+        "S005:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 17,
+              "duration_s": 291,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 6,
+            "edit_file": 8,
+            "run_checks": 2,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 17,
+          "tokens": {
+            "input": 224588,
+            "output": 9845
+          },
+          "median_call_s": 7.9,
+          "max_output_tokens_used": 2382,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 24058,
+          "context_omitted_steps": 10,
+          "wall_s": 298,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-nothink-32k-S005-V1"
+        },
+        "S007:V1": {
+          "status": "BLOCKED",
+          "attempts": [
+            {
+              "attempt": 1,
+              "outcome": "REASSIGN",
+              "reason": "independent_oracle",
+              "cycles": 6,
+              "duration_s": 89,
+              "validation": {
+                "typecheck": "NOT_APPLICABLE",
+                "build": "NOT_APPLICABLE",
+                "development_tests": "PASS",
+                "independent_oracle": "FAIL"
+              }
+            }
+          ],
+          "oracle_results": [
+            "FAIL"
+          ],
+          "actions": {
+            "read_file": 2,
+            "edit_file": 2,
+            "run_checks": 1,
+            "deliver": 1
+          },
+          "loops": 0,
+          "invalid_outputs": [],
+          "calls": 6,
+          "tokens": {
+            "input": 43023,
+            "output": 657
+          },
+          "median_call_s": 3.9,
+          "max_output_tokens_used": 372,
+          "thinking_chars": 0,
+          "truncated_calls": 0,
+          "max_context_estimate": 16699,
+          "context_omitted_steps": 0,
+          "wall_s": 94,
+          "logs": "artifacts/bench/2026-10-31-5c43a5bf-glm47flash-q8-nothink-32k-S007-V1"
+        }
+      },
+      "quantization": "Q8_0",
+      "bytes_per_token": 3.02,
+      "accepted": 0
+    }
+  ],
+  "finished_at": "2026-10-31T21:40:57.939Z"
+}
