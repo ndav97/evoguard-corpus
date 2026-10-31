@@ -33,7 +33,8 @@ done
 echo "== Modelos disponibles"
 ollama list
 # Ficha del entorno (la copia prepare.ps1 a docs/verification/gpu-sessions/): GPU, driver, CUDA, Ollama y digests.
-gpu="$(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader | head -1)"
+# Todas las GPU de la instancia (p. ej. 2× RTX 3090, 2026-10-31), separadas por « + ».
+gpu="$(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader | paste -sd'+' - | sed 's/+/ + /g')"
 cuda="$(nvidia-smi | grep -oE 'CUDA Version: [0-9.]+' | grep -oE '[0-9.]+$' || true)"
 {
   printf '{"recorded_at":"%s","instance":"%s","gpu":"%s","cuda":"%s","ollama_version":"%s","disk":"%s","models":' \
