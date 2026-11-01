@@ -99,15 +99,15 @@
     },
     "local_c": {
       "display_name": "Qwen3.8 27B",
-      "api_model_id": "qwen3.8:27b-q8_0",
+      "api_model_id": "qwen3.8:27b-mtp-q8_0",
       "transport": "ollama",
       "context": 65536,
       "max_output_tokens": 16384,
       "reasoning": "on",
       "temperature": 1.0,
       "seed": 42,
-      "digest": null,
-      "digest_status": "PENDING_BENCH",
+      "digest": "8a15828773037bdbb79b103ca20344c67a05251521b918a534c135ca76f1f04d",
+      "digest_status": "VERIFIED_BENCH_2026-10-31",
       "ollama_version": "0.40.3",
       "sampling": {
         "top_p": 0.95,
@@ -118,7 +118,8 @@
       },
       "sampling_source": "https://huggingface.co/Qwen/Qwen3.8-27B (muestreo recomendado para el modo de razonamiento)",
       "source": "https://huggingface.co/Qwen/Qwen3.8-27B",
-      "note": "2026-10-31: modelo abierto añadido al grupo al quedar GPT-5.6 Sol y Claude Sonnet 5 como referencia comercial. Configuración provisional = mejor configuración prevista (Q8_0, razonamiento activo, muestreo del fabricante); el banco en la A6000 decide entre esta y la variante sin razonamiento (config/local-bench.json → selection_2026_10_31) y fija el digest."
+      "note": "2026-10-31: modelo abierto añadido al quedar GPT y Claude como referencia comercial. Mejor configuración elegida con el banco en 2× RTX 3090 (48 GB): Q8_0 con predicción multitoken, razonamiento activo, muestreo del fabricante para ese modo, 65 536 / 16 384. Banco: 4/4 con razonamiento (con y sin MTP) frente a 2/4 sin razonamiento; MTP empató en resultados y fue ~9 % más rápido en tiempo total.",
+      "bench_evidence": "docs/verification/local-bench/2026-10-31-5c43a5bf.json"
     },
     "local_d": {
       "display_name": "GLM-4.7-Flash",
@@ -129,15 +130,16 @@
       "reasoning": "on",
       "temperature": 0.7,
       "seed": 42,
-      "digest": null,
-      "digest_status": "PENDING_BENCH",
+      "digest": "4420340fd3190fc6f5da59d85aeff8e74c8c401679b067c5d00df16efb98104d",
+      "digest_status": "VERIFIED_BENCH_2026-10-31",
       "ollama_version": "0.40.3",
       "sampling": {
         "top_p": 1.0
       },
       "sampling_source": "https://huggingface.co/zai-org/GLM-4.7-Flash (ajustes de SWE-bench Verified y Terminal Bench: temperatura 0,7, top_p 1,0, 16 384 tokens nuevos)",
       "source": "https://huggingface.co/zai-org/GLM-4.7-Flash",
-      "note": "2026-10-31: modelo abierto añadido al grupo al quedar GPT-5.6 Sol y Claude Sonnet 5 como referencia comercial. Configuración provisional = mejor configuración prevista (Q8_0, razonamiento activo, muestreo del fabricante); el banco en la A6000 decide entre esta y la variante sin razonamiento (config/local-bench.json → selection_2026_10_31) y fija el digest."
+      "note": "2026-10-31: modelo abierto añadido al quedar GPT y Claude como referencia comercial. Mejor configuración elegida con el banco en 2× RTX 3090 (48 GB): Q8_0, razonamiento activo, muestreo de SWE-bench Verified de la ficha, 65 536 / 16 384. Banco: 1/4 con razonamiento frente a 0/4 sin razonamiento; la ventana llegó a ~43 K tokens estimados, por encima de 32 K.",
+      "bench_evidence": "docs/verification/local-bench/2026-10-31-5c43a5bf.json"
     }
   }
 }

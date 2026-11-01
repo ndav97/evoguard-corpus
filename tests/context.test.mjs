@@ -33,6 +33,7 @@ calibrated.estimator.bytes_per_token = 3.2;
 // Ventana pequeña (8 192 tokens, la de los locales de 7–8B hasta 2026-10-11) para ejercitar recortes y omisiones.
 const small = structuredClone(calibrated);
 small.budget = { context_tokens: 8192, output_reserve_tokens: 1024, template_reserve_tokens: 512, input_tokens: 6656 };
+delete small.budget_by_provider; // la ventana reducida de prueba rige para todos los modelos
 const smallConfig = config => ({ ...config, context: 8192, max_output_tokens: 1024 });
 
 test('la política alcanza exactamente a los modelos con ventana limitada', () => {

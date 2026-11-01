@@ -889,3 +889,20 @@ ejecutor de episodios (cambió su huella). (5) Actualizar el plan.
 - **Razonamiento.** `reasoning: "on"` activa el modo de razonamiento en Ollama (`think: true`). El pensamiento cuenta dentro de `max_output_tokens`, se registra su tamaño (`thinking_chars`) y no entra al contexto del siguiente ciclo. La configuración provisional es con razonamiento, 65 536 / 16 384 (`config/context.json → budget_by_provider`). El banco la compara con la variante sin razonamiento (32 768 / 8 192) y con la variante MTP, que es más rápida y usa los mismos pesos.
 - **Regla de selección.** `config/local-bench.json → selection_2026_10_31`.
 - **Sin cambios en los modelos congelados.** Gemma 4, Qwen3-Coder y Devstral mantienen su configuración del 2026-10-12, porque el presupuesto general no cambia. El código cambia, así que se repite el ensayo de episodio antes de π0.
+
+## 2026-10-31 (c) — Banco de local_c y local_d: configuración fijada
+
+Evidencia: `docs/verification/local-bench/2026-10-31-5c43a5bf.json`. Entorno: 2× RTX 3090 (48 GB), Ollama 0.40.3, ficha en `docs/verification/gpu-sessions/20261031-145807-…json`.
+
+| Variante | Aceptadas | Tiempo total |
+|---|---|---|
+| Qwen3.8 Q8, con razonamiento | 4/4 | 1 189 s |
+| Qwen3.8 Q8 MTP, con razonamiento | 4/4 | 1 079 s |
+| Qwen3.8 Q8, sin razonamiento | 2/4 | — |
+| GLM-4.7-Flash Q8, con razonamiento | 1/4 | — |
+| GLM-4.7-Flash Q8, sin razonamiento | 0/4 | — |
+
+- **Qwen3.8 (local_c):** queda `qwen3.8:27b-mtp-q8_0` con razonamiento y 65 536 / 16 384 tokens. Empató en resultados con la variante sin MTP y fue más rápida (regla registrada antes del banco).
+- **GLM-4.7-Flash (local_d):** queda `glm-4.7-flash:q8_0` con razonamiento y 65 536 / 16 384 tokens.
+- **En todas las variantes:** ninguna salida inválida ni llamada cortada.
+- **Digests fijados en `config/models.json`.** Ambos modelos pasan a VERIFIED_BENCH_2026-10-31.

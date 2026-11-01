@@ -75,5 +75,5 @@
       "input_tokens": 48640
     }
   },
-  "budget_by_provider_note": "2026-10-31: local_c y local_d corren en la RTX A6000 (48 GB) con su mejor configuración: 65 536 tokens de ventana y 16 384 de salida para el razonamiento. El presupuesto general (32 768 / 8 192) sigue rigiendo a Gemma 4, Qwen3-Coder y Devstral, cuyo π0 ya está congelado. Si el banco elige la variante sin razonamiento, esta entrada se ajusta a 32 768 / 8 192 antes de π0."
+  "budget_by_provider_note": "2026-10-31: local_c y local_d corren en la RTX A6000 (48 GB) con su mejor configuración: 65 536 tokens de ventana y 16 384 de salida para el razonamiento. El presupuesto general (32 768 / 8 192) sigue rigiendo a Gemma 4, Qwen3-Coder y Devstral, cuyo π0 ya está congelado. Confirmado por el banco del 2026-10-31: ganaron las variantes con razonamiento."
 }

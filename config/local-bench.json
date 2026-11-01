@@ -159,10 +159,10 @@
     "rule": "≥ 9/10 acciones válidas en el diagnóstico, rendimiento en las tareas del banco y tiempo por turno dentro del límite"
   },
   "selection_2026_10_31": {
-    "gpu": "RTX A6000 (48 GB)",
+    "gpu": "2× RTX 3090 (48 GB; la A6000 no estaba disponible en Vast.ai)",
     "slots": {
-      "local_c": "qwen3.8:27b-q8_0 (variante por decidir)",
-      "local_d": "glm-4.7-flash:q8_0 (variante por decidir)"
+      "local_c": "qwen38-27b-mtp-q8-think-64k",
+      "local_d": "glm47flash-q8-think-64k"
     },
     "policy": "Mejor configuración posible de cada modelo nuevo: pesos Q8_0 (la mejor cuantización que cabe en 48 GB con margen para la caché), muestreo recomendado por el fabricante para cada modo y razonamiento activo o no según el banco. La variante se decide solo con las tareas del banco (familias de entrenamiento y validación) y queda fija e idéntica en los brazos B y E.",
     "rule": "Gana la variante con más tareas aceptadas; empate: más acciones válidas (≥ 9/10 en el diagnóstico) y menos llamadas cortadas (truncated_calls); se descarta la que supere el límite de tiempo por turno. MTP solo se elige si iguala en resultados a su variante sin MTP.",
@@ -171,6 +171,17 @@
       "qwen3.6:27b",
       "gpt-oss:20b",
       "devstral-small-2:24b"
-    ]
+    ],
+    "result": {
+      "evidence": "docs/verification/local-bench/2026-10-31-5c43a5bf.json",
+      "accepted": {
+        "qwen38-27b-q8-think-64k": "4/4 (1 189 s)",
+        "qwen38-27b-mtp-q8-think-64k": "4/4 (1 079 s)",
+        "qwen38-27b-q8-nothink-32k": "2/4",
+        "glm47flash-q8-think-64k": "1/4",
+        "glm47flash-q8-nothink-32k": "0/4"
+      },
+      "notes": "Sin salidas inválidas ni llamadas cortadas en ninguna variante. Contexto estimado máximo: Qwen3.8 35 K, GLM 43 K (justifica la ventana de 64 K)."
+    }
   }
 }
