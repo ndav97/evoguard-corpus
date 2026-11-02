@@ -2,7 +2,7 @@
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
-import { loadContextPolicy } from './context/policy.mjs';
+import { loadContextPolicy, policyFor } from './context/policy.mjs';
 
 const FROZEN_KEYS = ['display_name', 'api_model_id', 'transport', 'context', 'max_output_tokens', 'reasoning', 'temperature', 'seed', 'digest'];
 
@@ -18,7 +18,7 @@ export function modelBlockers(root, ring) {
     for (const provider of ring) {
       const config = models.models?.[provider];
       if (!config || !FROZEN_KEYS.every(key => key in config) || !config.api_model_id) blockers.push(`Modelos: configuración incompleta de ${provider}.`);
-      else if (config.transport === 'ollama' && (!/^[a-f0-9]{64}$/.test(config.digest ?? '') || config.context !== policy?.budget?.context_tokens)) blockers.push(`Modelos: ${provider} sin digest o contexto fijado.`);
+      else if (config.transport === 'ollama' && (!/^[a-f0-9]{64}$/.test(config.digest ?? '') || config.context !== (policy ? policyFor(policy, provider).budget.context_tokens : undefined) || config.max_output_tokens !== (policy ? policyFor(policy, provider).budget.output_reserve_tokens : undefined))) blockers.push(`Modelos: ${provider} sin digest o contexto fijado.`);
     }
   } catch (error) { blockers.push(`Modelos: ${error.message}`); }
   try {
