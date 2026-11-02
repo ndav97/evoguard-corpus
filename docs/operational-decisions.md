@@ -906,3 +906,22 @@ Evidencia: `docs/verification/local-bench/2026-10-31-5c43a5bf.json`. Entorno: 2�
 - **GLM-4.7-Flash (local_d):** queda `glm-4.7-flash:q8_0` con razonamiento y 65 536 / 16 384 tokens.
 - **En todas las variantes:** ninguna salida inválida ni llamada cortada.
 - **Digests fijados en `config/models.json`.** Ambos modelos pasan a VERIFIED_BENCH_2026-10-31.
+
+## S058: tests dependientes de la fecha; exclusión por prefijo en known_failures — 2026-11-02
+
+**Qué pasó.** El ensayo de S058 falló cuatro veces (2026-11-01 y 2026-11-02) con los parches de referencia correctos. El 2026-10-20 había pasado. Fallaron, en distintas ejecuciones, tests de la zona del dashboard sin relación con el código del cambio:
+- `DashboardPage.test.jsx › <Dashboard /> SubscriptionExpirationModal should render expiration modal with (…)`: calcula días hasta una fecha fija (2027-01-01) desde la fecha actual;
+- `BaseCourseCard.test.jsx › <BaseCourseCard /> renders with different startDate values (…)`: usa la fecha actual como inicio;
+- `hooks.test.jsx › useCourseEnrollmentsBySection returns enrollments by section`;
+- `CourseEnrollments.test.jsx › Course enrollments generates course status update on move to {in progress, saved for later} action`;
+- `useStatefulEnroll … ({ hasRedemptionMetadata: false })`: la variante `true` ya estaba excluida desde el 2026-10-20.
+
+**Por qué importa.** Sin la exclusión, π0 de local_c y local_d, que corre en noviembre, contaría como regresiones de esos modelos fallos que no existían cuando corrieron los otros cinco.
+
+**Decisiones:**
+1. Los siete tests pasan a `known_failures` de S058, con el criterio del 2026-10-08.
+2. Los dos tests parametrizados llevan la fecha en su nombre, que cambia en cada ejecución. Por eso `known_failures` admite ahora entradas terminadas en « *», que excluyen por prefijo (`runner/real/suite.mjs → knownFailures`, usado en el pipeline, la preparación y la auditoría). El resto de entradas sigue comparándose por nombre exacto.
+3. El cambio de código invalida los ensayos, así que se repiten las 40 familias, el ensayo general (S900) y el ensayo de episodios.
+4. Las etiquetas de π0 de S058 de los cinco modelos anteriores se recalculan con la misma exclusión, para que todos los modelos se midan con la misma suite.
+
+**Riesgo que queda.** Los tests excluidos están en la zona del cambio (dashboard). Las regresiones ahí las siguen detectando los tests ocultos T001–T005 y los ~1 550 tests restantes de la suite.

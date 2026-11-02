@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { docker } from '../sandbox/docker.mjs';
 import { loadRealFamily, validateRealFamily, inPackage } from './families.mjs';
 import { openReal, closeReal, execReal, runReal } from './docker.mjs';
-import { runSuiteIn, failing, signature } from './suite.mjs';
+import { runSuiteIn, failing, signature, knownFailures } from './suite.mjs';
 
 export const BASES_PATH = 'config/real-bases.json';
 const V0_ENV = 'GIT_AUTHOR_NAME="EvoGuard Pipeline" GIT_AUTHOR_EMAIL=pipeline@evoguard.invalid GIT_COMMITTER_NAME="EvoGuard Pipeline" GIT_COMMITTER_EMAIL=pipeline@evoguard.invalid GIT_AUTHOR_DATE=2000-01-01T00:00:00Z GIT_COMMITTER_DATE=2000-01-01T00:00:00Z';
@@ -96,7 +96,7 @@ export async function verifyBase(root, data, image, { runs = 2 } = {}) {
     report.checks.reference_patches_apply = report.patches.every(p => p.status === 'PASS');
   } finally { closeReal(session); }
   report.suite_runs = [];
-  const known = new Set(m.known_failures);
+  const known = knownFailures(m.known_failures);
   const signatures = [];
   for (let run = 0; run < runs; run++) {
     session = openReal(image, 'real-verify');

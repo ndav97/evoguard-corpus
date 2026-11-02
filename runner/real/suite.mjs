@@ -45,10 +45,19 @@ export function parseReport(json, cwd) {
 const IGNORED = new Set(['passed', 'pending', 'skipped', 'todo', 'disabled']);
 export const failing = (run, filter = () => true) => Object.entries(run.results).filter(([k, v]) => filter(k) && !IGNORED.has(v)).map(([k]) => k).sort();
 export const passing = (run, filter = () => true) => Object.entries(run.results).filter(([k, v]) => filter(k) && v === 'passed').map(([k]) => k).sort();
+// Pruebas conocidas (known_failures) — decisión 2026-11-02: una entrada que termina en « *» excluye por prefijo todas
+// las pruebas cuyo nombre empieza igual. Hace falta para pruebas parametrizadas que incluyen la fecha actual en su
+// nombre (S058: el nombre cambia en cada ejecución). El resto de entradas se comparan por nombre exacto, como antes.
+export function knownFailures(list = []) {
+  const exact = new Set(list.filter(e => !e.endsWith(' *')));
+  const prefixes = list.filter(e => e.endsWith(' *')).map(e => e.slice(0, -2));
+  return { has: key => exact.has(key) || prefixes.some(prefix => key.startsWith(prefix)) };
+}
+
 // Firma para comparar ejecuciones: número de pruebas, pruebas que fallan y archivos que no cargan, sin las
 // conocidas (known_failures). No usa los nombres de las que pasan: algunas suites los generan con la fecha
 // actual o datos aleatorios y cambian entre ejecuciones sin que cambie ningún resultado (S058, 2026-10-17).
-export const signature = (run, known = new Set()) => JSON.stringify([
+export const signature = (run, known = knownFailures()) => JSON.stringify([
   Object.keys(run.results).length,
   failing(run, k => !known.has(k)),
   [...run.suiteFailedFiles].filter(f => !known.has(f)).sort()

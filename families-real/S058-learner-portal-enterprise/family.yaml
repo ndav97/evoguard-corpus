@@ -17,8 +17,19 @@ runner: jest
 node: "24"
 workspace: github__openedx__frontend-app-learner-portal-enterprise          # carpeta en la caché de verificación (volumen evoguard-bases)
 hidden_tests_dir: src/evoguard           # donde se copian los tests ocultos al evaluar
-known_failures:                              # inestable en V0 (ensayo 2026-10-20: falla de forma intermitente sin cambios)
+known_failures:                              # inestables en V0 o dependientes de la fecha (ensayos 2026-10-20 y 2026-11-01/02)
   - "src/components/stateful-enroll/data/hooks/useStatefulEnroll.test.tsx › useStatefulEnroll should make redemption request and poll for committed transaction ({ hasRedemptionMetadata: true })"
+  # Dependientes de la fecha o intermitentes (ensayos del 2026-11-01/02): fallaron con el parche de referencia correcto
+  # y pasaron en otras ejecuciones, sin cambios en su código. Dos están parametrizadas con la fecha actual en el nombre,
+  # que cambia en cada ejecución: se excluyen por prefijo (entrada terminada en « *», runner/real/suite.mjs →
+  # knownFailures). Están en la zona del dashboard: la regresión ahí la siguen detectando los tests ocultos T001–T005 y
+  # el resto de la suite (docs/operational-decisions.md, 2026-11-02).
+  - "src/components/stateful-enroll/data/hooks/useStatefulEnroll.test.tsx › useStatefulEnroll should make redemption request and poll for committed transaction ({ hasRedemptionMetadata: false })"
+  - "src/components/dashboard/tests/DashboardPage.test.jsx › <Dashboard /> SubscriptionExpirationModal should render expiration modal with *"
+  - "src/components/dashboard/main-content/course-enrollments/course-cards/tests/BaseCourseCard.test.jsx › <BaseCourseCard /> renders with different startDate values *"
+  - "src/components/dashboard/main-content/course-enrollments/data/tests/hooks.test.jsx › useCourseEnrollmentsBySection returns enrollments by section"
+  - "src/components/dashboard/main-content/course-enrollments/tests/CourseEnrollments.test.jsx › Course enrollments generates course status update on move to in progress action"
+  - "src/components/dashboard/main-content/course-enrollments/tests/CourseEnrollments.test.jsx › Course enrollments generates course status update on move to saved for later action"
 focus: src/components/dashboard/sidebar/utils.js                 # zona que tocan los cinco cambios
 turns:
   - id: T001

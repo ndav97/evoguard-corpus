@@ -78,3 +78,14 @@ test('registros: credenciales reales del entorno detienen la tarea; los patrones
     } finally { rmSync(store.dir, { recursive: true, force: true }); }
   } finally { delete process.env.EVOGUARD_PROBE_API_KEY; }
 });
+
+test('known_failures (2026-11-02): « *» al final excluye por prefijo; el resto, por nombre exacto', async () => {
+  const { knownFailures, signature } = await import('../runner/real/suite.mjs');
+  const known = knownFailures(['a.test.js › exacta', 'b.test.js › con fecha *']);
+  assert.equal(known.has('a.test.js › exacta'), true);
+  assert.equal(known.has('a.test.js › exacta y más'), false);
+  assert.equal(known.has('b.test.js › con fecha ({ hoy: 2026-11-02 })'), true);
+  assert.equal(known.has('b.test.js › otra'), false);
+  const run = d => ({ results: { [`b.test.js › con fecha ({ hoy: ${d} })`]: 'failed', 'c.test.js › ok': 'passed' }, suiteFailedFiles: [] });
+  assert.equal(signature(run('2026-11-02'), known), signature(run('2026-11-03'), known));
+});

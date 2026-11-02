@@ -17,7 +17,7 @@ import { readBases } from './prepare.mjs';
 import { openReal, closeReal, execReal } from './docker.mjs';
 import { applySteps, realSteps, loadRealReference } from './lineage.mjs';
 import { runRealOracle, scopeCheck, TEST_FILE } from './pipeline.mjs';
-import { runSuiteIn, failing } from './suite.mjs';
+import { runSuiteIn, failing, knownFailures } from './suite.mjs';
 import { realReferencesDir, hiddenTestsOf } from './generate.mjs';
 
 const LEAK = /(evoguard|oracle|hidden[_ -]?tests?|reference\.patch|calibra|evaluator\/runs|PRIVATE_|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|SYNTEROLINK|openai|anthropic|gemini|qwen|granite|local_a|local_b)/i;
@@ -33,7 +33,7 @@ export async function auditReal(root, familyId, { freeze = false, runs } = {}) {
   const stabilityRuns = runs ?? data.policy.oracle_stability_runs;
   const validators = schemaValidators(root);
   const referencesDir = realReferencesDir(root, data);
-  const known = new Set(m.known_failures);
+  const known = knownFailures(m.known_failures);
   const report = { artifact_type: 'corpus_audit', family_id: familyId, stratum: 'semi-real', image_id: base.image_id, v0_commit: m.v0.commit, started_at: new Date().toISOString(), stability_runs: stabilityRuns, versions: {}, findings: [] };
   const finding = (version, message) => report.findings.push({ version, message });
   for (const version of realVersions(m)) {

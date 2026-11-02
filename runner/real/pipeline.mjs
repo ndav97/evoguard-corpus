@@ -7,7 +7,7 @@
 import { workspaceOps } from '../pipeline/workspace.mjs';
 import { openReal, closeReal, execReal } from './docker.mjs';
 import { applySteps } from './lineage.mjs';
-import { runSuiteIn, failing, signature, suiteCommand } from './suite.mjs';
+import { runSuiteIn, failing, signature, suiteCommand, knownFailures } from './suite.mjs';
 import { inPackage, scopeViolation, visibleChecks, REAL_VERSIONS } from './families.mjs';
 
 export const TEST_FILE = /(^|\/)(__tests__|__mocks__)\/|\.(test|spec)\.[cm]?[jt]sx?$|(^|\/)test-utils?\.[cm]?[jt]sx?$/;
@@ -119,7 +119,7 @@ export function scopeCheck(patch, { manifest, existingTests }) {
 export async function runRealOracle({ image, manifest, steps, v0Commit, patch, hiddenTests, version, runs = 1 }) {
   const n = REAL_VERSIONS.indexOf(version) + 1;
   const hiddenRel = hiddenTests.slice(0, n).map(t => ({ turn: t.id, rel: `${manifest.hidden_tests_dir}/${t.file}` }));
-  const known = new Set(manifest.known_failures);
+  const known = knownFailures(manifest.known_failures);
   const report = { version, runs: [] };
   const signatures = [];
   for (let run = 0; run < runs; run++) {
@@ -166,7 +166,7 @@ export function createRealEvaluator({ image, manifest, steps, v0Commit, version,
         if (result.error === 'INFRA_ERROR') return { status: 'INFRA_ERROR' };
         const command = `$ (en ${manifest.package_path}) ${suiteCommand(manifest).replace(/ --(reporter=json|json) --outputFile=\S+/, '')}`;
         if (!result.run) return { status: 'FAIL', feedback: `${command}\nLa suite no produjo informe (¿error de configuración o de compilación?).\n${tail(result.tail ?? '')}` };
-        const known = new Set(manifest.known_failures);
+        const known = knownFailures(manifest.known_failures);
         const problems = [...result.run.suiteFailedFiles.filter(f => !known.has(f)).map(f => `NO COMPILA / NO EJECUTA: ${f}`), ...failing(result.run, k => !known.has(k)).map(k => `FALLA: ${k}`)];
         const status = problems.length || !result.run.total ? 'FAIL' : 'PASS';
         return { status, feedback: `${command}\n${result.run.total} tests; ${problems.length} problemas${problems.length ? `:\n${problems.slice(0, 60).join('\n')}` : ''}\n${tail(result.tail ?? '', 12000)}` };
