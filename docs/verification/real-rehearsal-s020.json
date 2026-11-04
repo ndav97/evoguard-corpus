@@ -3,10 +3,10 @@
   "family_id": "S020",
   "image_id": "sha256:b6da049b7a1142e496157706f910d73a1cf3d31c84655bb628f2e502ac8a1598",
   "experimental": false,
-  "started_at": "2026-11-01T18:35:20.872Z",
+  "started_at": "2026-11-03T10:40:08.360Z",
   "versions": {
     "V1": {
-      "task_id": "afd24918-dc3e-4c09-b462-e1eee88f5a91",
+      "task_id": "7ae6119e-f42e-4375-9cd0-2ba6c5aa4287",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "5e6a9d5b8fca400222a604b9e33336ed4ccf86b9"
     },
     "V2": {
-      "task_id": "c02a51bb-fb92-49fb-8412-b5824f710b37",
+      "task_id": "f60bea22-3c57-4997-9311-cc1aa9369922",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "916fa50eb2c5309f31981e642312ed71d84e261c"
     },
     "V3": {
-      "task_id": "80d126bd-8acb-4216-a1d1-016c6cd54a7a",
+      "task_id": "6e7bbdbb-c86a-4684-91c4-2cca48a8bf54",
       "outcomes": [
         {
           "provider": "google",
@@ -102,7 +102,7 @@
       "candidate_commit": "71f6478571d10f8012613dc5bca9beda4ac344af"
     },
     "V4": {
-      "task_id": "930d9ea0-a706-4cdb-bbac-cf896af7a718",
+      "task_id": "659f3d8b-9cf0-4771-b691-7c3cf9abd079",
       "outcomes": [
         {
           "provider": "local_a",
@@ -121,7 +121,7 @@
       "candidate_commit": "96b537f6321a7534966c7a0380a2b79b985723b0"
     },
     "V5": {
-      "task_id": "35cd7dda-d80f-4b23-9b4c-4b10bf5c8f57",
+      "task_id": "4f3c1a12-1b93-4f44-9208-ba4c28f0d1a6",
       "outcomes": [
         {
           "provider": "local_b",
@@ -147,17 +147,17 @@
       {
         "status": "PASS",
         "total": 144,
-        "seconds": 41
+        "seconds": 38
       },
       {
         "status": "PASS",
         "total": 144,
-        "seconds": 41
+        "seconds": 38
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-11-01T18:50:24.899Z",
+  "finished_at": "2026-11-03T10:54:11.768Z",
   "sources_sha256": {
     "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
@@ -168,13 +168,13 @@
     "runner/sandbox/lineage.mjs": "b463a3a8e24dcab9742ecbbf715e674c24ad71d86746332b47e2843bc7bdaf52",
     "runner/real/families.mjs": "82f7ed80bdfd378689f00635401b11d5b80547d910eea723f43884f5e3c1b000",
     "runner/real/docker.mjs": "5eb9411901bfb6a9227507040c9ceddba3e06018b0f717de58063959ec6e7668",
-    "runner/real/suite.mjs": "022b9ddd9208979cee2df7e909eb97c3295a790cd43919881e2af4487c1786c1",
-    "runner/real/prepare.mjs": "2978e4d2e28c43c9e6128926f1ca588dba24219efb14d4d5f5d5dfd52f43a9b9",
+    "runner/real/suite.mjs": "ea56d1fb4391aae3c2d68fba462d9f250edb49cf6ac0307aa7c2ca86532252dd",
+    "runner/real/prepare.mjs": "a248bb8cac1e4ae7e5202b77d28acad7d403a71e54b0c9c1f367dbb5265add75",
     "runner/real/lineage.mjs": "ced4c02678c6d27c075456682ef0cc3cfcb8f3d1e0c2bf96202bb323307e6a73",
-    "runner/real/pipeline.mjs": "99992b5ca74b3b7a285ce8d49b52b3e72047d2fae028c705efc4b53d473df324",
+    "runner/real/pipeline.mjs": "b63534aebba1bbb037afe6179ecd96db7f99d6e76fa107a871e6d568366130ae",
     "runner/real/rehearse.mjs": "d39b1470cf891abb93572416524ce87d9ed37b18cadff0937ce024deba8cec6c",
     "runner/real/generate.mjs": "fa84d180aca20a5d59f3266e773896eacd651691d81cf197ff0779d9fee8bd36",
-    "runner/real/audit.mjs": "ab9fe8ad14b3d933804b4f58cede2c51b9a189be41f580454f0dd4c3548617e7",
+    "runner/real/audit.mjs": "09508b13825e3dd722b9596e4dc3ff8a3c399145f91d90d6f86ee3adde605030",
     "runner/real/preflight.mjs": "d43cba9059e89518024b4a86e21f7ffc409e7e46b54702d8193995304a750f7f",
     "docker/real/install.sh": "3443206d59ec370ca80ce186d1a3429545aee65026a558c7c0eafb3e171eea0c",
     "prompts/real-turn.md": "52c1b064030c70d4ca66eabd3bb11d887aab99d5e108d45aa5e1c17f91270a59",
