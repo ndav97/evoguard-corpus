@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Cambios de código del pipeline semi-real que no alteran lo que ejercitan los ensayos de familias. Un ensayo de familia sigue vigente si el único cambio es uno de estos, exactamente del hash anterior al nuevo. El ensayo general (S900) y el ensayo de episodios no admiten excepciones: deben repetirse con el código nuevo y son la evidencia del cambio.",
+  "changes": [
+    {
+      "date": "2026-11-03",
+      "file": "runner/execution/engine.mjs",
+      "from_sha256": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
+      "to_sha256": "d7c03e094c5101fb8051ceb6ed4e19ae4ea887f230e415a23cb54c295a9eabe2",
+      "summary": "En modo singleProvider (episodios de un único modelo), el motor acepta local_c y local_d como proveedor inicial y asigna siempre ese proveedor.",
+      "why_neutral": "Los ensayos de familias nunca usan singleProvider: sin él, la lista de proveedores admitidos y la asignación por rotación son idénticas a las anteriores. Solo cambian dos expresiones condicionadas por singleProvider === true.",
+      "evidence": [
+        "tests/bench.test.mjs (singleProvider con local_c y local_d; rechazo fuera de singleProvider)",
+        "docs/verification/real-pipeline-rehearsal.json (S900 repetido con el código nuevo)",
+        "docs/verification/episode-rehearsal.json (ensayo de episodios repetido con el código nuevo)"
+      ],
+      "decided_by": "Tesista, 2026-11-03 (opción «excepción documentada» frente a repetir los 40 ensayos)"
+    }
+  ]
+}

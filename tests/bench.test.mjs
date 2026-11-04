@@ -60,6 +60,14 @@ test('singleProvider: una sola asignación, solo en ensayo', async () => {
   const result = await runTask({ ...base, mode: 'rehearsal', singleProvider: true });
   assert.deepEqual(result.attempts.map(a => a.provider), ['local_a']);
   await assert.rejects(runTask({ ...base, mode: 'experimental', preflightBlockers: [], singleProvider: true }), /solo en ensayo/);
+  // 2026-11-03: local_c y local_d solo existen en episodios de un único proveedor, nunca en la rotación del corpus.
+  for (const provider of ['local_c', 'local_d']) {
+    const seen = [];
+    const own = await runTask({ ...base, initialProvider: provider, adapter: { async next(context) { seen.push(context.provider); return { type: 'technical_failure' }; } }, mode: 'rehearsal', singleProvider: true });
+    assert.deepEqual(own.attempts.map(a => a.provider), [provider]);
+    assert.deepEqual([...new Set(seen)], [provider]);
+    await assert.rejects(runTask({ ...base, initialProvider: provider, mode: 'rehearsal' }), /Proveedor o versión no disponible/);
+  }
 });
 
 test('los registros del banco van a .artifacts/bench y no se marcan como experimentales', () => {

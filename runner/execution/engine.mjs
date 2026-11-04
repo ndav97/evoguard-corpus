@@ -2,6 +2,9 @@ import { isDeepStrictEqual } from 'node:util';
 import { ACTION_TYPES, actionKey } from '../protocol/actions.mjs';
 import { performAction, workspaceOverview, PROTOCOL_CONFIG } from '../protocol/execute.mjs';
 const RING=['openai','anthropic','google','local_a','local_b'];
+// Modelos que solo se miden en episodios de un único proveedor (singleProvider), nunca en la rotación del corpus
+// (decisión 2026-10-31: Qwen3.8 y GLM-4.7-Flash reemplazan a los comerciales como modelos del estudio).
+const SINGLE_ONLY=['local_c','local_d'];
 const STAGES=['typecheck','build','development_tests','independent_oracle','architecture'];
 const VISIBLE=new Set(STAGES.slice(0,3));
 const clone=value=>structuredClone(value);
@@ -25,7 +28,7 @@ function validate(options) {
   if(!MODES[options.mode]) throw new Error('Modo desconocido');
   if(options.mode==='experimental'&&(!Array.isArray(options.preflightBlockers)||options.preflightBlockers.length)) throw new Error('Generación experimental bloqueada por preflight');
   if(!p || p.max_attempts!==3 || p.max_agent_cycles!==25 || p.max_provider_assignments!==5 || !isDeepStrictEqual(p.provider_ring,RING) || p.timeout_seconds?.api!==1800 || p.timeout_seconds?.local!==3600 || p.oracle_visible!==false || p.oracle_failure!=='immediate_reassignment_no_feedback' || p.repair_base!=='own_previous_attempt' || p.reassignment_base!=='previous_validated_reference_or_scaffold') throw new Error('Política incompatible');
-  if(!RING.includes(options.initialProvider) || !(options.mode==='simulation'?['V0']:['V0','V1','V2','V3','V4','V5']).includes(options.packet?.version)) throw new Error('Proveedor o versión no disponible');
+  if(!(options.singleProvider===true?[...RING,...SINGLE_ONLY]:RING).includes(options.initialProvider) || !(options.mode==='simulation'?['V0']:['V0','V1','V2','V3','V4','V5']).includes(options.packet?.version)) throw new Error('Proveedor o versión no disponible');
   if(options.simulationTimeoutMs!==undefined && options.mode!=='simulation') throw new Error('Timeout reducido solo en simulación');
   // singleProvider (banco de prueba): solo la primera asignación, sin reasignar; nunca en generación experimental.
   if(options.singleProvider!==undefined && (options.singleProvider!==true || options.mode!=='rehearsal')) throw new Error('singleProvider solo en ensayo');
@@ -49,7 +52,7 @@ export async function runTask(options) {
   let stop=false;
   const assignments=options.singleProvider?1:5;
   for(let assignment=0;assignment<assignments&&!stop;assignment++) {
-    const provider=RING[(start+assignment)%5];
+    const provider=options.singleProvider?options.initialProvider:RING[(start+assignment)%5];
     let workspace;
     try {
       workspace=await workspaces.open();

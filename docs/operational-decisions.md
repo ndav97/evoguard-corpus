@@ -925,3 +925,14 @@ Evidencia: `docs/verification/local-bench/2026-10-31-5c43a5bf.json`. Entorno: 2�
 4. Las etiquetas de π0 de S058 de los cinco modelos anteriores se recalculan con la misma exclusión, para que todos los modelos se midan con la misma suite.
 
 **Riesgo que queda.** Los tests excluidos están en la zona del cambio (dashboard). Las regresiones ahí las siguen detectando los tests ocultos T001–T005 y los ~1 550 tests restantes de la suite.
+
+## Motor de ejecución: local_c y local_d en episodios; cambio neutro documentado — 2026-11-03
+
+**Qué pasó.** El primer lanzamiento de π0 con local_c y local_d falló en todos los episodios con «Proveedor o versión no disponible». El motor (`runner/execution/engine.mjs`) solo aceptaba como proveedor inicial los cinco de la rotación del corpus. Se pasó por alto al añadir los modelos el 2026-10-31.
+
+**Corrección.** En modo `singleProvider`, que es el de los episodios, el motor acepta también local_c y local_d y asigna siempre el proveedor inicial. Fuera de ese modo nada cambia. Prueba: `tests/bench.test.mjs`.
+
+**Ensayos.** `engine.mjs` forma parte de la huella de los ensayos. El tesista eligió no repetir los 40 ensayos de familias (unas 20 horas):
+- **Por qué no hace falta repetirlos:** los ensayos nunca usan `singleProvider`, y en ellos la lista de proveedores y la rotación son idénticas.
+- **Cómo queda registrado:** el cambio entra en `config/neutral-changes.json` con el hash anterior y el nuevo. `runner/real/rehearsal-status.mjs` acepta ese cambio exacto solo para los ensayos de familias.
+- **Lo que sí se repite con el código nuevo:** el ensayo general (S900) y el ensayo de episodios, que son la evidencia del cambio.

@@ -7,6 +7,15 @@ import { fileURLToPath } from 'node:url';
 import { readBases } from './prepare.mjs';
 import { realFingerprint } from './sources.mjs';
 
+export function neutralChanges(root) {
+  const path = join(root, 'config/neutral-changes.json');
+  if (!existsSync(path)) return [];
+  const config = JSON.parse(readFileSync(path, 'utf8'));
+  const hex = /^[a-f0-9]{64}$/;
+  if (config.schema_version !== '1.0.0' || !Array.isArray(config.changes) || !config.changes.every(c => c.file && hex.test(c.from_sha256) && hex.test(c.to_sha256) && c.why_neutral && c.evidence?.length)) throw new Error('config/neutral-changes.json inválido');
+  return config.changes;
+}
+
 export function rehearsalCurrent(root, target) {
   const file = target === '--mini' ? 'real-pipeline-rehearsal.json' : `real-rehearsal-${target.toLowerCase()}.json`;
   const path = join(root, 'docs/verification', file);
@@ -14,7 +23,11 @@ export function rehearsalCurrent(root, target) {
   const evidence = JSON.parse(readFileSync(path, 'utf8'));
   if (evidence.status !== 'PASS' || evidence.experimental !== false) return { current: false, reason: `estado ${evidence.status}` };
   const current = realFingerprint(root);
-  const changed = Object.keys(current).filter(p => evidence.sources_sha256?.[p] !== current[p]);
+  // Cambios neutros documentados (config/neutral-changes.json): solo para ensayos de familias y solo si el archivo
+  // pasó exactamente del hash ensayado al hash actual. El ensayo general (--mini) nunca los admite.
+  const neutral = target === '--mini' ? [] : neutralChanges(root);
+  const accepted = p => neutral.some(c => c.file === p && c.from_sha256 === evidence.sources_sha256?.[p] && c.to_sha256 === current[p]);
+  const changed = Object.keys(current).filter(p => evidence.sources_sha256?.[p] !== current[p] && !accepted(p));
   if (changed.length) return { current: false, reason: `código cambiado (${changed.join(', ')})` };
   if (target !== '--mini') {
     const base = readBases(root).bases[target];
