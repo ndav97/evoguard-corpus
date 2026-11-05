@@ -1,12 +1,12 @@
 {
   "artifact_type": "real_pipeline_rehearsal",
   "family_id": "S900",
-  "image_id": "sha256:6a64179791c3e640f2cac8413032a2f929f644a0254a042d3c0d53f475297735",
+  "image_id": "sha256:9a6d416dda8128900a39d950d53ead4b39d61effb31b096717c905b157cff756",
   "experimental": false,
-  "started_at": "2026-11-02T19:41:10.282Z",
+  "started_at": "2026-11-04T01:31:16.281Z",
   "versions": {
     "V1": {
-      "task_id": "af099895-d1b3-4097-8362-05432217fc47",
+      "task_id": "4df9dd09-b960-48f8-b446-5b11a53e7398",
       "outcomes": [
         {
           "provider": "openai",
@@ -64,7 +64,7 @@
       "candidate_commit": "ae64c3bee0aa473634d276bdb40fa505f7050867"
     },
     "V2": {
-      "task_id": "875888f7-c1ea-4df1-9b2c-77531886a078",
+      "task_id": "6c767ca5-2296-46e6-9293-e6ec61340de4",
       "outcomes": [
         {
           "provider": "anthropic",
@@ -83,7 +83,7 @@
       "candidate_commit": "26370cea92758617ff23dce2f32ada956669084b"
     },
     "V3": {
-      "task_id": "e265c92b-53e8-451a-b489-429e85347a42",
+      "task_id": "b4761c8b-8c7e-4476-9e74-7f99e81c4964",
       "outcomes": [
         {
           "provider": "google",
@@ -109,17 +109,17 @@
       {
         "status": "PASS",
         "total": 14,
-        "seconds": 2
+        "seconds": 3
       },
       {
         "status": "PASS",
         "total": 14,
-        "seconds": 4
+        "seconds": 3
       }
     ]
   },
   "status": "PASS",
-  "finished_at": "2026-11-02T19:43:10.303Z",
+  "finished_at": "2026-11-04T01:33:17.785Z",
   "generation_and_audit": {
     "status": "PASS",
     "references": {
@@ -133,7 +133,7 @@
     }
   },
   "sources_sha256": {
-    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
+    "runner/execution/engine.mjs": "d7c03e094c5101fb8051ceb6ed4e19ae4ea887f230e415a23cb54c295a9eabe2",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "1c367145be1125c757ba56012368fae897374008d9341a84b0cc669ce7274e36",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",

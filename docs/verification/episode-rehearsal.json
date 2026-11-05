@@ -2,8 +2,8 @@
   "artifact_type": "episode_rehearsal",
   "family_id": "S001",
   "image_id": "sha256:8cfb79899555ddf90c49944952640e8bfcd5c2ca2749939373234c8b56539533",
-  "experiment": "ensayo-episodios-1793752928026",
-  "started_at": "2026-11-04T00:42:08.026Z",
+  "experiment": "ensayo-episodios-1793756857582",
+  "started_at": "2026-11-04T01:47:37.583Z",
   "scenarios": {
     "ideal": {
       "ok": true,
@@ -61,7 +61,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1793752928026\\B\\openai\\S001\\e1-r1"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793756857582\\B\\openai\\S001\\e1-r1"
     },
     "sin_entrega": {
       "ok": true,
@@ -119,7 +119,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1793752928026\\B\\openai\\S001\\e1-r2"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793756857582\\B\\openai\\S001\\e1-r2"
     },
     "regresion": {
       "ok": true,
@@ -177,7 +177,7 @@
         false,
         false
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1793752928026\\B\\openai\\S001\\e1-r3"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793756857582\\B\\openai\\S001\\e1-r3"
     },
     "head_movido": {
       "ok": true,
@@ -235,16 +235,16 @@
         true,
         true
       ],
-      "dir": ".artifacts\\episodes\\ensayo-episodios-1793752928026\\B\\openai\\S001\\e1-r4"
+      "dir": ".artifacts\\episodes\\ensayo-episodios-1793756857582\\B\\openai\\S001\\e1-r4"
     }
   },
   "status": "PASS",
-  "finished_at": "2026-11-04T01:02:42.644Z",
+  "finished_at": "2026-11-04T02:09:06.306Z",
   "sources_sha256": {
     "runner/episode/run.mjs": "98127d7ce1efe24877c5d033d67cd3d9433805f08cc83baff3f4ac4dd82e5432",
     "runner/episode/store.mjs": "b874e4e07a9cc93fe24cdfe4b0a1ddfe47bbb944fcc1de4b0add92a5cbe0ff47",
     "runner/episode/budget.mjs": "663428271707ee976a40357191bc63004f95e7cb7abc19b40c545754c9e93608",
-    "runner/execution/engine.mjs": "334b060bc70f170b8f5fb9f3f017ea168b63275f0ff277e09268666f4a9a8c15",
+    "runner/execution/engine.mjs": "d7c03e094c5101fb8051ceb6ed4e19ae4ea887f230e415a23cb54c295a9eabe2",
     "runner/protocol/actions.mjs": "f97094ea37c21e7f1e6d30bb71c992ba0d40983a64f6cda4a12292c501611c6b",
     "runner/protocol/execute.mjs": "1c367145be1125c757ba56012368fae897374008d9341a84b0cc669ce7274e36",
     "config/protocol.json": "48b17ef1df8fb96de0b6e0ef8e153c72c3e6d3cb109d664d7f0a96a3f56b7970",
